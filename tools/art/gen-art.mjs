@@ -650,6 +650,95 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
     ${hay(400, 420, 1.1, '#a8783e', '#6a4a2a')}
     <path d="M0 400 Q256 380 512 404 V512 H0Z" fill="#7a4a34"/>
     ${dog(236, 444, 1.8, '#f0b45a', '#3a2418')}`), { jpg: true });
+
+  // ---------- 10. 境界形象 stage_{1..5}（512 透明，叠在通用突破光效上）+ 伙伴头像 companion_{id}（256 圆章）----------
+  const halo = (c, r = 170) => `<circle cx="256" cy="270" r="${r}" fill="${c}" opacity=".35" filter="url(#soft)"/>`;
+  const sparks = (seed, c) => dust(rng(seed), 26, 80, 60, 352, 360, c, 4);
+  const stage = (id, lv, body) => job(`destiny/${id}/stage_${lv}`, 512, 512, body);
+  const eyes = (x1, x2, y, r = 5, c = '#2a1a10') => `<circle cx="${x1}" cy="${y}" r="${r}" fill="${c}"/><circle cx="${x2}" cy="${y}" r="${r}" fill="${c}"/>`;
+
+  // 荒漠一株草
+  stage('desert_grass', 1, `${halo('#d6f5a8')}<path d="M96 430 Q256 380 416 430 L416 470 L96 470Z" fill="#d9ad6e"/>
+    ${dust(rng(601), 24, 150, 360, 212, 70, '#c99556', 5)}${sprout(256, 420, 2.2)}`);
+  stage('desert_grass', 2, `${halo('#c3ec8f')}<ellipse cx="256" cy="440" rx="120" ry="20" fill="#c99556" opacity=".6"/>
+    <g stroke-linecap="round" fill="none"><path d="M256 440 Q240 320 200 220" stroke="#5c9a3a" stroke-width="14"/><path d="M256 440 Q262 300 268 170" stroke="#7bb556" stroke-width="16"/><path d="M256 440 Q290 330 336 240" stroke="#6aa844" stroke-width="13"/></g>`);
+  stage('desert_grass', 3, `${halo('#f6e08a', 190)}${sparks(603, '#ffe9a8')}
+    <path d="M256 450 Q250 320 256 140" stroke="#5c9a3a" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M254 330 C200 300 160 310 140 340 C180 356 220 352 254 330Z M258 260 C312 228 352 236 372 266 C334 284 294 280 258 260Z M256 190 C222 160 196 162 180 182 C206 200 232 202 256 190Z" fill="#7bb556"/>
+    <path d="M250 330 Q200 330 150 340 M262 262 Q320 256 364 266 M254 190 Q220 180 186 182" stroke="#ffd27a" stroke-width="4" fill="none"/>`);
+  stage('desert_grass', 4, `${halo('#9bd36a', 190)}${sparks(604, '#d6f5a8')}
+    <path d="M256 110 C330 200 340 300 300 400 Q256 450 212 400 C172 300 182 200 256 110Z" fill="#6aa844"/>
+    <path d="M256 130 V420 M256 220 L210 190 M256 220 L302 190 M256 300 L200 270 M256 300 L312 270" stroke="#4f8a30" stroke-width="5" fill="none"/>
+    <path d="M200 300 C150 280 120 300 110 330 C150 330 180 320 200 300Z M312 300 C362 280 392 300 402 330 C362 330 332 320 312 300Z" fill="#7bb556"/>
+    ${eyes(232, 280, 240, 9, '#e9ffc2')}<circle cx="232" cy="240" r="16" fill="#e9ffc2" opacity=".35"/><circle cx="280" cy="240" r="16" fill="#e9ffc2" opacity=".35"/>`);
+  stage('desert_grass', 5, `${halo('#c3ec8f', 210)}
+    <path d="M220 470 Q226 360 212 300 L300 300 Q288 360 296 470Z" fill="#7a4a2e"/>
+    <g fill="#6aa844"><ellipse cx="256" cy="200" rx="170" ry="96"/><ellipse cx="140" cy="250" rx="90" ry="60"/><ellipse cx="372" cy="250" rx="92" ry="60"/><ellipse cx="256" cy="120" rx="110" ry="64"/></g>
+    <path d="M232 360 q8 -10 16 0 M264 360 q8 -10 16 0" stroke="#3a2418" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M236 400 q20 14 40 0" stroke="#3a2418" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M220 470 Q170 476 140 490 M296 470 Q350 476 380 490" stroke="#7a4a2e" stroke-width="10" fill="none" stroke-linecap="round"/>`);
+
+  // 一只土狗
+  stage('local_dog', 1, `${halo('#ffe2a0')}${dog(256, 440, 2.6, '#e0a548', '#2a1a10')}`);
+  stage('local_dog', 2, `${halo('#f6ecd2')}<path d="M380 90 A60 60 0 1 0 420 190 A48 48 0 1 1 380 90Z" fill="#f6ecd2"/>
+    <g transform="rotate(-18 256 440)">${dog(256, 450, 2.7, '#d99a40', '#fff6d6')}</g>`);
+  stage('local_dog', 3, `${halo('#e8e4ff', 200)}${sparks(613, '#eef0ff')}
+    <g opacity=".45" filter="url(#soft)">${standDog(256, 430, 3.6, '#e8e4ff')}</g>${standDog(256, 430, 3.2, '#c98a3a')}
+    <circle cx="${256 + 64 * 3.2 - 205}" cy="${430 - 76 * 3.2 + 10}" r="7" fill="#eef0ff"/>`);
+  stage('local_dog', 4, `${halo('#ffd27a', 200)}<path d="M150 470 L210 360 Q256 340 302 360 L362 470Z" fill="#8a5a3a"/>
+    ${standDog(256, 362, 2.4, '#a8642a')}
+    <g fill="#5a3a24" opacity=".7"><ellipse cx="96" cy="470" rx="34" ry="14"/><circle cx="74" cy="458" r="10"/><ellipse cx="420" cy="470" rx="34" ry="14"/><circle cx="442" cy="458" r="10"/></g>`);
+  stage('local_dog', 5, `${halo('#ffd27a', 220)}${sparks(615, '#fff1b0')}
+    <g fill="#fff" opacity=".9"><ellipse cx="256" cy="440" rx="190" ry="36"/><ellipse cx="160" cy="420" rx="90" ry="30"/><ellipse cx="350" cy="424" rx="100" ry="30"/></g>
+    <g opacity=".55" filter="url(#glow)">${standDog(256, 420, 3, '#ffb347')}</g>${standDog(256, 420, 2.7, '#e0a548')}
+    <path d="M${256 + 76 * 2.7 - 20} ${420 - 72 * 2.7} a18 18 0 1 0 22 22 a14 14 0 1 1 -22 -22Z" fill="#fff6d6"/>`);
+
+  // 伙伴头像：与通用图标同款圆章（深色底 + 金边），角色居中
+  const comp = (id, cid, body, accent = '#f3cf7a') => job(`destiny/${id}/companion_${cid}`, 256, 256, `
+    <radialGradient id="cb" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#fbf3e1"/><stop offset="1" stop-color="#ecd5a8"/></radialGradient>
+    <circle cx="128" cy="128" r="120" fill="url(#cb)"/>${body}
+    <circle cx="128" cy="128" r="117" fill="none" stroke="${accent}" stroke-width="7"/><circle cx="128" cy="128" r="106" fill="none" stroke="#b98a3c" stroke-width="1.5" opacity=".5"/>`);
+  comp('desert_grass', 'dung_beetle', `<circle cx="170" cy="150" r="42" fill="#8a5a32"/><path d="M146 130 q10 -8 20 0" stroke="#6a4224" stroke-width="3" fill="none"/>
+    <ellipse cx="100" cy="150" rx="40" ry="30" fill="#2e2a3a"/><circle cx="66" cy="134" r="16" fill="#2e2a3a"/>${eyes(60, 72, 130, 3, '#fff')}
+    <path d="M80 176 l-10 18 M100 180 l0 20 M120 176 l12 18 M110 124 L140 120" stroke="#2e2a3a" stroke-width="5" stroke-linecap="round"/>`);
+  comp('desert_grass', 'earthworm', `<rect x="104" y="56" width="48" height="150" rx="24" fill="#e89a9a"/>
+    ${[96, 120, 144, 168].map((y) => `<path d="M106 ${y} h44" stroke="#c97676" stroke-width="3"/>`).join('')}
+    ${eyes(118, 138, 80, 4)}<path d="M112 70 l10 4 M144 70 l-10 4" stroke="#2a1a10" stroke-width="3" stroke-linecap="round"/>`);
+  comp('desert_grass', 'lost_bee', `<ellipse cx="96" cy="118" rx="26" ry="18" fill="#fff" opacity=".85"/><ellipse cx="160" cy="118" rx="26" ry="18" fill="#fff" opacity=".85"/>
+    <ellipse cx="128" cy="150" rx="46" ry="38" fill="#f2c24a"/><path d="M104 132 v38 M128 114 v72 M152 132 v38" stroke="#3a2a1a" stroke-width="10"/>
+    ${eyes(112, 144, 146, 4, '#fff')}<text x="128" y="96" text-anchor="middle" font-size="44" font-weight="900" fill="#b5523b" font-family="sans-serif">?</text>`);
+  comp('desert_grass', 'fox_cub', `<path d="M74 120 L60 40 L110 96Z M182 120 L196 40 L146 96Z" fill="#e8b878"/><path d="M78 108 L70 58 L102 96Z M178 108 L186 58 L154 96Z" fill="#f6d8b0"/>
+    <ellipse cx="128" cy="140" rx="58" ry="50" fill="#f0c890"/><ellipse cx="128" cy="164" rx="28" ry="20" fill="#fff4e0"/>
+    ${eyes(106, 150, 134, 7)}<circle cx="128" cy="156" r="6" fill="#2a1a10"/>`);
+  comp('desert_grass', 'lizard', `<path d="M70 170 Q90 120 140 120 Q190 120 196 92 Q206 120 180 140 Q150 160 110 176 Q90 200 60 196Z" fill="#7bb556"/>
+    <circle cx="176" cy="104" r="8" fill="#fff"/><circle cx="178" cy="104" r="4" fill="#2a1a10"/><path d="M166 98 h20" stroke="#4f8a30" stroke-width="5" stroke-linecap="round"/>
+    <path d="M100 176 l-8 18 M140 160 l6 20" stroke="#5c9a3a" stroke-width="6" stroke-linecap="round"/>`);
+  comp('desert_grass', 'fungus', `<path d="M60 190 Q128 170 196 190 M80 196 Q100 160 128 170 Q160 150 180 196" stroke="#f6f0e0" stroke-width="3" fill="none" opacity=".9"/>
+    ${[[96, 150, 26], [150, 128, 34], [186, 164, 20]].map(([x, y, r]) => `<rect x="${x - 6}" y="${y}" width="12" height="${190 - y}" fill="#f6efe0"/><path d="M${x - r} ${y + 4} Q${x} ${y - r} ${x + r} ${y + 4}Z" fill="#e9dcc4" stroke="#c9b48e" stroke-width="2"/>`).join('')}
+    <circle cx="150" cy="118" r="40" fill="#fffbe0" opacity=".25" filter="url(#soft)"/>`);
+
+  comp('local_dog', 'flea', `<ellipse cx="128" cy="130" rx="42" ry="32" fill="#7a4a2e"/><circle cx="92" cy="112" r="20" fill="#7a4a2e"/>
+    ${eyes(86, 98, 108, 3.5, '#fff')}<path d="M84 120 q8 6 16 0" stroke="#fff" stroke-width="3" fill="none"/>
+    <path d="M110 158 l-12 30 M140 160 l30 10 L150 196 M160 150 l24 -8" stroke="#5a3420" stroke-width="6" stroke-linecap="round" fill="none"/>`);
+  comp('local_dog', 'sparrow', `<ellipse cx="132" cy="140" rx="56" ry="48" fill="#a8703e"/><ellipse cx="140" cy="160" rx="36" ry="26" fill="#f0dcc0"/>
+    <path d="M150 116 Q190 120 200 150 Q170 150 150 140Z" fill="#7a4a2e"/><circle cx="104" cy="122" r="6" fill="#2a1a10"/>
+    <path d="M76 126 L52 116 L76 136Z" fill="#e2b04a"/><path d="M76 134 L54 146" stroke="#e2b04a" stroke-width="4"/>`);
+  comp('local_dog', 'old_cat', `<path d="M70 110 L76 56 L112 92Z M186 110 L180 56 L144 92Z" fill="#e8c090"/>
+    <ellipse cx="128" cy="140" rx="64" ry="54" fill="#f6e8d0"/><path d="M80 112 Q100 96 120 104 L116 140 Q90 140 80 112Z" fill="#c98a3a"/><path d="M150 100 Q178 104 182 130 L156 126Z" fill="#3a2a22"/>
+    <path d="M100 138 q10 8 20 0 M136 138 q10 8 20 0" stroke="#2a1a10" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M128 156 l-6 6 h12Z" fill="#c97676"/><path d="M70 150 l-26 -4 M70 160 l-26 4 M186 150 l26 -4 M186 160 l26 4" stroke="#8a7a6a" stroke-width="2"/>`);
+  comp('local_dog', 'beggar', `<circle cx="128" cy="120" r="52" fill="#f2cfa4"/><path d="M76 112 Q80 64 128 64 Q176 64 180 112 Q160 88 128 92 Q96 88 76 112Z" fill="#3a2a22"/>
+    ${eyes(108, 148, 120, 5)}<path d="M108 144 q20 16 40 0" stroke="#8a3a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M60 220 Q70 176 128 172 Q186 176 196 220Z" fill="#8a7a5a"/><rect x="140" y="186" width="22" height="18" fill="#a8946a"/>
+    <path d="M160 180 a26 26 0 0 1 52 0Z" fill="#e8b878" stroke="#b5853e" stroke-width="2"/>`);
+  comp('local_dog', 'weasel', `<path d="M96 210 Q90 150 112 110 Q128 84 150 100 Q170 116 160 150 Q150 190 156 210Z" fill="#c98a4a"/>
+    <ellipse cx="136" cy="96" rx="30" ry="24" fill="#c98a4a"/><path d="M116 76 l-4 -14 l12 8Z M154 76 l4 -14 l-12 8Z" fill="#c98a4a"/>
+    <path d="M122 92 l10 4 M150 92 l-10 4" stroke="#2a1a10" stroke-width="4" stroke-linecap="round"/><circle cx="136" cy="108" r="4" fill="#2a1a10"/>
+    <ellipse cx="136" cy="146" rx="14" ry="12" fill="#f0dcc0"/><path d="M122 140 L136 152 L150 140" stroke="#a8642a" stroke-width="4" fill="none"/>`);
+  comp('local_dog', 'locust_tree', `<g fill="#8aa85c"><ellipse cx="128" cy="86" rx="80" ry="44"/><ellipse cx="70" cy="110" rx="40" ry="28"/><ellipse cx="186" cy="110" rx="40" ry="28"/></g>
+    <path d="M90 230 Q100 170 92 120 L164 120 Q156 170 166 230Z" fill="#7a4a2e"/>
+    <path d="M110 150 q8 -6 16 0 M134 150 q8 -6 16 0" stroke="#3a2418" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M112 176 q16 12 32 0" stroke="#3a2418" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M108 190 Q128 214 148 190" stroke="#e9dcc4" stroke-width="4" fill="none"/>`);
 }
 
 // 锁定图标（选命格界面未解锁时叠加）
