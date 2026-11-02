@@ -2,7 +2,7 @@
  * 游戏控制器：持有引擎与存档，负责界面切换、存档、广告点位。
  * 界面函数（screens/*）只读取 Game 的状态并回调这里的方法，不直接改存档。
  */
-import { Node, view } from 'cc';
+import { Label, Node, view } from 'cc';
 import { Destiny, DestinyIndex, destinyStates, Engine, pickDestiny, randomSeed, StepResult } from '../core';
 import { Audio, SfxName } from './audio';
 import { CONFIG, setTexDestiny, TEX } from './config';
@@ -15,6 +15,7 @@ import { showDestinySelect } from './screens/destiny';
 import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
+import { showSplash } from './screens/splash';
 import { showDying, showStep } from './screens/popups';
 
 /** 本地日期 YYYY-MM-DD（每日天命按玩家本地日期切换） */
@@ -51,15 +52,20 @@ export class Game {
 
         this.save = loadSave();
         const run = this.save.run;
-        this.loading('正在轮回……');
+        // 启动页（游戏名 + 适龄提示 + 健康游戏忠告），加载期间显示，至少停留 splashMs
+        const t0 = Date.now();
+        const status = showSplash(this, '正在轮回……');
         try {
             this.index = await loadDestinyIndex();
             await this.useDestiny(pickDestiny(this.index, this.save.profile, run?.destiny ?? this.save.profile.current ?? CONFIG.defaultDestiny));
         } catch (e) {
             console.error('[game] 剧本加载失败', e);
-            this.loading('剧本加载失败，请重启游戏');
+            const l = status.getComponent(Label);
+            if (l) l.string = '剧本加载失败，请重启游戏';
             return;
         }
+        const wait = CONFIG.splashMs - (Date.now() - t0);
+        if (wait > 0) await new Promise(r => setTimeout(r, wait));
         this.audio = new Audio(this.save.muted);
         this.audio.attach(this.host);
         this.audio.preload(['click', 'choose', 'success', 'fail', 'item']);

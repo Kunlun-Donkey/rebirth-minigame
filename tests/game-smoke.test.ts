@@ -10,6 +10,8 @@ import { writeSave } from '../assets/scripts/game/save';
 import { Rng } from '../assets/scripts/core';
 
 const flush = () => new Promise(r => setTimeout(r, 0));
+// 测试里不等启动页停留时间
+CONFIG.splashMs = 0;
 
 function walk(n: Node, fn: (n: Node) => void): void {
     fn(n);
@@ -291,5 +293,26 @@ describe('音频', () => {
         for (let i = 0; i < 3; i++) await flush();
         expect(audioLog.length).toBe(before);
         expect(g.save.muted).toBe(true);
+    });
+});
+
+describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）', () => {
+    it('同屏显示三项，忠告全文与官方一致；点适龄图标弹出说明', async () => {
+        const { showSplash, GAME_NAME } = await import('../assets/scripts/game/screens/splash');
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        g.reset();
+        showSplash(g, '正在轮回……');
+        const ls = labels(g.screen);
+        expect(ls).toContain(GAME_NAME);
+        expect(ls).toContain(`${CONFIG.ageRating}+`);
+        expect(ls).toContain('健康游戏忠告');
+        expect(ls.join('')).toContain('抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。');
+        const badge = tappables(g.screen).find(n => n.name === `age_${CONFIG.ageRating}`)!;
+        expect(heightOf(badge)).toBeGreaterThanOrEqual(g.W / 10);
+        badge.emit(Node.EventType.TOUCH_START); badge.emit(Node.EventType.TOUCH_END);
+        await flush();
+        expect(labels(g.overlay).some(l => l.includes('适龄提示'))).toBe(true);
     });
 });

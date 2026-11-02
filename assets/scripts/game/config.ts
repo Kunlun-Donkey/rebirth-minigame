@@ -13,6 +13,10 @@ export const CONFIG = {
     designHeight: 1334,
     /** 顶部安全区（微信胶囊按钮） */
     safeTop: 96,
+    /** 适龄提示（须与公众平台「基础设置 → 适龄提示」一致） */
+    ageRating: 16,
+    /** 启动页（健康游戏忠告 + 适龄提示）最短显示毫秒数 */
+    splashMs: 2000,
 };
 
 /**
@@ -59,6 +63,8 @@ export const TEX = {
     adIcon: [`${C}/icon/ad_video`],
     lock: [`${C}/icon/lock`],
     logo: [`${C}/ui/logo_title`],
+    /** 适龄提示标识（主包；放官方 CADPA 标识图，缺图时代码画兜底） */
+    age: (n: number) => [`${C}/ui/age_${n}`],
 };
 
 /** 九宫格参数 [上, 右, 下, 左]（贴图像素，见 tools/art/gen-art.mjs） */
