@@ -12,7 +12,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // 首屏用到的图进主包 resources，其余进分包 subres（见 assets/scripts/game/res.ts）
 const MAIN_TEX = join(ROOT, 'assets/resources/textures');
 const SUB_TEX = join(ROOT, 'assets/subres/textures');
-const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'common/ui/logo_title', 'common/ui/panel',
+const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'common/ui/logo_title', 'common/ui/panel',
   'common/ui/btn_normal', 'common/ui/btn_primary', 'common/ui/btn_ad', 'common/ui/btn_locked']);
 const TMP = join(tmpdir(), 'rebirth-art');
 const filter = process.argv[2] ?? '';
@@ -566,5 +566,96 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
   ${sprout(512, 760, 3.2)}
   <text x="512" y="300" text-anchor="middle" ${TITLE_FONT} font-size="230" fill="#5a3410" stroke="#fff3d0" stroke-width="14" paint-order="stroke">重生</text>
   <rect width="1024" height="1024" fill="#fff" filter="url(#grain)" opacity=".35"/>`, { jpg: true });
+
+// ---------- 9. 多命格：每个命格 main_bg / settle_bg / settle_bg_ending / cover ----------
+// 需求单见 docs/art/requests-<命格>.md；规则同 ai-image-prompts.md §五：
+// 主界面上方 4/5 留空；结算夜景底部有发光轮回象征；结局黎明有终极形象剪影。cover 512×512，不含文字。
+{
+  const W = 1080, H = 1920;
+  const grad = (id, stops) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`;
+  const glowDot = (x, y, R, c) => `<circle cx="${x}" cy="${y}" r="${R}" fill="${c}" opacity=".4" filter="url(#soft)"/>`;
+  const cloud = (x, y, s, c, o = 1) => `<g transform="translate(${x} ${y}) scale(${s})" fill="${c}" opacity="${o}"><ellipse cx="0" cy="0" rx="90" ry="34"/><ellipse cx="-60" cy="10" rx="60" ry="26"/><ellipse cx="66" cy="8" rx="70" ry="28"/><ellipse cx="10" cy="-24" rx="56" ry="34"/></g>`;
+  const grain = `<rect width="100%" height="100%" fill="#fff" filter="url(#grain)" opacity=".45"/>`;
+  const hills = (y, amp, color, seed) => { const r = rng(seed); let d = `M0 ${y}`; for (let x = 0; x <= W; x += 120) d += ` Q${x + 60} ${f(y - amp * (0.4 + r()))} ${x + 120} ${f(y - amp * 0.3 * r())}`; return `<path d="${d} V${H} H0Z" fill="${color}"/>`; };
+  // 坐着的土狗（立耳、卷尾；原点脚底中心，约 100 高）
+  const dog = (x, y, s, c, eye = null) => `<g transform="translate(${x} ${y}) scale(${s})">
+    <path d="M-22 0 L-20 -26 Q-24 -42 -16 -52 L-20 -68 Q-20 -78 -12 -80 L-10 -96 L-2 -82 Q8 -82 10 -72 L20 -66 Q23 -60 14 -57 L4 -57 Q2 -44 8 -36 Q24 -32 28 -16 Q30 -6 26 0Z" fill="${c}"/>
+    <path d="M22 -10 Q46 -14 40 -34 Q32 -44 26 -32" fill="none" stroke="${c}" stroke-width="8" stroke-linecap="round"/>
+    ${eye ? `<circle cx="2" cy="-72" r="2.6" fill="${eye}"/>` : ''}</g>`;
+  // 站立的神犬剪影（面朝右；原点脚底中心）
+  const standDog = (x, y, s, c, flip = false) => `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})" fill="${c}">
+    <ellipse cx="0" cy="-42" rx="44" ry="17"/>
+    ${[-34, -22, 22, 34].map((lx) => `<rect x="${lx - 4}" y="-44" width="8" height="44" rx="3"/>`).join('')}
+    <path d="M28 -50 L44 -76 Q50 -86 62 -82 L78 -76 Q82 -70 74 -67 L60 -65 Q52 -56 44 -38Z"/>
+    <path d="M48 -80 L50 -98 L59 -82Z"/>
+    <path d="M-42 -48 Q-64 -66 -52 -80 Q-40 -86 -44 -70" fill="none" stroke="${c}" stroke-width="8" stroke-linecap="round"/></g>`;
+  // 老槐树（原点树根）
+  const tree = (x, y, s, trunk, leaf, o = 1) => `<g transform="translate(${x} ${y}) scale(${s})" opacity="${o}">
+    <path d="M-18 0 Q-10 -60 -22 -120 L-6 -122 Q0 -80 8 -126 L22 -120 Q10 -70 18 0Z" fill="${trunk}"/>
+    <g fill="${leaf}"><ellipse cx="0" cy="-160" rx="110" ry="60"/><ellipse cx="-80" cy="-130" rx="60" ry="40"/><ellipse cx="80" cy="-128" rx="64" ry="40"/><ellipse cx="20" cy="-200" rx="70" ry="44"/></g></g>`;
+  // 柴垛（原点底部中心）
+  const hay = (x, y, s, c, line) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-90 0 Q-80 -70 0 -86 Q80 -70 90 0Z" fill="${c}"/>
+    <g stroke="${line}" stroke-width="3" opacity=".6">${[-60, -30, 0, 30, 60].map((dx) => `<line x1="${dx}" y1="-4" x2="${dx * 0.7}" y2="-70"/>`).join('')}</g></g>`;
+  const wall = (x, y, w, h, c, line) => `<rect x="${x}" y="${y - h}" width="${w}" height="${h}" fill="${c}"/><path d="M${x} ${y - h} h${w}" stroke="${line}" stroke-width="6"/>
+    ${Array.from({ length: Math.floor(h / 26) }, (_, i) => `<line x1="${x}" y1="${y - h + 26 * (i + 1)}" x2="${x + w}" y2="${y - h + 26 * (i + 1)}" stroke="${line}" stroke-width="2" opacity=".4"/>`).join('')}`;
+  const house = (x, y, w, c, roof) => `<rect x="${x}" y="${y - w * 0.5}" width="${w}" height="${w * 0.5}" fill="${c}"/><path d="M${x - 12} ${y - w * 0.5} L${x + w / 2} ${y - w * 0.85} L${x + w + 12} ${y - w * 0.5}Z" fill="${roof}"/>`;
+
+  // —— 一只土狗 local_dog：北方小山村（麦秸黄 + 土红）——
+  job('destiny/local_dog/main_bg', W, H, `${grad('s', [[0, '#fbf1dc'], [0.6, '#f7e2bc'], [1, '#efc993']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="300" cy="380" r="240" fill="#fff6dc" opacity=".55" filter="url(#soft)"/>
+    ${hills(1560, 120, '#ead2a8', 11)}${hills(1640, 90, '#e2c08e', 12)}
+    ${tree(860, 1760, 1.15, '#7a4a2e', '#9aa85c')}
+    ${wall(-10, 1780, 560, 120, '#c98a5a', '#a86a42')}
+    <path d="M0 1770 Q540 1740 1080 1780 V1920 H0Z" fill="#d9a86a"/>
+    ${hay(620, 1790, 1.1, '#e8c27a', '#b5853e')}
+    ${dog(470, 1796, 0.75, '#c98a3a')}
+    ${grain}`, { jpg: true });
+  job('destiny/local_dog/settle_bg', W, H, `${grad('s', [[0, '#121a35'], [0.6, '#24304f'], [1, '#3e3646']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${dust(rng(502), 110, 0, 0, W, 1100, '#fff8e0', 2.2)}
+    <circle cx="780" cy="420" r="80" fill="#f6ecd2" opacity=".85"/><circle cx="780" cy="420" r="150" fill="#f6ecd2" opacity=".12" filter="url(#soft)"/>
+    ${hills(1560, 110, '#1c2440', 21)}${hills(1650, 80, '#232a44', 22)}
+    ${tree(860, 1780, 1.15, '#1a1a28', '#202638')}
+    ${wall(-10, 1790, 520, 110, '#2e2a3a', '#3a3448')}
+    <path d="M0 1780 Q540 1750 1080 1790 V1920 H0Z" fill="#2a2636"/>
+    ${hay(560, 1800, 1.1, '#3a3446', '#4a4258')}
+    ${glowDot(540, 1846, 110, '#ffd27a')}
+    <ellipse cx="540" cy="1846" rx="46" ry="14" fill="none" stroke="#b5523b" stroke-width="8"/>
+    <circle cx="540" cy="1864" r="12" fill="#ffd27a"/><circle cx="540" cy="1864" r="5" fill="#fff6d6"/>
+    ${dust(rng(503), 16, 420, 1720, 240, 120, '#ffe9a8', 3)}${grain}`, { jpg: true });
+  job('destiny/local_dog/settle_bg_ending', W, H, `${grad('s', [[0, '#fff4da'], [0.5, '#fde0ad'], [1, '#eeb07a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="380" cy="1180" r="150" fill="#fff6e4" opacity=".9"/><circle cx="380" cy="1180" r="300" fill="#fff6dc" opacity=".4" filter="url(#soft)"/>
+    ${cloud(200, 1460, 1.6, '#fff', 0.85)}${cloud(880, 1400, 1.4, '#fff', 0.8)}
+    <path d="M520 1540 L640 1330 Q700 1300 760 1340 L860 1540Z" fill="#b5523b"/>
+    <path d="M0 1560 Q300 1470 540 1530 T1080 1510 V1920 H0Z" fill="#fff" opacity=".92"/>
+    ${cloud(300, 1620, 2.2, '#fff', 0.95)}
+    ${[180, 260, 330].map((hx, i) => house(hx, 1800 - i * 6, 70, '#d9a86a', '#b5523b')).join('')}
+    ${[200, 290].map((sx) => `<path d="M${sx} 1740 q-14 -30 4 -60 q16 -30 -2 -60" fill="none" stroke="#c9b8a0" stroke-width="5" opacity=".6"/>`).join('')}
+    ${standDog(700, 1338, 1.9, '#7a3e22', true)}
+    ${dust(rng(504), 30, 400, 1000, 480, 300, '#fff8e0', 3)}${grain}`, { jpg: true });
+
+  // —— 选命格封面 512×512 ——
+  const coverBox = (sky, inner) => `${grad('cs', sky)}<rect width="512" height="512" fill="url(#cs)"/>${inner}
+    <rect width="512" height="512" fill="#fff" filter="url(#grain)" opacity=".4"/>`;
+  job('destiny/desert_grass/cover', 512, 512, coverBox([[0, '#fbe9c4'], [1, '#f1cf96']], `
+    <circle cx="380" cy="130" r="70" fill="#fff3c4" opacity=".8" filter="url(#soft)"/><circle cx="380" cy="130" r="36" fill="#fff6dc"/>
+    <path d="M0 360 Q140 320 280 350 T512 336 V512 H0Z" fill="#e2b877"/><path d="M0 420 Q170 390 330 412 T512 404 V512 H0Z" fill="#c99556"/>
+    ${sprout(256, 420, 1.55)}
+    <path d="M318 312 C318 312 306 328 306 336 A12 12 0 0 0 330 336 C330 328 318 312 318 312Z" fill="#bfe6f5" stroke="#fff" stroke-width="2"/>`), { jpg: true });
+  job('destiny/local_dog/cover', 512, 512, coverBox([[0, '#2a2f52'], [0.7, '#5a4a5c'], [1, '#8a5a48']], `
+    <circle cx="400" cy="110" r="44" fill="#f6ecd2" opacity=".9"/><circle cx="400" cy="110" r="90" fill="#f6ecd2" opacity=".15" filter="url(#soft)"/>
+    ${dust(rng(505), 30, 0, 0, 512, 240, '#fff8e0', 1.8)}
+    ${tree(110, 400, 0.85, '#3a2a28', '#4a5040')}
+    ${hay(400, 420, 1.1, '#a8783e', '#6a4a2a')}
+    <path d="M0 400 Q256 380 512 404 V512 H0Z" fill="#7a4a34"/>
+    ${dog(236, 444, 1.8, '#f0b45a', '#3a2418')}`), { jpg: true });
+}
+
+// 锁定图标（选命格界面未解锁时叠加）
+job('common/icon/lock', 128, 128, `
+  <circle cx="64" cy="64" r="58" fill="#3a2a1e" opacity=".85"/>
+  <path d="M44 58 V46 A20 20 0 0 1 84 46 V58" fill="none" stroke="#f3cf7a" stroke-width="9" stroke-linecap="round"/>
+  <rect x="36" y="56" width="56" height="42" rx="10" fill="#f3cf7a"/><circle cx="64" cy="74" r="6" fill="#3a2a1e"/><rect x="61" y="76" width="6" height="12" rx="3" fill="#3a2a1e"/>`);
 
 run();

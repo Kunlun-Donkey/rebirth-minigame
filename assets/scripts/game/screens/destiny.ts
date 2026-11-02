@@ -51,6 +51,7 @@ export function showDestinySelect(g: Game): void {
         if (!st.unlocked) {
             const mask = box(card, 0, 0, cardW, CARD_H, 'lock');
             rect(mask, { fill: COLOR.mask, fillAlpha: 40, radius: 20 });
+            image(mask, TEX.lock, 22 + (ART - 88) / 2, (CARD_H - 88) / 2, 88, 88);
         }
         onTap(card, () => {
             if (!st.unlocked) { Platform.toast(`解锁条件：${st.lockText ?? ''}`); return; }

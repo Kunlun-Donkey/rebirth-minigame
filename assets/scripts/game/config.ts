@@ -57,6 +57,7 @@ export const TEX = {
     stat: (stat?: string) => (stat ? [`${C}/icon/stat_${stat}`] : []),
     dir: (dir: string) => [`${C}/icon/dir_${dir}`],
     adIcon: [`${C}/icon/ad_video`],
+    lock: [`${C}/icon/lock`],
     logo: [`${C}/ui/logo_title`],
 };
 
