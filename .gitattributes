@@ -1,0 +1,2 @@
+# Windows 批处理必须是 CRLF
+*.bat text eol=crlf
