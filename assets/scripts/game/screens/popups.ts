@@ -69,7 +69,9 @@ export function showDying(g: Game): void {
     pop(panel);
     text(panel, '你 要 死 了', 0, 50, panelW, { size: 44, color: COLOR.bad, align: 'center', bold: true });
     text(panel, `死因：${def?.name ?? '未知'}`, 0, 130, panelW, { size: 30, color: COLOR.ink2, align: 'center' });
-    text(panel, '天道打了个盹，也许你还有一次机会。', 40, 190, panelW - 80, { size: 26, color: COLOR.ink2, align: 'center', wrap: true });
+    const boost = [...e.data.upgrades.values()].find(u => u.kind === 'reviveBoost' && e.upgradeLevel(u.id) > 0);
+    const hint = boost && e.canReviveByAd() ? `命盘·${boost.name}：${boost.desc}` : '天道打了个盹，也许你还有一次机会。';
+    text(panel, hint, 40, 190, panelW - 80, { size: 26, color: boost ? COLOR.legacy : COLOR.ink2, align: 'center', wrap: true });
     const bw = panelW - 80;
     if (e.canReviveByAd()) {
         button(panel, 40, 270, bw, { label: '看视频 · 逆天改命', style: 'ad', onClick: () => { close(); g.reviveByAd(); } });

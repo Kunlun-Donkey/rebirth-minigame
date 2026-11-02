@@ -135,26 +135,28 @@ function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     });
 }
 
-/** 有可封存的遗物时先选一件，再回到轮回殿 */
+/** 有可封存的遗物时逐格挑选（命盘·藏宝可多封存），再回到轮回殿 */
 function sealThenRebirth(g: Game, s: SettleResult): void {
-    if (!s.relicCandidates.length) {
+    const chosen: string[] = [];
+    const finish = () => {
+        g.engine.sealRelics(chosen);
+        g.persist();
         g.goDraft();
-        return;
-    }
-    let picked = false;
-    showList(g, `封存遗物（${s.relicSlots} 格）`, s.relicCandidates.map(id => {
-        const def = g.engine.data.items.get(id)!;
-        return {
-            title: def.name, desc: def.desc, tag: { text: '封存', color: COLOR.legacy },
-            onPick: () => { picked = true; g.engine.sealRelics([id]); g.persist(); g.goDraft(); },
-        };
-    }), {
-        closeText: '什么都不带',
-        onClose: () => {
-            if (picked) return;
-            g.engine.sealRelics([]);
-            g.persist();
-            g.goDraft();
-        },
-    });
+    };
+    const ask = () => {
+        const left = s.relicCandidates.filter(id => !chosen.includes(id));
+        if (!left.length || chosen.length >= s.relicSlots) return finish();
+        let picked = false;
+        showList(g, `封存遗物（${chosen.length + 1}/${s.relicSlots}）`, left.map(id => {
+            const def = g.engine.data.items.get(id)!;
+            return {
+                title: def.name, desc: def.desc, tag: { text: '封存', color: COLOR.legacy },
+                onPick: () => { picked = true; chosen.push(id); ask(); },
+            };
+        }), {
+            closeText: chosen.length ? '就带这些' : '什么都不带',
+            onClose: () => { if (!picked) finish(); },
+        });
+    };
+    ask();
 }

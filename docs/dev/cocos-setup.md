@@ -79,16 +79,17 @@ git clone https://github.com/Kunlun-Donkey/rebirth-minigame.git
 | `saveKey` | 存档 key，存档结构不兼容时升级版本号 |
 | `safeTop` | 顶部安全区（微信右上角胶囊），默认 96 |
 
-埋点（`Platform.report`）：`start_life`、`life_end`、`ad_reward`、`ad_cancel`，需在 We 分析后台注册（见 `minigame-event-report` skill）。
+埋点（`Platform.report`）：`start_life`、`life_end`、`ad_reward`、`ad_cancel`（属性 scene：revive / reroll / peek / double_points / swap_fate）、`upgrade_buy`（属性 id、level），需在 We 分析后台注册（见 `minigame-event-report` skill）。
 
 ## 七、广告点位
 
 | 位置 | 文案 | 频控 |
 |---|---|---|
 | 濒死弹窗 | 看视频 · 逆天改命 | 每局 1 次 |
-| 轮回殿抽卡 | 天机重演 · 看视频刷新这一组 | 每次开局 1 次 |
+| 轮回殿抽卡 | 天机重演 · 看视频刷新这一组（命盘·天机的免费次数用完后出现） | 每次开局 1 次 |
 | 事件卡右下角 | 窥探天命 · 看视频（n/3） | 每局 3 次 |
 | 结算页 | 看视频 · 轮回点翻倍 | 每局 1 次 |
+| 轮回殿「今日天命」弹窗 | 看视频 · 换一个天命 | 每天 1 次 |
 
 ## 八、美术素材接入
 

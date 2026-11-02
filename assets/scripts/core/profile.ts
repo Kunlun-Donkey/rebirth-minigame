@@ -15,10 +15,13 @@ export function destinyProfile(p: Profile, destinyId: string): DestinyProfile {
             codex: { deaths: [], endings: [], items: [], events: [] },
             bestStage: 0,
             skills: [],
+            upgrades: {},
         };
         p.destinies[destinyId] = dp;
     }
-    if (!dp.skills) dp.skills = []; // 兼容旧存档
+    // 兼容旧存档
+    if (!dp.skills) dp.skills = [];
+    if (!dp.upgrades) dp.upgrades = {};
     return dp;
 }
 

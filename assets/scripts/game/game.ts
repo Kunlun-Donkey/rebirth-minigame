@@ -16,6 +16,12 @@ import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
 import { showDying, showStep } from './screens/popups';
 
+/** 本地日期 YYYY-MM-DD（每日天命按玩家本地日期切换） */
+export function todayKey(d = new Date()): string {
+    const p = (n: number) => (n < 10 ? '0' : '') + n;
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
 export class Game {
     data!: Destiny;
     engine!: Engine;
@@ -82,6 +88,8 @@ export class Game {
         this.save.run = null;
         this.save.peekUsed = 0;
         this.save.rerollUsed = false;
+        this.save.freeRerollUsed = 0;
+        this.engine.todayFate(todayKey());
         this.persist();
         this.reset();
         this.audio.playBgm('bgm_main');
@@ -194,6 +202,28 @@ export class Game {
         this.persist();
         this.reset();
         showRun(this);
+    }
+
+    /** 命盘升级（花轮回点） */
+    buyUpgrade(id: string): boolean {
+        try {
+            this.engine.buyUpgrade(id);
+        } catch (e) {
+            console.warn('[game] 命盘升级失败', e);
+            return false;
+        }
+        this.persist();
+        Platform.report('upgrade_buy', { id, level: this.engine.upgradeLevel(id) });
+        return true;
+    }
+
+    /** 看视频换一个今日天命（每天一次） */
+    async swapFateByAd(): Promise<boolean> {
+        if (!this.engine.canSwapFate()) return false;
+        if (!(await this.watchAd('swap_fate'))) return false;
+        this.engine.swapFate(randomSeed());
+        this.persist();
+        return true;
     }
 
     async doublePointsByAd(): Promise<boolean> {

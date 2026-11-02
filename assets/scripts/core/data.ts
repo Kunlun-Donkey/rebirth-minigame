@@ -130,5 +130,10 @@ export function buildDestiny(raw: RawDestiny): Destiny {
         skills: new Map((raw.skills ?? []).map(s => [s.id, { ...s, useEffect: s.effect ? effect(s.effect, `技能 ${s.id}`) : undefined }])),
         legacies: new Map(meta.legacies.map(l => [l.id, { ...l, levelEffects: (l.levels ?? []).map((e, i) => effect(e, `传承 ${l.id}[${i}]`)) }])),
         endings: new Map(meta.endings.map(e => [e.id, e])),
+        upgrades: new Map((meta.upgrades ?? []).map(u => {
+            if (!u.costs?.length) fail(`命盘 ${u.id}: costs 不能为空`);
+            return [u.id, { ...u, kind: u.kind ?? 'start', startEffect: u.start ? effect(u.start, `命盘 ${u.id}`) : undefined }];
+        })),
+        fates: new Map((meta.fates ?? []).map(f => [f.id, { ...f, startEffect: f.start ? effect(f.start, `天命 ${f.id}`) : undefined }])),
     };
 }

@@ -1,12 +1,16 @@
-/** 轮回殿：天赋 / 道具 / 伙伴 各 3 选 1 →（技能超过上限时）选择携带技能 → 重生 */
+/**
+ * 轮回殿：天赋 / 道具 / 伙伴 各 N 选 1（默认 3，命盘·慧眼 4）→（技能超过上限时）选择携带技能 → 重生
+ * 顶部：命盘（花轮回点永久升级）、今日天命（可看视频换一次）
+ */
 import { Label, Node } from 'cc';
 import { DraftPick, randomSeed, Rarity } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
+import { Platform } from '../platform';
 import {
     box, button, chip, clear, COLOR, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text,
 } from '../ui/kit';
-import { showInfo } from './popups';
+import { ListEntry, showInfo, showList } from './popups';
 
 type PoolKey = 'talents' | 'items' | 'companions';
 const STEPS: { key: PoolKey; type: 'talent' | 'item' | 'companion'; title: string }[] = [
@@ -29,7 +33,7 @@ export function showDraft(g: Game): void {
         rect(root, { fill: COLOR.bg });
         image(root, TEX.mainBg, 0, 0, g.W, g.H, { cover: true });
         fadeIn(root, 0.12);
-        header(g, root);
+        header(g, root, render);
 
         if (step < STEPS.length) renderPool(root);
         else if (needLoadout && step === STEPS.length) renderLoadout(root);
@@ -40,7 +44,9 @@ export function showDraft(g: Game): void {
         const s = STEPS[step];
         text(root, `${s.title}（${step + 1}/3）`, 0, 330, g.W, { size: 34, color: COLOR.ochreD, align: 'center', bold: true });
         const ids = draft[s.key];
-        const cw = 214, ch = 360, gap = 20;
+        const gap = ids.length > 3 ? 14 : 20;
+        const cw = Math.min(214, Math.floor((g.W - 40 - gap * (ids.length - 1)) / ids.length));
+        const ch = ids.length > 3 ? 390 : 360;
         const x0 = (g.W - cw * ids.length - gap * (ids.length - 1)) / 2;
         ids.forEach((id, i) => {
             const n = card(g, root, s.type, id, x0 + i * (cw + gap), 400, cw, ch);
@@ -51,8 +57,19 @@ export function showDraft(g: Game): void {
                 render();
             }, false);
         });
-        summary(root, 800);
-        if (!g.save.rerollUsed) {
+        summary(root, 400 + ch + 40);
+        const freeLeft = e.freeRerolls() - g.save.freeRerollUsed;
+        if (freeLeft > 0) {
+            button(root, 60, g.H - 240, g.W - 120, {
+                label: `天机重演 · 免费刷新这一组（剩 ${freeLeft} 次）`, size: 26,
+                onClick: () => {
+                    g.save.freeRerollUsed += 1;
+                    g.persist();
+                    draft[s.key] = e.rollDraft(randomSeed())[s.key];
+                    render();
+                },
+            });
+        } else if (!g.save.rerollUsed) {
             button(root, 60, g.H - 240, g.W - 120, {
                 label: '天机重演 · 看视频刷新这一组', style: 'ad', size: 26,
                 onClick: async () => {
@@ -123,11 +140,22 @@ export function showDraft(g: Game): void {
     render();
 }
 
-function header(g: Game, root: Node): void {
+function header(g: Game, root: Node, rerender: () => void): void {
     const e = g.engine;
     const dp = e.dp;
     text(root, '轮  回  殿', 0, CONFIG.safeTop + 10, g.W, { size: 52, color: COLOR.ochreD, align: 'center', bold: true });
     soundToggle(g, root, 30, CONFIG.safeTop + 22);
+    if (e.data.upgrades.size) {
+        const label = e.upgradeViews().some(v => v.affordable) ? '命盘 · 可升级' : '命盘';
+        const n = chip(root, label, g.W - 30 - (estimateWidth(label, 22) + 20), CONFIG.safeTop + 22, COLOR.legacy, true, 22);
+        onTap(n, () => showUpgrades(g, rerender));
+    }
+    const fate = e.data.fates.get(dp.daily?.fate ?? '');
+    if (fate) {
+        const first = dp.daily?.first ? ' · 今日首世轮回点 +50%' : '';
+        const n = text(root, `今日天命·${fate.name}${first}  ›`, 0, CONFIG.safeTop + 184, g.W, { size: 24, color: COLOR.ochreD, align: 'center', bold: true });
+        onTap(n, () => showFate(g, rerender), false);
+    }
     text(root, `第 ${dp.lives + 1} 世 · ${e.data.meta.name} · 轮回点 ${g.save.profile.points}`, 0, CONFIG.safeTop + 90, g.W, { size: 26, color: COLOR.ink2, align: 'center' });
     const legacies = Object.entries(dp.legacy).map(([id, lv]) => `${e.data.legacies.get(id)?.name ?? id} Lv${lv}`);
     const line2 = [
@@ -183,4 +211,52 @@ export function soundToggle(g: Game, parent: Node, x: number, y: number): Node {
         if (label) label.string = muted ? '♪ 声音：关' : '♪ 声音：开';
     });
     return n;
+}
+
+/** 命盘：花轮回点永久升级（按下后刷新列表，方便连续购买） */
+function showUpgrades(g: Game, rerender: () => void): void {
+    const e = g.engine;
+    showList(g, `命盘 · 轮回点 ${g.save.profile.points}`, e.upgradeViews().map(v => ({
+        title: `${v.name}  Lv${v.level}/${v.max}`,
+        desc: v.desc,
+        tag: v.cost === undefined
+            ? { text: '已满级', color: COLOR.ink2 }
+            : { text: `${v.cost} 点`, color: v.affordable ? COLOR.legacy : COLOR.ink2 },
+        disabled: !v.affordable,
+        onPick: () => {
+            if (g.buyUpgrade(v.id)) {
+                g.audio.play('success');
+                Platform.toast(`${v.name} 升到 Lv${v.level + 1}`);
+            }
+            rerender();
+            showUpgrades(g, rerender);
+        },
+    })), { closeText: '返  回' });
+}
+
+/** 今日天命：说明 + 看视频换一个（每天一次） */
+function showFate(g: Game, rerender: () => void): void {
+    const e = g.engine;
+    const daily = e.dp.daily;
+    const fate = e.data.fates.get(daily?.fate ?? '');
+    if (!daily || !fate) return;
+    const entries: ListEntry[] = [{
+        title: `今日天命 · ${fate.name}`,
+        desc: `${fate.desc}${daily.first ? '\n今天第一世结算时轮回点 +50%。' : ''}`,
+        tag: { text: '今日生效', color: COLOR.legacy },
+    }];
+    if (e.canSwapFate()) {
+        entries.push({
+            title: '看视频 · 换一个天命',
+            desc: '每天一次，换成另一个随机天命。',
+            tag: { text: '视频', color: COLOR.adD },
+            onPick: async () => {
+                if (await g.swapFateByAd()) {
+                    Platform.toast(`天命已改为「${e.data.fates.get(e.dp.daily!.fate)?.name}」`);
+                    rerender();
+                }
+            },
+        });
+    }
+    showList(g, '天  命', entries, { closeText: '知道了' });
 }

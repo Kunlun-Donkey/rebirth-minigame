@@ -3,14 +3,18 @@
  *
  *   npm run play                 交互试玩（存档：.play-profile.json）
  *   npm run play -- --new        清空存档重新开始
- *   npm run sim                  随机 AI 连续轮回 2000 世，输出数值统计
+ *   npm run sim                  随机 AI 连续轮回 2000 世，输出数值统计（每世结算后自动买命盘）
  *   ./node_modules/.bin/tsx tools/play.ts --sim 500 --seed 42
+ *   ./node_modules/.bin/tsx tools/play.ts --sim 500 --ads   模拟每局都看广告（复活 + 轮回点翻倍）
  */
 import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
 import { buildDestiny, createProfile, Destiny, Engine, loadProfile, Profile, randomSeed, Rng, StepResult } from '../assets/scripts/core';
+
+/** 本地日期 YYYY-MM-DD（每日天命） */
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 import { loadRawDestiny } from './load';
 
 const args = process.argv.slice(2);
@@ -65,6 +69,7 @@ async function play() {
         if (legacies.length) console.log(`传承：${legacies.join('、')}`);
         if (dp.skills.length) console.log(`技能图鉴：${dp.skills.map(id => e.skillName(id)).join('、')}（${dp.skills.length}/${data.skills.size}）`);
         if (dp.sealed.length) console.log(`种子里封存着：${dp.sealed.map(i => e.itemName(i)).join('、')}`);
+        await hall();
 
         const draft = e.rollDraft(randomSeed());
         const t = draft.talents[await pickOne('选择天赋', names(draft.talents, data.talents))];
@@ -96,6 +101,37 @@ async function play() {
         save();
         if ((await pickOne('', ['再次重生', '退出'])) === 1) { rl.close(); return; }
     }
+
+    /** 轮回殿菜单：今日天命 / 命盘 → 开始抽卡 */
+    async function hall() {
+        for (;;) {
+            const fate = data.fates.get(e.todayFate(today()) ?? '');
+            if (fate) {
+                const first = dp().daily?.first ? `  ${C.gold}今日首世：轮回点 +50%${C.off}` : '';
+                console.log(`${C.gold}今日天命·${fate.name}${C.off}  ${C.dim}${fate.desc}${C.off}${first}`);
+            }
+            const menu = ['开始抽卡', `命盘（轮回点 ${profile.points}）`];
+            if (e.canSwapFate()) menu.push('【看广告】换一个天命');
+            const n = await pickOne('', menu);
+            if (n === 0) return;
+            if (n === 2) { e.swapFate(randomSeed()); save(); continue; }
+            for (;;) {
+                const views = e.upgradeViews();
+                const list = views.map(v => {
+                    const lv = `Lv${v.level}/${v.max}`;
+                    const price = v.cost === undefined ? `${C.dim}已满级${C.off}` : v.affordable ? `${C.gold}${v.cost} 点${C.off}` : `${C.dim}${v.cost} 点${C.off}`;
+                    return `${v.name} ${lv}  ${price}  ${C.dim}${v.desc}${C.off}`;
+                });
+                const k = await pickOne(`${C.cyan}════ 命盘 ════${C.off}  轮回点 ${profile.points}`, [...list, '返回']);
+                if (k === views.length) break;
+                const v = views[k];
+                if (v.cost === undefined) console.log('  已满级。');
+                else if (!v.affordable) console.log('  轮回点不够。');
+                else { e.buyUpgrade(v.id); save(); console.log(`  ${C.gold}${v.name} 升到 Lv${v.level + 1}${C.off}`); }
+            }
+        }
+    }
+    function dp() { return e.dp; }
 
     /** 轮回结算页 */
     async function settlePage() {
@@ -152,11 +188,16 @@ async function play() {
             e.doublePoints();
             console.log(`  ${C.gold}轮回点翻倍！本世 +${s.points}，累计 ${profile.points}${C.off}`);
         }
-        if (s.relicCandidates.length) {
-            const list = [...s.relicCandidates.map(i => `${e.itemName(i)} ${C.dim}${data.items.get(i)!.desc}${C.off}`), '不带'];
-            const n = await pickOne(`封存遗物带到下一世（${s.relicSlots} 格）：`, list);
-            e.sealRelics(n < s.relicCandidates.length ? [s.relicCandidates[n]] : []);
+        const chosen: string[] = [];
+        while (chosen.length < s.relicSlots) {
+            const left = s.relicCandidates.filter(i => !chosen.includes(i));
+            if (!left.length) break;
+            const list = [...left.map(i => `${e.itemName(i)} ${C.dim}${data.items.get(i)!.desc}${C.off}`), chosen.length ? '就带这些' : '不带'];
+            const n = await pickOne(`封存遗物带到下一世（${chosen.length + 1}/${s.relicSlots}）：`, list);
+            if (n === left.length) break;
+            chosen.push(left[n]);
         }
+        e.sealRelics(chosen);
     }
 
     async function turn() {
@@ -226,6 +267,7 @@ async function play() {
 // ───────────── 自动模拟（数值平衡） ─────────────
 
 function simulate(lives: number, seed: number) {
+    const ads = flag('--ads');
     const profile = createProfile();
     const e = new Engine(data as Destiny, profile);
     const holder = { rng: seed };
@@ -237,14 +279,21 @@ function simulate(lives: number, seed: number) {
     const skillFirst: Record<string, number> = {};
     let skillUses = 0;
     let firstEnding = 0;
+    let revives = 0;
+    let fullAt = 0;
+    const upgradeDone: Record<string, number> = {};
 
     for (let life = 1; life <= lives; life++) {
+        e.todayFate(`day${Math.floor(life / 6)}`); // 假设每天玩 6 世
         const draft = e.rollDraft(rng.int(1e9));
+        const k = draft.talents.length;
         e.startRun({
-            talent: draft.talents[rng.int(3)], item: draft.items[rng.int(3)], companion: draft.companions[rng.int(3)],
+            talent: draft.talents[rng.int(k)], item: draft.items[rng.int(k)], companion: draft.companions[rng.int(k)],
         }, rng.int(1e9));
         let guard = 0;
-        while (e.run.phase === 'direction' || e.run.phase === 'event') {
+        for (;;) {
+            if (ads && e.canReviveByAd()) { e.reviveByAd(); revives++; }
+            if (e.run.phase !== 'direction' && e.run.phase !== 'event') break;
             if (++guard > 5000) throw new Error('模拟死循环');
             const usable = e.skillViews().filter(s => s.usable);
             if (usable.length && rng.chance(0.3)) { e.useSkill(usable[rng.int(usable.length)].id); skillUses++; continue; }
@@ -264,8 +313,17 @@ function simulate(lives: number, seed: number) {
             }
         }
         const s = e.settle();
+        if (ads) e.doublePoints();
+        // 命盘：每世结算后买得起就买最便宜的
+        for (;;) {
+            const cheapest = e.upgradeViews().filter(v => v.affordable).sort((a, b) => a.cost! - b.cost!)[0];
+            if (!cheapest) break;
+            e.buyUpgrade(cheapest.id);
+            if (cheapest.level + 1 === cheapest.max) upgradeDone[cheapest.id] = life;
+        }
+        if (!fullAt && e.upgradeViews().every(v => v.cost === undefined)) fullAt = life;
         for (const id of e.dp.skills) skillFirst[id] ??= life;
-        if (s.relicCandidates.length) e.sealRelics([s.relicCandidates[rng.int(s.relicCandidates.length)]]);
+        if (s.relicCandidates.length) e.sealRelics(s.relicCandidates.slice(rng.int(s.relicCandidates.length)).slice(0, s.relicSlots));
         const b = stat[buckets.findIndex(([lo, hi]) => life >= lo && life <= hi)];
         b.n++;
         b.seasons += s.seasons;
@@ -274,7 +332,9 @@ function simulate(lives: number, seed: number) {
         else b.deaths[s.id] = (b.deaths[s.id] ?? 0) + 1;
     }
 
-    console.log(`\n模拟 ${lives} 世（随机 AI，种子 ${seed}）  首次结局：第 ${firstEnding || '—'} 世  总轮回点 ${profile.points}  技能施展 ${skillUses} 次`);
+    console.log(`\n模拟 ${lives} 世（随机 AI，种子 ${seed}${ads ? '，每局看广告' : ''}）  首次结局：第 ${firstEnding || '—'} 世  剩余轮回点 ${profile.points}  技能施展 ${skillUses} 次${ads ? `  广告复活 ${revives} 次` : ''}`);
+    const upLine = e.upgradeViews().map(v => `${v.name}${upgradeDone[v.id] ? `@${upgradeDone[v.id]}` : ` Lv${v.level}/${v.max}`}`);
+    console.log(`命盘满级（第几世）：${upLine.join('、')}  ${fullAt ? `全满 @${fullAt}` : '未全满'}`);
     buckets.forEach(([lo, hi], i) => {
         const b = stat[i];
         if (!b.n) return;

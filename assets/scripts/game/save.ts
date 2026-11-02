@@ -9,8 +9,10 @@ export interface SaveData {
     run: RunState | null;
     /** 本局已用的「窥探天命」次数 */
     peekUsed: number;
-    /** 本次开局是否已用过「天机重演」 */
+    /** 本次开局是否已用过看视频「天机重演」 */
     rerollUsed: boolean;
+    /** 本次开局已用的免费重演次数（命盘·天机） */
+    freeRerollUsed: number;
     /** 静音（背景音乐 + 音效） */
     muted: boolean;
 }
@@ -25,13 +27,14 @@ export function loadSave(): SaveData {
                 run: d.run ?? null,
                 peekUsed: d.peekUsed ?? 0,
                 rerollUsed: d.rerollUsed ?? false,
+                freeRerollUsed: d.freeRerollUsed ?? 0,
                 muted: d.muted ?? false,
             };
         } catch (e) {
             console.warn('[save] 存档损坏，已重置', e);
         }
     }
-    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, muted: false };
+    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false };
 }
 
 export function writeSave(d: SaveData): void {

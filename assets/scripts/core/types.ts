@@ -199,6 +199,38 @@ export interface CompanionDef extends PoolEntryBase {
     every?: { n: number; effect: RawEffect; text: string };
 }
 
+/**
+ * 命盘（局外永久升级，花轮回点购买，按命格独立）。
+ *   start       每级叠加一次 start 开局效果
+ *   reroll      每级 +1 次免费「天机重演」（用完后仍可看视频再刷一次）
+ *   draftSize   每级开局池 +1 张（3 选 1 → 4 选 1）
+ *   relicSlot   每级 +1 个遗物封存格
+ *   pointsBonus 每级轮回点 +value（如 0.1 = +10%）
+ *   reviveBoost 看视频「逆天改命」时额外获得 start 效果，并回满水分
+ * 设计约束：命盘不提供免费复活 / 免费窥探等能替代广告的效果，只放大广告的收益。
+ */
+export type UpgradeKind = 'start' | 'reroll' | 'draftSize' | 'relicSlot' | 'pointsBonus' | 'reviveBoost';
+
+export interface UpgradeDef {
+    id: string;
+    name: string;
+    desc: string;
+    kind?: UpgradeKind;
+    /** costs[i] = 升到第 i+1 级的价格；长度即最高等级 */
+    costs: number[];
+    start?: RawEffect;
+    value?: number;
+}
+
+/** 每日天命：当天所有轮回生效的全局修正（同一天所有玩家相同，可看视频换一次） */
+export interface FateDef {
+    id: string;
+    name: string;
+    desc: string;
+    mods?: Mods;
+    start?: RawEffect;
+}
+
 export interface DestinyMeta {
     id: string;
     name: string;
@@ -210,6 +242,8 @@ export interface DestinyMeta {
     deaths: DeathDef[];
     legacies: LegacyDef[];
     endings: EndingDef[];
+    upgrades?: UpgradeDef[];
+    fates?: FateDef[];
     settings: {
         suddenChance: number;
         rarityWeights: Record<Rarity, number>;
@@ -302,6 +336,8 @@ export interface Destiny {
     skills: Map<string, SkillDef & { useEffect?: Effect }>;
     legacies: Map<string, LegacyDef & { levelEffects: Effect[] }>;
     endings: Map<string, EndingDef>;
+    upgrades: Map<string, UpgradeDef & { kind: UpgradeKind; startEffect?: Effect }>;
+    fates: Map<string, FateDef & { startEffect?: Effect }>;
 }
 
 // ───────────── 存档 ─────────────
@@ -317,6 +353,10 @@ export interface DestinyProfile {
     bestStage: number;
     /** 已解锁技能（技能图鉴） */
     skills: string[];
+    /** 命盘等级 */
+    upgrades: Record<string, number>;
+    /** 今日天命（date 为本地日期 YYYY-MM-DD；first = 今日首世奖励尚未领取） */
+    daily?: { date: string; fate: string; first: boolean; swapped: boolean };
 }
 
 export interface Profile {
@@ -368,6 +408,21 @@ export interface RunState {
     learned: string[];
     /** 本世遇到但条件不足而锁定的选项（事件id#选项序号，结算页「下一世的目标」） */
     missed: string[];
+    /** 本世的天命 */
+    fate?: string;
+    /** 本世是今日首世（结算轮回点加成） */
+    firstOfDay?: boolean;
+}
+
+export interface UpgradeView {
+    id: string;
+    name: string;
+    desc: string;
+    level: number;
+    max: number;
+    /** 下一级价格；已满级为 undefined */
+    cost?: number;
+    affordable: boolean;
 }
 
 // ───────────── 给 UI 的视图 ─────────────

@@ -42,13 +42,20 @@ function screenName(g: Game): string {
 }
 
 describe('游戏层冒烟（假 cc 运行时）', () => {
-    it.each([7, 42, 2026])('种子 %i：随机点击 3000 次，走完多次轮回，无异常、无 undefined/NaN、可点元素都在屏幕内', async seed => {
+    it.each([
+        [7, false], [42, false], [2026, false],
+        [99, true], // 富裕存档：随机点击会买命盘（4 选 1、免费重演、多格封存等界面）
+    ])('种子 %i（富裕存档 %s）：随机点击 3000 次，走完多次轮回，无异常、无 undefined/NaN、可点元素都在屏幕内', async (seed, rich) => {
         sys.localStorage.clear?.();
         const host = new Node('Canvas');
         const g = new Game(host as never);
         await g.boot();
         await flush();
         expect(screenName(g)).toBe('draft');
+        if (rich) {
+            g.save.profile.points = 100000;
+            g.goDraft();
+        }
 
         const rng = new Rng({ rng: seed });
         const seen = new Set<string>();
@@ -80,7 +87,46 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         expect(seen).toContain('run');
         expect(seen).toContain('settle');
         expect(lives).toBeGreaterThan(2);
+        if (rich) expect(Object.keys(g.engine.dp.upgrades).length).toBeGreaterThan(0);
     }, 60_000);
+
+    it('命盘全满：4 选 1 卡牌、命盘列表、天命弹窗都在屏幕内', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        for (const v of g.engine.upgradeViews()) g.engine.dp.upgrades[v.id] = v.max;
+        g.goDraft();
+        await flush();
+        const root = g.screen.parent!;
+        const inScreen = (layer: Node) => {
+            for (const n of tappables(layer).filter(n => n.name !== 'modal')) {
+                const top = absTop(n, root);
+                expect(top, n.name).toBeGreaterThanOrEqual(0);
+                expect(top + heightOf(n), `${n.name}（${labels(n).join('|')}）`).toBeLessThanOrEqual(g.H + 1);
+            }
+        };
+        const cards = tappables(g.screen).filter(n => n.name.startsWith('card_'));
+        expect(cards.length).toBe(4);
+        inScreen(g.screen);
+        expect(labels(g.screen).some(l => l.includes('免费刷新'))).toBe(true);
+        expect(labels(g.screen).some(l => l.startsWith('今日天命·'))).toBe(true);
+
+        const tap = (label: string) => {
+            const n = tappables(g.screen).find(x => labels(x).some(l => l.startsWith(label)))!;
+            n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END);
+        };
+        tap('命盘');
+        await flush();
+        expect(labels(g.overlay).filter(l => /Lv\d\/\d/.test(l)).length).toBe(g.engine.data.upgrades.size);
+        inScreen(g.overlay);
+        g.goDraft();
+        await flush();
+        tap('今日天命');
+        await flush();
+        expect(labels(g.overlay).some(l => l.includes('换一个天命'))).toBe(true);
+        inScreen(g.overlay);
+    });
 
     it('中途存档：重启后恢复到同一局', async () => {
         sys.localStorage.clear?.();

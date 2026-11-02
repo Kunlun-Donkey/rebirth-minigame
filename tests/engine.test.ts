@@ -324,3 +324,119 @@ describe('技能', () => {
         expect(e.run.skills).toEqual(['burst', 'eye']);
     });
 });
+
+describe('命盘与每日天命', () => {
+    function rich(): RawDestiny {
+        const raw = fixture();
+        raw.meta.upgrades = [
+            { id: 'vigor', name: '固本', desc: '', costs: [100, 200], start: { 水分上限: 1 } },
+            { id: 'fortune', name: '福缘', desc: '', kind: 'pointsBonus', value: 0.1, costs: [50] },
+            { id: 'insight', name: '天机', desc: '', kind: 'reroll', costs: [10, 10] },
+            { id: 'vision', name: '慧眼', desc: '', kind: 'draftSize', costs: [10] },
+            { id: 'treasure', name: '藏宝', desc: '', kind: 'relicSlot', costs: [10] },
+            { id: 'wind', name: '续命', desc: '回满', kind: 'reviveBoost', costs: [10], start: { 根系: 1 } },
+        ];
+        raw.meta.fates = [
+            { id: 'fertile', name: '沃土', desc: '', start: { 根系: 2 } },
+            { id: 'windfall', name: '横财', desc: '', mods: { pointsMul: 2 } },
+        ];
+        raw.talents.push({ id: 't4', name: 't4', rarity: 'common', desc: '' });
+        raw.items.push({ id: 'pebble', name: '卵石', rarity: 'common', desc: '' });
+        raw.companions.push({ id: 'c4', name: 'c4', rarity: 'common', desc: '' });
+        return raw;
+    }
+
+    it('购买扣轮回点、逐级涨价、满级/点数不足不可买；start 效果开局生效', () => {
+        const profile = createProfile();
+        const e = new Engine(buildDestiny(rich()), profile);
+        profile.points = 250;
+        expect(e.upgradeViews().find(v => v.id === 'vigor')).toMatchObject({ level: 0, max: 2, cost: 100, affordable: true });
+        e.buyUpgrade('vigor');
+        expect(profile.points).toBe(150);
+        expect(() => e.buyUpgrade('vigor')).toThrow('轮回点不足');
+        profile.points = 200;
+        e.buyUpgrade('vigor');
+        expect(e.upgradeViews().find(v => v.id === 'vigor')).toMatchObject({ level: 2, cost: undefined, affordable: false });
+        expect(() => e.buyUpgrade('vigor')).toThrow('已满级');
+        e.startRun(pick, 1);
+        expect(e.run.attrs.waterMax).toBe(5);
+        expect(e.run.attrs.water).toBe(5);
+    });
+
+    it('慧眼 4 选 1、天机免费重演次数、藏宝多一格封存', () => {
+        const profile = createProfile();
+        const e = new Engine(buildDestiny(rich()), profile);
+        expect(e.draftSize()).toBe(3);
+        profile.points = 1000;
+        for (const id of ['vision', 'insight', 'insight', 'treasure']) e.buyUpgrade(id);
+        const d = e.rollDraft(1);
+        expect([d.talents.length, d.items.length, d.companions.length]).toEqual([4, 4, 4]);
+        expect(e.freeRerolls()).toBe(2);
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        e.choose(0);
+        e.choose(0);
+        const s = e.settle();
+        expect(s.relicSlots).toBe(2);
+    });
+
+    it('轮回点：命盘加成与今日首世加成写入明细，首世加成每天只给一次', () => {
+        const profile = createProfile();
+        const e = new Engine(buildDestiny(rich()), profile);
+        profile.points = 50;
+        e.buyUpgrade('fortune');
+        e.todayFate('2026-11-02');
+        // 固定为不带倍率的天命，便于断言
+        e.dp.daily!.fate = 'fertile';
+        const run = () => {
+            e.startRun(pick, 1);
+            e.chooseDirection('down');
+            e.choose(0);
+            e.choose(0);
+            return e.settle();
+        };
+        const s1 = run();
+        expect(s1.breakdown.map(b => b.label)).toEqual(expect.arrayContaining(['命盘加成 +10%', '今日首世 +50%']));
+        const s2 = run();
+        expect(s2.breakdown.map(b => b.label)).toContain('命盘加成 +10%');
+        expect(s2.breakdown.map(b => b.label)).not.toContain('今日首世 +50%');
+        // 跨天重新获得首世加成
+        e.todayFate('2026-11-03');
+        expect(e.dp.daily!.first).toBe(true);
+    });
+
+    it('今日天命：同一天结果固定，开局生效；看视频每天只能换一次', () => {
+        const a = new Engine(buildDestiny(rich()), createProfile());
+        const b = new Engine(buildDestiny(rich()), createProfile());
+        expect(a.todayFate('2026-11-02')).toBe(b.todayFate('2026-11-02'));
+        a.dp.daily!.fate = 'fertile';
+        a.startRun(pick, 1);
+        expect(a.run.fate).toBe('fertile');
+        expect(a.run.attrs.root).toBe(2);
+
+        expect(a.canSwapFate()).toBe(true);
+        expect(a.swapFate(1)).toBe('windfall');
+        expect(a.canSwapFate()).toBe(false);
+        expect(() => a.swapFate(2)).toThrow();
+        a.startRun(pick, 2);
+        expect(a.mods().pointsMul).toBe(2);
+    });
+
+    it('续命：广告复活时水分回满并获得额外效果（不提供免费复活）', () => {
+        const profile = createProfile();
+        const e = new Engine(buildDestiny(rich()), profile);
+        profile.points = 10;
+        e.buyUpgrade('wind');
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        e.choose(0);
+        const root = e.run.attrs.root;
+        e.choose(0);
+        expect(e.run.phase).toBe('dying');
+        const step = e.reviveByAd();
+        expect(e.run.attrs.water).toBe(e.run.attrs.waterMax);
+        expect(e.run.attrs.root).toBe(root + 1);
+        expect(step.messages.some(m => m.includes('命盘·续命'))).toBe(true);
+        expect(e.canReviveByAd()).toBe(false);
+    });
+});

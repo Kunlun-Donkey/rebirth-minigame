@@ -8,6 +8,8 @@
  *     phase 'dying'     : reviveByAd() 或 settle()
  *     phase 'over'      : settle() → sealRelics(ids)
  *
+ * 局外：upgradeViews() / buyUpgrade(id) 命盘；todayFate(date) / swapFate(seed) 每日天命（startRun 前调用）
+ *
  * 所有局内状态都在 run（可 JSON 序列化），存档只需保存 run + profile。
  */
 import { CondCtx, describeCond, DescribeNames, evalCond, HasKind, NumRef, walkCond } from './condition';
@@ -15,11 +17,13 @@ import { addUnique, destinyProfile } from './profile';
 import { Rng } from './rng';
 import {
     Choice, ChoiceView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Mods, Outcome, Profile,
-    RARITIES, Rarity, RunState, SettleResult, SkillView, StepResult,
+    RARITIES, Rarity, RunState, SettleResult, SkillView, StepResult, UpgradeKind, UpgradeView,
 } from './types';
 
 const ATTR_FLOOR = 0;
 const MEMORY_TEXT_MAX = 18;
+/** 今日首世轮回点加成 */
+export const DAILY_FIRST_BONUS = 0.5;
 const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [] };
 
 export class Engine {
@@ -34,7 +38,7 @@ export class Engine {
 
     // ───────────── 开局 ─────────────
 
-    /** 抽取开局三池（各 3 个） */
+    /** 抽取开局三池（各 draftSize() 个，默认 3） */
     rollDraft(seed: number): DraftPick {
         const holder = { rng: seed };
         const rng = new Rng(holder);
@@ -51,10 +55,11 @@ export class Engine {
             }
             return out;
         };
+        const n = this.draftSize();
         return {
-            talents: draw([...this.data.talents.values()], 3),
-            items: draw([...this.data.items.values()], 3),
-            companions: draw([...this.data.companions.values()], 3),
+            talents: draw([...this.data.talents.values()], n),
+            items: draw([...this.data.items.values()], n),
+            companions: draw([...this.data.companions.values()], n),
         };
     }
 
@@ -110,6 +115,20 @@ export class Engine {
             const def = d.legacies.get(id);
             if (!def) continue;
             for (let i = 0; i < Math.min(lv, def.levelEffects.length); i++) this.applyEffect(def.levelEffects[i], sink, false);
+        }
+        // 命盘
+        for (const u of d.upgrades.values()) {
+            if (u.kind !== 'start' || !u.startEffect) continue;
+            for (let i = 0; i < this.upgradeLevel(u.id); i++) this.applyEffect(u.startEffect, sink, false);
+        }
+        // 今日天命（由 todayFate 设定）
+        const daily = dp.daily;
+        if (daily && d.fates.has(daily.fate)) {
+            this.run.fate = daily.fate;
+            this.run.firstOfDay = daily.first;
+            daily.first = false;
+            const f = d.fates.get(daily.fate)!;
+            if (f.startEffect) this.applyEffect(f.startEffect, sink, false);
         }
         // 天赋 / 伴生物开局效果
         const t = d.talents.get(pick.talent);
@@ -358,6 +377,13 @@ export class Engine {
         this.run.reviveUsed.ad = true;
         const step = this.newStep();
         this.revive(step, '逆天改命！天道打了个盹，你又活了过来。');
+        // 命盘·续命：放大广告复活的收益
+        for (const u of this.data.upgrades.values()) {
+            if (u.kind !== 'reviveBoost' || !this.upgradeLevel(u.id)) continue;
+            this.addAttr('water', this.run.attrs.waterMax - this.run.attrs.water, step);
+            if (u.startEffect) this.applyEffect(u.startEffect, step, false);
+            step.messages.push(`【命盘·${u.name}】${u.desc}`);
+        }
         return step;
     }
 
@@ -414,12 +440,17 @@ export class Engine {
         if (firstTime) breakdown.push({ label: kind === 'ending' ? '首次达成结局' : '首次解锁死法', value: 10 });
         if (kind === 'ending') breakdown.push({ label: '达成结局', value: 50 });
         let points = breakdown.reduce((n, b) => n + b.value, 0);
-        const mul = mods.pointsMul ?? 1;
-        if (mul !== 1) {
+        const bonus = (label: string, mul: number) => {
+            if (mul === 1) return;
             const extra = Math.round(points * mul) - points;
-            breakdown.push({ label: `倍率 ×${mul}`, value: extra });
+            breakdown.push({ label, value: extra });
             points += extra;
-        }
+        };
+        const mul = mods.pointsMul ?? 1;
+        bonus(`倍率 ×${mul}`, mul);
+        const fortune = this.upgradeValue('pointsBonus');
+        if (fortune) bonus(`命盘加成 +${Math.round(fortune * 100)}%`, 1 + fortune);
+        if (this.run.firstOfDay) bonus(`今日首世 +${Math.round(DAILY_FIRST_BONUS * 100)}%`, 1 + DAILY_FIRST_BONUS);
 
         dp.lives += 1;
         dp.bestStage = Math.max(dp.bestStage, this.run.stage);
@@ -435,7 +466,7 @@ export class Engine {
             legacy,
             points,
             relicCandidates: [...new Set(this.run.found)],
-            relicSlots: 1 + (mods.relicSlots ?? 0),
+            relicSlots: 1 + (mods.relicSlots ?? 0) + this.upgradeValue('relicSlot'),
             firstTime,
             skill,
             breakdown,
@@ -475,6 +506,72 @@ export class Engine {
         this.dp.sealed = valid;
     }
 
+    // ───────────── 命盘（局外升级） ─────────────
+
+    upgradeLevel(id: string): number {
+        const def = this.data.upgrades.get(id);
+        return def ? Math.min(this.dp.upgrades[id] ?? 0, def.costs.length) : 0;
+    }
+
+    /** 某类命盘的总值：pointsBonus 为 等级 × value，其余为等级之和 */
+    upgradeValue(kind: UpgradeKind): number {
+        let v = 0;
+        for (const u of this.data.upgrades.values()) {
+            if (u.kind === kind) v += this.upgradeLevel(u.id) * (kind === 'pointsBonus' ? u.value ?? 0.1 : 1);
+        }
+        return v;
+    }
+
+    upgradeViews(): UpgradeView[] {
+        return [...this.data.upgrades.values()].map(u => {
+            const level = this.upgradeLevel(u.id);
+            const cost = u.costs[level];
+            return { id: u.id, name: u.name, desc: u.desc, level, max: u.costs.length, cost, affordable: cost !== undefined && this.profile.points >= cost };
+        });
+    }
+
+    buyUpgrade(id: string): void {
+        const v = this.upgradeViews().find(x => x.id === id);
+        if (!v) throw new Error(`命盘不存在：${id}`);
+        if (v.cost === undefined) throw new Error(`命盘已满级：${id}`);
+        if (!v.affordable) throw new Error(`轮回点不足：${id}`);
+        this.profile.points -= v.cost;
+        this.dp.upgrades[id] = v.level + 1;
+    }
+
+    /** 开局池每组张数 */
+    draftSize(): number { return 3 + this.upgradeValue('draftSize'); }
+
+    /** 每次开局可免费「天机重演」的次数 */
+    freeRerolls(): number { return this.upgradeValue('reroll'); }
+
+    // ───────────── 每日天命 ─────────────
+
+    /** 取今日天命（date = 本地日期 YYYY-MM-DD）；跨天时按日期确定性抽取（同一天所有玩家相同） */
+    todayFate(date: string): string | undefined {
+        const fates = [...this.data.fates.keys()];
+        if (!fates.length) return undefined;
+        const dp = this.dp;
+        if (dp.daily?.date !== date) {
+            dp.daily = { date, fate: fates[hashStr(`${date}|${this.data.meta.id}`) % fates.length], first: true, swapped: false };
+        }
+        return dp.daily.fate;
+    }
+
+    canSwapFate(): boolean {
+        return !!this.dp.daily && !this.dp.daily.swapped && this.data.fates.size > 1;
+    }
+
+    /** 广告「换一个天命」：每天一次，换成另一个随机天命 */
+    swapFate(seed: number): string {
+        const daily = this.dp.daily;
+        if (!daily || !this.canSwapFate()) throw new Error('今日已换过天命');
+        const others = [...this.data.fates.keys()].filter(id => id !== daily.fate);
+        daily.fate = others[new Rng({ rng: seed }).int(others.length)];
+        daily.swapped = true;
+        return daily.fate;
+    }
+
     // ───────────── 查询 ─────────────
 
     attrName(id: string): string { return this.data.attrNames[id] ?? id; }
@@ -483,6 +580,7 @@ export class Engine {
 
     mods(): Mods {
         const list: (Mods | undefined)[] = [
+            this.run.fate ? this.data.fates.get(this.run.fate)?.mods : undefined,
             ...this.run.talents.map(id => this.data.talents.get(id)?.mods),
             ...this.run.items.map(id => this.data.items.get(id)?.mods),
             ...this.run.companions.map(id => this.data.companions.get(id)?.mods),
@@ -807,4 +905,14 @@ export class Engine {
 
 function clip(s: string, n: number): string {
     return s.length > n ? s.slice(0, n) + '…' : s;
+}
+
+/** FNV-1a 字符串哈希（每日天命用，跨平台稳定） */
+function hashStr(s: string): number {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 0x01000193);
+    }
+    return h >>> 0;
 }
