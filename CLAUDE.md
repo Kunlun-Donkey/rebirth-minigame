@@ -14,7 +14,7 @@
 - 根目录 `tsconfig.json` 是 Cocos 的（继承 temp/tsconfig.cocos.json）；Linux 端由 `tools/ensure-cocos-temp.mjs`（npm pre 钩子）生成占位 temp 文件
 - package.json 的 `"type": "2d"` 是 Cocos 要求的，Node 会按 ESM 处理工具脚本：不要用 `__dirname`，用 `import.meta.url`
 - `npm run validate` — 剧本静态校验
-- `npm run play` — 终端试玩（`-- --new` 清档）；Windows 双击根目录 `play.bat` 出菜单（试玩 / 清档 / 模拟 / 校验），bat 须保持 CRLF（`.gitattributes`）
+- `npm run play` — 终端试玩（`-- --new` 清档）；Windows 双击根目录 `play.bat`：bat 只放纯 ASCII（cmd 读 UTF-8 中文会乱码切行），中文菜单在 `tools/menu.mjs`（首次自动 npm install，用 node 直接启动 tsx）；bat 须保持 CRLF（`.gitattributes`）
 - `npm run sim` — 随机 AI 2000 世数值统计
 - `npm run audio` — 程序合成 BGM/音效 → `assets/subres/audio/`（曲谱与音色在 `tools/audio/gen_audio.py`，依赖本机 godot skill 的合成器 + ffmpeg）
 
