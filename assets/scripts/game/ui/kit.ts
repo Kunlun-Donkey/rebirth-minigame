@@ -48,9 +48,11 @@ export const COLOR = {
 export const RARITY_COLOR: Record<string, string> = { common: COLOR.common, rare: COLOR.rare, epic: COLOR.epic, legend: COLOR.legend };
 export const RARITY_TEXT: Record<string, string> = { common: '普通', rare: '稀有', epic: '史诗', legend: '传说' };
 
-export function hex(h: string, alpha = 255): Color {
+/** '#rrggbb' 或 '#rrggbbaa'；传入 alpha 时覆盖透明度 */
+export function hex(h: string, alpha?: number): Color {
     const c = new Color().fromHEX(h);
-    c.a = alpha;
+    if (alpha !== undefined) c.a = alpha;
+    else if (h.replace('#', '').length < 8) c.a = 255;
     return c;
 }
 
@@ -105,13 +107,13 @@ export function rect(n: Node, s: RectStyle): Node {
         gfx.fill();
     }
     if (s.fill) {
-        gfx.fillColor = hex(s.fill, s.fillAlpha ?? 255);
+        gfx.fillColor = hex(s.fill, s.fillAlpha);
         gfx.roundRect(0, -h, w, h, r);
         gfx.fill();
     }
     if (s.stroke) {
         gfx.lineWidth = s.lineWidth ?? 2;
-        gfx.strokeColor = hex(s.stroke, s.strokeAlpha ?? 255);
+        gfx.strokeColor = hex(s.stroke, s.strokeAlpha);
         gfx.roundRect(0, -h, w, h, r);
         gfx.stroke();
     }
@@ -206,7 +208,7 @@ export function text(parent: Node, str: string, x: number, y: number, w: number,
     l.string = str;
     l.fontSize = size;
     l.lineHeight = lh;
-    l.color = hex(s.color ?? COLOR.ink, s.alpha ?? 255);
+    l.color = hex(s.color ?? COLOR.ink, s.alpha);
     l.isBold = !!s.bold;
     l.enableWrapText = !!s.wrap;
     // 换行文字：固定宽度、高度随内容撑开；单行文字：固定区域，超长自动缩小字号（保证对齐稳定）

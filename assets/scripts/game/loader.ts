@@ -1,5 +1,5 @@
 /** 从 resources 加载命格剧本，组装成 RawDestiny（与 Node 端 tools/load.ts 等价） */
-import { JsonAsset, resources, SpriteFrame } from 'cc';
+import { ImageAsset, JsonAsset, resources, SpriteFrame } from 'cc';
 import { buildDestiny, Destiny, RawDestiny, RawEvent } from '../core';
 
 function loadJson<T>(path: string): Promise<T> {
@@ -36,7 +36,11 @@ export function loadSpriteFrame(path: string): Promise<SpriteFrame | null> {
     let p = spriteCache.get(path);
     if (!p) {
         p = new Promise(resolve => {
-            resources.load(`${path}/spriteFrame`, SpriteFrame, (err, sf) => resolve(err || !sf ? null : sf));
+            // 图片导入类型为 sprite-frame 时直接取子资源；否则（如 texture）读原图自行生成 SpriteFrame
+            resources.load(`${path}/spriteFrame`, SpriteFrame, (err, sf) => {
+                if (!err && sf) return resolve(sf);
+                resources.load(path, ImageAsset, (err2, img) => resolve(err2 || !img ? null : SpriteFrame.createWithImage(img)));
+            });
         });
         spriteCache.set(path, p);
     }

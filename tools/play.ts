@@ -6,6 +6,7 @@
  *   npm run sim                  随机 AI 连续轮回 2000 世，输出数值统计
  *   ./node_modules/.bin/tsx tools/play.ts --sim 500 --seed 42
  */
+import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
@@ -25,7 +26,7 @@ else play().catch(e => { console.error(e); process.exit(1); });
 // ───────────── 交互试玩 ─────────────
 
 async function play() {
-    const PROFILE = join(__dirname, '..', '.play-profile.json');
+    const PROFILE = join(fileURLToPath(new URL('.', import.meta.url)), '..', '.play-profile.json');
     const profile: Profile = flag('--new') || !existsSync(PROFILE) ? createProfile() : loadProfile(readFileSync(PROFILE, 'utf8'));
     const save = () => writeFileSync(PROFILE, JSON.stringify(profile, null, 1));
     const rl = createInterface({ input: process.stdin });

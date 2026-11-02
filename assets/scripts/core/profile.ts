@@ -5,16 +5,20 @@ export function createProfile(): Profile {
 }
 
 export function destinyProfile(p: Profile, destinyId: string): DestinyProfile {
-    const dp = (p.destinies[destinyId] ??= {
-        lives: 0,
-        legacy: {},
-        sealed: [],
-        memory: {},
-        codex: { deaths: [], endings: [], items: [], events: [] },
-        bestStage: 0,
-        skills: [],
-    });
-    dp.skills ??= []; // 兼容旧存档
+    let dp = p.destinies[destinyId];
+    if (!dp) {
+        dp = {
+            lives: 0,
+            legacy: {},
+            sealed: [],
+            memory: {},
+            codex: { deaths: [], endings: [], items: [], events: [] },
+            bestStage: 0,
+            skills: [],
+        };
+        p.destinies[destinyId] = dp;
+    }
+    if (!dp.skills) dp.skills = []; // 兼容旧存档
     return dp;
 }
 

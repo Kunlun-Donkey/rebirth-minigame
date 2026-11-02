@@ -1,56 +1,82 @@
-# Windows 端接入 Cocos Creator 3.8 并发布微信小游戏
+# Windows：用 Cocos Creator 打开工程 → 构建微信小游戏 → 开发者工具截图
 
-> Linux 端负责写代码、跑测试；Windows 端只做：开工程 → 挂一个组件 → 预览 / 构建。
-> 界面全部由代码生成，**不需要在编辑器里拼 UI**。
+> 本仓库**本身就是一个 Cocos Creator 3.8 工程**：clone 下来直接用 Dashboard 打开即可。
+> 界面全部由代码生成，启动场景 `assets/scenes/main.scene` 已经挂好入口组件 `GameRoot`。
 
-## 一、建工程（只做一次）
+## 一、准备
 
-1. Cocos Dashboard → 新建项目 → 选 **3.8.x** 的「Empty (2D)」模板，项目名 `rebirth`。
-2. 关掉编辑器，把本仓库的 `assets/` 目录整个复制进新工程，覆盖合并：
-   ```
-   rebirth/assets/
-     resources/data/...      剧本数据（JSON）
-     resources/textures/...  美术素材
-     scripts/core/...        引擎（纯 TS）
-     scripts/game/...        Cocos 表现层
-   ```
-   其余目录（`docs/ tools/ tests/ typings/ node_modules/` 等）是 Linux 开发用的，不用复制。
-3. 重新打开工程，等资源导入完成。
+| 软件 | 版本 |
+|---|---|
+| Cocos Dashboard + Cocos Creator | 3.8.x（工程按 3.8.0 创建，更高的 3.8 小版本打开时会提示升级，点确定即可） |
+| 微信开发者工具 | 稳定版最新 |
+| Git | 任意 |
 
-> 之后的同步：只需要用仓库里的 `assets/scripts` 和 `assets/resources` 覆盖工程里的同名目录。
-> 以后把 Git 仓库根目录直接设成 Cocos 工程根目录会更省事，`.gitignore` 已经排除了 `library/ temp/ local/ build/`。
+## 二、打开工程（只做一次）
 
-## 二、编辑器设置（只做一次）
+```bash
+git clone https://github.com/Kunlun-Donkey/rebirth-minigame.git
+```
+1. Cocos Dashboard → 项目 → **添加** → 选择 `rebirth-minigame` 文件夹 → 打开。
+2. 首次打开会导入全部资源并生成 `library/ temp/` 和各文件的 `.meta`（约 1~2 分钟）。
+3. 资源管理器里双击 `assets/scenes/main.scene` 打开场景。
+4. 点编辑器顶部 **▶ 预览**（浏览器预览），看到「轮回殿」即成功。
 
-1. **设计分辨率**：菜单「项目 → 项目设置 → 项目数据」
-   - 设计宽度 `750`，设计高度 `1334`
-   - 勾选「适配屏幕宽度」，不勾选「适配屏幕高度」
-2. **场景**：在 `assets/` 下新建 `scenes/main.scene`，打开它
-   - 场景里若没有 Canvas：层级管理器右键 → 创建 → UI 组件 → Canvas
-   - 选中 **Canvas** 节点 → 属性检查器底部「添加组件」→ 搜索 `GameRoot` → 添加
-   - 保存场景
-3. **图片类型**：`resources/textures` 下的图片，属性检查器里 Type 应为 `sprite-frame`（3.8 默认就是）。
-4. 点编辑器顶部 ▶ 预览，看到「轮回殿」即成功。
+> 首次打开后会多出很多 `.meta` 文件，**请提交到 Git**（Cocos 用它们记录资源 uuid，丢了会导致引用失效）：
+> `git add -A && git commit -m "Cocos 首次导入生成 meta" && git push`
 
-## 三、构建微信小游戏
+已预设好的项目设置（一般不用改，可在「项目 → 项目设置」核对）：
+- 设计分辨率 **750 × 1334**，适配屏幕宽度 ✔，适配屏幕高度 ✘
+- 功能裁剪：只保留 2D / UI / Graphics / Tween / WebGL（3D、物理、粒子等已关闭，减小包体）
 
-1. 菜单「项目 → 构建发布」→ 发布平台选「微信小游戏」
-2. 初始场景选 `main.scene`，填写 AppID，屏幕方向「竖屏」
-3. 构建 → 用微信开发者工具打开 `build/wechatgame`
-4. 真机预览：开发者工具「预览」扫码
+## 三、配置 resources 为小游戏子包（必做，否则超出主包 4MB）
 
-## 四、上线前要填的配置
+贴图约 3.8MB，加上引擎会超过微信主包上限。
+1. 资源管理器选中 `assets/resources` 文件夹
+2. 属性检查器：「配置为 Bundle」已勾选 → 展开 **小游戏** 平台设置 → 「配置为子包」✔（或「压缩类型 → 小游戏子包」）
+3. 右上角「应用」
+
+> 微信启动时会自动加载这个子包，代码无需改动。子包上限远大于主包（以微信官方当前规则为准）。
+
+## 四、构建微信小游戏
+
+1. 菜单 **项目 → 构建发布**
+2. 发布平台：**微信小游戏**
+3. 初始场景：`db://assets/scenes/main.scene`（勾选参与构建的场景只需这一个）
+4. AppID：填你注册的小游戏 AppID（没有可先填测试号，见下文）
+5. 设备方向：**Portrait（竖屏）**
+6. 点「构建」→ 完成后点「运行」或手动用开发者工具打开 `build/wechatgame`
+
+## 五、在微信开发者工具里截图（备案用）
+
+1. 微信开发者工具 → 导入项目 → 目录选 `build/wechatgame`，AppID 同上 → 打开
+2. 模拟器机型选 **iPhone 6/7/8（375×667）** 或 **iPhone X 系列**，竖屏
+3. 在模拟器里玩到需要的画面：
+
+| # | 画面 | 怎么到达 |
+|---|---|---|
+| 1 | 开局抽卡（轮回殿） | 启动后的第一个界面 |
+| 2 | 方向选择 | 抽完三张卡点「重生」 |
+| 3 | 事件 + 选项 | 选一个方向 |
+| 4 | 境界突破 | 嫩芽通常在第 2 季突破，会弹出突破弹窗 |
+| 5 | 轮回结算 | 一世结束后（可在濒死弹窗点「接受命运」） |
+
+4. 截图：模拟器上方工具栏的**截图按钮**，或 Windows 自带截图（Win + Shift + S）只框选模拟器画面。
+5. 需要带名称的截图：点模拟器右上角胶囊「···」，面板顶部会显示小游戏名称和头像。
+
+> 正式 AppID + 公众平台已填名称/图标时，模拟器和真机的启动加载页、菜单面板都会显示正式名称；测试号显示的不是正式名称。
+
+## 六、上线前要填的配置
 
 `assets/scripts/game/config.ts`：
 | 字段 | 说明 |
 |---|---|
-| `rewardedAdUnitId` | 激励视频广告位 id（微信公众平台 → 流量主 → 广告位）。**为空时广告走 Mock，直接视为看完**，方便测试 |
+| `rewardedAdUnitId` | 激励视频广告位 id。**为空时广告走 Mock（直接视为看完）**，方便测试和截图 |
 | `saveKey` | 存档 key，存档结构不兼容时升级版本号 |
-| `safeTop` | 顶部安全区高度（微信右上角胶囊按钮），默认 96 |
+| `safeTop` | 顶部安全区（微信右上角胶囊），默认 96 |
 
-埋点事件（`Platform.report`）：`start_life`、`life_end`、`ad_reward`、`ad_cancel`，需要在 We 分析后台注册，见 `minigame-event-report` skill。
+埋点（`Platform.report`）：`start_life`、`life_end`、`ad_reward`、`ad_cancel`，需在 We 分析后台注册（见 `minigame-event-report` skill）。
 
-## 五、广告点位一览
+## 七、广告点位
 
 | 位置 | 文案 | 频控 |
 |---|---|---|
@@ -59,15 +85,11 @@
 | 事件卡右下角 | 窥探天命 · 看视频（n/3） | 每局 3 次 |
 | 结算页 | 看视频 · 轮回点翻倍 | 每局 1 次 |
 
-## 六、美术素材接入
+## 八、美术素材接入
 
-代码按下面的路径加载贴图（不带扩展名，`.png/.jpg` 都可以），**缺图时自动用纸张风格兜底，不会报错**：
-
-| 用途 | 路径（resources 下） |
-|---|---|
 目录规范与 `docs/art/ai-image-prompts.md` §七 一致：**通用层**任何命格共用，**命格层**同名文件优先。
 
-| 用途 | 路径（resources 下） | 显示方式 |
+| 用途 | 路径（`assets/resources/textures/` 下） | 显示方式 |
 |---|---|---|
 | 主界面背景（轮回殿 / 局内） | `destiny/<命格>/main_bg` | cover 等比铺满 |
 | 结算背景 | `destiny/<命格>/settle_bg`、`settle_bg_ending` | cover 等比铺满 |
@@ -79,17 +101,19 @@
 | 伙伴头像（可选） | `destiny/<命格>/companion_{id}` | |
 | 境界形象（可选） | `destiny/<命格>/stage_{1..5}`，缺省回落 `common/fx/fx_breakthrough` | |
 
-（以上路径都省略了前缀 `textures/`。）
-- **比例保护**：贴图宽高比和显示区域差太多会自动跳过，换下一个候选；全部不可用时用纸张风格兜底。
-- 路径统一定义在 `assets/scripts/game/config.ts` 的 `TEX`，改目录只需改那里。
-- 新命格最少只需 3 张：`main_bg`、`settle_bg`、`settle_bg_ending`；剧本数据里给死法 / 技能 / 道具 / 天赋写好 `icon` 字段即可复用通用图标。
+- 缺图 / 比例不合时自动换下一个候选，全部不可用时用纸张风格兜底，不报错。
+- 图片导入类型无论是 sprite-frame 还是 texture 都能加载（代码会自动兜底）。
+- 路径统一定义在 `assets/scripts/game/config.ts` 的 `TEX`。
+- 大图建议压缩：`ending_card.png`（730KB）、`settle_panel.png`（590KB）可用 TinyPNG 或转 JPG。
 
-## 七、排错
+## 九、排错
 
 | 现象 | 原因 / 处理 |
 |---|---|
-| 预览黑屏，控制台「剧本加载失败」 | `resources/data` 没复制进工程，或 JSON 有语法错误（Linux 端先跑 `npm run validate`） |
-| 界面偏移 / 被裁切 | 设计分辨率没按第二节设置 |
-| 看不到任何界面 | `GameRoot` 没挂在 Canvas 上，或 Canvas 不在场景里 |
-| 贴图不显示 | 图片 Type 不是 `sprite-frame`，或路径和上表不一致 |
-| 编辑器报 `cc` 某 API 不存在 | Linux 端的 `typings/cc-shim.d.ts` 与真实 API 不一致，把报错发回来修 |
+| 预览只有沙色背景、控制台「剧本加载失败」 | `assets/resources/data` 缺失或 JSON 语法错误（Linux 端 `npm run validate`） |
+| 控制台「Canvas 上未挂 GameRoot，已自动补挂」 | 场景里的组件绑定丢了，代码已自动兜底，可忽略；也可在 Canvas 上手动重新添加 `GameRoot` |
+| 预览黑屏 / 什么都没有 | 打开的不是 `main.scene`；或构建时初始场景没选 `main.scene` |
+| 界面偏移、被裁切 | 项目设置的设计分辨率不是 750×1334 适配宽度 |
+| 构建报「主包超过 4M」 | 第三节的子包没配置 |
+| 编辑器报 `cc` 某个 API 不存在 / 类型不对 | Linux 端的 `typings/cc-shim.d.ts` 与真实 API 有出入：**把完整报错发回来修** |
+| VSCode 里大量 `cc` 类型报错 | 先用 Cocos 打开一次工程生成 `temp/declarations`；`typings/` 已被根 tsconfig 排除 |

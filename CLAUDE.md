@@ -3,13 +3,16 @@
 文字交互 + 轮回 Roguelite。Cocos Creator 3.8.x · TypeScript · 2D 竖屏 · 仅激励视频变现。
 
 ## 开发环境
-- Linux 写代码 / 跑测试 → Git → Windows 上 Cocos Creator 构建 + 微信开发者工具真机测试（接入步骤：`docs/dev/cocos-setup.md`）
+- 仓库本身就是 Cocos Creator 3.8 工程（package.json 的 creator 字段、settings/v2、assets/scenes/main.scene 已挂 GameRoot）
+- Linux 写代码 / 跑测试 → GitHub → Windows 上 Cocos 打开、构建微信小游戏、开发者工具截图（步骤：`docs/dev/cocos-setup.md`）
 - Linux 无 Cocos 编辑器：**核心逻辑必须是纯 TS（不 import 'cc'）**，放在 `assets/scripts/core/`
 - 系统 `npx` 已损坏，用 `npm run <script>` 或 `./node_modules/.bin/<bin>`
 
 ## 命令
 - `npm test` — vitest：条件 DSL、引擎、剧本 300 世冒烟、**游戏层冒烟**（假 cc 运行时随机点击 3000 次 × 3 种子，含屏幕越界检查）
-- `npm run typecheck` — tsc：核心层（tsconfig.tools.json）+ 游戏层（tsconfig.game.json，用 `typings/cc-shim.d.ts`）。不要新建 tsconfig.json，那是 Cocos 的
+- `npm run typecheck` — tsc：核心层（tsconfig.tools.json）+ 游戏层（tsconfig.game.json，用 `typings/cc-shim.d.ts`）
+- 根目录 `tsconfig.json` 是 Cocos 的（继承 temp/tsconfig.cocos.json）；Linux 端由 `tools/ensure-cocos-temp.mjs`（npm pre 钩子）生成占位 temp 文件
+- package.json 的 `"type": "2d"` 是 Cocos 要求的，Node 会按 ESM 处理工具脚本：不要用 `__dirname`，用 `import.meta.url`
 - `npm run validate` — 剧本静态校验
 - `npm run play` — 终端试玩（`-- --new` 清档）
 - `npm run sim` — 随机 AI 2000 世数值统计
@@ -27,5 +30,7 @@
 ## 约定
 - 写剧本内容遵循 `.claude/skills/rebirth-content/SKILL.md`
 - 游戏层新用到 cc API 时，同步补 `typings/cc-shim.d.ts` 和 `tests/fake-cc.ts`
+- 游戏代码避免 ES2021+ 语法（如 `??=`），兼容老版本微信
+- `assets/` 下的 `.meta` 由 Cocos 生成，要提交；`GameRoot.ts.meta` 的 uuid 被 main.scene 引用，不要改
 - UI 风格以 `docs/filing/mock/style.css` 为准（颜色常量在 `ui/kit.ts` 的 `COLOR`）
 - 改动后跑 `npm run typecheck && npm test && npm run validate`

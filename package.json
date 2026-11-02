@@ -1,14 +1,26 @@
 {
   "name": "rebirth-minigame",
+  "type": "2d",
+  "uuid": "75149d21-71fa-4c3c-8c1d-88c5c360815f",
+  "version": "1.0.0",
+  "creator": {
+    "version": "3.8.0"
+  },
   "private": true,
   "description": "我重生了，这一世我将拿回属于我的一切 - 微信小游戏",
   "scripts": {
-    "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.tools.json && tsc -p tsconfig.game.json",
-    "validate": "tsx tools/validate.ts",
+    "art": "node tools/art/gen-art.mjs",
+    "preplay": "node tools/ensure-cocos-temp.mjs",
     "play": "tsx tools/play.ts",
+    "postinstall": "node tools/ensure-cocos-temp.mjs",
+    "presim": "node tools/ensure-cocos-temp.mjs",
     "sim": "tsx tools/play.ts --sim 2000",
-    "art": "node tools/art/gen-art.mjs"
+    "pretest": "node tools/ensure-cocos-temp.mjs",
+    "test": "vitest run",
+    "pretypecheck": "node tools/ensure-cocos-temp.mjs",
+    "typecheck": "tsc -p tsconfig.tools.json && tsc -p tsconfig.game.json",
+    "prevalidate": "node tools/ensure-cocos-temp.mjs",
+    "validate": "tsx tools/validate.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

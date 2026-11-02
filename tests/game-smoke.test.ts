@@ -133,3 +133,19 @@ describe('贴图接入（真实素材）', () => {
         expect(ev.getComponent(Sprite)!.spriteFrame?.name).toBe('textures/common/ui/event_card');
     });
 });
+
+describe('贴图加载兜底', () => {
+    it('图片未导入为 sprite-frame 时，改读 ImageAsset 生成 SpriteFrame', async () => {
+        const { loadSpriteFrame } = await import('../assets/scripts/game/loader');
+        const { resources } = await import('./fake-cc');
+        resources.spriteFrameDisabled = true;
+        try {
+            const sf = await loadSpriteFrame('textures/common/frame/frame_rare');
+            expect(sf).not.toBeNull();
+            expect(sf!.originalSize).toEqual({ width: 600, height: 900 });
+            expect(await loadSpriteFrame('textures/common/frame/not_exist')).toBeNull();
+        } finally {
+            resources.spriteFrameDisabled = false;
+        }
+    });
+});

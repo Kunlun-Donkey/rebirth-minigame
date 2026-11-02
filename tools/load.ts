@@ -1,9 +1,10 @@
 /** Node 端读取命格剧本（游戏内由 Cocos resources 加载，组装成同样的 RawDestiny） */
+import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { RawDestiny, RawEvent } from '../assets/scripts/core/types';
 
-export const DATA_ROOT = join(__dirname, '..', 'assets', 'resources', 'data', 'destinies');
+export const DATA_ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources', 'data', 'destinies');
 
 const readJson = <T>(file: string): T => {
     try {

@@ -63,6 +63,18 @@ declare module 'cc' {
     }
 
     export class UIOpacity extends Component { opacity: number; }
+    export class Canvas extends Component {}
+
+    export class Scene extends Node {
+        getComponentInChildren<T extends Component>(type: new () => T): T | null;
+    }
+    export class Director {
+        static EVENT_AFTER_SCENE_LAUNCH: string;
+        getScene(): Scene | null;
+        once(type: string, cb: (...args: unknown[]) => void, target?: unknown): void;
+        on(type: string, cb: (...args: unknown[]) => void, target?: unknown): void;
+    }
+    export const director: Director;
     export class BlockInputEvents extends Component {}
 
     export class Label extends Component {
@@ -82,7 +94,9 @@ declare module 'cc' {
 
     export class Asset { readonly name: string; }
     export class JsonAsset extends Asset { json: unknown; }
+    export class ImageAsset extends Asset { readonly width: number; readonly height: number; }
     export class SpriteFrame extends Asset {
+        static createWithImage(image: ImageAsset): SpriteFrame;
         insetTop: number; insetBottom: number; insetLeft: number; insetRight: number;
         readonly originalSize: Size;
     }

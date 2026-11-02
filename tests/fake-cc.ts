@@ -2,10 +2,11 @@
  * 测试用的假 'cc' 运行时：足够让 assets/scripts/game 在 Node 里跑起来（节点树、组件、触摸事件、资源加载）。
  * 通过 vitest.config.ts 的 alias 把 'cc' 指向这里。
  */
+import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const RES = join(__dirname, '..', 'assets', 'resources');
+const RES = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources');
 
 export namespace _decorator {
     export const ccclass = (_name?: string) => <T>(ctor: T) => ctor;
@@ -77,6 +78,14 @@ export class UITransform extends Component {
     setAnchorPoint(x: number, y: number) { this.anchorX = x; this.anchorY = y; }
 }
 export class UIOpacity extends Component { opacity = 255; }
+export class Canvas extends Component {}
+export class Director {
+    static EVENT_AFTER_SCENE_LAUNCH = 'director_after_scene_launch';
+    getScene() { return null; }
+    once() {}
+    on() {}
+}
+export const director = new Director();
 export class BlockInputEvents extends Component {}
 export class Label extends Component {
     static Overflow = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
@@ -87,9 +96,15 @@ export class Label extends Component {
 }
 export class Asset { constructor(public name = '') {} }
 export class JsonAsset extends Asset { json: unknown; }
+export class ImageAsset extends Asset { width = 0; height = 0; }
 export class SpriteFrame extends Asset {
     insetTop = 0; insetBottom = 0; insetLeft = 0; insetRight = 0;
     originalSize = { width: 0, height: 0 };
+    static createWithImage(img: ImageAsset): SpriteFrame {
+        const sf = new SpriteFrame(img.name);
+        sf.originalSize = { width: img.width, height: img.height };
+        return sf;
+    }
 }
 
 /** 读取 PNG / JPEG 头部得到真实尺寸 */
@@ -122,9 +137,19 @@ function findImage(path: string): string | undefined {
 }
 
 export const resources = {
+    /** 测试开关：模拟图片导入类型不是 sprite-frame */
+    spriteFrameDisabled: false,
     load(path: string, type: unknown, cb: (err: Error | null, asset: unknown) => void) {
         setTimeout(() => {
+            if (type === ImageAsset) {
+                const file = findImage(path);
+                if (!file) return cb(new Error(`缺图 ${path}`), null);
+                const img = new ImageAsset(path);
+                Object.assign(img, imageSize(file));
+                return cb(null, img);
+            }
             if (type === SpriteFrame) {
+                if (resources.spriteFrameDisabled) return cb(new Error('模拟：图片未导入为 sprite-frame'), null);
                 const p = path.replace(/\/spriteFrame$/, '');
                 const file = findImage(p);
                 if (!file) return cb(new Error(`缺图 ${p}`), null);
