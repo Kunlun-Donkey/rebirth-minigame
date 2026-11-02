@@ -142,7 +142,7 @@
     "text": "一个道士在庙里歇脚。他看见你，眼睛一亮：好重的妖气。",
     "choices": [
       { "text": "夹着尾巴装傻", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "灵性": 1 }, "result": "他看了你半天，摇摇头：是我眼花了。",
+        "effect": { "灵性": 1, "skill": "play_tame" }, "result": "他看了你半天，摇摇头：是我眼花了。原来装乖这么管用。",
         "fail": { "effect": { "death": "taoist" }, "result": "他掏出一只葫芦，喊了一声你的名字。" } },
       { "text": "撒腿就跑", "chance": 0.6, "chanceAttr": "脚力", "chanceStep": 0.03,
         "effect": { "脚力": 1 }, "result": "你从后墙的狗洞钻了出去。他的拂尘扫空了。",
