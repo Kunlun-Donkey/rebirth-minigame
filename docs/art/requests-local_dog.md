@@ -8,6 +8,19 @@
 主色调：**乡土暖色调，以麦秸黄和土红为主色**（与荒漠的赭石沙色区分：更暖、更有烟火气）。
 世界观：北方小山村。村口柴堆、老槐树、土坯院墙、祠堂、后山竹林、半山破庙、山顶雷池。主角是一条黄色土狗（中华田园犬：短毛、立耳、卷尾）。
 
+## 交付状态（2026-11-02）
+
+P0 四张 + 荒漠封面已用 SVG 程序化生成入库（`npm run art -- local_dog`，源码 [tools/art/gen-art.mjs](../../tools/art/gen-art.mjs) §9），扁平剪影风格，可直接用。
+想换 AI 精修版：按下方提示词生成，同名放入对应目录，并从 gen-art.mjs 删掉该条目防覆盖（封面用 `.jpg` 或 `.png` 均可，代码不看扩展名）。
+
+| 文件 | 状态 |
+|---|---|
+| `local_dog/main_bg.jpg`（主包） | ✅ SVG |
+| `local_dog/settle_bg.jpg` · `settle_bg_ending.jpg` · `cover.jpg` | ✅ SVG |
+| `desert_grass/cover.jpg` | ✅ SVG |
+| 选命格「未解锁」锁图标 `common/icon/lock.png` | ✅ SVG，已接入 destiny.ts |
+| `stage_1..5` · `companion_*` · `epitaph_card` | ⏳ 角色画留给 AI；缺图已兜底 |
+
 ## 交付清单
 
 | 优先级 | 文件 | 尺寸 / 比例 | 放到 | 用途 |
