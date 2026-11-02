@@ -1,7 +1,7 @@
 /** 游戏配置（上线前在这里填真实的广告位 id） */
 export const CONFIG = {
-    /** 当前命格 */
-    destiny: 'desert_grass',
+    /** 首次进入时的默认命格（之后记在存档 profile.current，由轮回殿切换） */
+    defaultDestiny: 'desert_grass',
     /** 微信激励视频广告位 id；为空时使用开发 Mock（直接视为看完） */
     rewardedAdUnitId: '',
     /** 存档 key（结构变更时升级版本号） */
@@ -21,20 +21,26 @@ export const CONFIG = {
  * 返回数组 = 候选列表，按顺序取第一张存在且比例合适的；全部缺失时 UI 用纸张风格兜底。
  */
 const C = 'textures/common';
-const D = (f: string) => `textures/destiny/${CONFIG.destiny}/${f}`;
+/** 当前命格（切换命格时由 Game 调用 setTexDestiny 更新；TEX 里的命格层贴图都随之变化） */
+let curDestiny = CONFIG.defaultDestiny;
+export function setTexDestiny(id: string): void { curDestiny = id; }
+const D = (f: string) => `textures/destiny/${curDestiny}/${f}`;
 /** 命格版优先，回落通用版 */
 const both = (dir: string, f: string) => [D(f), `${C}/${dir}/${f}`];
 
 export const TEX = {
-    mainBg: [D('main_bg')],
-    settleBg: [D('settle_bg')],
-    settleBgEnding: [D('settle_bg_ending')],
-    settlePanel: both('ui', 'settle_panel'),
-    eventCard: both('ui', 'event_card'),
-    eventCardGold: both('ui', 'event_card_gold'),
-    eventCardSudden: both('ui', 'event_card_sudden'),
-    epitaphCard: both('ui', 'epitaph_card'),
-    endingCard: both('ui', 'ending_card'),
+    // 命格层贴图用 getter：每次读取都按当前命格取路径
+    get mainBg() { return [D('main_bg')]; },
+    get settleBg() { return [D('settle_bg')]; },
+    get settleBgEnding() { return [D('settle_bg_ending')]; },
+    get settlePanel() { return both('ui', 'settle_panel'); },
+    get eventCard() { return both('ui', 'event_card'); },
+    get eventCardGold() { return both('ui', 'event_card_gold'); },
+    get eventCardSudden() { return both('ui', 'event_card_sudden'); },
+    get epitaphCard() { return both('ui', 'epitaph_card'); },
+    get endingCard() { return both('ui', 'ending_card'); },
+    /** 命格选择卡封面（任意命格，不随当前命格变化）；缺图时卡片显示名字首字 */
+    cover: (id: string) => [`textures/destiny/${id}/cover`],
     frame: (rarity: string) => [`${C}/frame/frame_${rarity}`],
     badge: (type: 'talent' | 'item' | 'companion' | 'skill') => [`${C}/frame/badge_${type}`],
     fxBreakthrough: [`${C}/fx/fx_breakthrough`],

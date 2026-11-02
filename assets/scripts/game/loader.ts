@@ -1,6 +1,6 @@
 /** 从 resources 加载命格剧本，组装成 RawDestiny（与 Node 端 tools/load.ts 等价） */
 import { ImageAsset, JsonAsset, resources, SpriteFrame } from 'cc';
-import { buildDestiny, Destiny, RawDestiny, RawEvent } from '../core';
+import { buildDestiny, Destiny, DestinyIndex, RawDestiny, RawEvent } from '../core';
 import { bundleOf } from './res';
 
 function loadJson<T>(path: string): Promise<T> {
@@ -15,6 +15,10 @@ function loadJsonDir<T>(path: string): Promise<{ name: string; json: T }[]> {
             err ? reject(err) : resolve((assets ?? []).map(a => ({ name: a.name, json: a.json as T }))),
         );
     });
+}
+
+export function loadDestinyIndex(): Promise<DestinyIndex> {
+    return loadJson<DestinyIndex>('data/destinies/index');
 }
 
 export async function loadDestiny(id: string): Promise<Destiny> {

@@ -3,13 +3,13 @@
   "name": "荒漠一株草",
   "desc": "你是荒漠里的一颗草籽。这一世，你要长成贯通天地的树。",
   "attrs": [
-    { "id": "water", "name": "水分", "icon": "💧", "stat": "life", "init": 5 },
+    { "id": "water", "name": "水分", "icon": "💧", "stat": "life", "init": 5, "desc": "生命。每季消耗 1，归零就渴死。向下扎根、喝露水能补充。" },
     { "id": "waterMax", "name": "水分上限", "init": 5, "hidden": true },
-    { "id": "root", "name": "根系", "icon": "🌿", "stat": "down", "init": 0 },
-    { "id": "stem", "name": "茎叶", "icon": "🍃", "stat": "up", "init": 0 },
-    { "id": "tough", "name": "韧性", "icon": "🛡", "stat": "tough", "init": 0 },
-    { "id": "spirit", "name": "灵性", "icon": "✨", "stat": "spirit", "init": 0 },
-    { "id": "qi", "name": "灵气", "icon": "🔆", "stat": "energy", "init": 0 }
+    { "id": "root", "name": "根系", "short": "根", "color": "#8a6a3c", "icon": "🌿", "stat": "down", "init": 0, "desc": "向下扎根获得。每 8 点根系，每季自动吸 1 点水；也是深入地下的门槛。" },
+    { "id": "stem", "name": "茎叶", "short": "叶", "color": "#5c9a3a", "icon": "🍃", "stat": "up", "init": 0, "desc": "向上生长获得。茎叶越高，每季光合产出的灵气越多；也是长高的门槛。" },
+    { "id": "tough", "name": "韧性", "short": "韧", "color": "#7d7d7d", "icon": "🛡", "stat": "tough", "init": 0, "desc": "抵抗灾难与啃咬，提高许多冒险选项的成功率。" },
+    { "id": "spirit", "name": "灵性", "short": "灵", "color": "#8e5bc9", "icon": "✨", "stat": "spirit", "init": 0, "desc": "悟性与运气。解锁对话、遗迹与奇遇相关的选项。" },
+    { "id": "qi", "name": "灵气", "short": "气", "color": "#d99a2b", "icon": "🔆", "stat": "energy", "init": 0, "desc": "成长货币。积累到一定程度就会突破境界。" }
   ],
   "dirs": [
     { "id": "up", "name": "向上生长" },
@@ -123,12 +123,21 @@
     { "id": "fair_wind", "name": "好风", "desc": "风把你吹得笔直。开局茎叶 +2。", "start": { "茎叶": 2 } },
     { "id": "windfall", "name": "天降横财", "desc": "今天轮回点 ×1.2。", "mods": { "pointsMul": 1.2 } }
   ],
+  "rules": {
+    "life": "water", "lifeMax": "waterMax",
+    "lifeDeath": "thirst", "oldAgeDeath": "old_age",
+    "regen": { "from": "root", "per": 8 },
+    "growth": "qi",
+    "yield": { "from": "stem", "per": 3, "base": 1, "minStage": 1 },
+    "startLog": "一颗草籽落在了荒漠里。",
+    "loadingText": "荒漠里，一颗种子正在醒来……",
+    "reviveOnceText": "不死草：你枯萎了，又从根里抽出一根新芽。",
+    "dirPrompt": "你是一株{stage}。\n这一季，往哪儿长？",
+    "emptyItems": "你的根边什么都没有。"
+  },
   "settings": {
     "suddenChance": 0.2,
     "rarityWeights": { "common": 60, "rare": 28, "epic": 10, "legend": 2 },
-    "qiBase": 1,
-    "qiPerStem": 3,
-    "waterPerRoot": 8,
     "skillSlots": 3
   }
 }

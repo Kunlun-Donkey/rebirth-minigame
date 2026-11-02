@@ -1,7 +1,27 @@
 import { describe, expect, it } from 'vitest';
-import { buildDestiny, createProfile, Engine, Rng } from '../assets/scripts/core';
-import { listDestinies, loadRawDestiny } from '../tools/load';
-import { validateDestiny } from '../tools/validate-lib';
+import { buildDestiny, createProfile, destinyProfile, destinyStates, Engine, pickDestiny, Rng } from '../assets/scripts/core';
+import { listDestinies, loadIndex, loadRawDestiny } from '../tools/load';
+import { validateDestiny, validateIndex } from '../tools/validate-lib';
+
+describe('命格索引与解锁', () => {
+    const index = loadIndex();
+
+    it('index.json 校验无错误', () => {
+        expect(validateIndex(index, listDestinies())).toEqual([]);
+    });
+
+    it('新存档只开放默认命格；达成条件后解锁土狗', () => {
+        const p = createProfile();
+        const locked = destinyStates(index, p).find(s => s.entry.id === 'local_dog')!;
+        expect(locked.unlocked).toBe(false);
+        expect(locked.lockText).toBeTruthy();
+        expect(pickDestiny(index, p, 'local_dog')).toBe('desert_grass');
+
+        destinyProfile(p, 'desert_grass').bestStage = 2;
+        expect(destinyStates(index, p).every(s => s.unlocked)).toBe(true);
+        expect(pickDestiny(index, p, 'local_dog')).toBe('local_dog');
+    });
+});
 
 describe.each(listDestinies())('命格剧本 %s', id => {
     const { raw } = loadRawDestiny(id);

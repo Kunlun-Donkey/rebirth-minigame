@@ -1,7 +1,7 @@
 /** 剧本静态校验：引用完整性、可达性、可选性、文本长度 */
 import { walkCond } from '../assets/scripts/core/condition';
 import { buildDestiny, DataError } from '../assets/scripts/core/data';
-import { Cond, Destiny, Effect, RARITIES, RawDestiny } from '../assets/scripts/core/types';
+import { Cond, Destiny, DestinyIndex, Effect, RARITIES, RawDestiny } from '../assets/scripts/core/types';
 
 export const TEXT_LIMITS = { text: 60, choice: 14, result: 40 };
 
@@ -66,7 +66,19 @@ export function validateDestiny(raw: RawDestiny): Report {
     const len = (s: string | undefined) => (s ? [...s].length : 0);
 
     // 命格元数据
-    for (const id of ['thirst', 'old_age']) if (!d.deaths.has(id)) errors.push(`缺少引擎内置死法：${id}`);
+    // 命格规则：引用的属性 / 死法必须存在
+    const R = d.meta.rules;
+    if (!R) errors.push('destiny.json 缺少 rules');
+    else {
+        for (const [k, id] of [['life', R.life], ['lifeMax', R.lifeMax], ['regen.from', R.regen?.from], ['growth', R.growth], ['yield.from', R.yield?.from]] as const) {
+            if (!id || !d.attrNames[id]) errors.push(`rules.${k} 引用了不存在的属性「${id}」`);
+        }
+        for (const [k, id] of [['lifeDeath', R.lifeDeath], ['oldAgeDeath', R.oldAgeDeath]] as const) {
+            if (!d.deaths.has(id)) errors.push(`rules.${k} 引用了不存在的死法「${id}」`);
+        }
+        if (!(R.regen?.per > 0) || !(R.yield?.per > 0)) errors.push('rules.regen.per / rules.yield.per 必须大于 0');
+        if (!R.startLog) errors.push('rules.startLog 不能为空');
+    }
     for (const death of d.deaths.values()) {
         if (death.legacy && !d.legacies.has(death.legacy)) errors.push(`死法 ${death.id}: 传承 ${death.legacy} 不存在`);
         if (!death.legacy) warnings.push(`死法 ${death.id} 没有传承（违背「死亡即成长」）`);
@@ -186,4 +198,21 @@ export function validateDestiny(raw: RawDestiny): Report {
             结局: d.endings.size,
         },
     };
+}
+
+/** 命格索引校验：id 唯一且有对应目录、解锁条件引用合法、至少一个默认开放 */
+export function validateIndex(index: DestinyIndex, dirs: string[]): string[] {
+    const errors: string[] = [];
+    const ids = index.destinies.map(d => d.id);
+    if (!ids.length) errors.push('index.json 没有任何命格');
+    if (new Set(ids).size !== ids.length) errors.push('index.json 里有重复的命格 id');
+    for (const d of index.destinies) {
+        if (!dirs.includes(d.id)) errors.push(`index.json 的命格 ${d.id} 没有对应的剧本目录`);
+        const b = d.unlock?.bestStage;
+        if (b && !ids.includes(b.destiny)) errors.push(`命格 ${d.id} 的解锁条件引用了不存在的命格 ${b.destiny}`);
+        if (d.unlock && !d.unlock.text) errors.push(`命格 ${d.id} 的解锁条件缺少说明 text`);
+    }
+    if (!index.destinies.some(d => !d.unlock)) errors.push('至少要有一个默认开放（无 unlock）的命格');
+    for (const dir of dirs) if (!ids.includes(dir)) errors.push(`剧本目录 ${dir} 没有登记到 index.json，游戏里选不到`);
+    return errors;
 }

@@ -1,0 +1,186 @@
+[
+  {
+    "id": "up_fallback", "dir": "up", "weight": 3,
+    "text": "你在山里转了一季。追过兔子，没追上。",
+    "choices": [ { "text": "接着跑", "effect": { "脚力": 1 }, "result": "兔子没追上，腿倒是越来越快了。" } ]
+  },
+
+  {
+    "id": "u1_rabbit", "dir": "up", "layers": ["U1"],
+    "text": "草丛里蹿出一只野兔，冲你翻了个白眼。",
+    "choices": [
+      { "text": "追", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "体力": 3, "脚力": 1 }, "result": "你叼住了它。今天是你这辈子吃得最饱的一天。",
+        "fail": { "effect": { "体力": -1, "脚力": 1 }, "result": "兔子钻进了洞。你在洞口守到了天黑。" } },
+      { "text": "不追", "effect": { "灵性": 1 }, "result": "兔子愣了一下，好像有点失望。" }
+    ]
+  },
+  {
+    "id": "u1_trap", "dir": "up", "layers": ["U1", "U2"],
+    "text": "草里有股铁锈味，混着一块肉的香。",
+    "choices": [
+      { "text": "叼肉", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "体力": 3 }, "result": "你叼起肉就跑。身后，铁夹子咔地合上了。",
+        "fail": { "effect": { "death": "trap" }, "result": "咔嚓。铁夹子咬住了你的腿。" } },
+      { "text": "绕开", "effect": { "脚力": 1 }, "result": "你绕了一大圈。那块肉，留给更傻的狗吧。" },
+      { "text": "先拿爪子探探", "require": "legacy:nimble>=1", "effect": { "体力": 3, "灵性": 1 },
+        "result": "前世你踩过它。这一世，你先把夹子拍合了。" },
+      { "text": "刨出夹子", "showIf": "skill:dig", "useSkill": "dig", "effect": { "体力": 3, "妖气": 3 },
+        "result": "你把夹子连土刨了出来，叼着肉走了。" }
+    ]
+  },
+  {
+    "id": "u1_hunter", "dir": "up", "layers": ["U1"],
+    "text": "一个猎户扛着土枪，冲你吹了声口哨。",
+    "choices": [
+      { "text": "跟他走", "effect": { "体力": 2, "脚力": 1 }, "result": "你帮他撵了一下午山鸡。他分了你一只鸡腿。" },
+      { "text": "躲进林子", "effect": { "灵性": 1 }, "result": "枪口冲着你的时候，你闻到了火药味。" }
+    ]
+  },
+  {
+    "id": "u1_mushroom", "dir": "up", "layers": ["U1", "U2"],
+    "text": "树根底下长着一圈红蘑菇，甜丝丝的。",
+    "choices": [
+      { "text": "吃一口", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "妖气": 4 }, "result": "你浑身发热。月亮好像变大了。",
+        "fail": { "effect": { "体力": -2 }, "result": "你吐了一下午，看见满天都是星星。" } },
+      { "text": "闻闻就走", "effect": { "灵性": 1 }, "result": "你记住了这个味道。好闻的，不一定能吃。" }
+    ]
+  },
+
+  {
+    "id": "u2_wolves", "dir": "up", "layers": ["U2", "U3"],
+    "text": "竹林深处，亮起了三双绿眼睛。是狼。",
+    "choices": [
+      { "text": "跑", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.04,
+        "effect": { "脚力": 2 }, "result": "你一口气跑下了山。狼在后面嚎了一夜。",
+        "fail": { "effect": { "death": "wolves" }, "result": "它们从三个方向扑了上来。" } },
+      { "text": "背靠竹子龇牙", "require": "牙口>=5", "effect": { "牙口": 1, "妖气": 5 },
+        "result": "你一步也没退。狼绕了三圈，走了。" },
+      { "text": "学狼嚎", "require": "legacy:wolf_blood>=1", "effect": { "妖气": 6, "脚力": 1 },
+        "result": "前世它们围死了你。这一世你一嚎，它们以为来了同类。" },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "妖气": 4 },
+        "result": "你叫得满山回音。狼以为来了一群狗，散了。" },
+      { "text": "犬牙", "showIf": "skill:fang", "useSkill": "fang", "effect": { "牙口": 2, "妖气": 8 },
+        "result": "你咬住头狼的脖子不松口。狼群认了怂。" }
+    ]
+  },
+  {
+    "id": "u2_bamboo_shoot", "dir": "up", "layers": ["U2"],
+    "text": "一场雨后，竹笋一夜冒出半人高。",
+    "choices": [
+      { "text": "啃笋", "effect": { "体力": 2 }, "result": "狗不爱吃笋。但饿的时候，什么都爱。" },
+      { "text": "往深里刨", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "moonstone" },
+        "result": "笋底下埋着一块石头，在土里发着光。" }
+    ]
+  },
+  {
+    "id": "u2_weasel_ask", "dir": "up", "layers": ["U2"], "once": true,
+    "text": "一只黄鼠狼拦住你，作了个揖：你看我，像人还是像黄鼠狼？",
+    "choices": [
+      { "text": "说它像人", "effect": { "灵性": 2, "体力": 1 }, "result": "它高兴得打了个滚，塞给你一颗鸡蛋。" },
+      { "text": "说它像黄鼠狼", "effect": { "牙口": 1 }, "result": "它气得跳脚，骂骂咧咧地走了。" },
+      { "text": "跟它聊聊", "showIf": "skill:talk", "useSkill": "talk", "effect": { "妖气": 6, "灵性": 1 },
+        "result": "你们聊了一下午。它教你怎么对着月亮吸气。" }
+    ]
+  },
+  {
+    "id": "u2_voice", "dir": "up", "layers": ["U2"],
+    "text": "风吹竹林。你听见有人在叫：小黄，小黄。",
+    "choices": [
+      { "text": "循着声音去", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 2, "妖气": 3 }, "result": "是竹子在叫你。它们说，你是这山里最好的狗。",
+        "fail": { "effect": { "体力": -2 }, "result": "什么也没有。你在林子里迷了一夜路。" } },
+      { "text": "不理它", "effect": { "脚力": 1 }, "result": "你头也不回地穿过了竹林。" }
+    ]
+  },
+
+  {
+    "id": "u3_offering", "dir": "up", "layers": ["U3"],
+    "text": "供桌上摆着一盘供果，还有半只烧鸡。",
+    "choices": [
+      { "text": "偷吃", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "体力": 4 }, "result": "你吃得满嘴流油。泥像没说什么。",
+        "fail": { "effect": { "妖气": -3, "体力": 1 }, "result": "吃到一半，泥像好像瞪了你一眼。你噎住了。" } },
+      { "text": "替山神守夜", "effect": { "忠义": 1, "灵性": 1, "妖气": 4 }, "result": "天亮时，烧鸡还在。供桌上多了一层月光。" }
+    ]
+  },
+  {
+    "id": "u3_moon", "dir": "up", "layers": ["U3"], "once": true, "weight": 20,
+    "text": "庙前的空地上，月光亮得像一池水。",
+    "choices": [
+      { "text": "对月长啸", "effect": { "妖气": 6, "skill": "howl" }, "result": "你对着月亮长啸。月亮好像往下沉了一点。" },
+      { "text": "趴下晒月亮", "effect": { "妖气": 3, "体力": 1 }, "result": "你在月光里睡着了。梦里有很多骨头。" }
+    ]
+  },
+  {
+    "id": "u3_incense", "dir": "up", "layers": ["U3"],
+    "text": "香炉里的香灰还是温的。有人刚来过。",
+    "choices": [
+      { "text": "舔一口", "effect": { "妖气": 3 }, "result": "苦的。但舔完，你觉得耳朵更尖了。" },
+      { "text": "叼一撮走", "effect": { "item": "incense_ash" }, "result": "你用嘴包了一撮香灰。说不定哪天用得上。" }
+    ]
+  },
+  {
+    "id": "u3_taoist", "dir": "up", "layers": ["U3"], "stage": [2, 99],
+    "text": "一个道士在庙里歇脚。他看见你，眼睛一亮：好重的妖气。",
+    "choices": [
+      { "text": "夹着尾巴装傻", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 1 }, "result": "他看了你半天，摇摇头：是我眼花了。",
+        "fail": { "effect": { "death": "taoist" }, "result": "他掏出一只葫芦，喊了一声你的名字。" } },
+      { "text": "撒腿就跑", "chance": 0.6, "chanceAttr": "脚力", "chanceStep": 0.03,
+        "effect": { "脚力": 1 }, "result": "你从后墙的狗洞钻了出去。他的拂尘扫空了。",
+        "fail": { "effect": { "death": "taoist" }, "result": "葫芦口一吸，你倒飞了回去。" } },
+      { "text": "把妖气藏起来", "require": "legacy:hide_aura>=1", "effect": { "灵性": 2, "妖气": 5 },
+        "result": "前世你进过他的葫芦。这一世，他只看见一条土狗。" },
+      { "text": "叼出香灰", "require": "item:incense_ash", "effect": { "妖气": 10 },
+        "result": "他看见山神庙的香灰，愣了愣，冲你拜了一拜。" },
+      { "text": "装乖", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "体力": 3, "忠义": 1 },
+        "result": "你翻出肚皮打了个滚。他笑着扔给你半张饼。" }
+    ]
+  },
+
+  {
+    "id": "u4_tribulation", "dir": "up", "layers": ["U4"],
+    "text": "雷云压到了头顶。它们是冲你来的。",
+    "choices": [
+      { "text": "硬扛", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.04,
+        "effect": { "妖气": 20, "牙口": 2 }, "result": "雷劈了九道。你还站着，毛全竖了。",
+        "fail": { "effect": { "death": "lightning" }, "result": "第九道雷，正正落在你头顶。" } },
+      { "text": "躲进石缝", "effect": { "体力": -2, "妖气": 3 }, "result": "雷劈碎了半块山石。你在缝里抖了一夜。" },
+      { "text": "雷纹护体", "require": "legacy:thunder_mark>=2", "effect": { "妖气": 25, "灵性": 2 },
+        "result": "前世雷劈死了你。这一世，雷落在你身上，像回家。" },
+      { "text": "引雷", "showIf": "skill:thunder", "useSkill": "thunder", "effect": { "妖气": 30 },
+        "result": "你张嘴咬住了劈下来的雷。它在你肚子里打了个滚。" }
+    ]
+  },
+  {
+    "id": "u4_catch_thunder", "dir": "up", "layers": ["U4"], "once": true, "weight": 15,
+    "text": "雷池里落下一道细细的雷，在水面上跳来跳去。",
+    "choices": [
+      { "text": "接住它", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "妖气": 10, "skill": "thunder" }, "result": "你一口叼住了那道雷。它乖乖地，钻进了你的毛里。",
+        "fail": { "effect": { "体力": -3 }, "result": "雷把你弹出去三丈远。毛焦了一片。" } },
+      { "text": "看着它", "effect": { "灵性": 2 }, "result": "雷跳累了，沉进了水里。你好像懂了点什么。" }
+    ]
+  },
+  {
+    "id": "u4_thunder_pine", "dir": "up", "layers": ["U4"],
+    "text": "一棵被雷劈过的老松，还冒着青烟。",
+    "choices": [
+      { "text": "啃一块下来", "effect": { "item": "thunder_wood" }, "result": "木头麻嘴。你叼着它，一路打着喷嚏。" },
+      { "text": "在树下刨坑", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "tiangou_bone" },
+        "result": "树根底下，埋着一截会发光的骨头。" }
+    ]
+  },
+  {
+    "id": "u4_bite_moon", "dir": "up", "layers": ["U4"], "stage": [4, 99], "once": true,
+    "text": "月亮离山顶很近。近得像能咬一口。",
+    "choices": [
+      { "text": "跳起来咬", "chance": 0.35, "chanceAttr": "牙口", "chanceStep": 0.03,
+        "effect": { "妖气": 40 }, "result": "你咬下了一小口月亮。凉的，甜的。",
+        "fail": { "effect": { "体力": -3 }, "result": "差一点。你摔在石头上，月亮在笑。" } },
+      { "text": "再等等", "effect": { "灵性": 2, "妖气": 5 }, "result": "你对着月亮坐了一夜。总有一天。" }
+    ]
+  }
+]

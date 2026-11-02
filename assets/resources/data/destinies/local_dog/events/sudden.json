@@ -1,0 +1,98 @@
+[
+  {
+    "id": "x_snow", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 10,
+    "text": "大雪封了村子。夜里冷得骨头疼。",
+    "choices": [
+      { "text": "去挠门", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.06,
+        "effect": { "忠义": 1, "体力": 1 }, "result": "门开了。你在灶膛边睡了一夜。",
+        "fail": { "effect": { "death": "cold" }, "result": "门没开。雪越下越大。" } },
+      { "text": "钻进柴堆", "effect": { "体力": -2 }, "result": "你熬到了天亮。四条腿都冻麻了。" },
+      { "text": "在雪里打滚", "require": "legacy:thick_fur>=1", "effect": { "妖气": 5 },
+        "result": "前世你冻死在雪夜。这一世，你的毛厚得像棉袄。" },
+      { "text": "躲到老槐树下", "showIf": "companion:locust_tree", "effect": { "体力": 1 },
+        "result": "老槐树垂下枝条，把风雪挡在了外面。" }
+    ]
+  },
+  {
+    "id": "x_flood", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 6,
+    "text": "河水漫进了村子。有个孩子在水里扑腾。",
+    "choices": [
+      { "text": "跳下去", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "忠义": 4 }, "result": "你叼着他的衣领游上了岸。他娘给你磕了个头。",
+        "fail": { "effect": { "体力": -3 }, "result": "水太急。有人把孩子捞上来了，你喝了半肚子水。" } },
+      { "text": "爬上房顶", "effect": { "体力": -1 }, "result": "你在房顶蹲了三天，水才退。" }
+    ]
+  },
+  {
+    "id": "x_mad_dog", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 6,
+    "text": "村里传说出了疯狗。人人手里都拎着棍子。",
+    "choices": [
+      { "text": "躲进山里", "effect": { "脚力": 1, "体力": -1 }, "result": "你在山里躲了一季。风声过去了。" },
+      { "text": "照常在村口趴着", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.06,
+        "effect": { "忠义": 1 }, "result": "大家看你乖乖的，说：疯狗不是它。",
+        "fail": { "effect": { "death": "driven_out" }, "result": "有人指着你喊：就是它！" } }
+    ]
+  },
+  {
+    "id": "x_trader_night", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 6,
+    "text": "半夜，刘拐子拎着麻袋，摸进了村子。",
+    "choices": [
+      { "text": "叫醒全村", "chance": 0.6, "chanceAttr": "忠义", "chanceStep": 0.05,
+        "effect": { "忠义": 2 }, "result": "灯一盏盏亮了。刘拐子扔下麻袋就跑。",
+        "fail": { "effect": { "death": "dogcatcher" }, "result": "麻袋套住了你的头。" } },
+      { "text": "躲进柴堆", "effect": { "灵性": 1, "体力": -1 }, "result": "你屏着气，听他的脚步走远了。" },
+      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 1, "忠义": 1 },
+        "result": "你把他引到了河边。他一脚踩空，掉了进去。" }
+    ]
+  },
+  {
+    "id": "x_eclipse", "dir": "any", "sudden": true, "gold": true, "stage": [2, 99], "weight": 2,
+    "text": "天狗食月。全村人敲锣打鼓，月亮一点点缺了一块。",
+    "choices": [
+      { "text": "张嘴", "effect": { "妖气": 25, "灵性": 2 }, "result": "你总觉得，那一口是你咬的。" },
+      { "text": "趴着看", "effect": { "item": "moonstone" }, "result": "月亮回来时，掉了一小块在你脚边。" }
+    ]
+  },
+  {
+    "id": "x_meteor", "dir": "any", "sudden": true, "gold": true, "stage": [3, 99], "weight": 2, "once": true,
+    "text": "一颗流星落在了后山。你第一个跑到。",
+    "choices": [
+      { "text": "刨开那个坑", "effect": { "item": "tiangou_bone" }, "result": "坑底有一截骨头。它冲你叫了一声。" },
+      { "text": "舔一舔", "effect": { "妖气": 20, "体力": 2 }, "result": "烫嘴。但浑身都是劲。" }
+    ]
+  },
+  {
+    "id": "x_tiger_old", "dir": "any", "sudden": true, "stage": [4, 99], "once": true, "weight": 25,
+    "require": "flag:tiger_grudge",
+    "text": "黑虎老了，牙掉了一半。它看见你，还是龇了龇牙。",
+    "choices": [
+      { "text": "咬回去", "effect": { "skill": "fang", "item": "tiger_tooth", "牙口": 2 },
+        "result": "你咬回了当年那一口。它的牙，掉在你脚边。" },
+      { "text": "从它身边走过", "effect": { "忠义": 2, "灵性": 2 }, "result": "你没回头。你早就不是那只小狗了。" }
+    ]
+  },
+  {
+    "id": "x_weasel_betray", "dir": "any", "sudden": true, "stage": [1, 3], "once": true, "weight": 25,
+    "require": "companion:weasel & season>=4",
+    "text": "二皮说，后山有只走丢的鸡，叫你一起去。它的眼神有点怪。",
+    "choices": [
+      { "text": "跟它去", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "体力": 3 }, "result": "真有只鸡。二皮说：这次，没骗你。",
+        "fail": { "effect": { "death": "betrayed" }, "result": "鸡没有。只有一个张开的套索。" } },
+      { "text": "不去", "effect": { "灵性": 1 }, "result": "二皮讪讪地走了。从此没再回来。" },
+      { "text": "我闻得出你在撒谎", "require": "legacy:judge>=1", "effect": { "灵性": 2, "妖气": 6 },
+        "result": "前世它骗死了你。这一世，它跪下认了错。" },
+      { "text": "问它为什么", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3 },
+        "result": "它说猎户抓了它的崽。你们一起，把崽救了回来。" }
+    ]
+  },
+  {
+    "id": "x_beggar_chicken", "dir": "any", "sudden": true, "once": true, "weight": 6,
+    "require": "companion:beggar & season>=5",
+    "text": "狗剩讨来一只烧鸡，自己没舍得吃，全给了你。",
+    "choices": [
+      { "text": "分他一半", "effect": { "体力": 2, "忠义": 2 }, "result": "你们一人一半。那是他最开心的一天。" },
+      { "text": "大口吃", "effect": { "体力": 4 }, "result": "狗剩看你吃，笑得比你还香。" }
+    ]
+  }
+]

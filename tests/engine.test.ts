@@ -35,7 +35,12 @@ function fixture(extraEvents: RawEvent[] = []): RawDestiny {
                 { id: 'fire', name: '耐火', desc: '', max: 3 },
             ],
             endings: [{ id: 'win', name: '胜利', epitaph: '赢了' }],
-            settings: { suddenChance: 0, rarityWeights: { common: 1, rare: 0, epic: 0, legend: 0 }, qiBase: 0, qiPerStem: 99, waterPerRoot: 99, skillSlots: 2 },
+            settings: { suddenChance: 0, rarityWeights: { common: 1, rare: 0, epic: 0, legend: 0 }, skillSlots: 2 },
+            rules: {
+                life: 'water', lifeMax: 'waterMax', lifeDeath: 'thirst', oldAgeDeath: 'old_age',
+                regen: { from: 'root', per: 99 }, growth: 'qi',
+                yield: { from: 'stem', per: 99, base: 0 }, startLog: '一颗种子。',
+            },
         },
         skills: [
             { id: 'burst', name: '爆发', desc: '', cd: 3, use: 'direction', effect: { 灵气: 10 }, hint: '' },

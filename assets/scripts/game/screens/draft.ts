@@ -3,7 +3,7 @@
  * 顶部：命盘（花轮回点永久升级）、今日天命（可看视频换一次）
  */
 import { Label, Node } from 'cc';
-import { DraftPick, randomSeed, Rarity } from '../../core';
+import { destinyStates, DraftPick, randomSeed, Rarity } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
@@ -156,7 +156,12 @@ function header(g: Game, root: Node, rerender: () => void): void {
         const n = text(root, `今日天命·${fate.name}${first}  ›`, 0, CONFIG.safeTop + 184, g.W, { size: 24, color: COLOR.ochreD, align: 'center', bold: true });
         onTap(n, () => showFate(g, rerender), false);
     }
-    text(root, `第 ${dp.lives + 1} 世 · ${e.data.meta.name} · 轮回点 ${g.save.profile.points}`, 0, CONFIG.safeTop + 90, g.W, { size: 26, color: COLOR.ink2, align: 'center' });
+    const multi = g.index.destinies.length > 1;
+    const states = multi ? destinyStates(g.index, g.save.profile) : [];
+    const fresh = states.some(s => s.unlocked && !s.lives && s.entry.id !== e.data.meta.id);
+    const nameLine = `第 ${dp.lives + 1} 世 · ${e.data.meta.name}${multi ? (fresh ? ' ⇄ 新命格!' : ' ⇄') : ''} · 轮回点 ${g.save.profile.points}`;
+    const nameN = text(root, nameLine, 0, CONFIG.safeTop + 90, g.W, { size: 26, color: fresh ? COLOR.bad : COLOR.ink2, align: 'center' });
+    if (multi) onTap(nameN, () => g.goDestinySelect());
     const legacies = Object.entries(dp.legacy).map(([id, lv]) => `${e.data.legacies.get(id)?.name ?? id} Lv${lv}`);
     const line2 = [
         legacies.length ? `传承 ${legacies.length}` : '尚无传承',

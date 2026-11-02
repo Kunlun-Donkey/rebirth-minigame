@@ -140,8 +140,9 @@ export class Engine {
         for (const id of dp.sealed) this.gainItem(id, sink);
         dp.sealed = [];
 
-        this.run.attrs.water = this.run.attrs.waterMax;
-        this.run.log.push(`第${this.run.life}世，一颗草籽落在了荒漠里。`);
+        const R = d.meta.rules;
+        this.run.attrs[R.life] = this.run.attrs[R.lifeMax];
+        this.run.log.push(`第${this.run.life}世，${R.startLog}`);
         this.startSeason();
     }
 
@@ -380,7 +381,8 @@ export class Engine {
         // 命盘·续命：放大广告复活的收益
         for (const u of this.data.upgrades.values()) {
             if (u.kind !== 'reviveBoost' || !this.upgradeLevel(u.id)) continue;
-            this.addAttr('water', this.run.attrs.waterMax - this.run.attrs.water, step);
+            const R = this.data.meta.rules;
+            this.addAttr(R.life, this.run.attrs[R.lifeMax] - this.run.attrs[R.life], step);
             if (u.startEffect) this.applyEffect(u.startEffect, step, false);
             step.messages.push(`【命盘·${u.name}】${u.desc}`);
         }
@@ -616,14 +618,14 @@ export class Engine {
     private endSeason(step: StepResult): void {
         const r = this.run;
         const m = this.mods();
-        const settings = this.data.meta.settings;
+        const R = this.data.meta.rules;
 
         const cost = r.season % (m.waterCostEvery ?? 1) === 0 ? 1 : 0;
-        const absorb = Math.floor((r.attrs.root ?? 0) / settings.waterPerRoot);
-        this.addAttr('water', absorb - cost, step);
-        if (r.stage > 0) {
-            const qi = settings.qiBase + Math.floor((r.attrs.stem ?? 0) / settings.qiPerStem);
-            this.addAttr('qi', qi, step);
+        const regen = Math.floor((r.attrs[R.regen.from] ?? 0) / R.regen.per);
+        this.addAttr(R.life, regen - cost, step);
+        if (r.stage >= (R.yield.minStage ?? 1)) {
+            const gain = R.yield.base + Math.floor((r.attrs[R.yield.from] ?? 0) / R.yield.per);
+            this.addAttr(R.growth, gain, step);
         }
         for (const id of r.companions) {
             const c = this.data.companions.get(id);
@@ -654,7 +656,7 @@ export class Engine {
         }
         // 寿元
         const stage = this.data.stages.find(s => s.level === r.stage);
-        if (stage && r.season >= stage.lifespan) { this.die('old_age', step); if (this.phase() === 'dying') return; }
+        if (stage && r.season >= stage.lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying') return; }
         this.startSeason();
     }
 
@@ -713,7 +715,8 @@ export class Engine {
     // ───────────── 内部：生死 ─────────────
 
     private checkVitals(step: StepResult): void {
-        if ((this.run.attrs.water ?? 0) <= 0 && this.run.phase !== 'dying' && this.run.phase !== 'over') this.die('thirst', step);
+        const R = this.data.meta.rules;
+        if ((this.run.attrs[R.life] ?? 0) <= 0 && this.run.phase !== 'dying' && this.run.phase !== 'over') this.die(R.lifeDeath, step);
     }
 
     private die(deathId: string, step: StepResult): void {
@@ -728,7 +731,7 @@ export class Engine {
         }
         if (this.mods().reviveOnce && !r.reviveUsed.talent) {
             r.reviveUsed.talent = true;
-            this.revive(step, '不死草：你枯萎了，又从根里抽出一根新芽。', false);
+            this.revive(step, this.data.meta.rules.reviveOnceText ?? '你倒下了，又挣扎着活了过来。', false);
             return;
         }
         r.dying = deathId;
@@ -741,7 +744,9 @@ export class Engine {
     private revive(step: StepResult, text: string, fromDying = true): void {
         const r = this.run;
         step.messages.push(text);
-        r.attrs.water = Math.max(r.attrs.water, Math.ceil(r.attrs.waterMax / 2));
+        step.revived = true;
+        const R = this.data.meta.rules;
+        r.attrs[R.life] = Math.max(r.attrs[R.life], Math.ceil(r.attrs[R.lifeMax] / 2));
         if (fromDying) {
             r.log.push(`第${r.season}季，逆天改命，又活了过来。`);
             r.dying = undefined;
@@ -773,7 +778,7 @@ export class Engine {
     private applyEffect(e: Effect, step: StepResult, mulQi = true): void {
         const r = this.run;
         for (const [id, v] of Object.entries(e.attrs)) {
-            const amount = id === 'qi' && v > 0 && mulQi ? Math.round(v * (this.mods().qiMul ?? 1)) : v;
+            const amount = id === this.data.meta.rules.growth && v > 0 && mulQi ? Math.round(v * (this.mods().qiMul ?? 1)) : v;
             this.addAttr(id, amount, step);
         }
         for (const f of e.flags) addUnique(r.flags, f);
@@ -792,9 +797,10 @@ export class Engine {
         const a = this.run.attrs;
         const before = a[id] ?? 0;
         let after = Math.max(ATTR_FLOOR, before + v);
-        if (id === 'water') after = Math.min(after, a.waterMax);
+        const R = this.data.meta.rules;
+        if (id === R.life) after = Math.min(after, a[R.lifeMax]);
         a[id] = after;
-        if (id === 'waterMax' && a.water > after) a.water = after;
+        if (id === R.lifeMax && a[R.life] > after) a[R.life] = after;
         const delta = after - before;
         if (delta) step.deltas[id] = (step.deltas[id] ?? 0) + delta;
     }

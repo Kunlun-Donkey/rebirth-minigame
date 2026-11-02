@@ -4,3 +4,4 @@ export * from './data';
 export * from './engine';
 export * from './profile';
 export * from './rng';
+export * from './destinies';

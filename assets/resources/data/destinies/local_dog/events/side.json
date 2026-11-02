@@ -1,0 +1,131 @@
+[
+  {
+    "id": "side_fallback", "dir": "side", "weight": 3,
+    "text": "你沿着土路走了一季。路边什么都有一点。",
+    "choices": [ { "text": "接着走", "effect": { "脚力": 1 }, "result": "路很长。你的脚掌磨出了茧。" } ]
+  },
+
+  {
+    "id": "l1_butcher", "dir": "side", "layers": ["L1"],
+    "text": "肉摊前，屠户剁肉的声音咚咚响。",
+    "choices": [
+      { "text": "蹲着等", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
+        "effect": { "体力": 3 }, "result": "屠户看你蹲得规矩，扔了块碎肉给你。",
+        "fail": { "effect": { "体力": -1 }, "result": "屠户拿刀背敲了你的脑袋。" } },
+      { "text": "去别处转转", "effect": { "脚力": 1 }, "result": "集市很大。香味，到处都是。" }
+    ]
+  },
+  {
+    "id": "l1_beggar", "dir": "side", "layers": ["L1"], "once": true,
+    "text": "墙根下有个小乞丐，跟你一样瘦，一样脏。",
+    "choices": [
+      { "text": "分他半个馒头", "effect": { "忠义": 2, "灵性": 1 }, "result": "他抱着你哭了。他说他叫狗剩。" },
+      { "text": "抢他的", "effect": { "体力": 2, "忠义": -1 }, "result": "他没追。他只是看着你。" }
+    ]
+  },
+  {
+    "id": "l1_trader", "dir": "side", "layers": ["L1", "L2"], "stage": [1, 99],
+    "text": "刘拐子在集市上收狗。他一眼就盯上了你。",
+    "choices": [
+      { "text": "跑", "chance": 0.6, "chanceAttr": "脚力", "chanceStep": 0.04,
+        "effect": { "脚力": 1 }, "result": "你钻进人堆，他的拐棍够不着。",
+        "fail": { "effect": { "death": "dogcatcher" }, "result": "他的拐棍一勾，你进了麻袋。" } },
+      { "text": "叼着黑虎的牙瞪他", "require": "item:tiger_tooth", "effect": { "牙口": 2, "妖气": 5 },
+        "result": "他认出了黑虎的牙。他的腿比拐棍还软。" },
+      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2 },
+        "result": "你跑得太快，刘拐子连影子都没看清。" }
+    ]
+  },
+  {
+    "id": "l1_dog_fight", "dir": "side", "layers": ["L1"],
+    "text": "集市上有人在斗狗。赢的那只，有肉吃。",
+    "choices": [
+      { "text": "下场", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.06,
+        "effect": { "牙口": 2, "体力": 3 }, "result": "你赢了。那块肉，是你这辈子吃过最香的。",
+        "fail": { "effect": { "体力": -3 }, "result": "你被咬得一瘸一拐。没人给你肉。" } },
+      { "text": "看热闹", "effect": { "灵性": 1 }, "result": "你看明白了：咬人的狗，不叫。" }
+    ]
+  },
+
+  {
+    "id": "l2_taoist", "dir": "side", "layers": ["L2", "L3"],
+    "text": "县城里有个摆摊捉妖的道士。他的罗盘冲你转个不停。",
+    "choices": [
+      { "text": "夹着尾巴走开", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 1 }, "result": "罗盘转了两圈，停了。他嘟囔：坏了？",
+        "fail": { "effect": { "death": "taoist" }, "result": "他掏出一只葫芦，喊了一声你的名字。" } },
+      { "text": "把妖气藏起来", "require": "legacy:hide_aura>=1", "effect": { "灵性": 2, "妖气": 5 },
+        "result": "前世你进过他的葫芦。这一世，罗盘一动不动。" },
+      { "text": "装乖", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "体力": 3 },
+        "result": "你蹭了蹭他的腿。他把罗盘往桌上一拍：一条家狗，转什么转。" }
+    ]
+  },
+  {
+    "id": "l2_yamen", "dir": "side", "layers": ["L2"],
+    "text": "衙门在招巡街犬。管饭。",
+    "choices": [
+      { "text": "去应征", "require": "牙口>=4", "effect": { "体力": 3, "忠义": 2, "牙口": 1 },
+        "result": "你吓跑了一个小偷。官差赏了你一根大骨头。" },
+      { "text": "装乖应征", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "体力": 3, "忠义": 3 },
+        "result": "你在官差面前乖得像只猫。他们当场收下了你。" },
+      { "text": "算了", "effect": { "脚力": 1 }, "result": "你还是喜欢自己走路。" }
+    ]
+  },
+  {
+    "id": "l2_weasel_lie", "dir": "side", "layers": ["L2"],
+    "text": "一只黄鼠狼凑过来说：城外有个鸡窝，没人看。",
+    "choices": [
+      { "text": "跟它去", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "体力": 4 }, "result": "真有个鸡窝。它吃鸡，你吃蛋。",
+        "fail": { "effect": { "death": "betrayed" }, "result": "那是猎户下的套。黄鼠狼在树上笑。" } },
+      { "text": "不信", "effect": { "灵性": 1 }, "result": "它撇撇嘴，去找别的狗了。" },
+      { "text": "盯着它的眼睛", "require": "legacy:judge>=1", "effect": { "灵性": 2, "妖气": 5 },
+        "result": "前世它骗过你。你咬住它的尾巴，它吐出了真话。" },
+      { "text": "跟它对质", "showIf": "skill:talk", "useSkill": "talk", "effect": { "妖气": 6 },
+        "result": "你一句一句问。它说不圆，哭着跑了。" }
+    ]
+  },
+  {
+    "id": "l2_swill", "dir": "side", "layers": ["L2"],
+    "text": "酒楼后门的泔水桶，是县城野狗的必争之地。",
+    "choices": [
+      { "text": "抢位置", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "体力": 4 }, "result": "你抢到了一整块红烧肉。县城的狗，记住了你。",
+        "fail": { "effect": { "体力": -2 }, "result": "五条狗一起扑了上来。" } },
+      { "text": "等它们吃完", "effect": { "忠义": 1, "灵性": 1, "体力": 1 }, "result": "剩下的不多。但没人咬你。" }
+    ]
+  },
+
+  {
+    "id": "l3_lapdog", "dir": "side", "layers": ["L3"],
+    "text": "王府的狮子狗穿着绸缎，冲你哼了一声。",
+    "choices": [
+      { "text": "冲它叫", "effect": { "牙口": 1, "妖气": 3 }, "result": "它吓得钻进了轿子。轿夫们笑出了声。" },
+      { "text": "不理它", "effect": { "灵性": 1 }, "result": "你想：它这辈子，没追过兔子吧。" }
+    ]
+  },
+  {
+    "id": "l3_monk", "dir": "side", "layers": ["L3"],
+    "text": "京城大庙里，有个老和尚在给一群狗讲经。",
+    "choices": [
+      { "text": "坐下听", "effect": { "灵性": 3, "妖气": 6 }, "result": "你一个字也没听懂。但你的心，静了。" },
+      { "text": "吃供品", "effect": { "体力": 3 }, "result": "老和尚看见了，没说话，又放了一盘。" }
+    ]
+  },
+  {
+    "id": "l3_astrologer", "dir": "side", "layers": ["L3"], "stage": [3, 99], "once": true,
+    "text": "钦天监的老头拦住你：你身上有天狗相，可愿随我修行？",
+    "choices": [
+      { "text": "跟他走", "effect": { "妖气": 20, "灵性": 2, "item": "moonstone" }, "result": "他教你看星星。原来月亮上，也有狗。" },
+      { "text": "我还要回村", "effect": { "忠义": 3 }, "result": "他叹了口气：也好，也好。" }
+    ]
+  },
+  {
+    "id": "l3_xiaocui", "dir": "side", "layers": ["L3"], "once": true, "weight": 20, "require": "flag:xiaocui",
+    "text": "你在一户大宅门口停下了。门里，有小翠的味道。",
+    "choices": [
+      { "text": "挠门", "effect": { "忠义": 3, "体力": 4 }, "result": "她嫁到了京城。她抱着你，叫了一声：小黄。" },
+      { "text": "远远看一眼", "effect": { "灵性": 2, "妖气": 6 }, "result": "她过得很好。你转身，回村去了。" }
+    ]
+  }
+]

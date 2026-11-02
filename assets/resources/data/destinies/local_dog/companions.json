@@ -1,0 +1,14 @@
+[
+  { "id": "flea", "name": "跳蚤·阿痒", "rarity": "common", "desc": "每 3 季妖气 +1。咬你一口，你就精神了。",
+    "every": { "n": 3, "effect": { "妖气": 1 }, "text": "阿痒咬了你一口。你一激灵，精神了。" } },
+  { "id": "sparrow", "name": "麻雀·叽喳", "rarity": "common", "desc": "脚力 +1，每 4 季脚力 +1。", "start": { "脚力": 1 },
+    "every": { "n": 4, "effect": { "脚力": 1 }, "text": "叽喳领你抄了条近路。" } },
+  { "id": "old_cat", "name": "瘸腿老猫·花婆", "rarity": "rare", "desc": "灵性 +1，每 4 季灵性 +1。", "start": { "灵性": 1 },
+    "every": { "n": 4, "effect": { "灵性": 1 }, "text": "花婆眯着眼给你讲了个村里的老故事。" } },
+  { "id": "beggar", "name": "小乞丐·狗剩", "rarity": "rare", "desc": "每 3 季体力 +1。他讨到什么都分你一半。",
+    "every": { "n": 3, "effect": { "体力": 1 }, "text": "狗剩把讨来的半个饼掰给了你。" } },
+  { "id": "weasel", "name": "黄鼠狼·二皮", "rarity": "rare", "desc": "每 3 季妖气 +2。它看你的眼神有点怪。",
+    "every": { "n": 3, "effect": { "妖气": 2 }, "text": "二皮偷来一颗鸡蛋，分了你一半蛋黄。" } },
+  { "id": "locust_tree", "name": "老槐树精", "rarity": "epic", "desc": "每 2 季体力 +1。村口那棵老槐树，会在你睡着时给你遮风。",
+    "every": { "n": 2, "effect": { "体力": 1 }, "text": "老槐树落下几片叶子，盖在你身上。" } }
+]

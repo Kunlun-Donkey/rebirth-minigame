@@ -37,33 +37,39 @@ function hud(g: Game, root: Node): number {
     rect(tag, { fill: COLOR.leaf, radius: 23 });
     text(tag, stage, 0, 0, 140, { size: 26, color: COLOR.white, align: 'center', valign: 'center' }, 46);
 
-    // 水分条
+    // 生命条（剧本 rules.life / rules.lifeMax，如水分、体力）
+    const meta = e.data.meta;
+    const R = meta.rules;
+    const lifeDef = meta.attrs.find(a => a.id === R.life);
+    const life = r.attrs[R.life] ?? 0;
+    const lifeMax = Math.max(1, r.attrs[R.lifeMax] ?? 1);
     const wy = top + 66;
-    text(root, '水分', 30, wy - 6, 70, { size: 24, color: COLOR.ink2 });
+    text(root, lifeDef?.name ?? R.life, 30, wy - 6, 70, { size: 24, color: COLOR.ink2 });
     const barW = g.W - 30 - 100 - 110;
-    const bar = box(root, 100, wy, barW, 18, 'water');
+    const bar = box(root, 100, wy, barW, 18, 'life');
     rect(bar, { fill: COLOR.waterBg, radius: 9 });
-    const ratio = Math.max(0, Math.min(1, r.attrs.water / Math.max(1, r.attrs.waterMax)));
+    const ratio = Math.max(0, Math.min(1, life / lifeMax));
     if (ratio > 0) {
         const fillN = box(bar, 0, 0, Math.max(18, barW * ratio), 18, 'fill');
-        rect(fillN, { fill: ratio <= 0.25 ? COLOR.bad : COLOR.water, radius: 9 });
+        rect(fillN, { fill: ratio <= 0.25 ? COLOR.bad : lifeDef?.color ?? COLOR.water, radius: 9 });
     }
-    text(root, `${r.attrs.water}/${r.attrs.waterMax}`, g.W - 30 - 100, wy - 6, 100, { size: 24, color: COLOR.ink2, align: 'right' });
+    text(root, `${life}/${lifeMax}`, g.W - 30 - 100, wy - 6, 100, { size: 24, color: COLOR.ink2, align: 'right' });
 
-    // 属性
-    const attrs: [string, string, string][] = [['root', '根', '#8a6a3c'], ['stem', '叶', COLOR.leaf], ['tough', '韧', '#7d7d7d'], ['spirit', '灵', COLOR.epic], ['qi', '气', '#d99a2b']];
+    // 属性（剧本 attrs 中非隐藏、非生命的属性，按声明顺序）
+    const attrs = meta.attrs.filter(a => !a.hidden && a.id !== R.life);
     const ay = wy + 40;
-    const cw = (g.W - 60 - 4 * 10) / 5;
-    attrs.forEach(([id, ic, color], i) => {
-        const c = box(root, 30 + i * (cw + 10), ay, cw, 56, `attr_${id}`);
+    const n = Math.max(1, attrs.length);
+    const cw = (g.W - 60 - (n - 1) * 10) / n;
+    attrs.forEach((a, i) => {
+        const color = a.color ?? COLOR.ochre;
+        const c = box(root, 30 + i * (cw + 10), ay, cw, 56, `attr_${a.id}`);
         rect(c, { fill: COLOR.btn, fillAlpha: 190, stroke: COLOR.btnEdge, strokeAlpha: 90, radius: 12 });
         const dot = box(c, 14, 12, 32, 32, 'ic');
         rect(dot, { fill: color, radius: 16 });
-        const ch = text(dot, ic, 0, 0, 32, { size: 20, color: COLOR.white, align: 'center', valign: 'center' }, 32);
-        const stat = e.data.meta.attrs.find(a => a.id === id)?.stat;
-        image(dot, TEX.stat(stat), 0, 0, 32, 32, { onLoaded: () => { ch.active = false; } });
-        text(c, String(r.attrs[id] ?? 0), 52, 8, cw - 60, { size: 30, bold: true, valign: 'center' }, 40);
-        onTap(c, () => showInfo(g, e.attrName(id), [attrHelp(id)]), false);
+        const ch = text(dot, a.short ?? a.name.slice(0, 1), 0, 0, 32, { size: 20, color: COLOR.white, align: 'center', valign: 'center' }, 32);
+        image(dot, TEX.stat(a.stat), 0, 0, 32, 32, { onLoaded: () => { ch.active = false; } });
+        text(c, String(r.attrs[a.id] ?? 0), 52, 8, cw - 60, { size: 30, bold: true, valign: 'center' }, 40);
+        onTap(c, () => showInfo(g, a.name, [a.desc ?? '']), false);
     });
 
     // 位置
@@ -76,16 +82,6 @@ function hud(g: Game, root: Node): number {
     const st = soundToggle(g, root, 0, ly);
     st.setPosition(g.W - 30 - sizeOf(st).w, -ly, 0);
     return ly + 60;
-}
-
-function attrHelp(id: string): string {
-    return {
-        root: '向下扎根获得。每 8 点根系，每季自动吸 1 点水；也是深入地下的门槛。',
-        stem: '向上生长获得。茎叶越高，每季光合产出的灵气越多；也是长高的门槛。',
-        tough: '抵抗灾难与啃咬，提高许多冒险选项的成功率。',
-        spirit: '悟性与运气。解锁对话、遗迹与奇遇相关的选项。',
-        qi: '成长货币。积累到一定程度就会突破境界。',
-    }[id] ?? '';
 }
 
 // ───────────── 事件 ─────────────
@@ -160,12 +156,12 @@ function directionArea(g: Game, root: Node, y: number, _bottom: number): void {
     const e = g.engine;
     const r = e.run;
     const cardW = g.W - 60;
-    const lines = [`你是一株${e.stageName(r.stage)}。`, '这一季，往哪儿长？'];
+    const prompt = (e.data.meta.rules.dirPrompt ?? '你是{stage}。\n这一季，往哪儿去？').replace('{stage}', e.stageName(r.stage));
     const card = box(root, 30, y, cardW, 230, 'prompt');
     rect(card, { fill: COLOR.paper, stroke: COLOR.paperEdge, strokeAlpha: 180, lineWidth: 3, radius: 20, shadow: COLOR.btnShadow, shadowOffset: 8 });
     image(card, TEX.eventCard, 0, 0, cardW, 230, { maxAspectDiff: 1.2 });
     text(card, `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`, 40, 30, 300, { size: 24, color: COLOR.ink2 });
-    text(card, lines.join('\n'), 40, 80, cardW - 80, { size: 34, wrap: true, lineHeight: 60 });
+    text(card, prompt, 40, 80, cardW - 80, { size: 34, wrap: true, lineHeight: 60 });
 
     let cy = y + 230 + 28;
     for (const o of e.directionOptions()) {
@@ -241,7 +237,7 @@ function itemsPopup(g: Game): void {
             onPick: can ? () => g.act(() => e.useItem(id)) : undefined,
         };
     });
-    showList(g, '道  具', entries, { emptyText: '你的根边什么都没有。' });
+    showList(g, '道  具', entries, { emptyText: e.data.meta.rules.emptyItems ?? '你身边什么都没有。' });
 }
 
 function skillsPopup(g: Game): void {

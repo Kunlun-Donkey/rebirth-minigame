@@ -6,25 +6,34 @@
  *   npm run sim                  随机 AI 连续轮回 2000 世，输出数值统计（每世结算后自动买命盘）
  *   ./node_modules/.bin/tsx tools/play.ts --sim 500 --seed 42
  *   ./node_modules/.bin/tsx tools/play.ts --sim 500 --ads   模拟每局都看广告（复活 + 轮回点翻倍）
+ *   --destiny local_dog          指定命格（试玩不指定时开局让你选；模拟不指定时依次模拟全部命格）
  */
 import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
-import { buildDestiny, createProfile, Destiny, Engine, loadProfile, Profile, randomSeed, Rng, StepResult } from '../assets/scripts/core';
+import { buildDestiny, createProfile, Destiny, destinyStates, Engine, loadProfile, pickDestiny, Profile, randomSeed, Rng, StepResult } from '../assets/scripts/core';
 
 /** 本地日期 YYYY-MM-DD（每日天命） */
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
-import { loadRawDestiny } from './load';
+import { loadIndex, loadRawDestiny } from './load';
 
 const args = process.argv.slice(2);
 const flag = (n: string) => args.includes(n);
 const opt = (n: string) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : undefined; };
-const destinyId = opt('--destiny') ?? 'desert_grass';
-const data = buildDestiny(loadRawDestiny(destinyId).raw);
+const index = loadIndex();
+const load = (id: string) => buildDestiny(loadRawDestiny(id).raw);
+let data: Destiny;
 const RARITY_TEXT: Record<string, string> = { common: '普通', rare: '稀有', epic: '史诗', legend: '传说' };
 
-if (flag('--sim')) simulate(Number(opt('--sim') ?? 2000), Number(opt('--seed') ?? 1));
+if (flag('--sim')) {
+    const ids = opt('--destiny') ? [opt('--destiny')!] : index.destinies.map(d => d.id);
+    for (const id of ids) {
+        data = load(id);
+        console.log(`\n══════ ${data.meta.name} ══════`);
+        simulate(Number(opt('--sim') ?? 2000), Number(opt('--seed') ?? 1));
+    }
+}
 else play().catch(e => { console.error(e); process.exit(1); });
 
 // ───────────── 交互试玩 ─────────────
@@ -52,6 +61,20 @@ async function play() {
         }
     };
     const C = { dim: '\x1b[2m', gold: '\x1b[33m', red: '\x1b[31m', green: '\x1b[32m', cyan: '\x1b[36m', magenta: '\x1b[35m', bold: '\x1b[1m', off: '\x1b[0m' };
+    let destinyId = opt('--destiny');
+    if (!destinyId) {
+        const states = destinyStates(index, profile);
+        console.log('\n选择命格：');
+        states.forEach((st, i) => console.log(`  ${i + 1}. ${st.entry.name}${st.unlocked ? `  ${C.dim}${st.entry.desc}${C.off}` : `  ${C.dim}🔒 ${st.lockText}${C.off}`}`));
+        const def = pickDestiny(index, profile, profile.current);
+        for (;;) {
+            const st = states[await ask(`> （上次：${states.find(s => s.entry.id === def)!.entry.name}）`, states.length)];
+            if (st.unlocked) { destinyId = st.entry.id; break; }
+            console.log(`${C.red}尚未解锁：${st.lockText}${C.off}`);
+        }
+    }
+    profile.current = destinyId;
+    data = load(destinyId);
     const e = new Engine(data, profile);
     const names = (ids: string[], m: Map<string, { name: string; desc: string; rarity: string }>) =>
         ids.map(id => m.get(id)!).map(x => `${x.name}〔${RARITY_TEXT[x.rarity]}〕${C.dim}${x.desc}${C.off}`);
@@ -210,7 +233,7 @@ async function play() {
 
         if (r.phase === 'direction') {
             const status = data.meta.attrs.filter(a => !a.hidden).map(a =>
-                a.id === 'water' ? `${a.icon}${r.attrs.water}/${r.attrs.waterMax}` : `${a.icon}${r.attrs[a.id]}`).join(' ');
+                a.id === data.meta.rules.life ? `${a.icon}${r.attrs[a.id]}/${r.attrs[data.meta.rules.lifeMax]}` : `${a.icon}${r.attrs[a.id]}`).join(' ');
             console.log(`\n${C.bold}第${r.season}季 · ${e.stageName(r.stage)}${C.off}  ${status}`);
             if (skillLine) console.log(skillLine);
             const opts = e.directionOptions();
@@ -299,7 +322,7 @@ function simulate(lives: number, seed: number) {
             if (usable.length && rng.chance(0.3)) { e.useSkill(usable[rng.int(usable.length)].id); skillUses++; continue; }
             if (e.run.phase === 'direction') {
                 const items = e.usableItems();
-                if (items.length && (e.run.attrs.water <= 2 || rng.chance(0.15))) { e.useItem(items[rng.int(items.length)]); continue; }
+                if (items.length && (e.run.attrs[data.meta.rules.life] <= 2 || rng.chance(0.15))) { e.useItem(items[rng.int(items.length)]); continue; }
                 const opts = e.directionOptions().filter(o => o.enabled);
                 e.chooseDirection(opts[rng.int(opts.length)].dir);
             } else {

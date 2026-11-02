@@ -73,6 +73,12 @@ export interface AttrDef {
     id: string;
     name: string;
     icon?: string;
+    /** HUD 圆标里的单字（缺省取 name 第一个字） */
+    short?: string;
+    /** HUD 圆标底色 */
+    color?: string;
+    /** 点开属性时的说明 */
+    desc?: string;
     /** 通用属性图标 → textures/common/icon/stat_{stat}（life/down/up/tough/spirit/energy） */
     stat?: string;
     init: number;
@@ -244,17 +250,63 @@ export interface DestinyMeta {
     endings: EndingDef[];
     upgrades?: UpgradeDef[];
     fates?: FateDef[];
+    /** 命格规则：生命 / 回复 / 成长等由数据决定，引擎不写死任何属性名 */
+    rules: DestinyRules;
     settings: {
         suddenChance: number;
         rarityWeights: Record<Rarity, number>;
-        /** 基础光合：每季灵气 = base + floor(茎叶 / per)，境界 0 不产出 */
-        qiBase: number;
-        qiPerStem: number;
-        /** 根系吸水：每季水分 + floor(根系 / waterPerRoot) */
-        waterPerRoot: number;
         /** 开局可携带技能数 */
         skillSlots: number;
     };
+}
+
+export interface DestinyRules {
+    /** 生命属性（如水分 / 体力），归零即 lifeDeath */
+    life: string;
+    /** 生命上限属性（隐藏） */
+    lifeMax: string;
+    lifeDeath: string;
+    /** 活到境界寿元时的死法 */
+    oldAgeDeath: string;
+    /** 每季回复：生命 + floor(from / per)；每季基础消耗 1（受 waterCostEvery 修正） */
+    regen: { from: string; per: number };
+    /** 成长货币（如灵气 / 妖气），受 qiMul 加成，用于境界突破 */
+    growth: string;
+    /** 每季产出：growth + base + floor(from / per)，境界 ≥ minStage 才产出 */
+    yield: { from: string; per: number; base: number; minStage?: number };
+    /** 开局生平第一句 */
+    startLog: string;
+    /** 加载界面文字 */
+    loadingText?: string;
+    /** 「死后复活一次」类天赋触发时的旁白 */
+    reviveOnceText?: string;
+    /** 选方向时的提示，{stage} 替换为境界名；换行用 \n */
+    dirPrompt?: string;
+    /** 道具栏为空时的提示 */
+    emptyItems?: string;
+}
+
+/** 命格索引（data/destinies/index.json）：轮回殿里可选的命格及解锁条件 */
+export interface DestinyIndexEntry {
+    id: string;
+    name: string;
+    /** 一句话简介 */
+    desc: string;
+    /** 解锁条件；省略 = 默认开放。多个字段需同时满足 */
+    unlock?: {
+        /** 给玩家看的条件说明 */
+        text: string;
+        /** 某命格的最高境界达到 level */
+        bestStage?: { destiny: string; level: number };
+        /** 所有命格累计轮回世数 */
+        lives?: number;
+        /** 所有命格累计达成的结局数 */
+        endings?: number;
+    };
+}
+
+export interface DestinyIndex {
+    destinies: DestinyIndexEntry[];
 }
 
 export interface RawDestiny {
@@ -365,6 +417,8 @@ export interface Profile {
     points: number;
     lives: number;
     destinies: Record<string, DestinyProfile>;
+    /** 玩家上次选择的命格 */
+    current?: string;
 }
 
 // ───────────── 局内状态（可直接 JSON 序列化，用于中途存档） ─────────────
@@ -472,6 +526,8 @@ export interface StepResult {
     success?: boolean;
     /** 本步新领悟的技能 */
     skills: string[];
+    /** 本步发生了复活（护身道具 / 天赋 / 看视频） */
+    revived?: boolean;
 }
 
 export interface SkillView {

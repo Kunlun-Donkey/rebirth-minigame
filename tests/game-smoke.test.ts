@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { Label, Node, sys, UITransform } from './fake-cc';
 import { Game } from '../assets/scripts/game/game';
 import { CONFIG } from '../assets/scripts/game/config';
+import { writeSave } from '../assets/scripts/game/save';
 import { Rng } from '../assets/scripts/core';
 
 const flush = () => new Promise(r => setTimeout(r, 0));
@@ -45,16 +46,22 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
     it.each([
         [7, false], [42, false], [2026, false],
         [99, true], // 富裕存档：随机点击会买命盘（4 选 1、免费重演、多格封存等界面）
-    ])('种子 %i（富裕存档 %s）：随机点击 3000 次，走完多次轮回，无异常、无 undefined/NaN、可点元素都在屏幕内', async (seed, rich) => {
+        [123, 'dog'], // 第二命格：土狗
+    ] as [number, boolean | 'dog'][])('种子 %i（存档 %s）：随机点击 3000 次，走完多次轮回，无异常、无 undefined/NaN、可点元素都在屏幕内', async (seed, rich) => {
         sys.localStorage.clear?.();
         const host = new Node('Canvas');
         const g = new Game(host as never);
         await g.boot();
         await flush();
         expect(screenName(g)).toBe('draft');
-        if (rich) {
+        if (rich === true) {
             g.save.profile.points = 100000;
             g.goDraft();
+        }
+        if (rich === 'dog') {
+            g.save.profile.destinies.desert_grass.bestStage = 2;
+            await g.switchDestiny('local_dog');
+            expect(g.data.meta.id).toBe('local_dog');
         }
 
         const rng = new Rng({ rng: seed });
@@ -82,12 +89,12 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
             seen.add(screenName(g));
             const bad = labels(g.screen).concat(labels(g.overlay)).filter(s => /undefined|NaN|\[object/.test(s));
             expect(bad, `第 ${i} 步出现异常文字`).toEqual([]);
-            lives = g.engine?.dp?.lives ?? 0;
+            lives = g.save?.profile?.lives ?? 0;
         }
         expect(seen).toContain('run');
         expect(seen).toContain('settle');
         expect(lives).toBeGreaterThan(2);
-        if (rich) expect(Object.keys(g.engine.dp.upgrades).length).toBeGreaterThan(0);
+        if (rich === true) expect(Object.keys(g.engine.dp.upgrades).length).toBeGreaterThan(0);
     }, 60_000);
 
     it('命盘全满：4 选 1 卡牌、命盘列表、天命弹窗都在屏幕内', async () => {
@@ -128,6 +135,65 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         inScreen(g.overlay);
     });
 
+    it('多命格：未解锁时点不进；解锁后切换到土狗，HUD 按剧本显示，重启后记住命格', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
+        const openSelect = async () => {
+            tapNode(tappables(g.screen).find(x => labels(x).some(l => l.includes('⇄')))!);
+            await flush();
+            expect(screenName(g)).toBe('destiny');
+        };
+        await openSelect();
+        const dogCard = () => tappables(g.screen).find(n => n.name === 'destiny_local_dog')!;
+        expect(labels(dogCard()).some(l => l.startsWith('🔒'))).toBe(true);
+        tapNode(dogCard());
+        for (let i = 0; i < 5; i++) await flush();
+        expect(g.data.meta.id).toBe('desert_grass');
+
+        // 达成解锁条件
+        g.save.profile.destinies.desert_grass.bestStage = 2;
+        g.goDraft();
+        await flush();
+        expect(labels(g.screen).some(l => l.includes('新命格'))).toBe(true);
+        await openSelect();
+        tapNode(dogCard());
+        for (let i = 0; i < 10; i++) await flush();
+        expect(g.data.meta.id).toBe('local_dog');
+        expect(screenName(g)).toBe('draft');
+        expect(labels(g.screen).some(l => l.includes('一只土狗'))).toBe(true);
+
+        // 开一局：HUD 显示体力条与土狗属性
+        for (let i = 0; i < 3; i++) {
+            tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+            await flush();
+        }
+        tapNode(tappables(g.screen).find(n => n.children.some(c => c.getComponent(Label)?.string.includes('重   生')))!);
+        for (let i = 0; i < 5; i++) await flush();
+        expect(screenName(g)).toBe('run');
+        expect(g.engine.run.destiny).toBe('local_dog');
+        const hudText = labels(g.screen);
+        expect(hudText).toContain('体力');
+        expect(hudText.some(l => l.includes('土狗崽'))).toBe(true);
+        expect(hudText.some(l => /undefined|NaN/.test(l))).toBe(false);
+
+        // 重启：恢复土狗这一局
+        const g2 = new Game(new Node('Canvas2') as never);
+        await g2.boot();
+        await flush();
+        expect(g2.data.meta.id).toBe('local_dog');
+        expect(screenName(g2)).toBe('run');
+        writeSave({ ...g2.save, run: null });
+        // 进行中的局结束后，下次启动仍停在土狗命格
+        const g3 = new Game(new Node('Canvas3') as never);
+        await g3.boot();
+        await flush();
+        expect(g3.data.meta.id).toBe('local_dog');
+        expect(screenName(g3)).toBe('draft');
+    });
+
     it('中途存档：重启后恢复到同一局', async () => {
         sys.localStorage.clear?.();
         const host = new Node('Canvas');
@@ -160,8 +226,9 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
 describe('贴图接入（真实素材）', () => {
     it('命格版优先/回落通用版；比例不合的贴图被跳过', async () => {
         const { image } = await import('../assets/scripts/game/ui/kit');
-        const { TEX } = await import('../assets/scripts/game/config');
+        const { TEX, setTexDestiny } = await import('../assets/scripts/game/config');
         const { Sprite } = await import('./fake-cc');
+        setTexDestiny('desert_grass');
         const host = new Node('host');
         // 3:4 的结局背景用 cover：等比放大铺满 750x1334，不拉伸、居中溢出
         const bg = image(host as never, TEX.settleBgEnding, 0, 0, 750, 1334, { cover: true }) as unknown as Node;

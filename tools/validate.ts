@@ -1,9 +1,15 @@
 /** npm run validate [命格id]  —— 校验剧本，有错误时退出码为 1 */
-import { listDestinies, loadRawDestiny } from './load';
-import { validateDestiny } from './validate-lib';
+import { listDestinies, loadIndex, loadRawDestiny } from './load';
+import { validateDestiny, validateIndex } from './validate-lib';
 
 const ids = process.argv[2] ? [process.argv[2]] : listDestinies();
 let failed = false;
+
+const indexErrors = validateIndex(loadIndex(), listDestinies());
+console.log('\n══ 命格索引 index.json ══');
+for (const e of indexErrors) console.log(`  ✖ ${e}`);
+console.log(indexErrors.length ? `  ✖ ${indexErrors.length} 个错误` : '  ✔ 无错误');
+if (indexErrors.length) failed = true;
 
 for (const id of ids) {
     const { raw, eventFiles } = loadRawDestiny(id);

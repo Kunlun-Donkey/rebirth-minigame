@@ -3,14 +3,15 @@
  * 界面函数（screens/*）只读取 Game 的状态并回调这里的方法，不直接改存档。
  */
 import { Node, view } from 'cc';
-import { Destiny, Engine, randomSeed, StepResult } from '../core';
+import { Destiny, DestinyIndex, destinyStates, Engine, pickDestiny, randomSeed, StepResult } from '../core';
 import { Audio, SfxName } from './audio';
-import { CONFIG, TEX } from './config';
-import { loadDestiny } from './loader';
+import { CONFIG, setTexDestiny, TEX } from './config';
+import { loadDestiny, loadDestinyIndex } from './loader';
 import { Platform } from './platform';
 import { loadSubBundle } from './res';
 import { loadSave, SaveData, writeSave } from './save';
 import { box, clear, COLOR, image, rect, setTapFeedback, text } from './ui/kit';
+import { showDestinySelect } from './screens/destiny';
 import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
@@ -23,6 +24,8 @@ export function todayKey(d = new Date()): string {
 }
 
 export class Game {
+    /** 所有命格（轮回殿可切换） */
+    index!: DestinyIndex;
     data!: Destiny;
     engine!: Engine;
     save!: SaveData;
@@ -46,23 +49,23 @@ export class Game {
         this.screen = box(root, 0, 0, this.W, this.H, 'screen');
         this.overlay = box(root, 0, 0, this.W, this.H, 'overlay');
 
-        this.loading('荒漠里，一颗种子正在醒来……');
+        this.save = loadSave();
+        const run = this.save.run;
+        this.loading('正在轮回……');
         try {
-            this.data = await loadDestiny(CONFIG.destiny);
+            this.index = await loadDestinyIndex();
+            await this.useDestiny(pickDestiny(this.index, this.save.profile, run?.destiny ?? this.save.profile.current ?? CONFIG.defaultDestiny));
         } catch (e) {
             console.error('[game] 剧本加载失败', e);
             this.loading('剧本加载失败，请重启游戏');
             return;
         }
-        this.save = loadSave();
-        this.engine = new Engine(this.data, this.save.profile);
         this.audio = new Audio(this.save.muted);
         this.audio.attach(this.host);
         this.audio.preload(['click', 'choose', 'success', 'fail', 'item']);
         setTapFeedback(() => this.audio.play('click'));
         Platform.setupPassiveShare(() => '我重生了，这一世我将拿回属于我的一切');
 
-        const run = this.save.run;
         if (run && run.destiny === this.data.meta.id && run.phase !== 'over') {
             this.engine.resume(run);
             this.goRun();
@@ -73,12 +76,53 @@ export class Game {
         loadSubBundle().then(b => { if (b) this.subReady = true; });
     }
 
+    /** 加载命格剧本并切换引擎（剧本有缓存，来回切换不重复加载） */
+    private destinyCache = new Map<string, Destiny>();
+    private async useDestiny(id: string): Promise<void> {
+        let d = this.destinyCache.get(id);
+        if (!d) {
+            d = await loadDestiny(id);
+            this.destinyCache.set(id, d);
+        }
+        this.data = d;
+        this.engine = new Engine(d, this.save.profile);
+        this.save.profile.current = id;
+        setTexDestiny(id);
+    }
+
+    /** 轮回殿切换命格（只能在开局前切换，进行中的一局不受影响） */
+    private switching = false;
+    async switchDestiny(id: string): Promise<void> {
+        if (this.switching || id === this.data.meta.id) return;
+        const st = destinyStates(this.index, this.save.profile).find(s => s.entry.id === id);
+        if (!st?.unlocked) return;
+        this.switching = true;
+        const prev = this.data.meta.id;
+        this.loading(`正在投胎为「${st.entry.name}」……`);
+        try {
+            await this.useDestiny(id);
+            Platform.report('switch_destiny', { id });
+        } catch (e) {
+            console.error('[game] 命格加载失败', e);
+            Platform.toast('命格加载失败，请稍后再试');
+            await this.useDestiny(prev).catch(() => undefined);
+        } finally {
+            this.switching = false;
+        }
+        this.goDraft();
+    }
+
+    goDestinySelect(): void {
+        this.reset();
+        showDestinySelect(this);
+    }
+
     /** 分包是否已就绪 */
     private subReady = false;
     /** 分包没下完时显示加载提示并等待；下载失败也放行（缺图有兜底） */
     private async ensureSub(): Promise<void> {
         if (this.subReady) return;
-        this.loading('正在加载资源……');
+        this.loading(this.data.meta.rules.loadingText ?? '正在加载资源……');
         if (await loadSubBundle()) this.subReady = true;
     }
 
@@ -110,9 +154,15 @@ export class Game {
     }
 
     goSettle(): void {
+        const before = new Set(destinyStates(this.index, this.save.profile).filter(st => st.unlocked).map(st => st.entry.id));
         const s = this.engine.settle();
         this.save.run = null;
         this.persist();
+        const fresh = destinyStates(this.index, this.save.profile).filter(st => st.unlocked && !before.has(st.entry.id));
+        if (fresh.length) {
+            this.audio.play('breakthrough');
+            Platform.toast(`新命格解锁：${fresh.map(st => st.entry.name).join('、')}`);
+        }
         Platform.report('life_end', { kind: s.kind, cause: s.id, seasons: s.seasons, stage: s.stage });
         this.reset();
         this.audio.playBgm('bgm_settle');
@@ -157,7 +207,7 @@ export class Game {
         const phase = this.engine.run.phase;
         if (phase === 'dying') return 'death';
         if (s.messages.some(m => m.startsWith('【突破·'))) return 'breakthrough';
-        if (s.messages.some(m => m.includes('又活了过来') || m.includes('替你挡下') || m.includes('新芽'))) return 'revive';
+        if (s.revived) return 'revive';
         if (s.skills.length) return 'skill';
         if (s.success === false) return 'fail';
         if (s.success === true) return 'success';

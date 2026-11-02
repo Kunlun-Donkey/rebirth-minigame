@@ -1,0 +1,214 @@
+[
+  {
+    "id": "down_fallback", "dir": "down", "weight": 3,
+    "text": "你在村口趴了一季，看人来人往。",
+    "choices": [ { "text": "接着守着", "effect": { "忠义": 1 }, "result": "有人路过，顺手摸了摸你的头。" } ]
+  },
+
+  {
+    "id": "d1_bone", "dir": "down", "layers": ["D1"], "weight": 12,
+    "text": "村口老槐树下的土是松的，有股骨头味。",
+    "choices": [
+      { "text": "刨", "effect": { "item": "bone", "skill": "dig" }, "result": "你在村口刨出了一根骨头。原来土里埋着宝贝。" },
+      { "text": "不刨", "effect": { "忠义": 1 }, "result": "那是别家狗埋的。你是条讲规矩的狗。" }
+    ]
+  },
+  {
+    "id": "d1_tiger", "dir": "down", "layers": ["D1", "D2"],
+    "text": "地主家的大狼狗黑虎，一口抢走了你嘴里的馒头。",
+    "choices": [
+      { "text": "忍了", "effect": { "体力": -1, "忠义": 1, "flag": "tiger_grudge" }, "result": "你记住了它的味道。总有一天。" },
+      { "text": "扑上去", "chance": 0.3, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "牙口": 2, "妖气": 3 }, "result": "你咬下它一撮毛。它愣住了，没想到。",
+        "fail": { "effect": { "体力": -3, "flag": "tiger_grudge" }, "result": "它把你按在泥里。全村的狗都看见了。" } },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "忠义": 1, "牙口": 1 },
+        "result": "你叫得全村都出来看。黑虎被主人喊了回去。" },
+      { "text": "亮出黑虎的牙", "require": "item:tiger_tooth", "effect": { "妖气": 6, "体力": 2 },
+        "result": "它闻到了自己牙的味道，夹着尾巴把馒头还了回来。" }
+    ]
+  },
+  {
+    "id": "d1_kids", "dir": "down", "layers": ["D1"],
+    "text": "几个孩子拿土坷垃砸你，笑得很开心。",
+    "choices": [
+      { "text": "跑", "effect": { "脚力": 1 }, "result": "你跑得比土坷垃快。" },
+      { "text": "摇尾巴", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
+        "effect": { "忠义": 2, "体力": 1 }, "result": "砸着砸着，有个孩子扔了块饼过来。",
+        "fail": { "effect": { "体力": -2 }, "result": "他们砸得更起劲了。" } }
+    ]
+  },
+  {
+    "id": "d1_bait", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "路边扔着一块肉，香得不太正常。",
+    "choices": [
+      { "text": "吃", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "体力": 4 }, "result": "是谁家掉的肉。你吃得干干净净。",
+        "fail": { "effect": { "death": "poison" }, "result": "肉里有药。你的腿先软了。" } },
+      { "text": "闻都不闻", "effect": { "灵性": 1 }, "result": "你从它旁边走过去。口水流了一路。" },
+      { "text": "铁胃硬吃", "require": "legacy:iron_gut>=1", "effect": { "体力": 4, "牙口": 1 },
+        "result": "前世它毒死过你。这一世你嚼了嚼，咽了。" }
+    ]
+  },
+  {
+    "id": "d1_dogcatcher", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "刘拐子的板车停在村口。车上的笼子里，挤着好几条狗。",
+    "choices": [
+      { "text": "去咬开笼子", "chance": 0.35, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "忠义": 2, "妖气": 5 }, "result": "你咬开了笼子的插销。狗们四散而逃。",
+        "fail": { "effect": { "death": "dogcatcher" }, "result": "一张网兜头罩了下来。" } },
+      { "text": "躲远点", "effect": { "灵性": 1 }, "result": "你躲在草垛后面，听着笼子里的狗叫了一路。" },
+      { "text": "先把狗都叫跑", "require": "legacy:wary>=1", "effect": { "忠义": 2, "脚力": 1 },
+        "result": "前世这辆车拉走了你。这一世，它空着来，空着走。" },
+      { "text": "叽喳，去报信", "showIf": "companion:sparrow", "effect": { "忠义": 2 },
+        "result": "叽喳满村子叫。村长出来，把刘拐子轰走了。" },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "忠义": 3 },
+        "result": "全村人被你叫了出来。刘拐子灰溜溜地走了。" },
+      { "text": "引开他", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2, "忠义": 2 },
+        "result": "你绕着板车跑了三圈。刘拐子追得摔进了沟里。" }
+    ]
+  },
+
+  {
+    "id": "d2_xiaocui_tag", "dir": "down", "layers": ["D2"], "once": true, "weight": 20, "require": "flag:xiaocui",
+    "text": "小翠长高了。她偷偷把一块小铜牌，系在了你脖子上。",
+    "choices": [
+      { "text": "舔舔她的脸", "effect": { "item": "dog_tag", "忠义": 2 }, "result": "牌子上歪歪扭扭刻着两个字：小黄。" }
+    ]
+  },
+  {
+    "id": "d2_old_cat", "dir": "down", "layers": ["D2"], "once": true,
+    "text": "院墙上趴着一只瘸腿老猫。它说话，你居然听得懂一半。",
+    "choices": [
+      { "text": "跟它学说话", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 1, "skill": "talk" }, "result": "学了一整个冬天。你会说的第一句话是：鱼呢？",
+        "fail": { "effect": { "灵性": 1 }, "result": "它说得太快了。你只听懂了一个字：鱼。" } },
+      { "text": "冲它叫", "effect": { "牙口": 1 }, "result": "老猫翻了个白眼，跳下墙走了。" }
+    ]
+  },
+  {
+    "id": "d2_thief", "dir": "down", "layers": ["D2", "D3"],
+    "text": "半夜，有人翻进院子，摸向鸡笼。",
+    "choices": [
+      { "text": "叫醒主人", "effect": { "忠义": 2 }, "result": "主人举着扁担冲出来。小偷跑了，鸡一只没少。" },
+      { "text": "扑上去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "忠义": 3, "牙口": 1 }, "result": "你咬住了他的腿。第二天，主人给你炖了骨头。",
+        "fail": { "effect": { "体力": -2 }, "result": "他一棍子把你抡到了墙上。" } },
+      { "text": "犬牙", "showIf": "skill:fang", "useSkill": "fang", "effect": { "忠义": 3, "妖气": 4 },
+        "result": "你咬住他的裤腿不撒口，直到全村都来了。" }
+    ]
+  },
+  {
+    "id": "d2_well", "dir": "down", "layers": ["D2"],
+    "text": "院里那口井，夏天打上来的水也是凉的。",
+    "choices": [
+      { "text": "喝个饱", "effect": { "体力": 2 }, "result": "你喝得肚子圆滚滚的，在枣树下睡了一觉。" },
+      { "text": "守着井口", "effect": { "忠义": 1, "灵性": 1 }, "result": "井里倒映着月亮。你守着它，像守着一块骨头。" }
+    ]
+  },
+  {
+    "id": "d2_bacon", "dir": "down", "layers": ["D2", "D3"],
+    "text": "灶台上挂着一块腊肉。屋里没人。",
+    "choices": [
+      { "text": "叼走", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "体力": 4 }, "result": "没人发现。你把腊肉埋在了后院，吃了一个月。",
+        "fail": { "effect": { "death": "driven_out" }, "result": "主人拎着棍子追出来：滚，别再回来。" } },
+      { "text": "忍住", "effect": { "忠义": 2 }, "result": "主人回来，看见腊肉还在，奖了你一块。" }
+    ]
+  },
+
+  {
+    "id": "d3_tablets", "dir": "down", "layers": ["D3", "D4"],
+    "text": "半夜，祠堂里的牌位一个个在晃。",
+    "choices": [
+      { "text": "冲它们叫", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "妖气": 5 }, "result": "牌位不晃了。有个声音说：好狗。",
+        "fail": { "effect": { "体力": -3 }, "result": "一阵阴风把你掀翻在地。" } },
+      { "text": "趴下装睡", "effect": { "灵性": 1 }, "result": "你闭着眼，听它们聊了一夜村里的事。" },
+      { "text": "睁眼看清", "require": "legacy:yin_eye>=1", "effect": { "灵性": 2, "妖气": 8 },
+        "result": "你看清了。是村里死去的老人，回来看看。" },
+      { "text": "花婆，你看见了吗", "showIf": "companion:old_cat", "effect": { "灵性": 2 },
+        "result": "花婆眯着眼说：别怕，是老族长，他喜欢你。" }
+    ]
+  },
+  {
+    "id": "d3_elder", "dir": "down", "layers": ["D3"],
+    "text": "老族长每天来上香，都会掰一块供饼给你。",
+    "choices": [
+      { "text": "吃饼", "effect": { "体力": 3 }, "result": "供饼有香火味。老族长说，祖宗也想喂喂狗。" },
+      { "text": "送他回家", "effect": { "忠义": 2 }, "result": "你一路跟着他到家门口。他回头说：好狗。" }
+    ]
+  },
+  {
+    "id": "d3_fire", "dir": "down", "layers": ["D3"], "stage": [2, 99], "once": true,
+    "text": "半夜，祠堂起火了。火光里，牌位在烧。",
+    "choices": [
+      { "text": "冲进去叼牌位", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "忠义": 4, "妖气": 6 }, "result": "你叼出了最老的那块牌位。全村人都跪下了。",
+        "fail": { "effect": { "体力": -4 }, "result": "火舌舔过你的背，毛烧掉了一半。" } },
+      { "text": "满村叫人", "effect": { "忠义": 3 }, "result": "全村人提着水桶跑来。火灭了。" }
+    ]
+  },
+  {
+    "id": "d3_bandits", "dir": "down", "layers": ["D3"], "stage": [3, 99], "once": true, "weight": 20,
+    "text": "山匪来了。火把从村口一路烧向祠堂。",
+    "choices": [
+      { "text": "挡在村口", "require": "牙口>=8", "effect": { "flag": "village_saved", "忠义": 5, "妖气": 15 },
+        "result": "你一条狗，堵住了整条路。那夜之后，村里叫你神犬。" },
+      { "text": "带人躲进祠堂", "require": "忠义>=10", "effect": { "flag": "village_saved", "忠义": 4, "妖气": 10 },
+        "result": "全村老小跟着你躲进了地窖。一个也没少。" },
+      { "text": "狂吠示警", "showIf": "skill:bark", "useSkill": "bark", "effect": { "flag": "village_saved", "忠义": 4, "妖气": 12 },
+        "result": "你的叫声比锣还响。村里人抄起锄头，山匪退了。" },
+      { "text": "逃", "effect": { "体力": -2, "忠义": -3 }, "result": "你跑了。回来时，村子烧了一半。" }
+    ]
+  },
+
+  {
+    "id": "d4_gate", "dir": "down", "layers": ["D4"], "chainOnly": true,
+    "text": "古墓门口的阴气，冷得像冬天的井水。你的毛全竖了起来。",
+    "choices": [
+      { "text": "硬闯", "effect": { "death": "yin" }, "result": "你一脚踏进去，就再也没出来。" },
+      { "text": "用阴阳眼看路", "require": "legacy:yin_eye>=2", "effect": { "灵性": 2, "妖气": 10 },
+        "result": "前世这阴气冲死了你。这一世，你看得见路。" },
+      { "text": "撒一把香灰", "require": "item:incense_ash", "effect": { "loseItem": "incense_ash", "妖气": 10 },
+        "result": "山神庙的香灰落地，阴气让开了一条缝。" },
+      { "text": "过阴", "showIf": "skill:ghost_walk", "useSkill": "ghost_walk", "effect": { "妖气": 15 },
+        "result": "阴气在你面前低下了头。你走了进去。" },
+      { "text": "退回去", "effect": { "back": "down", "体力": -1 }, "result": "你退回了祠堂。那股冷，你记住了。" }
+    ]
+  },
+  {
+    "id": "d4_zombie", "dir": "down", "layers": ["D4"], "once": true, "weight": 20,
+    "text": "墓里坐起来一具僵尸。它直挺挺地，朝村子的方向跳去。",
+    "choices": [
+      { "text": "咬住它的腿", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.04,
+        "effect": { "flag": "village_saved", "妖气": 20 }, "result": "你咬到鸡叫。它躺回了棺材。村里没人知道这一夜。",
+        "fail": { "effect": { "death": "yin" }, "result": "它回头，冲你吹了一口气。" } },
+      { "text": "对它狂吠到天亮", "require": "灵性>=6", "effect": { "flag": "village_saved", "妖气": 15 },
+        "result": "鸡叫了。僵尸僵在半路，倒了下去。" },
+      { "text": "过阴引路", "showIf": "skill:ghost_walk", "useSkill": "ghost_walk", "effect": { "flag": "village_saved", "妖气": 20 },
+        "result": "你走在阴气前面，把它领回了棺材。" },
+      { "text": "跑回村报信", "effect": { "忠义": 2 }, "result": "村里人不信。好在它天亮前自己躺回去了。" }
+    ]
+  },
+  {
+    "id": "d4_jar", "dir": "down", "layers": ["D4"],
+    "text": "墓里有一只陶罐，罐口封着一道黄符。",
+    "choices": [
+      { "text": "撕符", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "item": "moonstone", "妖气": 5 }, "result": "罐里滚出一块石头，亮得像一小块月亮。",
+        "fail": { "effect": { "death": "yin" }, "result": "符一撕开，罐里涌出一股黑气。" } },
+      { "text": "在罐底刨坑", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "tiangou_bone" },
+        "result": "罐子底下，埋着一截会发光的骨头。" },
+      { "text": "不碰", "effect": { "灵性": 1 }, "result": "有些东西，封着是有道理的。" }
+    ]
+  },
+  {
+    "id": "d4_tomb_lord", "dir": "down", "layers": ["D4"],
+    "text": "墓主人的魂坐在墓顶上，问你：一条狗，来这儿做什么？",
+    "choices": [
+      { "text": "说来守村", "effect": { "忠义": 3, "妖气": 8 }, "result": "他笑了：我守了这村子三百年，该换班了。" },
+      { "text": "跟他细聊", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "妖气": 12 },
+        "result": "他讲了一夜村子的来历。天亮时，他把守村的法子教给了你。" }
+    ]
+  }
+]

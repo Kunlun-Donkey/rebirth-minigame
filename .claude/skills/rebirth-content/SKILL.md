@@ -6,14 +6,17 @@ description: 《我重生了，这一世我将拿回属于我的一切》剧本�
 # 重生游戏剧本写作规范
 
 ## 必读
-1. 对应命格设计文档：`docs/design/01-plant-destiny.md`（植物系）——玩法意图。
+1. 对应命格设计文档：`docs/design/01-plant-destiny.md`（荒漠一株草）、`docs/design/02-dog-destiny.md`（一只土狗）——玩法意图。
 2. **数据格式以代码为准**：`assets/scripts/core/types.ts` 中的 `RawEvent / RawChoice / RawEffect` 等。
 3. 先看同命格已有数据，保持风格和数值一致：`assets/resources/data/destinies/<命格>/`
 
 ## 文件布局
 ```
+assets/resources/data/destinies/index.json   命格索引：新命格必须登记，可加 unlock 解锁条件
 assets/resources/data/destinies/<命格id>/
-  destiny.json      属性、方向、层、境界、死法、传承、结局、settings
+  destiny.json      属性（short/color/desc 给 HUD）、方向、层、境界、死法、传承、结局、rules、settings
+                    rules：life/lifeMax 生命属性、lifeDeath/oldAgeDeath 死法、regen/yield 每季回复与产出、
+                           growth 成长货币、startLog/loadingText/reviveOnceText/dirPrompt/emptyItems 文案
   talents.json      天赋池        items.json  道具池      companions.json 伴生物池
   skills.json       技能（领悟途径在 destiny.json 死法 skills / 境界 skillPool / 事件效果 skill 中配置）
   events/*.json     事件（按方向/主题分文件，文件名随意，全部合并加载）

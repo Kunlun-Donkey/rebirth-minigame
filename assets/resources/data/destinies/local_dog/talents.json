@@ -1,0 +1,14 @@
+[
+  { "id": "sturdy", "name": "皮实", "icon": "vitality", "rarity": "common", "desc": "体力上限 +2。", "start": { "体力上限": 2 } },
+  { "id": "small_belly", "name": "饭量小", "icon": "vitality", "rarity": "common", "desc": "每 2 季才饿一次。", "mods": { "waterCostEvery": 2 } },
+  { "id": "long_legs", "name": "腿长", "icon": "growth", "rarity": "common", "desc": "脚力 +3。", "start": { "脚力": 3 } },
+  { "id": "watchdog", "name": "看家护院", "icon": "defense", "rarity": "common", "desc": "忠义 +3。", "start": { "忠义": 3 } },
+  { "id": "iron_teeth", "name": "铁齿", "icon": "defense", "rarity": "common", "desc": "牙口 +3。", "start": { "牙口": 3 } },
+  { "id": "loud", "name": "大嗓门", "icon": "social", "rarity": "rare", "desc": "叫起来全村都听得见。灵性 +1，忠义 +1。", "start": { "灵性": 1, "忠义": 1 } },
+  { "id": "unlucky", "name": "倒霉狗", "icon": "cursed", "rarity": "rare", "desc": "【负面】突发事件更频繁，但轮回点 ×1.5。", "mods": { "suddenMul": 1.8, "pointsMul": 1.5 } },
+  { "id": "dog_nose", "name": "狗鼻子", "icon": "wisdom", "rarity": "rare", "desc": "每个事件有 35% 概率闻出一个选项的结果。", "mods": { "hintChance": 0.35 } },
+  { "id": "nine_lives", "name": "九条命", "icon": "rebirth", "rarity": "epic", "desc": "本局第一次死亡时，摇摇晃晃地站起来。", "mods": { "reviveOnce": true } },
+  { "id": "tiangou_blood", "name": "天狗血脉", "icon": "bloodline", "rarity": "epic", "desc": "妖气获取 ×2。", "mods": { "qiMul": 2 } },
+  { "id": "dog_luck", "name": "狗运亨通", "icon": "luck", "rarity": "epic", "desc": "金色奇遇概率 ×3，灵性 +2。", "start": { "灵性": 2 }, "mods": { "goldMul": 3 } },
+  { "id": "reincarnated", "name": "灵犬转世", "icon": "bloodline", "rarity": "legend", "desc": "全属性 +2，妖气 ×1.5，奇遇 ×2。", "start": { "忠义": 2, "脚力": 2, "牙口": 2, "灵性": 2, "体力上限": 2 }, "mods": { "qiMul": 1.5, "goldMul": 2 } }
+]

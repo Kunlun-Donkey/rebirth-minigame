@@ -1,0 +1,18 @@
+{
+  "destinies": [
+    {
+      "id": "desert_grass",
+      "name": "荒漠一株草",
+      "desc": "你是荒漠里的一颗草籽。千百次轮回之后，这片荒漠会长出一棵树。"
+    },
+    {
+      "id": "local_dog",
+      "name": "一只土狗",
+      "desc": "你是村口柴堆里生下的土狗。被嫌弃、被欺负、被丢下——这一世，你要一口一口咬回来。",
+      "unlock": {
+        "text": "荒漠一株草的任意一世突破为「小草」",
+        "bestStage": { "destiny": "desert_grass", "level": 2 }
+      }
+    }
+  ]
+}

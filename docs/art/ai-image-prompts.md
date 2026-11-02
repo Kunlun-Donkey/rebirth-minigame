@@ -257,6 +257,11 @@
 一张竖版手机游戏全屏背景图，比例9:16，用作达成结局时的结算页背景。画面是黎明时分的【命格场景】，金色的晨光洒满大地，画面中下部是【该命格的终极形象剪影，如：一棵巨大古树 / 云端仙山上的身影 / 一颗被守护的星球】。画面上半部分是柔和明亮的暖金色天空，大面积留白，用于叠加深色文字。氛围庄严、圆满，充满胜利感。整体为东方幻想风格的扁平厚涂插画，【以 X 和 Y 为主色】，带细腻的纸张颗粒质感，光影柔和，构图干净，具有高级感的手机游戏美术风格。画面中不要出现任何文字、字母、数字、水印、签名或logo，不要血腥恐怖或低俗元素，不要照片写实或3D渲染效果，不要杂乱和过度饱和。
 ```
 
+> 每个命格另需一张 `cover.png`（512×512，1:1）作为轮回殿「选择命格」卡片封面，缺图时显示命格名最后一个字。
+
+### 5.x 一只土狗 `destiny/local_dog/`
+完整需求与提示词见 [requests-local_dog.md](requests-local_dog.md)（必做 main_bg / settle_bg / settle_bg_ending / cover，可选 stage_1..5、companion_*）。
+
 ### 5.1 荒漠一株草 `destiny/desert_grass/`
 主色调：**暖沙色调，以赭石和土黄为主色**。`settle_bg` / `settle_bg_ending` 已完成。
 
@@ -354,6 +359,6 @@ textures/
     fx/      fx_breakthrough
     icon/    death_*  skill_*  item_*  talent_*
   destiny/
-    <命格id>/  main_bg  settle_bg  settle_bg_ending  [epitaph_card]  [stage_*]  [companion_*]
+    <命格id>/  main_bg  settle_bg  settle_bg_ending  cover  [epitaph_card]  [stage_*]  [companion_*]
 ```
 命格目录下有同名文件（如 `epitaph_card`）时，代码优先用命格版，否则回落到 `common/`。

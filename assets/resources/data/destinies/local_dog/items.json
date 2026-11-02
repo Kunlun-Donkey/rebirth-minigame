@@ -1,0 +1,12 @@
+[
+  { "id": "bun", "name": "半个馒头", "icon": "supply", "rarity": "common", "desc": "使用：体力 +3。", "use": { "体力": 3 }, "useText": "馒头有点硬。你嚼了很久，舍不得咽。" },
+  { "id": "bone", "name": "肉骨头", "icon": "supply", "rarity": "common", "desc": "使用：妖气 +3，牙口 +1，体力 +1。", "use": { "妖气": 3, "牙口": 1, "体力": 1 }, "useText": "你啃了一下午。骨头没了，牙更利了。" },
+  { "id": "old_collar", "name": "旧项圈", "icon": "shield", "rarity": "common", "desc": "被动：替你挡下一次死亡。", "saveFromDeath": true },
+  { "id": "bell", "name": "铜铃铛", "icon": "guide", "rarity": "rare", "desc": "被动：能看见三个方向下一处的情况。", "mods": { "previewDirs": true } },
+  { "id": "incense_ash", "name": "庙里的香灰", "icon": "key", "rarity": "rare", "desc": "被动：山神庙和古墓里，有东西认得它。" },
+  { "id": "moonstone", "name": "月光石", "icon": "gem", "rarity": "rare", "desc": "使用：妖气 +8，灵性 +1。", "use": { "妖气": 8, "灵性": 1 }, "useText": "石头化成一汪月光，你一口舔干净了。" },
+  { "id": "dog_tag", "name": "小翠的狗牌", "icon": "relic", "rarity": "epic", "desc": "被动：死后多封存一件遗物。上面刻着你小时候的名字。", "mods": { "relicSlots": 1 } },
+  { "id": "tiger_tooth", "name": "黑虎的牙", "icon": "token", "rarity": "epic", "desc": "被动：上面有黑虎的味道。宿敌事件更好对付。" },
+  { "id": "thunder_wood", "name": "雷击木", "icon": "crystal", "rarity": "epic", "desc": "使用：妖气 +15。", "use": { "妖气": 15 }, "useText": "你咬碎了雷击木。毛根根竖了起来。" },
+  { "id": "tiangou_bone", "name": "天狗骨", "icon": "artifact", "rarity": "legend", "desc": "使用：脚力 +5，妖气 +20。", "use": { "脚力": 5, "妖气": 20 }, "useText": "古老的骨头碎成了光。你听见天上有狗叫了一声。" }
+]

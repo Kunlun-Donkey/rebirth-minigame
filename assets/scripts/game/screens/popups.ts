@@ -10,7 +10,7 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
     const e = g.engine;
     const innerW = g.W - 60 - 80;
     const breakthrough = s.messages.find(m => m.startsWith('【突破·'));
-    const deltas = Object.entries(s.deltas).filter(([k]) => k !== 'waterMax' || s.deltas.waterMax);
+    const deltas = Object.entries(s.deltas).filter(([k, v]) => k !== g.engine.data.meta.rules.lifeMax || v);
     const chipsText = [
         ...deltas.map(([k, v]) => ({ t: `${e.attrName(k)} ${v > 0 ? '+' : ''}${v}`, c: v > 0 ? COLOR.good : COLOR.bad })),
         ...s.gained.map(i => ({ t: `获得 ${e.itemName(i)}`, c: COLOR.legacy })),

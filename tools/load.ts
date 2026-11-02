@@ -2,7 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { RawDestiny, RawEvent } from '../assets/scripts/core/types';
+import type { DestinyIndex, RawDestiny, RawEvent } from '../assets/scripts/core/types';
 
 export const DATA_ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources', 'data', 'destinies');
 
@@ -40,4 +40,8 @@ export function loadRawDestiny(id: string): { raw: RawDestiny; eventFiles: Recor
         },
         eventFiles,
     };
+}
+
+export function loadIndex(): DestinyIndex {
+    return readJson(join(DATA_ROOT, 'index.json'));
 }

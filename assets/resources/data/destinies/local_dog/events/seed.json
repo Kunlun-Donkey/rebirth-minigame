@@ -1,0 +1,58 @@
+[
+  {
+    "id": "s0_up_smell", "dir": "up", "stage": [0, 0], "weight": 20,
+    "text": "柴堆外头飘来一股香味，是从山那边来的。你的鼻子比眼睛先醒了。",
+    "choices": [
+      { "text": "爬出去闻闻", "effect": { "脚力": 1, "体力": -1 }, "result": "你摔了三个跟头，爬到了柴堆外面。山，好大。" },
+      { "text": "缩回窝里", "effect": { "体力": 1 }, "result": "窝里暖和。香味明天还会有的。" }
+    ]
+  },
+  {
+    "id": "s0_up_hen", "dir": "up", "stage": [0, 0], "weight": 12,
+    "text": "一只老母鸡挡在路上，咯咯叫着要啄你。它比你大两圈。",
+    "choices": [
+      { "text": "冲上去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.1,
+        "effect": { "牙口": 1, "妖气": 1 }, "result": "老母鸡扑棱着翅膀跑了。你叼下了一根鸡毛。",
+        "fail": { "effect": { "体力": -1 }, "result": "它啄了你的鼻子。你哼唧着跑回了柴堆。" } },
+      { "text": "绕着走", "effect": { "脚力": 1 }, "result": "你绕了好大一圈。腿倒是练出来了。" }
+    ]
+  },
+  {
+    "id": "s0_down_xiaocui", "dir": "down", "stage": [0, 0], "weight": 25, "once": true,
+    "text": "一个扎羊角辫的小姑娘蹲下来看你。她说：你就叫小黄吧。",
+    "choices": [
+      { "text": "摇尾巴", "effect": { "忠义": 2, "flag": "xiaocui" }, "result": "她笑了。她说她叫小翠。" },
+      { "text": "舔她的手", "effect": { "忠义": 1, "体力": 2, "flag": "xiaocui" }, "result": "她把半个窝头塞进了你嘴里。她说她叫小翠。" }
+    ]
+  },
+  {
+    "id": "s0_down_bone", "dir": "down", "stage": [0, 0], "weight": 12,
+    "text": "柴堆底下的土是松的，有一股骨头的味道。",
+    "choices": [
+      { "text": "刨", "chance": 0.6, "chanceAttr": "牙口", "chanceStep": 0.1,
+        "effect": { "item": "bone", "skill": "dig" }, "result": "你在村口刨出了一根骨头。原来土里埋着宝贝。",
+        "fail": { "effect": { "体力": -1 }, "result": "刨了半天，只刨出一只鞋底。" } },
+      { "text": "趴着守着", "effect": { "忠义": 1 }, "result": "你守着那块土睡了一觉。有人路过，夸你乖。" }
+    ]
+  },
+  {
+    "id": "s0_cold", "dir": "any", "stage": [0, 0], "weight": 10,
+    "text": "夜里起风了。一窝小狗挤成一团，谁也不想待在外圈。",
+    "choices": [
+      { "text": "挤进中间", "effect": { "体力": 1 }, "result": "你睡得很暖。外圈的兄弟抖了一夜。" },
+      { "text": "让给最小的", "effect": { "忠义": 1, "灵性": 1 }, "result": "你在外圈抖了一夜。最小的那只，往你身上靠了靠。" }
+    ]
+  },
+  {
+    "id": "s0_kicked", "dir": "any", "stage": [0, 0], "weight": 10,
+    "text": "有人嫌你挡道，一脚把你踢进了沟里。",
+    "choices": [
+      { "text": "哼唧两声", "effect": { "忠义": 1 }, "result": "你爬上来，又摇了摇尾巴。狗就是这样。" },
+      { "text": "咬他裤腿", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.1,
+        "effect": { "牙口": 1, "妖气": 1 }, "result": "他吓了一跳，骂了句小畜生，走了。",
+        "fail": { "effect": { "体力": -2 }, "result": "他又踢了你一脚。这次更重。" } },
+      { "text": "记住这张脸", "require": "legacy:grudge>=1", "effect": { "牙口": 1, "妖气": 2 },
+        "result": "前世他把你赶出了村。这一世，你冲他龇了龇小奶牙。" }
+    ]
+  }
+]
