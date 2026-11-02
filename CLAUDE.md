@@ -16,12 +16,14 @@
 - `npm run validate` — 剧本静态校验
 - `npm run play` — 终端试玩（`-- --new` 清档）
 - `npm run sim` — 随机 AI 2000 世数值统计
+- `npm run audio` — 程序合成 BGM/音效 → `assets/resources/audio/`（曲谱与音色在 `tools/audio/gen_audio.py`，依赖本机 godot skill 的合成器 + ffmpeg）
 
 ## 结构
 - `assets/scripts/core/` 引擎：`types` · `condition` 条件 DSL · `data` 剧本归一化 · `engine` 局内状态机 · `profile` 局外存档 · `rng`
 - `assets/scripts/game/` Cocos 表现层（UI 全部代码生成，入口 `GameRoot` 挂 Canvas）
   - `game.ts` 控制器（界面切换、存档、广告点位）· `config.ts` 配置与贴图路径 `TEX` · `platform.ts` wx 适配（存档/激励视频/分享/埋点，非微信环境自动 Mock）· `loader.ts` · `save.ts`
   - `ui/kit.ts` 代码 UI 工具包（左上角坐标系、纸张卡、按钮、弹窗、缺图兜底）
+  - `audio.ts` 背景音乐/音效/静音（点击音效经 `kit.setTapFeedback` 注入）
   - `screens/` draft 轮回殿 · run 局内 · settle 结算 · popups 弹窗
 - `assets/resources/data/destinies/<命格>/` 剧本数据；`assets/resources/textures/` 美术素材
 - `tools/` Node 端加载、校验、试玩、模拟；`tests/fake-cc.ts` 测试用假 cc

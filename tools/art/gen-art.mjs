@@ -66,6 +66,11 @@ const DEFS = `
   <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#5a3714" flood-opacity=".28"/>
 </filter>`;
 
+// 需要 Pillow（带 libimagequant）：python3 -c "from PIL import features; print(features.check('libimagequant'))"
+const QUANT = `import sys
+from PIL import Image
+Image.open(sys.argv[1]).convert('RGBA').quantize(256, method=Image.LIBIMAGEQUANT).save(sys.argv[2], optimize=True)`;
+
 const jobs = [];
 function job(rel, w, h, body, { jpg = false, bg = 'transparent' } = {}) {
   jobs.push({ rel, w, h, body, jpg, bg });
@@ -84,7 +89,9 @@ function run() {
       { stdio: 'ignore' });
     const out = join(TEX, j.rel + (j.jpg ? '.jpg' : '.png'));
     mkdirSync(dirname(out), { recursive: true });
-    execFileSync('convert', j.jpg ? [png, '-quality', '86', out] : [png, '-strip', 'PNG8:' + out]); // 8 位调色板，体积约为 1/5
+    // JPG：不透明大图；PNG：libimagequant 量化为 256 色调色板（保留半透明边缘与发光，体积约为 1/5）
+    if (j.jpg) execFileSync('convert', [png, '-quality', '86', out]);
+    else execFileSync('python3', ['-c', QUANT, png, out]);
     console.log(j.rel + (j.jpg ? '.jpg' : '.png'));
   }
 }
@@ -267,7 +274,6 @@ function icon(cat, name, glyph) {
   <radialGradient id="ib" cx=".5" cy=".38" r=".7"><stop offset="0" stop-color="#5a4130"/><stop offset="1" stop-color="#2a1c12"/></radialGradient>
   <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1d58e"/><stop offset=".5" stop-color="#b98a3c"/><stop offset="1" stop-color="#e2b866"/></linearGradient>
   <circle cx="128" cy="128" r="120" fill="url(#ib)"/>
-  <circle cx="128" cy="128" r="120" fill="#fff" filter="url(#grain)" opacity=".35"/>
   <circle cx="128" cy="128" r="80" fill="${A}" opacity=".12" filter="url(#soft)"/>
   <g filter="url(#glow)">${glyph(A)}</g>
   <circle cx="128" cy="128" r="117" fill="none" stroke="url(#rim)" stroke-width="7"/>
@@ -457,5 +463,104 @@ icon('talent', 'rebirth', (A) => {
   ${dust(r, 120, 0, 1600, 1080, 320, '#f6dfb0', 2)}
   <rect width="1080" height="1920" fill="#fff" filter="url(#grain)" opacity=".5"/>`, { jpg: true });
 }
+
+// ---------- 7. 第二批 UI：按钮 / 弹窗面板 / 工具栏 / 属性 / 方向 / 广告 ----------
+// 按钮 240×120（九宫格 上36 右36 下48 左36，底部 12px 是按钮厚度）
+const BTN = {
+  normal: { top: '#fffdf6', bot: '#f4e6c9', line: '#b0906a', side: '#c8ad86', hl: true },
+  primary: { top: '#8cc865', bot: '#5c9a3a', line: '#457a2a', side: '#3c6b24', hl: true },
+  ad: { top: '#ffeab0', bot: '#f0c255', line: '#c99a34', side: '#b58a2b', hl: true },
+  locked: { top: '#f1e9d8', bot: '#e8dcc4', line: '#cdbb9c', side: '#d9c9a8', hl: false },
+};
+for (const [id, c] of Object.entries(BTN)) {
+  job(`common/ui/btn_${id}`, 240, 120, `
+  <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.top}"/><stop offset="1" stop-color="${c.bot}"/></linearGradient>
+  <rect x="3" y="15" width="234" height="102" rx="28" fill="${c.side}"/>
+  <rect x="3" y="3" width="234" height="102" rx="28" fill="url(#b)" stroke="${c.line}" stroke-width="3"/>
+  ${c.hl ? '<path d="M30 14 H210" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".55"/>' : ''}`);
+}
+
+// 弹窗面板 480×480（九宫格 90）
+job('common/ui/panel', 480, 480, `
+  <linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fcf5e4"/><stop offset="1" stop-color="#f1e1bf"/></linearGradient>
+  <g filter="url(#shadow)"><rect x="12" y="10" width="456" height="452" rx="28" fill="url(#p)" stroke="#c9a874" stroke-width="4"/></g>
+  <rect x="12" y="10" width="456" height="452" rx="28" fill="#fff" filter="url(#grain)" opacity=".5"/>
+  <rect x="28" y="26" width="424" height="420" rx="18" fill="none" stroke="#c9a874" stroke-width="2" opacity=".6"/>
+  ${corners(480, 472, 22, cornerCurl('#b89a66', 0.62, 4))}`);
+
+// 工具栏图标 128（圆角方块底 + 棕色符号）
+function tool(name, glyph) {
+  job(`common/icon/tool_${name}`, 128, 128, `
+  <linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8ead0"/><stop offset="1" stop-color="#ecd5a8"/></linearGradient>
+  <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#t)" stroke="#c9a874" stroke-width="3"/>
+  ${glyph}`);
+}
+const BR = '#7a4a1f', GD = '#d99a2b';
+tool('items', `<path d="M38 58 Q30 100 64 102 Q98 100 90 58 Q78 50 64 52 Q50 50 38 58Z" fill="#c4874a" stroke="${BR}" stroke-width="4"/>
+  <path d="M42 52 Q64 36 86 52" fill="none" stroke="${BR}" stroke-width="5" stroke-linecap="round"/><circle cx="64" cy="52" r="6" fill="${GD}"/>`);
+tool('skills', `<path d="${spiral(62, 70, 3, 28, 1.7, Math.PI / 2)}" fill="none" stroke="#5c9a3a" stroke-width="7" stroke-linecap="round"/>
+  <path d="${star(94, 34, 12, 3.5, 4)}" fill="${GD}"/>`);
+tool('companions', `<circle cx="48" cy="56" r="13" fill="#c4874a"/><path d="M26 98 Q26 74 48 74 Q70 74 70 98Z" fill="#c4874a"/>
+  <circle cx="82" cy="50" r="15" fill="${BR}"/><path d="M58 98 Q58 70 82 70 Q106 70 106 98Z" fill="${BR}"/>`);
+tool('codex', `<path d="M64 40 Q46 30 26 34 V94 Q46 90 64 100 Q82 90 102 94 V34 Q82 30 64 40Z" fill="#fbf3e1" stroke="${BR}" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M64 40 V100" stroke="${BR}" stroke-width="4"/><path d="M36 50 h18 M36 62 h18 M74 50 h18 M74 62 h18 M74 74 h12" stroke="${GD}" stroke-width="3.5" stroke-linecap="round"/>`);
+
+// 属性 / 方向：彩色圆底 + 白色符号（128，小尺寸显示）
+function dot(rel, color, glyph) {
+  job(rel, 128, 128, `
+  <radialGradient id="c" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <circle cx="64" cy="64" r="58" fill="${color}"/><circle cx="64" cy="64" r="58" fill="url(#c)"/>
+  <circle cx="64" cy="64" r="56" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/>
+  <g fill="#fff" stroke="#fff">${glyph}</g>`);
+}
+const WS = 'fill="none" stroke-linecap="round" stroke-linejoin="round"';
+dot('common/icon/stat_life', '#3d8fc0', `<path d="M64 26 C64 26 40 58 40 74 A24 24 0 0 0 88 74 C88 58 64 26 64 26Z" stroke="none"/>`);
+dot('common/icon/stat_down', '#8a6a3c', `<path d="M64 28 V88 M42 68 L64 92 L86 68" ${WS} stroke-width="9"/><path d="M64 56 L46 44 M64 68 L84 56" ${WS} stroke-width="5"/>`);
+dot('common/icon/stat_up', '#5c9a3a', `<path d="M64 98 V40 M42 60 L64 36 L86 60" ${WS} stroke-width="9"/><path d="M64 78 C52 76 44 68 42 58 C54 60 62 66 64 78Z" stroke="none"/>`);
+dot('common/icon/stat_tough', '#7d7d7d', `<path d="M64 28 L94 40 Q94 80 64 100 Q34 80 34 40Z" stroke="none"/>`);
+dot('common/icon/stat_spirit', '#8e5bc9', `<path d="${star(64, 64, 36, 10, 4)}" stroke="none"/>`);
+dot('common/icon/stat_energy', '#d99a2b', `<circle cx="64" cy="64" r="16" stroke="none"/>
+  ${Array.from({ length: 8 }, (_, i) => `<line x1="64" y1="28" x2="64" y2="38" stroke-width="7" stroke-linecap="round" transform="rotate(${i * 45} 64 64)"/>`).join('')}`);
+dot('common/icon/dir_up', '#5c9a3a', `<path d="M64 96 V36 M38 60 L64 32 L90 60" ${WS} stroke-width="11"/>`);
+dot('common/icon/dir_down', '#8a6a3c', `<path d="M64 32 V92 M38 68 L64 96 L90 68" ${WS} stroke-width="11"/>`);
+dot('common/icon/dir_side', '#8e5bc9', `<path d="M30 64 H98 M78 44 L100 64 L78 84 M50 44 L28 64 L50 84" ${WS} stroke-width="9"/>`);
+job('common/icon/ad_video', 128, 128, `
+  <rect x="10" y="26" width="108" height="76" rx="20" fill="#b58a2b"/><rect x="10" y="26" width="108" height="76" rx="20" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/>
+  <path d="M54 46 L84 64 L54 82Z" fill="#fff"/>`);
+
+// ---------- 8. 标题字 / 分享图 / 小程序头像 ----------
+const TITLE_FONT = `font-family="Noto Serif CJK SC, Source Han Serif SC, serif" font-weight="900"`;
+const titleBlock = (cx, y, big, small) => `
+  <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a4f1c"/><stop offset="1" stop-color="#4a2a10"/></linearGradient>
+  <text x="${cx}" y="${y}" text-anchor="middle" ${TITLE_FONT} font-size="${big}" letter-spacing="${f(big * 0.12)}" fill="url(#tg)" stroke="#fff3d0" stroke-width="${f(big * 0.06)}" paint-order="stroke">我重生了</text>
+  <text x="${cx}" y="${f(y + small * 1.9)}" text-anchor="middle" ${TITLE_FONT} font-size="${small}" letter-spacing="${f(small * 0.18)}" fill="#6b4a2a" stroke="#fff3d0" stroke-width="${f(small * 0.12)}" paint-order="stroke">这一世，我将拿回属于我的一切</text>`;
+job('common/ui/logo_title', 1000, 360, `
+  <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3c4" stop-opacity=".9"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient>
+  <ellipse cx="500" cy="170" rx="480" ry="170" fill="url(#gl)"/>
+  ${titleBlock(500, 190, 150, 44)}
+  <path d="${star(120, 70, 16, 4, 4)}" fill="#e2b04a"/><path d="${star(890, 230, 12, 3, 4)}" fill="#e2b04a"/>`);
+
+const coverBg = (W, H, r) => `
+  <radialGradient id="cb" cx=".5" cy=".55" r=".75"><stop offset="0" stop-color="#fff6dc"/><stop offset=".6" stop-color="#f3d9a6"/><stop offset="1" stop-color="#d9a868"/></radialGradient>
+  <radialGradient id="ry" gradientUnits="userSpaceOnUse" cx="${W / 2}" cy="${f(H * 0.62)}" r="${f(W * 0.7)}"><stop offset="0" stop-color="#fffbe8" stop-opacity=".8"/><stop offset="1" stop-color="#fffbe8" stop-opacity="0"/></radialGradient>
+  <rect width="${W}" height="${H}" fill="url(#cb)"/>
+  ${Array.from({ length: 24 }, (_, i) => { const a = (i / 24) * 2 * Math.PI, w = 0.05, R = W, cx = W / 2, cy = H * 0.62; return `<path d="M${cx} ${f(cy)} L${f(cx + R * Math.cos(a - w))} ${f(cy + R * Math.sin(a - w))} L${f(cx + R * Math.cos(a + w))} ${f(cy + R * Math.sin(a + w))}Z" fill="url(#ry)"/>`; }).join('')}
+  ${dust(r, 40, 0, 0, W, H, '#fff8e0', 2.5)}`;
+const sprout = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})">
+  <circle cx="0" cy="-40" r="70" fill="#d6f5a8" opacity=".35" filter="url(#soft)"/>
+  <path d="M0 0 C-3 -30 3 -56 0 -84" stroke="#4f8a30" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M0 -44 C-28 -60 -50 -54 -60 -40 C-40 -30 -18 -32 0 -44Z" fill="#7bb556"/>
+  <path d="M1 -64 C26 -84 48 -80 58 -66 C38 -54 18 -56 1 -64Z" fill="#9bd36a"/>
+  <ellipse cx="0" cy="4" rx="46" ry="9" fill="#a87444" opacity=".5"/></g>`;
+job('common/ui/share_cover', 500, 400, `${coverBg(500, 400, rng(8))}
+  ${titleBlock(250, 120, 76, 24)}${sprout(250, 350, 1.15)}
+  <rect width="500" height="400" fill="#fff" filter="url(#grain)" opacity=".4"/>`, { jpg: true });
+
+// 小程序头像（备案 / 后台上传用，不进游戏包；路径相对 textures/）
+job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
+  <circle cx="512" cy="560" r="300" fill="none" stroke="#e2b04a" stroke-width="16" stroke-dasharray="560 80" opacity=".8" transform="rotate(-60 512 560)"/>
+  ${sprout(512, 760, 3.2)}
+  <text x="512" y="300" text-anchor="middle" ${TITLE_FONT} font-size="230" fill="#5a3410" stroke="#fff3d0" stroke-width="14" paint-order="stroke">重生</text>
+  <rect width="1024" height="1024" fill="#fff" filter="url(#grain)" opacity=".35"/>`, { jpg: true });
 
 run();

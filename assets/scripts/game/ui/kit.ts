@@ -6,6 +6,7 @@
 import {
     BlockInputEvents, Color, Graphics, Label, Layers, Node, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3,
 } from 'cc';
+import { BTN_SLICE, POPUP_SLICE, TEX } from '../config';
 import { loadSpriteFrame } from '../loader';
 
 // ───────────── 主题 ─────────────
@@ -137,6 +138,8 @@ export interface ImageOpts {
     maxAspectDiff?: number;
     /** 等比放大铺满区域并居中（超出部分溢出，适合全屏背景） */
     cover?: boolean;
+    /** 贴图成功显示后回调（如隐藏文字兜底） */
+    onLoaded?: () => void;
 }
 
 /**
@@ -172,6 +175,7 @@ export function image(parent: Node, paths: string | string[], x: number, y: numb
             } else {
                 n.getComponent(UITransform)!.setContentSize(w / sc, h / sc);
             }
+            o.onLoaded?.();
             return;
         }
     })();
@@ -252,6 +256,12 @@ export function estimateWidth(str: string, size: number): number {
 
 // ───────────── 交互 ─────────────
 
+/** 点击反馈钩子（由 Game 注入点击音效），kit 不直接依赖音频模块 */
+let tapFeedback: (() => void) | null = null;
+export function setTapFeedback(fn: (() => void) | null): void {
+    tapFeedback = fn;
+}
+
 export function onTap(n: Node, fn: () => void, feedback = true): void {
     let pressed = false;
     n.on(Node.EventType.TOUCH_START, () => {
@@ -264,7 +274,10 @@ export function onTap(n: Node, fn: () => void, feedback = true): void {
     });
     n.on(Node.EventType.TOUCH_END, () => {
         n.setScale(1, 1, 1);
-        if (pressed) fn();
+        if (pressed) {
+            if (feedback) tapFeedback?.();
+            fn();
+        }
         pressed = false;
     });
 }
@@ -281,8 +294,12 @@ export interface ButtonOpts {
     subColor?: string;
     size?: number;
     align?: 'left' | 'center';
+    /** 文字左侧的小图标（贴图候选列表）；ad 按钮默认带视频图标 */
+    icon?: string[];
     onClick?: () => void;
 }
+
+const BTN_ICON = 40;
 
 /** 按钮：高度自适应（有 sub 或 tags 换行时更高），返回节点；用 sizeOf 取实际高度 */
 export function button(parent: Node, x: number, y: number, w: number, o: ButtonOpts): Node {
@@ -306,9 +323,19 @@ export function button(parent: Node, x: number, y: number, w: number, o: ButtonO
         ghost: { fill: COLOR.paper, stroke: COLOR.btnEdge, shadow: '', ink: COLOR.ink2 },
     }[style];
     rect(n, { fill: theme.fill, stroke: theme.stroke, lineWidth: 2, radius: 18, shadow: theme.shadow || undefined, shadowOffset: 6 });
+    // 贴图皮肤：自带底部厚度，高度含画出来的 6px 投影
+    if (style !== 'ghost') image(n, TEX.btn(style), 0, 0, w, h + 6, { slice: BTN_SLICE, sliceScale: 0.6 });
 
     const top = o.sub || tagsOnNewLine ? 18 : (h - Math.round(size * 1.4)) / 2;
-    text(n, o.label, pad, top, w - pad * 2, { size, color: theme.ink, align: align === 'center' ? 'center' : 'left', lineHeight: Math.round(size * 1.4) });
+    const icon = o.icon ?? (style === 'ad' ? TEX.adIcon : undefined);
+    let lx = pad;
+    if (icon) {
+        const iy = top + (Math.round(size * 1.4) - BTN_ICON) / 2;
+        const ix = align === 'center' ? Math.max(pad, (w - labelW) / 2 - BTN_ICON - 10) : pad;
+        image(n, icon, ix, iy, BTN_ICON, BTN_ICON);
+        if (align === 'left') lx = pad + BTN_ICON + 12;
+    }
+    text(n, o.label, lx, top, w - lx - pad, { size, color: theme.ink, align: align === 'center' ? 'center' : 'left', lineHeight: Math.round(size * 1.4) });
 
     let ty = top + Math.round(size * 1.4) + 6;
     if (o.tags?.length) {
@@ -337,6 +364,7 @@ export function modal(host: Node, screenW: number, screenH: number, panelH: numb
     const pw = screenW - 60;
     const py = Math.max(80, (screenH - panelH) / 2);
     const panel = paper(root, 30, py, pw, panelH);
+    image(panel, TEX.panel, -10, -10, pw + 20, panelH + 22, { slice: POPUP_SLICE, sliceScale: 0.8 });
     const close = () => {
         if (!root.isValid) return;
         root.destroy();

@@ -10,6 +10,7 @@
   "description": "我重生了，这一世我将拿回属于我的一切 - 微信小游戏",
   "scripts": {
     "art": "node tools/art/gen-art.mjs",
+    "audio": "python3 tools/audio/gen_audio.py",
     "preplay": "node tools/ensure-cocos-temp.mjs",
     "play": "tsx tools/play.ts",
     "postinstall": "node tools/ensure-cocos-temp.mjs",

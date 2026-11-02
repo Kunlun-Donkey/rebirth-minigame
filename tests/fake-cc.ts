@@ -95,6 +95,16 @@ export class Label extends Component {
     overflow = 0; horizontalAlign = 0; verticalAlign = 0;
 }
 export class Asset { constructor(public name = '') {} }
+export class AudioClip extends Asset {}
+/** 所有 AudioSource 的播放记录（测试断言用） */
+export const audioLog: string[] = [];
+export class AudioSource extends Component {
+    clip: AudioClip | null = null; loop = false; volume = 1; playing = false;
+    play() { this.playing = true; audioLog.push(`bgm:${this.clip?.name}`); }
+    stop() { this.playing = false; }
+    pause() { this.playing = false; }
+    playOneShot(clip: AudioClip) { audioLog.push(`sfx:${clip.name}`); }
+}
 export class JsonAsset extends Asset { json: unknown; }
 export class ImageAsset extends Asset { width = 0; height = 0; }
 export class SpriteFrame extends Asset {
@@ -141,6 +151,10 @@ export const resources = {
     spriteFrameDisabled: false,
     load(path: string, type: unknown, cb: (err: Error | null, asset: unknown) => void) {
         setTimeout(() => {
+            if (type === AudioClip) {
+                const file = join(RES, `${path}.mp3`);
+                return existsSync(file) ? cb(null, new AudioClip(path.split('/').pop())) : cb(new Error(`缺音频 ${path}`), null);
+            }
             if (type === ImageAsset) {
                 const file = findImage(path);
                 if (!file) return cb(new Error(`缺图 ${path}`), null);

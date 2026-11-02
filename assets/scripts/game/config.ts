@@ -42,4 +42,18 @@ export const TEX = {
     stage: (lv: number) => [D(`stage_${lv}`), `${C}/fx/fx_breakthrough`],
     companion: (id: string) => [D(`companion_${id}`)],
     icon: (kind: 'death' | 'skill' | 'item' | 'talent', icon?: string) => (icon ? [`${C}/icon/${kind}_${icon}`] : []),
+    /** 按钮九宫格（BTN_SLICE） */
+    btn: (style: 'normal' | 'primary' | 'ad' | 'locked') => [`${C}/ui/btn_${style}`],
+    /** 弹窗面板九宫格（POPUP_SLICE） */
+    panel: [`${C}/ui/panel`],
+    tool: (id: 'items' | 'skills' | 'companions' | 'codex') => [`${C}/icon/tool_${id}`],
+    /** 属性图标：剧本 attrs[].stat → stat_{stat} */
+    stat: (stat?: string) => (stat ? [`${C}/icon/stat_${stat}`] : []),
+    dir: (dir: string) => [`${C}/icon/dir_${dir}`],
+    adIcon: [`${C}/icon/ad_video`],
+    logo: [`${C}/ui/logo_title`],
 };
+
+/** 九宫格参数 [上, 右, 下, 左]（贴图像素，见 tools/art/gen-art.mjs） */
+export const BTN_SLICE: [number, number, number, number] = [36, 36, 48, 36];
+export const POPUP_SLICE: [number, number, number, number] = [90, 90, 90, 90];

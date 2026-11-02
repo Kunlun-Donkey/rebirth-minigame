@@ -30,9 +30,9 @@
 | `settle_bg_ending` | 荒漠一株草 | ✅ `destiny/desert_grass/settle_bg_ending.jpg` | 比例 3:4，有空重生成 9:16 |
 | `epitaph_card` | 荒漠一株草 | ⚠ `destiny/desert_grass/epitaph_card.jpg` | 带枯草和荒漠背景、竖版，只适合小草。**通用版见 §1.3 重新生成** |
 
-### SVG 程序化生成（57 张，已入库可用）
+### SVG 程序化生成（78 张，已入库可用）
 
-由 `npm run art`（[tools/art/gen-art.mjs](../../tools/art/gen-art.mjs)）生成：扁平矢量风格，8 位 PNG，体积小。
+由 `npm run art`（[tools/art/gen-art.mjs](../../tools/art/gen-art.mjs)）生成：扁平矢量风格，PNG 经 libimagequant 量化为 256 色（保留半透明），体积小。
 **想要更有质感时，用下面的提示词生成 AI 版，同名放进来替换即可。** 替换后要从脚本里删掉对应条目，否则再跑 `npm run art` 会覆盖。
 
 | 层 | 内容 | 数量 | 文件 |
@@ -42,6 +42,12 @@
 | 通用 | 突破光效 | 1 | `common/fx/fx_breakthrough.jpg` |
 | 通用 | 死因 12 + 技能 14 + 道具 9 + 天赋 9 图标 | 44 | `common/icon/*.png` |
 | 荒漠一株草 | 主界面背景 | 1 | `destiny/desert_grass/main_bg.jpg` |
+| 通用 · 第二批 | 按钮皮肤 4（九宫格 36/36/48/36）+ 弹窗面板 1（九宫格 90） | 5 | `common/ui/btn_{normal,primary,ad,locked}.png` `panel.png` |
+| 通用 · 第二批 | 工具栏 4 + 属性 6 + 方向 3 + 广告 1 图标 | 14 | `common/icon/tool_*` `stat_*` `dir_*` `ad_video.png` |
+| 通用 · 第二批 | 标题字 + 分享图（5:4） | 2 | `common/ui/logo_title.png` `share_cover.jpg` |
+| 后台用 | 小程序头像 1024 | 1 | `docs/filing/app_icon.jpg`（不进游戏包） |
+
+> 属性图标是通用类型：剧本 `attrs[].stat` 指定（荒漠一株草：水分 life / 根系 down / 茎叶 up / 韧性 tough / 灵性 spirit / 灵气 energy）。
 
 ### 仍待生成（可选）
 

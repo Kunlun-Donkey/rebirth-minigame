@@ -1,5 +1,5 @@
 /** 轮回殿：天赋 / 道具 / 伙伴 各 3 选 1 →（技能超过上限时）选择携带技能 → 重生 */
-import { Node } from 'cc';
+import { Label, Node } from 'cc';
 import { DraftPick, randomSeed, Rarity } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
@@ -45,10 +45,11 @@ export function showDraft(g: Game): void {
         ids.forEach((id, i) => {
             const n = card(g, root, s.type, id, x0 + i * (cw + gap), 400, cw, ch);
             onTap(n, () => {
+                g.audio.play('card');
                 picks[s.key] = id;
                 step += 1;
                 render();
-            });
+            }, false);
         });
         summary(root, 800);
         if (!g.save.rerollUsed) {
@@ -126,6 +127,7 @@ function header(g: Game, root: Node): void {
     const e = g.engine;
     const dp = e.dp;
     text(root, '轮  回  殿', 0, CONFIG.safeTop + 10, g.W, { size: 52, color: COLOR.ochreD, align: 'center', bold: true });
+    soundToggle(g, root, 30, CONFIG.safeTop + 22);
     text(root, `第 ${dp.lives + 1} 世 · ${e.data.meta.name} · 轮回点 ${g.save.profile.points}`, 0, CONFIG.safeTop + 90, g.W, { size: 26, color: COLOR.ink2, align: 'center' });
     const legacies = Object.entries(dp.legacy).map(([id, lv]) => `${e.data.legacies.get(id)?.name ?? id} Lv${lv}`);
     const line2 = [
@@ -168,5 +170,17 @@ function card(g: Game, parent: Node, type: 'talent' | 'item' | 'companion', id: 
     const label = RARITY_TEXT[def.rarity];
     chip(n, label, (w - estimateWidth(label, 20) - 20) / 2, 200, color, true);
     text(n, def.desc, 16, 244, w - 32, { size: 22, color: COLOR.ink2, wrap: true, lineHeight: 32 });
+    return n;
+}
+
+/** 声音开关（局内 HUD 也复用） */
+export function soundToggle(g: Game, parent: Node, x: number, y: number): Node {
+    const n = chip(parent, g.audio.isMuted ? '♪ 声音：关' : '♪ 声音：开', x, y, g.audio.isMuted ? COLOR.ink2 : COLOR.ochreD, false, 22);
+    onTap(n, () => {
+        const muted = g.toggleMute();
+        // 只更新文字，不重建整个界面
+        const label = n.children.find(c => c.name === 'text')?.getComponent(Label);
+        if (label) label.string = muted ? '♪ 声音：关' : '♪ 声音：开';
+    });
     return n;
 }

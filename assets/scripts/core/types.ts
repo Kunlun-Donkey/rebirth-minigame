@@ -73,6 +73,8 @@ export interface AttrDef {
     id: string;
     name: string;
     icon?: string;
+    /** 通用属性图标 → textures/common/icon/stat_{stat}（life/down/up/tough/spirit/energy） */
+    stat?: string;
     init: number;
     hidden?: boolean;
 }

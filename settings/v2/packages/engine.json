@@ -73,7 +73,7 @@
         "_value": false
       },
       "audio": {
-        "_value": false
+        "_value": true
       },
       "video": {
         "_value": false
@@ -108,6 +108,7 @@
     },
     "includeModules": [
       "2d",
+      "audio",
       "base",
       "gfx-webgl",
       "gfx-webgl2",

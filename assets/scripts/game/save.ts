@@ -11,6 +11,8 @@ export interface SaveData {
     peekUsed: number;
     /** 本次开局是否已用过「天机重演」 */
     rerollUsed: boolean;
+    /** 静音（背景音乐 + 音效） */
+    muted: boolean;
 }
 
 export function loadSave(): SaveData {
@@ -23,12 +25,13 @@ export function loadSave(): SaveData {
                 run: d.run ?? null,
                 peekUsed: d.peekUsed ?? 0,
                 rerollUsed: d.rerollUsed ?? false,
+                muted: d.muted ?? false,
             };
         } catch (e) {
             console.warn('[save] 存档损坏，已重置', e);
         }
     }
-    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false };
+    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, muted: false };
 }
 
 export function writeSave(d: SaveData): void {

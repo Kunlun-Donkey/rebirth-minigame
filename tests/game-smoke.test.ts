@@ -149,3 +149,34 @@ describe('贴图加载兜底', () => {
         }
     });
 });
+
+describe('音频', () => {
+    it('所有音效/BGM 文件存在，游戏流程中会播放 BGM 与音效，静音后不再播放', async () => {
+        const { existsSync } = await import('node:fs');
+        const { audioLog } = await import('./fake-cc');
+        const names = ['click', 'card', 'choose', 'success', 'fail', 'item', 'skill', 'breakthrough', 'death', 'revive', 'ending'];
+        for (const n of names) expect(existsSync(`assets/resources/audio/sfx/${n}.mp3`), n).toBe(true);
+        for (const n of ['bgm_main', 'bgm_settle']) expect(existsSync(`assets/resources/audio/bgm/${n}.mp3`), n).toBe(true);
+
+        sys.localStorage.clear?.();
+        audioLog.length = 0;
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        for (let i = 0; i < 5; i++) await flush();
+        expect(audioLog).toContain('bgm:bgm_main');
+        // 点一张卡 → 翻卡音效
+        const card = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+        card.emit(Node.EventType.TOUCH_START); card.emit(Node.EventType.TOUCH_END);
+        for (let i = 0; i < 3; i++) await flush();
+        expect(audioLog).toContain('sfx:card');
+
+        // 静音后点击不再出声
+        g.toggleMute();
+        const before = audioLog.length;
+        const next = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+        next.emit(Node.EventType.TOUCH_START); next.emit(Node.EventType.TOUCH_END);
+        for (let i = 0; i < 3; i++) await flush();
+        expect(audioLog.length).toBe(before);
+        expect(g.save.muted).toBe(true);
+    });
+});

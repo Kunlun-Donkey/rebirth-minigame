@@ -4,11 +4,12 @@
  */
 import { Node, view } from 'cc';
 import { Destiny, Engine, randomSeed, StepResult } from '../core';
-import { CONFIG } from './config';
+import { Audio, SfxName } from './audio';
+import { CONFIG, TEX } from './config';
 import { loadDestiny } from './loader';
 import { Platform } from './platform';
 import { loadSave, SaveData, writeSave } from './save';
-import { box, clear, COLOR, rect, text } from './ui/kit';
+import { box, clear, COLOR, image, rect, setTapFeedback, text } from './ui/kit';
 import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
@@ -22,6 +23,7 @@ export class Game {
     screen!: Node;
     /** 弹窗层，始终在界面之上 */
     overlay!: Node;
+    audio!: Audio;
     W = CONFIG.designWidth;
     H = CONFIG.designHeight;
 
@@ -47,6 +49,10 @@ export class Game {
         }
         this.save = loadSave();
         this.engine = new Engine(this.data, this.save.profile);
+        this.audio = new Audio(this.save.muted);
+        this.audio.attach(this.host);
+        this.audio.preload(['click', 'choose', 'success', 'fail', 'item']);
+        setTapFeedback(() => this.audio.play('click'));
         Platform.setupPassiveShare(() => '我重生了，这一世我将拿回属于我的一切');
 
         const run = this.save.run;
@@ -66,11 +72,13 @@ export class Game {
         this.save.rerollUsed = false;
         this.persist();
         this.reset();
+        this.audio.playBgm('bgm_main');
         showDraft(this);
     }
 
     goRun(): void {
         this.reset();
+        this.audio.playBgm('bgm_main');
         if (this.engine.run.phase === 'dying') {
             showRun(this);
             showDying(this);
@@ -87,6 +95,8 @@ export class Game {
         this.persist();
         Platform.report('life_end', { kind: s.kind, cause: s.id, seasons: s.seasons, stage: s.stage });
         this.reset();
+        this.audio.playBgm('bgm_settle');
+        if (s.kind === 'ending') this.audio.play('ending');
         showSettle(this);
     }
 
@@ -110,7 +120,28 @@ export class Game {
             return;
         }
         this.persist();
+        this.audio.play(this.stepSound(step));
         showStep(this, step, () => this.afterStep());
+    }
+
+    /** 按结果挑一个最重要的音效 */
+    private stepSound(s: StepResult): SfxName {
+        const phase = this.engine.run.phase;
+        if (phase === 'dying') return 'death';
+        if (s.messages.some(m => m.startsWith('【突破·'))) return 'breakthrough';
+        if (s.messages.some(m => m.includes('又活了过来') || m.includes('替你挡下') || m.includes('新芽'))) return 'revive';
+        if (s.skills.length) return 'skill';
+        if (s.success === false) return 'fail';
+        if (s.success === true) return 'success';
+        if (s.gained.length) return 'item';
+        return 'choose';
+    }
+
+    toggleMute(): boolean {
+        this.save.muted = !this.save.muted;
+        this.audio.setMuted(this.save.muted);
+        this.persist();
+        return this.save.muted;
     }
 
     afterStep(): void {
@@ -182,6 +213,9 @@ export class Game {
     private loading(msg: string): void {
         clear(this.screen);
         rect(this.screen, { fill: COLOR.bg });
-        text(this.screen, msg, 0, this.H / 2 - 30, this.W, { size: 30, color: COLOR.ink2, align: 'center' });
+        image(this.screen, TEX.mainBg, 0, 0, this.W, this.H, { cover: true });
+        const lw = this.W - 80;
+        image(this.screen, TEX.logo, 40, this.H * 0.28, lw, lw * 0.36);
+        text(this.screen, msg, 0, this.H / 2 + 40, this.W, { size: 30, color: COLOR.ink2, align: 'center' });
     }
 }

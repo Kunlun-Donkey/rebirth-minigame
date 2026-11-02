@@ -93,6 +93,17 @@ declare module 'cc' {
     }
 
     export class Asset { readonly name: string; }
+    export class AudioClip extends Asset {}
+    export class AudioSource extends Component {
+        clip: AudioClip | null;
+        loop: boolean;
+        volume: number;
+        readonly playing: boolean;
+        play(): void;
+        stop(): void;
+        pause(): void;
+        playOneShot(clip: AudioClip, volumeScale?: number): void;
+    }
     export class JsonAsset extends Asset { json: unknown; }
     export class ImageAsset extends Asset { readonly width: number; readonly height: number; }
     export class SpriteFrame extends Asset {

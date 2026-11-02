@@ -3,13 +3,13 @@
   "name": "荒漠一株草",
   "desc": "你是荒漠里的一颗草籽。这一世，你要长成贯通天地的树。",
   "attrs": [
-    { "id": "water", "name": "水分", "icon": "💧", "init": 5 },
+    { "id": "water", "name": "水分", "icon": "💧", "stat": "life", "init": 5 },
     { "id": "waterMax", "name": "水分上限", "init": 5, "hidden": true },
-    { "id": "root", "name": "根系", "icon": "🌿", "init": 0 },
-    { "id": "stem", "name": "茎叶", "icon": "🍃", "init": 0 },
-    { "id": "tough", "name": "韧性", "icon": "🛡", "init": 0 },
-    { "id": "spirit", "name": "灵性", "icon": "✨", "init": 0 },
-    { "id": "qi", "name": "灵气", "icon": "🔆", "init": 0 }
+    { "id": "root", "name": "根系", "icon": "🌿", "stat": "down", "init": 0 },
+    { "id": "stem", "name": "茎叶", "icon": "🍃", "stat": "up", "init": 0 },
+    { "id": "tough", "name": "韧性", "icon": "🛡", "stat": "tough", "init": 0 },
+    { "id": "spirit", "name": "灵性", "icon": "✨", "stat": "spirit", "init": 0 },
+    { "id": "qi", "name": "灵气", "icon": "🔆", "stat": "energy", "init": 0 }
   ],
   "dirs": [
     { "id": "up", "name": "向上生长" },

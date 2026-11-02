@@ -6,6 +6,7 @@ import type { Game } from '../game';
 import {
     box, button, ButtonOpts, chip, COLOR, image, onTap, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
+import { soundToggle } from './draft';
 import { ListEntry, showInfo, showList } from './popups';
 
 const DIR_ICON: Record<string, string> = { up: '▲', down: '▼', side: '◆' };
@@ -58,7 +59,9 @@ function hud(g: Game, root: Node): number {
         rect(c, { fill: COLOR.btn, fillAlpha: 190, stroke: COLOR.btnEdge, strokeAlpha: 90, radius: 12 });
         const dot = box(c, 14, 12, 32, 32, 'ic');
         rect(dot, { fill: color, radius: 16 });
-        text(dot, ic, 0, 0, 32, { size: 20, color: COLOR.white, align: 'center', valign: 'center' }, 32);
+        const ch = text(dot, ic, 0, 0, 32, { size: 20, color: COLOR.white, align: 'center', valign: 'center' }, 32);
+        const stat = e.data.meta.attrs.find(a => a.id === id)?.stat;
+        image(dot, TEX.stat(stat), 0, 0, 32, 32, { onLoaded: () => { ch.active = false; } });
         text(c, String(r.attrs[id] ?? 0), 52, 8, cw - 60, { size: 30, bold: true, valign: 'center' }, 40);
         onTap(c, () => showInfo(g, e.attrName(id), [attrHelp(id)]), false);
     });
@@ -70,6 +73,8 @@ function hud(g: Game, root: Node): number {
         ? `${DIR_ICON[dir]} ${e.data.dirs.find(d => d.id === dir)?.name ?? ''} · ${e.data.layersByDir[dir][r.pos[dir]]?.name ?? ''}`
         : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
     chip(root, loc, 30, ly, COLOR.ochreD, false, 24);
+    const st = soundToggle(g, root, 0, ly);
+    st.setPosition(g.W - 30 - sizeOf(st).w, -ly, 0);
     return ly + 60;
 }
 
@@ -177,10 +182,11 @@ function directionArea(g: Game, root: Node, y: number, _bottom: number): void {
 }
 
 function dirOpts(g: Game, o: DirOption): ButtonOpts {
-    if (!o.enabled) return { label: `${DIR_ICON[o.dir]} ${o.name}`, style: 'locked', sub: `需要：${o.lockText}` };
+    if (!o.enabled) return { label: o.name, icon: TEX.dir(o.dir), style: 'locked', sub: `需要：${o.lockText}` };
     const next = o.nextLayer ? `下一层：${o.nextLayer.name}${o.nextLayer.lockText ? `（需${o.nextLayer.lockText}）` : ''}` : '已是最深处';
     return {
-        label: `${DIR_ICON[o.dir]} ${o.name}`,
+        label: o.name,
+        icon: TEX.dir(o.dir),
         tags: [{ text: o.layerName, color: COLOR.ochreD }],
         sub: next,
         onClick: () => {
@@ -200,18 +206,19 @@ function toolbar(g: Game, root: Node): void {
     rect(bar, { fill: COLOR.paper, fillAlpha: 230, stroke: COLOR.paperEdge, strokeAlpha: 120, lineWidth: 2 });
     const usableItems = e.run.phase === 'direction' ? e.usableItems().length : 0;
     const usableSkills = e.skillViews().filter(s => s.usable).length;
-    const tools: { ic: string; label: string; badge: number; fn: () => void }[] = [
-        { ic: '囊', label: '道具', badge: usableItems, fn: () => itemsPopup(g) },
-        { ic: '技', label: '技能', badge: usableSkills, fn: () => skillsPopup(g) },
-        { ic: '伴', label: '伙伴', badge: 0, fn: () => companionsPopup(g) },
-        { ic: '鉴', label: '图鉴', badge: 0, fn: () => codexPopup(g) },
+    const tools: { id: 'items' | 'skills' | 'companions' | 'codex'; ic: string; label: string; badge: number; fn: () => void }[] = [
+        { id: 'items', ic: '囊', label: '道具', badge: usableItems, fn: () => itemsPopup(g) },
+        { id: 'skills', ic: '技', label: '技能', badge: usableSkills, fn: () => skillsPopup(g) },
+        { id: 'companions', ic: '伴', label: '伙伴', badge: 0, fn: () => companionsPopup(g) },
+        { id: 'codex', ic: '鉴', label: '图鉴', badge: 0, fn: () => codexPopup(g) },
     ];
     const tw = g.W / tools.length;
     tools.forEach((t, i) => {
         const n = box(bar, i * tw, 0, tw, TOOLBAR_H, `tool_${t.label}`);
         const ic = box(n, (tw - 56) / 2, 14, 56, 56, 'ic');
         rect(ic, { fill: COLOR.ochre, fillAlpha: 45, radius: 14 });
-        text(ic, t.ic, 0, 0, 56, { size: 28, color: COLOR.ochreD, align: 'center', valign: 'center' }, 56);
+        const ch = text(ic, t.ic, 0, 0, 56, { size: 28, color: COLOR.ochreD, align: 'center', valign: 'center' }, 56);
+        image(ic, TEX.tool(t.id), 0, 0, 56, 56, { onLoaded: () => { ch.active = false; } });
         text(n, t.label, 0, 74, tw, { size: 22, color: COLOR.ink2, align: 'center' });
         if (t.badge > 0) {
             const b = box(n, (tw + 56) / 2 - 16, 6, 30, 30, 'badge');
