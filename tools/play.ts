@@ -110,6 +110,8 @@ async function play() {
             }
         }
         e.startRun({ talent: t, item: it, companion: c, skills }, randomSeed());
+        const map = e.mapDef();
+        if (map) console.log(`\n${C.gold}这一世，你出生在「${map.name}」${C.off}  ${C.dim}${map.desc}${C.off}`);
 
         for (;;) {
             while (e.run.phase === 'direction' || e.run.phase === 'event') await turn();

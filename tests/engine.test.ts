@@ -445,3 +445,48 @@ describe('命盘与每日天命', () => {
         expect(e.canReviveByAd()).toBe(false);
     });
 });
+
+describe('出生地图', () => {
+    function withMaps(): RawDestiny {
+        const raw = fixture([
+            { id: 'only_a', dir: 'down', layers: ['D1'], maps: ['a'], weight: 1000, text: 'A', choices: [{ text: '.', result: '.' }] },
+            { id: 'only_b', dir: 'down', layers: ['D1'], maps: ['b'], weight: 1000, text: 'B', choices: [{ text: '.', result: '.' }] },
+        ]);
+        raw.meta.maps = [
+            { id: 'a', name: '甲地', desc: '', startLog: '生在甲地。', start: { 根系: 2 }, layers: { D1: { name: '甲一层' } } },
+            { id: 'b', name: '乙地', desc: '', layers: { D2: { name: '乙二层', enterText: '到了乙二层' } } },
+        ];
+        return raw;
+    }
+
+    it('每世随机一张地图：开局效果、出生旁白、层改名、事件按地图过滤', () => {
+        const e = new Engine(buildDestiny(withMaps()), createProfile());
+        const seen = new Set<string>();
+        for (let seed = 1; seed <= 40; seed++) {
+            e.startRun(pick, seed);
+            const m = e.run.map!;
+            seen.add(m);
+            expect(e.mapDef()?.id).toBe(m);
+            const down = e.directionOptions().find(o => o.dir === 'down')!;
+            if (m === 'a') {
+                expect(e.run.attrs.root).toBe(2);
+                expect(e.run.log[0]).toContain('生在甲地');
+                expect(down.layerName).toBe('甲一层');
+            } else {
+                expect(e.run.attrs.root).toBe(0);
+                expect(down.layerName).toBe('一层');
+                expect(down.nextLayer?.name).toBe('乙二层');
+            }
+            e.chooseDirection('down');
+            expect(e.eventView().id).not.toBe(m === 'a' ? 'only_b' : 'only_a');
+        }
+        expect(seen).toEqual(new Set(['a', 'b']));
+    });
+
+    it('没有地图的命格不受影响（不消耗随机数，结果与之前一致）', () => {
+        const e = new Engine(buildDestiny(fixture()), createProfile());
+        e.startRun(pick, 1);
+        expect(e.run.map).toBeUndefined();
+        expect(e.mapDef()).toBeUndefined();
+    });
+});

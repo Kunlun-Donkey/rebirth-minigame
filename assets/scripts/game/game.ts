@@ -16,7 +16,7 @@ import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
 import { showSplash } from './screens/splash';
-import { showDying, showStep } from './screens/popups';
+import { showDying, showInfo, showStep } from './screens/popups';
 
 /** 本地日期 YYYY-MM-DD（每日天命按玩家本地日期切换） */
 export function todayKey(d = new Date()): string {
@@ -190,8 +190,10 @@ export class Game {
         this.engine.startRun(pick, randomSeed());
         this.save.peekUsed = 0;
         this.persist();
-        Platform.report('start_life', { life: this.engine.run.life, talent: pick.talent });
+        const map = this.engine.mapDef();
+        Platform.report('start_life', { life: this.engine.run.life, talent: pick.talent, map: map?.id ?? '' });
         this.goRun();
+        if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc]);
     }
 
     /** 执行一个会产生结果的动作（选项/道具/技能），弹出结果后推进 */

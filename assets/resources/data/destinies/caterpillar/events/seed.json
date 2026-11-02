@@ -1,0 +1,66 @@
+[
+  {
+    "id": "s0_shell", "dir": "any", "stage": [0, 0], "weight": 18, "once": true,
+    "text": "你刚从卵里钻出来，卵壳还挂在屁股后面。肚子已经饿了。",
+    "choices": [
+      { "text": "把卵壳吃了", "effect": { "饱腹": 2, "蜕变": 1 }, "result": "第一顿饭，是自己的房子。味道还行。" },
+      { "text": "留着当盾牌", "effect": { "item": "egg_shell" }, "result": "你把卵壳顶在头上。看起来很蠢，但很安全。" }
+    ]
+  },
+  {
+    "id": "s0_siblings", "dir": "up", "stage": [0, 0], "weight": 16, "once": true,
+    "text": "你们一窝四十几条挤在叶子上。一只胸口有白斑的喜鹊落了下来。",
+    "choices": [
+      { "text": "往叶缝里钻", "effect": { "灵性": 1, "flag": "magpie_grudge" }, "result": "它吃了一半兄弟姐妹才走。你记住了那块白斑。" },
+      { "text": "装成叶脉", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "flag": "magpie_grudge" }, "result": "它的眼睛扫过你，没停。你活下来了，账也记下了。",
+        "fail": { "effect": { "饱腹": -2, "flag": "magpie_grudge" }, "result": "它啄掉了你半截毛。你从叶子边摔了下去。" } },
+      { "text": "前世见过它", "require": "legacy:camouflage>=1", "effect": { "灵性": 2, "蜕变": 2, "flag": "magpie_grudge" },
+        "result": "前世它吃过你。这一世你提前躲进了叶背，连它的影子都没碰到。" }
+    ]
+  },
+  {
+    "id": "s0_dew", "dir": "up", "stage": [0, 0], "weight": 12,
+    "text": "叶尖上挂着一颗露珠，比你的脑袋还大。",
+    "choices": [
+      { "text": "喝一口", "effect": { "饱腹": 1, "攀爬": 1 }, "result": "你拱到叶尖上喝了一口。差点连人带水一起掉下去。" },
+      { "text": "整颗推回去", "effect": { "item": "dewdrop" }, "result": "你像推雪球一样把它推回了叶心。留着慢慢喝。" }
+    ]
+  },
+  {
+    "id": "s0_wind", "dir": "down", "stage": [0, 0], "weight": 12,
+    "text": "一阵风把叶子翻了个面。你倒挂着，所有的脚都在发抖。",
+    "choices": [
+      { "text": "死死抓住", "effect": { "攀爬": 1, "吐丝": 1 }, "result": "风停了，你还在。脚底磨出了茧。" },
+      { "text": "顺势翻到叶背", "effect": { "胃口": 1, "灵性": 1 }, "result": "叶背凉快，还没人跟你抢。你决定以后就住这儿。" }
+    ]
+  },
+  {
+    "id": "s0_ant_scout", "dir": "down", "stage": [0, 0], "weight": 10,
+    "text": "一只蚂蚁爬过来，用触角把你从头敲到尾，像在估价。",
+    "choices": [
+      { "text": "一动不动", "effect": { "灵性": 1 }, "result": "它估完价，摇摇头走了。你太小，不值得搬。" },
+      { "text": "把它顶开", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
+        "effect": { "吐丝": 1, "蜕变": 1 }, "result": "你用脑袋把它顶下了叶子。它在下面骂骂咧咧。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它咬了你一口就跑。你疼得把自己卷了起来。" } }
+    ]
+  },
+  {
+    "id": "s0_granny", "dir": "any", "stage": [0, 1], "weight": 20, "once": true, "maps": ["veg"],
+    "text": "一只满是皱纹的手翻开了白菜叶。老太太眯着眼，在找虫子。",
+    "choices": [
+      { "text": "缩进菜帮缝", "effect": { "灵性": 1, "flag": "granny_seen" }, "result": "手指从你头顶擦过去。老太太嘟囔：今年虫子真多。" },
+      { "text": "装成一粒菜籽", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "蜕变": 1, "flag": "granny_seen" }, "result": "她看了你两眼，放过了你。你吓得蜕了层皮。",
+        "fail": { "effect": { "death": "picked" }, "result": "她两根手指捏住了你。罐头盒里，挤满了你的兄弟。" } }
+    ]
+  },
+  {
+    "id": "s0_xiaoyu", "dir": "any", "stage": [0, 1], "weight": 20, "once": true, "maps": ["park", "veg"],
+    "text": "一个扎马尾的小姑娘蹲下来，鼻子快贴到叶子上了。她说：你好丑哦。",
+    "choices": [
+      { "text": "抬头看她", "effect": { "灵性": 1, "flag": "xiaoyu" }, "result": "她吓了一跳，又笑了。她说她叫小雨，明天还来看你。" },
+      { "text": "背过身去", "effect": { "吐丝": 1 }, "result": "你用屁股对着她。丑怎么了，丑也是会变的。" }
+    ]
+  }
+]

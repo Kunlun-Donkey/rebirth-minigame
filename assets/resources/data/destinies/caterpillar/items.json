@@ -1,0 +1,12 @@
+[
+  { "id": "tender_leaf", "name": "一片嫩叶", "icon": "supply", "rarity": "common", "desc": "使用：饱腹 +3。", "use": { "饱腹": 3 }, "useText": "嫩叶脆生生的。你连叶脉都没剩下。" },
+  { "id": "dewdrop", "name": "一颗露珠", "icon": "supply", "rarity": "common", "desc": "使用：饱腹 +1，灵性 +1，蜕变 +2。", "use": { "饱腹": 1, "灵性": 1, "蜕变": 2 }, "useText": "露珠里映着整个早上。你一口喝掉了早上。" },
+  { "id": "egg_shell", "name": "旧卵壳", "icon": "shield", "rarity": "common", "desc": "被动：替你挡下一次死亡。", "saveFromDeath": true },
+  { "id": "leaf_boat", "name": "叶子船", "icon": "guide", "rarity": "rare", "desc": "被动：能看见三个方向下一处的情况。", "mods": { "previewDirs": true } },
+  { "id": "apple_core", "name": "半个苹果核", "icon": "supply", "rarity": "rare", "desc": "使用：蜕变 +4，胃口 +1。", "use": { "蜕变": 4, "胃口": 1 }, "useText": "你在苹果核里啃出了一条隧道。" },
+  { "id": "moon_nectar", "name": "月光花蜜", "icon": "gem", "rarity": "rare", "desc": "使用：蜕变 +8，灵性 +1。", "use": { "蜕变": 8, "灵性": 1 }, "useText": "花蜜是凉的，喝下去肚子里亮了一下。" },
+  { "id": "ribbon", "name": "小雨的发带", "icon": "relic", "rarity": "epic", "desc": "被动：死后多封存一件遗物。上面有一股洗发水的香味。", "mods": { "relicSlots": 1 } },
+  { "id": "magpie_feather", "name": "花胸的尾羽", "icon": "token", "rarity": "epic", "desc": "被动：喜鹊花胸的羽毛。宿敌事件更好对付。" },
+  { "id": "thunder_silk", "name": "雷击丝", "icon": "crystal", "rarity": "epic", "desc": "使用：蜕变 +15。", "use": { "蜕变": 15 }, "useText": "你吞下那根带电的丝。浑身的毛都亮了。" },
+  { "id": "ancient_cocoon", "name": "远古之茧", "icon": "artifact", "rarity": "legend", "desc": "使用：攀爬 +5，蜕变 +20。", "use": { "攀爬": 5, "蜕变": 20 }, "useText": "空茧化成一阵风。你听见很久以前，有只蝴蝶在笑。" }
+]

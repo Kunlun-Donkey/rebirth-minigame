@@ -31,7 +31,9 @@ function hud(g: Game, root: Node): number {
     const r = e.run;
     const top = CONFIG.safeTop;
     text(root, `第 ${r.life} 世`, 30, top, 200, { size: 36, color: COLOR.ochreD, bold: true });
-    text(root, e.data.meta.name, 170, top + 6, 260, { size: 26, color: COLOR.ink2 });
+    const map = e.mapDef();
+    const where = text(root, map ? `${e.data.meta.name} · ${map.name}` : e.data.meta.name, 170, top + 6, g.W - 170 - 190, { size: 26, color: COLOR.ink2 });
+    if (map) onTap(where, () => showInfo(g, `出生地 · ${map.name}`, [map.desc]), false);
     const stage = e.stageName(r.stage);
     const tag = box(root, g.W - 30 - 140, top, 140, 46, 'stage');
     rect(tag, { fill: COLOR.leaf, radius: 23 });
@@ -76,7 +78,7 @@ function hud(g: Game, root: Node): number {
     const ly = ay + 76;
     const dir = r.dir ?? null;
     const loc = dir
-        ? `${DIR_ICON[dir]} ${e.data.dirs.find(d => d.id === dir)?.name ?? ''} · ${e.data.layersByDir[dir][r.pos[dir]]?.name ?? ''}`
+        ? `${DIR_ICON[dir]} ${e.data.dirs.find(d => d.id === dir)?.name ?? ''} · ${e.layerName(dir, r.pos[dir])}`
         : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
     chip(root, loc, 30, ly, COLOR.ochreD, false, 24);
     const st = soundToggle(g, root, 0, ly);
@@ -86,13 +88,23 @@ function hud(g: Game, root: Node): number {
 
 // ───────────── 事件 ─────────────
 
-function eventArea(g: Game, root: Node, y: number, bottom: number): void {
+/** 排版档位：选项太多放不下时，依次缩小正文字号与间距 */
+const COMPACT = [
+    { size: 34, lh: 60, minH: 260, gap: 18 },
+    { size: 30, lh: 50, minH: 220, gap: 12 },
+    { size: 26, lh: 42, minH: 190, gap: 8 },
+];
+
+function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0): void {
     const e = g.engine;
     const v = e.eventView();
+    const L = COMPACT[level];
+    // 本档的全部节点放在一个容器里，放不下时整体销毁、换更紧凑的档位重排
+    const root = box(parent, 0, 0, g.W, g.H, 'eventArea');
     const cardW = g.W - 60;
     const textW = cardW - 80;
-    const textH = textHeight(v.text, textW, 34, 60);
-    const cardH = Math.max(260, 100 + textH + 70);
+    const textH = textHeight(v.text, textW, L.size, L.lh);
+    const cardH = Math.max(L.minH, 100 + textH + 70);
     const tex = v.gold ? TEX.eventCardGold : v.sudden ? TEX.eventCardSudden : TEX.eventCard;
 
     const card = box(root, 30, y, cardW, cardH, 'event');
@@ -106,7 +118,7 @@ function eventArea(g: Game, root: Node, y: number, bottom: number): void {
     const head = v.gold ? '✦ 奇遇' : v.sudden ? '⚡ 突发' : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
     text(card, head, 40, 30, 300, { size: 24, color: v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2 });
     text(card, `${e.stageName(r.stage)}`, cardW - 240, 30, 200, { size: 24, color: COLOR.ink2, align: 'right' });
-    text(card, v.text, 40, 80, textW, { size: 34, wrap: true, lineHeight: 60 });
+    text(card, v.text, 40, 80, textW, { size: L.size, wrap: true, lineHeight: L.lh });
 
     // 窥探天命（看视频）
     const left = CONFIG.peekPerRun - g.save.peekUsed;
@@ -117,11 +129,17 @@ function eventArea(g: Game, root: Node, y: number, bottom: number): void {
     }
 
     // 选项
-    let cy = y + cardH + 28;
+    let cy = y + cardH + 28 - L.gap;
     for (const c of v.choices) {
-        const n = button(root, 30, cy, cardW, choiceOpts(g, c));
-        cy += sizeOf(n).h + 18;
+        const n = button(root, 30, cy + L.gap, cardW, choiceOpts(g, c));
+        cy += sizeOf(n).h + L.gap;
     }
+    if (cy > bottom && level < COMPACT.length - 1) {
+        root.destroy();
+        eventArea(g, parent, y, bottom, level + 1);
+        return;
+    }
+    cy += L.gap;
     // 事件中可施展的技能
     const skills = e.skillViews().filter(s => s.usable);
     if (skills.length && cy < bottom - 70) {

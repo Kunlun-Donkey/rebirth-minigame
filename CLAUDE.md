@@ -22,6 +22,8 @@
 - `assets/scripts/core/` 引擎：`types` · `condition` 条件 DSL · `data` 剧本归一化 · `engine` 局内状态机 + 局外命盘/每日天命 · `profile` 局外存档 · `destinies` 多命格解锁 · `rng`
   - **引擎不认识任何具体属性名**：生命/成长货币/每季回复与产出/饿死渴死/寿终都由 destiny.json 的 `rules` 指定；HUD 读 `attrs[]` 的 `short/color/desc/stat`
   - 多命格并列可选：`data/destinies/index.json` 登记命格与解锁条件（`unlock.bestStage/lives/endings`），玩家选择记在 `profile.current`；轮回点全局通用，传承/技能/命盘按命格独立
+  - 当前 4 个命格：荒漠一株草（默认）→ 一条毛毛虫（草到嫩芽）/ 一只土狗（草到小草）→ 一只皮皮虾（狗到土狗）；设计文档 `docs/design/0{1..4}-*.md`
+  - 随机出生地图：destiny.json 的 `maps`（每世按 weight 随机，可覆盖层名/旁白、开局效果、mods），事件用 `maps: [...]` 限定地图；`engine.mapDef()/layerName()` 取显示名，兜底事件不能带 maps
   - 重生不限次数；命盘（destiny.json `upgrades`）只放大广告收益、**不提供免费复活/窥探等替代广告的效果**；改价格后用 `npm run sim`（含 `-- --ads`）看全满世数（设计文档 §6.4.2）
 - `assets/scripts/game/` Cocos 表现层（UI 全部代码生成，入口 `GameRoot` 挂 Canvas）
   - `game.ts` 控制器（界面切换、存档、广告点位）· `config.ts` 配置与贴图路径 `TEX` · `platform.ts` wx 适配（存档/激励视频/分享/埋点，非微信环境自动 Mock）· `loader.ts` · `save.ts`

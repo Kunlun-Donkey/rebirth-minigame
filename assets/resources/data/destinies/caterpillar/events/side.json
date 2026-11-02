@@ -1,0 +1,129 @@
+[
+  {
+    "id": "side_fallback", "dir": "side", "weight": 3,
+    "text": "你爬了一季，爬过了好多片叶子。",
+    "choices": [ { "text": "接着爬", "effect": { "攀爬": 1, "灵性": 1 }, "result": "世界比一片叶子大多了。" } ]
+  },
+
+  {
+    "id": "l1_maze", "dir": "side", "layers": ["L1"], "weight": 12,
+    "text": "草比你高一百倍。你在草根之间转了三天，转回了原地。",
+    "choices": [
+      { "text": "爬上草尖认路", "effect": { "攀爬": 2 }, "result": "你爬上草尖一看：原来往左拐就出去了。" },
+      { "text": "跟着气味走", "effect": { "灵性": 2 }, "result": "你闻着花香走出了草丛。鼻子比眼睛靠谱。" }
+    ]
+  },
+  {
+    "id": "l1_ants_road", "dir": "side", "layers": ["L1"], "weight": 12,
+    "text": "一条蚂蚁大路横在面前。成千上万只蚂蚁扛着东西，喊着号子往家走。",
+    "choices": [
+      { "text": "等它们过完", "effect": { "灵性": 1, "饱腹": -1 }, "result": "你等了整整一天。最后一只蚂蚁冲你点了点头。" },
+      { "text": "硬闯过去", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 2 }, "result": "你从蚂蚁头顶爬了过去。它们骂了你一路。",
+        "fail": { "effect": { "death": "ants" }, "result": "它们放下手里的东西，一起把你扛了起来。" } },
+      { "text": "前世有约", "require": "legacy:ant_truce>=1", "effect": { "灵性": 2, "饱腹": 2 },
+        "result": "前世它们搬过你。这一世你报上暗号，它们抬着你过了马路。" },
+      { "text": "跟它们打招呼", "showIf": "skill:talk", "useSkill": "talk", "effect": { "饱腹": 2, "蜕变": 3 },
+        "result": "领头的蚂蚁让出一条道，还塞给你一粒糖渣。" }
+    ]
+  },
+  {
+    "id": "l1_leaf_boat", "dir": "side", "layers": ["L1"], "weight": 8,
+    "text": "下过雨，地上有一摊水。一片卷边的叶子漂在水上。",
+    "choices": [
+      { "text": "坐上去", "effect": { "item": "leaf_boat", "灵性": 1 }, "result": "你划着叶子船漂过了水坑。船你留下了。" },
+      { "text": "绕着水坑走", "effect": { "攀爬": 1 }, "result": "你绕了好远。水坑那边的草，长得一样。" }
+    ]
+  },
+
+  {
+    "id": "l2_flowers", "dir": "side", "layers": ["L2"], "weight": 12,
+    "text": "花坛里开满了花。夜里，有一朵花的花心在发光。",
+    "choices": [
+      { "text": "去舔一口", "effect": { "item": "moon_nectar" }, "result": "是月光花的蜜。你装了满满一肚子。" },
+      { "text": "先啃花瓣", "effect": { "饱腹": 2, "胃口": 1 }, "result": "花瓣是甜的，还有点涩。你吃得满嘴花香。" }
+    ]
+  },
+  {
+    "id": "l2_bee", "dir": "side", "layers": ["L2"], "weight": 10,
+    "text": "一只蜜蜂嗡的一声落在你面前：这片花是我们的。",
+    "choices": [
+      { "text": "让开", "effect": { "灵性": 1 }, "result": "你去了隔壁那朵。花多的是。" },
+      { "text": "竖起毛吓它", "showIf": "skill:spines", "useSkill": "spines", "effect": { "胃口": 2, "蜕变": 3 },
+        "result": "它看了看你的毛，嗡嗡两声飞走了。" },
+      { "text": "跟它讲理", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "蜕变": 2 }, "result": "你说你只吃叶子不吃蜜。它想了想，同意了。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它不听，蛰了你一下。你肿了半边。" } }
+    ]
+  },
+  {
+    "id": "l2_mantis", "dir": "side", "layers": ["L2", "L3"], "stage": [2, 99], "weight": 10,
+    "text": "一只螳螂挡在花茎上，两把刀慢慢举了起来。",
+    "choices": [
+      { "text": "原路退回", "effect": { "back": "side", "灵性": 1 }, "result": "你一点一点往后退。它没动，你也没回头。" },
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 4 },
+        "result": "它的刀碰了一下你的毛，缩了回去。它说算了，扎手。" },
+      { "text": "冲过去", "chance": 0.35, "chanceAttr": "攀爬", "chanceStep": 0.05,
+        "effect": { "攀爬": 3, "蜕变": 5 }, "result": "你从它刀底下钻了过去。它还在原地举着刀。",
+        "fail": { "effect": { "death": "mantis" }, "result": "螳螂的刀，比你想的快。" } }
+    ]
+  },
+  {
+    "id": "l2_xiaoyu_jar", "dir": "side", "layers": ["L2"], "once": true, "weight": 20, "require": "flag:xiaoyu",
+    "text": "小雨找到了你。她把你放进一个玻璃罐，罐里铺满了新鲜叶子。",
+    "choices": [
+      { "text": "安心住下", "effect": { "饱腹": 4, "胃口": 2, "flag": "xiaoyu_kept" }, "result": "她天天换叶子，还在罐盖上扎了透气孔。" },
+      { "text": "爬出罐子", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "攀爬": 2, "灵性": 1 }, "result": "你顶开盖子跑了。她在后面喊：你还会回来吗？",
+        "fail": { "effect": { "饱腹": -1, "flag": "xiaoyu_kept" }, "result": "盖子太紧了。你认命地啃起了叶子。" } }
+    ]
+  },
+  {
+    "id": "l2_xiaoyu_free", "dir": "side", "layers": ["L2", "L3"], "stage": [3, 99], "once": true, "weight": 22, "require": "flag:xiaoyu_kept",
+    "text": "你在罐子里结了茧。小雨把罐子放在窗台上，每天看一眼。茧裂了。",
+    "choices": [
+      { "text": "落在她发梢", "effect": { "item": "ribbon", "灵性": 3 }, "result": "她不敢动，眼睛亮亮的。她把发带系在了罐子上。" },
+      { "text": "从窗口飞走", "effect": { "攀爬": 3, "蜕变": 6 }, "result": "你飞过她头顶，飞出窗外。她一直挥手。" }
+    ]
+  },
+
+  {
+    "id": "l3_valley", "dir": "side", "layers": ["L3"], "weight": 12,
+    "text": "蝴蝶谷里，一只翅膀破了的老蝴蝶在教小蝴蝶怎么借风。",
+    "choices": [
+      { "text": "在旁边听", "effect": { "灵性": 2, "攀爬": 2 }, "result": "它说：风不是用来推的，是用来骑的。" },
+      { "text": "跟着练", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.05,
+        "effect": { "蜕变": 8 }, "result": "你借着风飘了一大段。老蝴蝶冲你点了点头。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "你被风吹进了花丛，一身花粉。" } }
+    ]
+  },
+  {
+    "id": "l3_storm", "dir": "side", "layers": ["L3"], "stage": [3, 99], "once": true, "weight": 18,
+    "text": "暴雨要来了。蝴蝶们的翅膀沾了水就飞不动，全挤在一棵快倒的树上。",
+    "choices": [
+      { "text": "吐丝织顶棚", "require": "吐丝>=8", "effect": { "吐丝": 2, "蜕变": 10, "flag": "valley_saved" },
+        "result": "你吐了一夜的丝，在树杈间织出一张大伞。天亮了，一只都没少。" },
+      { "text": "带它们挪窝", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 3, "蜕变": 6, "flag": "valley_saved" }, "result": "你领着它们躲进了岩缝。雨下了三天，它们记住了你。",
+        "fail": { "effect": { "饱腹": -3 }, "result": "雨来得太快了。你只救下了一小半。" } },
+      { "text": "自己先躲", "effect": { "饱腹": 1 }, "result": "你躲进了树洞。雨停后，谷里安静了很多。" }
+    ]
+  },
+  {
+    "id": "l3_xiaoyu", "dir": "side", "layers": ["L3"], "stage": [4, 99], "once": true, "weight": 20, "require": "item:ribbon",
+    "maps": ["park", "veg"],
+    "text": "温室门口，一个扎马尾的姑娘在等。她长高了，手里攥着一个空玻璃罐。",
+    "choices": [
+      { "text": "落在她发梢", "effect": { "ending": "xiaoyu_butterfly" }, "result": "她一动不动，笑出了眼泪。" },
+      { "text": "绕着她飞一圈", "effect": { "灵性": 3, "蜕变": 10 }, "result": "她认出了你。她说：去吧，飞远一点。" }
+    ]
+  },
+  {
+    "id": "l3_queen", "dir": "side", "layers": ["L3"], "stage": [4, 99], "weight": 8, "gold": true,
+    "text": "谷底的花开得像火。谷里最老的蝴蝶把一片金色的鳞片放在你背上。",
+    "choices": [
+      { "text": "收下", "effect": { "灵性": 3, "吐丝": 2, "蜕变": 10 }, "result": "它说：你从泥里爬上来，你配。" },
+      { "text": "送给更小的", "effect": { "灵性": 5 }, "result": "老蝴蝶没说话，只是看了你很久。" }
+    ]
+  }
+]

@@ -93,6 +93,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             sudden: ev.sudden ?? false,
             gold: ev.gold ?? false,
             chainOnly: ev.chainOnly ?? false,
+            maps: ev.maps,
             require: cond(ev.require, `${where}.require`),
             text: ev.text,
             choices: ev.choices.map((c, i) => choice(c, `${where}.choices[${i}]`)),
@@ -135,5 +136,6 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             return [u.id, { ...u, kind: u.kind ?? 'start', startEffect: u.start ? effect(u.start, `命盘 ${u.id}`) : undefined }];
         })),
         fates: new Map((meta.fates ?? []).map(f => [f.id, { ...f, startEffect: f.start ? effect(f.start, `天命 ${f.id}`) : undefined }])),
+        maps: new Map((meta.maps ?? []).map(m => [m.id, { ...m, startEffect: m.start ? effect(m.start, `地图 ${m.id}`) : undefined }])),
     };
 }

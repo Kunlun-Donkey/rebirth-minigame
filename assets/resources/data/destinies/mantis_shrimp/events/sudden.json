@@ -1,0 +1,97 @@
+[
+  {
+    "id": "x_seagull", "dir": "any", "sudden": true, "weight": 10, "maps": ["tidal", "reef"],
+    "text": "一只海鸥扎进水里，翅膀拍起一大片水花，直冲你来。",
+    "choices": [
+      { "text": "钻进沙里", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 1, "skill": "eyes" }, "result": "你一头扎进沙里。它的嘴落下来时，你的眼睛已经看清了它的每一根羽毛。",
+        "fail": { "effect": { "death": "seagull" }, "result": "它的嘴比你钻得快。" } },
+      { "text": "一拳打它嘴", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 4 },
+        "result": "海鸥嘴上挨了一拳，嘎嘎叫着飞走了。" },
+      { "text": "前世的沙色", "require": "legacy:sand_color>=1", "effect": { "灵性": 2 },
+        "result": "前世它叼走过你。这一世你往沙上一趴，它扎下来又飞走了。" }
+    ]
+  },
+  {
+    "id": "x_boss_net", "dir": "any", "sudden": true, "weight": 14, "maps": ["market"], "stage": [0, 2],
+    "text": "有客人指着水箱：这只大的。老板的网兜伸了进来。",
+    "choices": [
+      { "text": "往泵后面躲", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 1, "flag": "boss_seen" }, "result": "网兜捞走了旁边那只。你缩在泵后面发抖。",
+        "fail": { "effect": { "death": "cooked" }, "result": "网兜一抄，你上秤了。" } },
+      { "text": "给网兜一拳", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "flag": "boss_seen" },
+        "result": "你一拳打穿了网兜。老板骂骂咧咧去换了个新的。" },
+      { "text": "前世的倒刺", "require": "legacy:thorny_tail>=1", "effect": { "拳力": 1, "flag": "boss_seen" },
+        "result": "前世你上过一次桌。这一世老板一抓，被你的尾刺扎得直甩手。" }
+    ]
+  },
+  {
+    "id": "x_trawl", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 99], "maps": ["tidal", "reef"],
+    "text": "海底突然震起来。一张拖网贴着海底刮过来，所到之处什么都不剩。",
+    "choices": [
+      { "text": "钻进最深的洞", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 2 }, "result": "网从你的洞口刮过去，带走了半片海底。你还在。",
+        "fail": { "effect": { "death": "net" }, "result": "网把你的洞连沙一起铲了起来。" } },
+      { "text": "尾巴一弹", "showIf": "skill:dart", "useSkill": "dart", "effect": { "游速": 1 }, "result": "你弹到了网的边上。网擦着你过去了。" },
+      { "text": "前世识网", "require": "legacy:net_sense>=1", "effect": { "灵性": 2 },
+        "result": "前世这张网捞走过你。这一世你看见它的影子，提前躲进了礁石。" }
+    ]
+  },
+  {
+    "id": "x_storm", "dir": "any", "sudden": true, "weight": 10,
+    "text": "台风来了。海水翻了个底朝天，沙子、海草、小鱼全搅在一起。",
+    "choices": [
+      { "text": "死死扒住礁石", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 1, "体力": -1 }, "result": "你扒了一夜。台风过去，你还在原地。",
+        "fail": { "effect": { "death": "wave" }, "result": "一个浪把你从礁石上撕了下来。" } },
+      { "text": "缩进洞里", "effect": { "体力": -2, "灵性": 1 }, "result": "洞被沙子埋了一半。你挖了一天才挖出来。" },
+      { "text": "稳如礁", "require": "legacy:steady>=1", "effect": { "打洞": 1 },
+        "result": "前世这样的浪拍碎过你。这一世你早早挖好了最深的洞。" }
+    ]
+  },
+  {
+    "id": "x_feast", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 99],
+    "text": "一条死鱼沉到了海底。附近的螃蟹、海星、小鱼全来了。",
+    "choices": [
+      { "text": "挤进去抢", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.08,
+        "effect": { "体力": 4 }, "result": "你一拳一个，打出了一块地盘。吃了个饱。",
+        "fail": { "effect": { "体力": -2 }, "result": "螃蟹比你多。你被挤了出来，还挨了一钳。" } },
+      { "text": "等它们吃完", "effect": { "体力": 1, "灵性": 1 }, "result": "你捡了点剩下的。不多，但安全。" }
+    ]
+  },
+  {
+    "id": "x_molt_soft", "dir": "any", "sudden": true, "weight": 10, "stage": [1, 99],
+    "text": "你蜕了壳。新壳还软着，什么都挡不住。",
+    "choices": [
+      { "text": "躲在洞里等壳硬", "effect": { "体力": 1, "海灵": 2 }, "result": "你在洞里躲了三天。出来时，壳硬得能敲出响。" },
+      { "text": "把旧壳收好", "effect": { "item": "old_shell" }, "result": "你把蜕下的旧壳塞在洞口。下次谁来，先撞上它。" }
+    ]
+  },
+  {
+    "id": "x_octopus_old", "dir": "any", "sudden": true, "weight": 14, "stage": [3, 99], "once": true, "require": "flag:octopus_grudge",
+    "text": "墨斗被一条海鳗堵在了石缝里，八条腿缩成一团，冲你喷了一口淡淡的墨。",
+    "choices": [
+      { "text": "亮出它的墨囊", "require": "item:ink_sac", "effect": { "海灵": 10, "灵性": 2 },
+        "result": "它认出了自己的墨，缩得更紧了。你游走了，海鳗也没敢动。" },
+      { "text": "帮它赶走海鳗", "showIf": "skill:punch", "useSkill": "punch", "effect": { "灵性": 4, "海灵": 5 },
+        "result": "你一拳打跑了海鳗。墨斗愣在那儿，不知道该说什么。你也没打算听。" },
+      { "text": "看着就好", "effect": { "灵性": 1 }, "result": "你看了一会儿，游走了。它的事，跟你没关系了。" }
+    ]
+  },
+  {
+    "id": "x_bright_eyes", "dir": "any", "sudden": true, "gold": true, "stage": [2, 99], "weight": 2,
+    "text": "月光照进海里。你的眼睛突然看见了一种颜色——一种从来没有名字的颜色。",
+    "choices": [
+      { "text": "盯着它看", "effect": { "海灵": 15, "灵性": 2 }, "result": "你看了一整夜。天亮时，你觉得自己懂了点什么。" },
+      { "text": "顺着它游", "effect": { "游速": 3, "打洞": 2 }, "result": "那道颜色领着你，找到了一片没人去过的沙地。" }
+    ]
+  },
+  {
+    "id": "x_dragon_scale", "dir": "any", "sudden": true, "gold": true, "stage": [2, 99], "weight": 2, "once": true,
+    "text": "一片巴掌大的鳞片从深处漂上来，在你面前转了三圈。",
+    "choices": [
+      { "text": "抱住它", "effect": { "item": "dragon_scale" }, "result": "鳞片是温的。你听见很深很深的地方，有谁叹了口气。" },
+      { "text": "让它漂走", "effect": { "灵性": 4 }, "result": "它漂走了。你觉得以后还会见到它的主人。" }
+    ]
+  }
+]

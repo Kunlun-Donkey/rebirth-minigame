@@ -11,7 +11,34 @@
       "desc": "你是村口柴堆里生下的土狗。被嫌弃、被欺负、被丢下——这一世，你要一口一口咬回来。",
       "unlock": {
         "text": "荒漠一株草的任意一世突破为「小草」",
-        "bestStage": { "destiny": "desert_grass", "level": 2 }
+        "bestStage": {
+          "destiny": "desert_grass",
+          "level": 2
+        }
+      }
+    },
+    {
+      "id": "caterpillar",
+      "name": "一条毛毛虫",
+      "desc": "谁见了都想捏死的毛毛虫。出生在菜园、果园还是公园，全看运气。",
+      "unlock": {
+        "text": "荒漠一株草的任意一世破土为「嫩芽」",
+        "bestStage": {
+          "destiny": "desert_grass",
+          "level": 1
+        }
+      }
+    },
+    {
+      "id": "mantis_shrimp",
+      "name": "一只皮皮虾",
+      "desc": "差点被端上桌的皮皮虾。生在滩涂、珊瑚礁，或者海鲜市场的水箱里。",
+      "unlock": {
+        "text": "一只土狗的任意一世长成「土狗」",
+        "bestStage": {
+          "destiny": "local_dog",
+          "level": 1
+        }
       }
     }
   ]

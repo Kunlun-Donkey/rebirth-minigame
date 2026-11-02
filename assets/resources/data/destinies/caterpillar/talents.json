@@ -1,0 +1,14 @@
+[
+  { "id": "sturdy", "name": "皮实", "icon": "vitality", "rarity": "common", "desc": "饱腹上限 +2。", "start": { "饱腹上限": 2 } },
+  { "id": "slow_gut", "name": "细嚼慢咽", "icon": "vitality", "rarity": "common", "desc": "每 2 季才饿一次。", "mods": { "waterCostEvery": 2 } },
+  { "id": "many_legs", "name": "腿多", "icon": "growth", "rarity": "common", "desc": "攀爬 +3。", "start": { "攀爬": 3 } },
+  { "id": "big_mouth", "name": "大嘴", "icon": "growth", "rarity": "common", "desc": "胃口 +3。", "start": { "胃口": 3 } },
+  { "id": "silky", "name": "丝多", "icon": "defense", "rarity": "common", "desc": "吐丝 +3。", "start": { "吐丝": 3 } },
+  { "id": "pretty", "name": "长得好看", "icon": "social", "rarity": "rare", "desc": "花纹漂亮，小孩子舍不得捏。灵性 +1，吐丝 +1。", "start": { "灵性": 1, "吐丝": 1 } },
+  { "id": "unlucky", "name": "倒霉虫", "icon": "cursed", "rarity": "rare", "desc": "【负面】突发事件更频繁，但轮回点 ×1.5。", "mods": { "suddenMul": 1.8, "pointsMul": 1.5 } },
+  { "id": "antenna", "name": "长触角", "icon": "wisdom", "rarity": "rare", "desc": "每个事件有 35% 概率摸出一个选项的结果。", "mods": { "hintChance": 0.35 } },
+  { "id": "golden_cicada", "name": "金蝉脱壳", "icon": "rebirth", "rarity": "epic", "desc": "本局第一次死亡时，蜕下旧皮逃走。", "mods": { "reviveOnce": true } },
+  { "id": "phoenix_wing", "name": "凤蝶血脉", "icon": "bloodline", "rarity": "epic", "desc": "蜕变获取 ×2。", "mods": { "qiMul": 2 } },
+  { "id": "lucky_spot", "name": "背上有个福字", "icon": "luck", "rarity": "epic", "desc": "金色奇遇概率 ×3，灵性 +2。", "start": { "灵性": 2 }, "mods": { "goldMul": 3 } },
+  { "id": "reincarnated", "name": "蝶仙转世", "icon": "bloodline", "rarity": "legend", "desc": "全属性 +2，蜕变 ×1.5，奇遇 ×2。", "start": { "胃口": 2, "攀爬": 2, "吐丝": 2, "灵性": 2, "饱腹上限": 2 }, "mods": { "qiMul": 1.5, "goldMul": 2 } }
+]

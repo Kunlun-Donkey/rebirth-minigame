@@ -1,0 +1,162 @@
+[
+  {
+    "id": "down_fallback", "dir": "down", "weight": 3,
+    "text": "你埋头啃了一季叶子，什么也没想。",
+    "choices": [ { "text": "接着啃", "effect": { "饱腹": 1, "胃口": 1 }, "result": "叶子少了一半。你胖了一圈。" } ]
+  },
+
+  {
+    "id": "d1_munch", "dir": "down", "layers": ["D1"], "weight": 14,
+    "text": "这片叶子嫩得能掐出水来。",
+    "choices": [
+      { "text": "从边上啃", "effect": { "饱腹": 2, "胃口": 1 }, "result": "你啃出了一个整齐的半圆。吃相很好。" },
+      { "text": "打包一片", "effect": { "item": "tender_leaf" }, "result": "你咬下一块叶子卷起来背在身上。饿了再吃。" }
+    ]
+  },
+  {
+    "id": "d1_pesticide", "dir": "down", "layers": ["D1", "D2"], "stage": [1, 99], "weight": 10,
+    "text": "一阵白雾飘过来，闻起来有点像薄荷。叶子上的蚜虫一只接一只掉了下去。",
+    "choices": [
+      { "text": "屏住气往下钻", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2 }, "result": "你钻到了最底下的叶子背面。雾散了，你还在。",
+        "fail": { "effect": { "death": "pesticide" }, "result": "雾钻进了你的气孔。你的脚一只一只松开了。" } },
+      { "text": "卷成团滚开", "showIf": "skill:curl", "useSkill": "curl", "effect": { "吐丝": 1 },
+        "result": "你卷成球从叶子上滚了下去，滚出了雾。" },
+      { "text": "皮厚不怕", "require": "legacy:tough_skin>=1", "effect": { "饱腹": 2, "胃口": 2 },
+        "result": "前世这阵雾熏倒过你。这一世你皮厚，趁别的虫倒下，独占了整片叶子。" },
+      { "text": "往远处爬", "effect": { "back": "down", "饱腹": -1 }, "result": "你掉头就爬，爬回了上一片叶子。" }
+    ]
+  },
+  {
+    "id": "d1_hand", "dir": "down", "layers": ["D1"], "stage": [1, 99], "weight": 8,
+    "text": "叶子被一只大手翻开了。两根手指在叶面上一点一点地摸。",
+    "choices": [
+      { "text": "往叶柄爬", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 1, "灵性": 1 }, "result": "手指追了两下，没追上。你趴在叶柄底下喘气。",
+        "fail": { "effect": { "death": "picked" }, "result": "手指捏住了你。你被扔进了一个铁盒子。" } },
+      { "text": "听脚步早跑了", "require": "legacy:wary>=1", "effect": { "灵性": 2, "蜕变": 2 },
+        "result": "前世这只手捏过你。这一世脚步声一响，你已经在三片叶子外了。" },
+      { "text": "掉到地上", "effect": { "饱腹": -2 }, "result": "你松开脚，摔进了土里。土里也行，就是硌。" }
+    ]
+  },
+
+  {
+    "id": "d2_hide", "dir": "down", "layers": ["D2"], "weight": 12,
+    "text": "叶背凉快又安静，一只鸟的影子从叶面上滑过去。",
+    "choices": [
+      { "text": "趴着不动", "effect": { "灵性": 1, "饱腹": 1 }, "result": "影子过去了。你啃了一口叶背，接着趴着。" },
+      { "text": "边躲边吃", "effect": { "胃口": 2, "饱腹": 1 }, "result": "你从叶背啃出一个洞。阳光漏进来，正好照着你。" }
+    ]
+  },
+  {
+    "id": "d2_ladybug", "dir": "down", "layers": ["D2"], "weight": 10,
+    "text": "一只七星瓢虫在叶背上吃蚜虫，吃得满嘴绿。",
+    "choices": [
+      { "text": "跟它聊天", "effect": { "灵性": 1, "蜕变": 2 }, "result": "它说蚜虫是甜的。你尝了一只，确实是甜的。" },
+      { "text": "抢它的地盘", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
+        "effect": { "胃口": 2, "skill": "spines" }, "result": "你冲它竖起了毛。它看了看，飞走了。整片叶背归你。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "它冲你喷了一口臭液。你熏得一天没吃下饭。" } }
+    ]
+  },
+  {
+    "id": "d2_heart", "dir": "down", "layers": ["D2"], "maps": ["veg"], "weight": 14,
+    "text": "你钻进了白菜心。一层包一层，嫩得发黄。",
+    "choices": [
+      { "text": "往最里面钻", "effect": { "胃口": 2, "饱腹": 2 }, "result": "你在白菜心里吃出了一个房间。冬天都不怕了。" },
+      { "text": "只啃外面一层", "effect": { "饱腹": 1, "灵性": 1 }, "result": "你留了一手。老太太翻菜心时，你不在里面。" }
+    ]
+  },
+  {
+    "id": "d2_thorn", "dir": "down", "layers": ["D2"], "maps": ["park"], "weight": 14,
+    "text": "月季的刺比你还粗。叶背倒是干净，就是要从刺中间挤过去。",
+    "choices": [
+      { "text": "小心挤过去", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "胃口": 2, "攀爬": 1 }, "result": "你从两根刺中间挤了过去。叶背上全是你的。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "刺划了你一道口子。你缩成一团疼了半天。" } },
+      { "text": "绕开走", "effect": { "攀爬": 1 }, "result": "你绕了一大圈。腿酸了，叶子还是那么远。" }
+    ]
+  },
+
+  {
+    "id": "d3_sweet", "dir": "down", "layers": ["D3"], "weight": 12,
+    "text": "果肉又甜又软，你每咬一口，汁就淌一身。",
+    "choices": [
+      { "text": "吃到撑", "effect": { "饱腹": 3, "胃口": 2 }, "result": "你吃得走不动，就在果子里睡了一觉。" },
+      { "text": "吃一半留一半", "effect": { "饱腹": 2, "蜕变": 2 }, "result": "你留了一半。吃饱的虫子，脑子更清楚。" }
+    ]
+  },
+  {
+    "id": "d3_neighbor", "dir": "down", "layers": ["D3"], "weight": 10,
+    "text": "果子另一头也有条虫在啃。你们在果核那儿撞上了。",
+    "choices": [
+      { "text": "各吃各的", "effect": { "饱腹": 2, "灵性": 1 }, "result": "你们背对背啃了一季。挺好，不孤单。" },
+      { "text": "把它顶出去", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.08,
+        "effect": { "胃口": 3, "吐丝": 1 }, "result": "你把它挤出了果子。整个果子都是你的了。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它比你胖。被顶出去的是你。" } }
+    ]
+  },
+  {
+    "id": "d3_apple", "dir": "down", "layers": ["D3"], "maps": ["orchard"], "weight": 14,
+    "text": "苹果熟透了，枝头一晃，它连你一起往下掉。",
+    "choices": [
+      { "text": "抱着苹果掉", "chance": 0.6, "chanceAttr": "吐丝", "chanceStep": 0.1,
+        "effect": { "item": "apple_core", "胃口": 1 }, "result": "苹果砸在草地上，裂成两半。你从里面爬出来，还叼着半个核。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "苹果摔烂了，你也摔晕了。" } },
+      { "text": "吐丝挂在枝上", "effect": { "吐丝": 2 }, "result": "苹果掉下去了，你吊在半空。你看着它滚远。" }
+    ]
+  },
+  {
+    "id": "d3_tomato", "dir": "down", "layers": ["D3"], "maps": ["veg"], "weight": 14,
+    "text": "番茄汁多得像池塘。老太太的手伸过来，要摘这个番茄。",
+    "choices": [
+      { "text": "从底下钻出去", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "饱腹": 2, "灵性": 1 }, "result": "番茄被摘走的那一刻，你从底下掉进了菜地。",
+        "fail": { "effect": { "death": "picked" }, "result": "老太太掰开番茄，看见了你。她说：就知道有虫。" } },
+      { "text": "缩到最深处", "effect": { "胃口": 2, "饱腹": 2 }, "result": "番茄被放进了菜篮子。你在篮子里吃了一路。" }
+    ]
+  },
+
+  {
+    "id": "d4_gate", "dir": "down", "layers": ["D4"], "chainOnly": true,
+    "text": "树根底下有歌声，又低又长，听得你的脚自己往下走。",
+    "choices": [
+      { "text": "跟着歌声走", "effect": { "death": "cicada_song" }, "result": "歌声越来越近，你越走越深。" },
+      { "text": "塞住耳朵往前", "require": "legacy:deaf_ear>=2", "effect": { "灵性": 3, "蜕变": 5 },
+        "result": "前世这首歌勾走过你。这一世你听着它，脚没乱。" },
+      { "text": "跟知了爷进去", "require": "companion:old_cicada", "effect": { "灵性": 2, "蜕变": 5 },
+        "result": "知了爷冲下面喊了一嗓子，歌停了。它说：这是我侄子。" },
+      { "text": "赶紧爬回去", "effect": { "back": "down", "饱腹": -1 }, "result": "你掉头就爬。歌声在后面追了你一路。" }
+    ]
+  },
+  {
+    "id": "d4_roots", "dir": "down", "layers": ["D4"], "weight": 12,
+    "text": "树根里流着甜甜的汁，一群蝉的幼虫正趴着喝。",
+    "choices": [
+      { "text": "凑过去喝", "effect": { "饱腹": 3, "蜕变": 3 }, "result": "它们挪了挪，给你让了个位置。地底下的规矩，先来的让后来的。" },
+      { "text": "跟它们聊", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "flag": "cicada_friend" },
+        "result": "它们说在地下待了十几年，就为了上去唱一个夏天。你听得很认真。" }
+    ]
+  },
+  {
+    "id": "d4_ant_city", "dir": "down", "layers": ["D4"], "weight": 10,
+    "text": "你钻进了一座蚂蚁城。守门的兵蚁举起了大颚。",
+    "choices": [
+      { "text": "献上叶子", "require": "item:tender_leaf", "effect": { "loseItem": "tender_leaf", "灵性": 2, "胃口": 2 },
+        "result": "兵蚁收了叶子，放你进去逛了一圈。蚁后的房间真大。" },
+      { "text": "跟它讲条件", "showIf": "skill:talk", "useSkill": "talk", "effect": { "蜕变": 6, "饱腹": 2 },
+        "result": "你答应帮它们看着蚜虫。它们管了你一顿饭。" },
+      { "text": "掉头就跑", "chance": 0.7, "chanceAttr": "攀爬", "chanceStep": 0.05,
+        "effect": { "攀爬": 1 }, "result": "你跑得比兵蚁快。原来你还挺能跑。",
+        "fail": { "effect": { "death": "ants" }, "result": "整座城的蚂蚁都出来了。" } }
+    ]
+  },
+  {
+    "id": "d4_song_king", "dir": "down", "layers": ["D4"], "stage": [3, 99], "once": true, "weight": 20, "require": "flag:cicada_friend",
+    "text": "蝉的幼虫们围着你。它们说：上面的夏天太短了，你留下来，教我们一首新歌吧。",
+    "choices": [
+      { "text": "留下来唱歌", "require": "灵性>=10", "effect": { "ending": "cicada_king" },
+        "result": "你没有长翅膀。你在地底下写了一首歌，唱了很多年。" },
+      { "text": "我要上去", "effect": { "灵性": 3, "蜕变": 8 }, "result": "它们送你上去。临走前，它们一起唱了一段给你听。" }
+    ]
+  }
+]

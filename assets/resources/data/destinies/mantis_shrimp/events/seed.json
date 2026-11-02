@@ -1,0 +1,58 @@
+[
+  {
+    "id": "s0_siblings", "dir": "down", "stage": [0, 0], "weight": 16, "once": true, "maps": ["tidal", "reef"],
+    "text": "你们一窝小虾刚孵出来，一条长满吸盘的腿从石缝里伸了进来。",
+    "choices": [
+      { "text": "往沙里钻", "effect": { "打洞": 1, "flag": "octopus_grudge" }, "result": "那条腿卷走了你一半的兄弟。你记住了那团紫色。" },
+      { "text": "朝它挥拳", "chance": 0.4, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "拳力": 2, "flag": "octopus_grudge" }, "result": "你的小拳头打在吸盘上，它缩了一下。章鱼墨斗，记住你了。",
+        "fail": { "effect": { "体力": -2, "flag": "octopus_grudge" }, "result": "它把你甩了出去。你撞在石头上，眼冒金星。" } },
+      { "text": "前世见过它", "require": "legacy:slippery>=1", "effect": { "游速": 2, "灵性": 1, "flag": "octopus_grudge" },
+        "result": "前世它缠死过你。这一世你身子一滑，从吸盘中间溜了出去。" }
+    ]
+  },
+  {
+    "id": "s0_tank", "dir": "any", "stage": [0, 1], "weight": 20, "once": true, "maps": ["market"],
+    "text": "水箱里挤满了虾。一只大手伸进来，一抓就是一把，扔进了塑料袋。",
+    "choices": [
+      { "text": "往箱底沉", "effect": { "打洞": 1, "flag": "boss_seen" }, "result": "手从你头顶捞过去。胖老板说：今天的虾真精神。" },
+      { "text": "给它一拳", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "拳力": 2, "flag": "boss_seen" }, "result": "老板嗷了一声缩回手，甩了甩：这只还会打人！",
+        "fail": { "effect": { "death": "cooked" }, "result": "你被捞了起来，装进了袋子。" } }
+    ]
+  },
+  {
+    "id": "s0_ahai", "dir": "any", "stage": [0, 1], "weight": 18, "once": true, "maps": ["tidal", "market"],
+    "text": "一个晒得黝黑的男孩蹲在水边，盯着你看了半天。他说：你打架的样子好帅。",
+    "choices": [
+      { "text": "冲他挥挥拳", "effect": { "拳力": 1, "flag": "ahai" }, "result": "他乐了，说他叫阿海，他爷爷是打渔的。" },
+      { "text": "缩进洞里", "effect": { "打洞": 1 }, "result": "他在洞口等了很久，最后走了。" }
+    ]
+  },
+  {
+    "id": "s0_first_food", "dir": "up", "stage": [0, 0], "weight": 14,
+    "text": "一只比你还大的浮游虫在你面前慢悠悠地飘。",
+    "choices": [
+      { "text": "一拳打晕", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "体力": 2, "拳力": 1 }, "result": "第一拳就打中了。你吃得肚皮发亮。",
+        "fail": { "effect": { "体力": -1 }, "result": "你挥空了。它慢悠悠地飘走了，像在嘲笑你。" } },
+      { "text": "跟着它游", "effect": { "游速": 1 }, "result": "你追了它一天，没追上，游得倒是快了。" }
+    ]
+  },
+  {
+    "id": "s0_sand", "dir": "down", "stage": [0, 0], "weight": 14,
+    "text": "海底的沙又细又软，你忍不住想挖个洞。",
+    "choices": [
+      { "text": "挖个深洞", "effect": { "打洞": 2 }, "result": "你挖出了一个 U 形洞，两头都有门。很专业。" },
+      { "text": "挖着玩", "effect": { "体力": 1, "灵性": 1 }, "result": "你挖出一个贝壳，又埋回去了。挺好玩。" }
+    ]
+  },
+  {
+    "id": "s0_goby", "dir": "any", "stage": [0, 0], "weight": 10,
+    "text": "一条小虾虎鱼游到你的洞口，眼巴巴地看着你。它也没地方住。",
+    "choices": [
+      { "text": "让它住进来", "effect": { "体力": 1, "灵性": 1 }, "result": "你挖洞，它放哨。你们一晚上都睡得很踏实。" },
+      { "text": "赶它走", "effect": { "拳力": 1 }, "result": "你冲它比了比拳头。它委屈地游走了。" }
+    ]
+  }
+]

@@ -50,6 +50,8 @@ export interface RawEvent {
     gold?: boolean;
     /** 仅作为 next / enterEvent 链式触发，不参与随机抽取 */
     chainOnly?: boolean;
+    /** 只在这些出生地图里出现（省略 = 所有地图） */
+    maps?: string[];
     require?: string;
     text: string;
     choices: RawChoice[];
@@ -228,6 +230,23 @@ export interface UpgradeDef {
     value?: number;
 }
 
+/**
+ * 出生地图：每一世开局按权重随机一张。可改层的名字/旁白、给开局效果与修正，
+ * 事件用 maps 字段限定只在某些地图出现。
+ */
+export interface MapDef {
+    id: string;
+    name: string;
+    desc: string;
+    weight?: number;
+    /** 出生旁白（替代 rules.startLog） */
+    startLog?: string;
+    start?: RawEffect;
+    mods?: Mods;
+    /** 层覆盖：层 id → 名字 / 进入旁白 / 受阻旁白 */
+    layers?: Record<string, { name?: string; enterText?: string; blockedText?: string }>;
+}
+
 /** 每日天命：当天所有轮回生效的全局修正（同一天所有玩家相同，可看视频换一次） */
 export interface FateDef {
     id: string;
@@ -250,6 +269,7 @@ export interface DestinyMeta {
     endings: EndingDef[];
     upgrades?: UpgradeDef[];
     fates?: FateDef[];
+    maps?: MapDef[];
     /** 命格规则：生命 / 回复 / 成长等由数据决定，引擎不写死任何属性名 */
     rules: DestinyRules;
     settings: {
@@ -367,6 +387,7 @@ export interface GameEvent {
     sudden: boolean;
     gold: boolean;
     chainOnly: boolean;
+    maps?: string[];
     require?: Cond;
     text: string;
     choices: Choice[];
@@ -390,6 +411,7 @@ export interface Destiny {
     endings: Map<string, EndingDef>;
     upgrades: Map<string, UpgradeDef & { kind: UpgradeKind; startEffect?: Effect }>;
     fates: Map<string, FateDef & { startEffect?: Effect }>;
+    maps: Map<string, MapDef & { startEffect?: Effect }>;
 }
 
 // ───────────── 存档 ─────────────
@@ -466,6 +488,8 @@ export interface RunState {
     fate?: string;
     /** 本世是今日首世（结算轮回点加成） */
     firstOfDay?: boolean;
+    /** 本世出生地图 */
+    map?: string;
 }
 
 export interface UpgradeView {

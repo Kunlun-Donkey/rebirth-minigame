@@ -110,6 +110,13 @@ export class Engine {
         this.doubled = false;
 
         const sink = this.newStep();
+        // 出生地图（按权重随机）
+        const maps = [...d.maps.values()];
+        const map = maps.length ? this.rng.weighted(maps, m => m.weight ?? 1) : undefined;
+        if (map) {
+            this.run.map = map.id;
+            if (map.startEffect) this.applyEffect(map.startEffect, sink, false);
+        }
         // 传承
         for (const [id, lv] of Object.entries(dp.legacy)) {
             const def = d.legacies.get(id);
@@ -142,7 +149,7 @@ export class Engine {
 
         const R = d.meta.rules;
         this.run.attrs[R.life] = this.run.attrs[R.lifeMax];
-        this.run.log.push(`第${this.run.life}世，${R.startLog}`);
+        this.run.log.push(`第${this.run.life}世，${map?.startLog ?? R.startLog}`);
         this.startSeason();
     }
 
@@ -167,8 +174,8 @@ export class Engine {
                 name: dd.name,
                 enabled,
                 lockText: enabled ? undefined : this.describe(dd.cond),
-                layerName: cur?.name ?? '',
-                nextLayer: next ? { name: next.name, lockText: this.check(next.cond) ? undefined : this.describe(next.cond) } : undefined,
+                layerName: cur ? this.layerText(cur).name : '',
+                nextLayer: next ? { name: this.layerText(next).name, lockText: this.check(next.cond) ? undefined : this.describe(next.cond) } : undefined,
             };
         });
     }
@@ -475,7 +482,7 @@ export class Engine {
             explore: this.data.dirs.map(dd => ({
                 dir: dd.id,
                 name: dd.name,
-                layer: this.data.layersByDir[dd.id][r.maxPos[dd.id]]?.name ?? '',
+                layer: this.layerName(dd.id, r.maxPos[dd.id]),
             })),
             attrs: d.meta.attrs.filter(a => !a.hidden).map(a => ({ id: a.id, name: a.name, icon: a.icon, value: r.attrs[a.id] ?? 0 })),
             learned: r.learned.map(id => ({ id, name: this.skillName(id) })),
@@ -580,8 +587,26 @@ export class Engine {
     stageName(level: number): string { return this.data.stages.find(s => s.level === level)?.name ?? `境界${level}`; }
     itemName(id: string): string { return this.data.items.get(id)?.name ?? id; }
 
+    /** 本世出生地图 */
+    mapDef() {
+        return this.run?.map ? this.data.maps.get(this.run.map) : undefined;
+    }
+
+    /** 层的显示文字（出生地图可覆盖名字与旁白） */
+    layerText(layer: { id: string; name: string; enterText: string; blockedText: string }) {
+        const o = this.mapDef()?.layers?.[layer.id];
+        return { name: o?.name ?? layer.name, enterText: o?.enterText ?? layer.enterText, blockedText: o?.blockedText ?? layer.blockedText };
+    }
+
+    /** 某方向第 index 层的显示名 */
+    layerName(dir: Dir, index: number): string {
+        const l = this.data.layersByDir[dir][index];
+        return l ? this.layerText(l).name : '';
+    }
+
     mods(): Mods {
         const list: (Mods | undefined)[] = [
+            this.mapDef()?.mods,
             this.run.fate ? this.data.fates.get(this.run.fate)?.mods : undefined,
             ...this.run.talents.map(id => this.data.talents.get(id)?.mods),
             ...this.run.items.map(id => this.data.items.get(id)?.mods),
@@ -671,11 +696,12 @@ export class Engine {
             r.pos[dir] += 1;
             r.push[dir] = 0;
             r.maxPos[dir] = Math.max(r.maxPos[dir], r.pos[dir]);
-            step.messages.push(next.enterText);
-            r.log.push(`第${r.season}季，抵达${next.name}。`);
+            const t = this.layerText(next);
+            if (t.enterText) step.messages.push(t.enterText);
+            r.log.push(`第${r.season}季，抵达${t.name}。`);
             if (next.enterEvent) r.pending.push(next.enterEvent);
         } else {
-            step.messages.push(`${next.blockedText}（需要：${this.describe(next.cond)}）`);
+            step.messages.push(`${this.layerText(next).blockedText}（需要：${this.describe(next.cond)}）`);
         }
     }
 
@@ -684,6 +710,7 @@ export class Engine {
         const goldMul = this.mods().goldMul ?? 1;
         const cands = [...this.data.events.values()].filter(e =>
             !e.chainOnly && filter(e) &&
+            (!e.maps || (!!r.map && e.maps.includes(r.map))) &&
             r.stage >= e.stage[0] && r.stage <= e.stage[1] &&
             !(e.once && r.seen.includes(e.id)) &&
             e.id !== r.lastEvent &&

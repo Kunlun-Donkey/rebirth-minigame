@@ -21,7 +21,7 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
     let h = 60;
     if (s.success !== undefined) h += 56;
     if (s.text) h += textHeight(s.text, innerW, 32, 52) + 20;
-    if (chipsText.length) h += Math.ceil(chipsText.length / 3) * 50 + 10;
+    if (chipsText.length) h += Math.ceil(chipsText.length / 2) * 50 + 10;
     for (const m of s.messages) h += textHeight(m, innerW, 26, 40) + 12;
     if (breakthrough) h += 220;
     h += 130;
@@ -58,7 +58,9 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
         y += sizeOf(n).h + 12;
     }
     if (breakthrough) Platform.vibrate();
-    button(panel, 40, Math.max(y + 10, sizeOf(panel).h - 120), innerW, { label: '继  续', style: 'primary', onClick: close });
+    // 按钮始终在面板内（内容超出估算时宁可压住最后一行，也不能出屏）
+    const ph = sizeOf(panel).h;
+    button(panel, 40, Math.min(Math.max(y + 10, ph - 120), ph - 110), innerW, { label: '继  续', style: 'primary', onClick: close });
 }
 
 /** 濒死：看视频复活 / 接受命运 */

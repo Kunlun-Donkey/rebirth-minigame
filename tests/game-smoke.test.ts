@@ -7,7 +7,7 @@ import { Label, Node, sys, UITransform } from './fake-cc';
 import { Game } from '../assets/scripts/game/game';
 import { CONFIG } from '../assets/scripts/game/config';
 import { writeSave } from '../assets/scripts/game/save';
-import { Rng } from '../assets/scripts/core';
+import { destinyProfile, Rng } from '../assets/scripts/core';
 
 const flush = () => new Promise(r => setTimeout(r, 0));
 // 测试里不等启动页停留时间
@@ -136,6 +136,51 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         expect(labels(g.overlay).some(l => l.includes('换一个天命'))).toBe(true);
         inScreen(g.overlay);
     });
+
+    it.each(['caterpillar', 'mantis_shrimp'])('新命格 %s：选择页放得下全部命格；开局弹出生地，HUD 显示出生地，随机点击 800 次不出错', async id => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        g.save.profile.destinies.desert_grass.bestStage = 2;
+        destinyProfile(g.save.profile, 'local_dog').bestStage = 1;
+        g.goDestinySelect();
+        await flush();
+        const root = g.screen.parent!;
+        const cards = tappables(g.screen).filter(n => n.name.startsWith('destiny_'));
+        expect(cards.length).toBe(4);
+        const back = tappables(g.screen).find(n => labels(n).some(l => l.includes('返')))!;
+        for (const c of cards) expect(absTop(c, root) + heightOf(c), c.name).toBeLessThanOrEqual(absTop(back, root));
+        const card = cards.find(n => n.name === `destiny_${id}`)!;
+        card.emit(Node.EventType.TOUCH_START); card.emit(Node.EventType.TOUCH_END);
+        for (let i = 0; i < 10; i++) await flush();
+        expect(g.data.meta.id).toBe(id);
+        for (let i = 0; i < 3; i++) {
+            const c = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+            c.emit(Node.EventType.TOUCH_START); c.emit(Node.EventType.TOUCH_END);
+            await flush();
+        }
+        const go = tappables(g.screen).find(n => n.children.some(c => c.getComponent(Label)?.string.includes('重   生')))!;
+        go.emit(Node.EventType.TOUCH_START); go.emit(Node.EventType.TOUCH_END);
+        for (let i = 0; i < 5; i++) await flush();
+        expect(screenName(g)).toBe('run');
+        const map = g.engine.mapDef()!;
+        expect(map).toBeTruthy();
+        expect(labels(g.overlay).some(l => l.includes(`出生在「${map.name}」`))).toBe(true);
+        expect(labels(g.screen).some(l => l.includes(map.name))).toBe(true);
+
+        const rng = new Rng({ rng: 5 });
+        for (let i = 0; i < 800; i++) {
+            const layer = g.overlay.children.length ? g.overlay : g.screen;
+            const nodes = tappables(layer).filter(n => n.name !== 'modal');
+            const pick = (nodes.length ? nodes : tappables(layer))[rng.int(Math.max(1, nodes.length || tappables(layer).length))];
+            if (!pick) continue;
+            pick.emit(Node.EventType.TOUCH_START); pick.emit(Node.EventType.TOUCH_END);
+            await flush(); await flush();
+            const bad = labels(g.screen).concat(labels(g.overlay)).filter(t => /undefined|NaN|\[object/.test(t));
+            expect(bad, `第 ${i} 步`).toEqual([]);
+        }
+    }, 60_000);
 
     it('多命格：未解锁时点不进；解锁后切换到土狗，HUD 按剧本显示，重启后记住命格', async () => {
         sys.localStorage.clear?.();

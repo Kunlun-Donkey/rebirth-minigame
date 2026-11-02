@@ -1,0 +1,159 @@
+[
+  {
+    "id": "down_fallback", "dir": "down", "weight": 3,
+    "text": "你在洞里待了一季，把洞又挖深了一点。",
+    "choices": [ { "text": "接着挖", "effect": { "打洞": 1, "体力": 1 }, "result": "洞挖好了，觉也睡好了。" } ]
+  },
+
+  {
+    "id": "d1_clam", "dir": "down", "layers": ["D1"], "weight": 14,
+    "text": "沙里埋着一个蛤蜊，壳闭得紧紧的。",
+    "choices": [
+      { "text": "一拳打开", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "体力": 3, "拳力": 1, "skill": "punch" }, "result": "啪的一声，壳碎了。你这才知道自己的拳头有多快。",
+        "fail": { "effect": { "体力": -1 }, "result": "蛤蜊比你想的硬。你的钳子麻了半天。" } },
+      { "text": "带回洞里", "effect": { "item": "clam" }, "result": "你把它滚回了洞里。饿了再说。" }
+    ]
+  },
+  {
+    "id": "d1_crab", "dir": "down", "layers": ["D1"], "stage": [1, 99], "weight": 10,
+    "text": "一只大螃蟹横着走过来，钳子一张一合，看上了你的洞。",
+    "choices": [
+      { "text": "让给它", "effect": { "back": "down", "打洞": 1 }, "result": "你换了个地方，重新挖了个洞。" },
+      { "text": "跟它打", "chance": 0.45, "chanceAttr": "拳力", "chanceStep": 0.08,
+        "effect": { "拳力": 2, "海灵": 3 }, "result": "你一拳打在它钳子上。它愣了一下，横着跑了。",
+        "fail": { "effect": { "death": "crab" }, "result": "它的钳子比你的拳头先到。" } },
+      { "text": "前世的反击拳", "require": "legacy:counter_punch>=1", "effect": { "拳力": 2, "海灵": 4 },
+        "result": "前世它夹住过你。这一世你打的是它的关节，它一下就松了。" }
+    ]
+  },
+  {
+    "id": "d1_tank_sand", "dir": "down", "layers": ["D1", "D2"], "maps": ["market"], "weight": 14,
+    "text": "水箱底只有薄薄一层砂。隔壁的龙虾说：别挖了，这儿谁都出不去。",
+    "choices": [
+      { "text": "偏要挖", "effect": { "打洞": 2, "灵性": 1 }, "result": "你挖到了箱底，发现了一道裂缝。龙虾不说话了。" },
+      { "text": "跟龙虾聊", "effect": { "灵性": 2 }, "result": "龙虾说它在这儿待了三天，见过好多虾被捞走。你听得很仔细。" }
+    ]
+  },
+
+  {
+    "id": "d2_crack", "dir": "down", "layers": ["D2"], "weight": 12,
+    "text": "礁石缝里又黑又窄，一转身就碰壁。你觉得很安心。",
+    "choices": [
+      { "text": "往深里挖", "effect": { "打洞": 2 }, "result": "你挖出了一个带拐角的洞。大鱼的嘴伸不进来。" },
+      { "text": "睡一觉", "effect": { "体力": 2 }, "result": "你在缝里睡了一整季。醒来时，壳又硬了一点。" }
+    ]
+  },
+  {
+    "id": "d2_octopus", "dir": "down", "layers": ["D2", "D3"], "stage": [1, 3], "weight": 12, "require": "flag:octopus_grudge",
+    "text": "石缝外面伸进来一条紫色的腿。是墨斗，它记得你。",
+    "choices": [
+      { "text": "缩到最里面", "chance": 0.5, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 1, "灵性": 1 }, "result": "腿在洞口摸了半天，摸不到你，缩回去了。",
+        "fail": { "effect": { "death": "octopus" }, "result": "你的洞不够深。" } },
+      { "text": "一拳打出去", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 5 },
+        "result": "你一拳打在吸盘上。腿嗖地缩了回去，外面喷出一团墨。" },
+      { "text": "滑出去", "require": "legacy:slippery>=2", "effect": { "游速": 2, "海灵": 3 },
+        "result": "前世它缠死过你。这一世你像抹了油，从它腿缝里溜走了。" },
+      { "text": "从后门跑", "effect": { "back": "down", "体力": -1 }, "result": "你从洞的另一头钻了出去。U 形洞的好处。" }
+    ]
+  },
+  {
+    "id": "d2_coral_crack", "dir": "down", "layers": ["D2"], "maps": ["reef"], "weight": 14,
+    "text": "珊瑚缝里住满了小东西：小丑鱼、海葵、一只脾气很坏的海胆。",
+    "choices": [
+      { "text": "挨家拜访", "effect": { "灵性": 2, "海灵": 2 }, "result": "大家都挺客气。海胆除外。" },
+      { "text": "占个好位置", "effect": { "打洞": 2 }, "result": "你在两块珊瑚中间挖了个洞。邻居们看你的眼神有点怕。" }
+    ]
+  },
+  {
+    "id": "d2_pump", "dir": "down", "layers": ["D2"], "maps": ["market"], "weight": 14,
+    "text": "增氧泵后面有根管子，管子那头，好像有海的味道。",
+    "choices": [
+      { "text": "钻进管子", "chance": 0.5, "chanceAttr": "打洞", "chanceStep": 0.1,
+        "effect": { "打洞": 2, "海灵": 3 }, "result": "管子很窄，你一点点往里拱。那头真的是海的味道。",
+        "fail": { "effect": { "体力": -2 }, "result": "你卡在管子里，被泡泡吹了出来。" } },
+      { "text": "躲在后面", "effect": { "体力": 2 }, "result": "老板的网兜伸不到泵后面。你在这儿睡得很好。" }
+    ]
+  },
+
+  {
+    "id": "d3_grouper", "dir": "down", "layers": ["D3"], "weight": 12,
+    "text": "一条大石斑鱼在海草里慢慢游，嘴比你的洞还大。",
+    "choices": [
+      { "text": "藏进海草根", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "灵性": 1, "打洞": 1 }, "result": "它从你头顶游过去了。海草根底下，它看不见你。",
+        "fail": { "effect": { "death": "grouper" }, "result": "它张嘴一吸，你就进去了。" } },
+      { "text": "一拳打它嘴唇", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 6 },
+        "result": "它嘴唇一麻，掉头就跑。它这辈子没见过会打人的虾。" },
+      { "text": "前世硬壳", "require": "legacy:hard_shell>=2", "effect": { "拳力": 2, "海灵": 5 },
+        "result": "前世它吞过你。这一世它刚吸进嘴，就被硌得吐了出来。" }
+    ]
+  },
+  {
+    "id": "d3_kelp", "dir": "down", "layers": ["D3"], "weight": 10,
+    "text": "海草林深处，一棵海带打了个结，结里藏着一颗亮东西。",
+    "choices": [
+      { "text": "解开看看", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "item": "pearl" }, "result": "是一颗小珍珠。不知道是谁藏在这儿的。",
+        "fail": { "effect": { "item": "kelp_knot" }, "result": "里面只有一块碎玻璃。你把海带结咬了下来。" } },
+      { "text": "不碰", "effect": { "灵性": 1 }, "result": "别人藏的东西，你不拿。" }
+    ]
+  },
+  {
+    "id": "d3_bleach", "dir": "down", "layers": ["D3"], "maps": ["reef"], "stage": [3, 99], "once": true, "weight": 18,
+    "text": "珊瑚林一片一片地变白了。小鱼们说，海水太热了，珊瑚快不行了。",
+    "choices": [
+      { "text": "挖沟引冷水", "require": "打洞>=10", "effect": { "打洞": 2, "海灵": 10, "flag": "reef_saved" },
+        "result": "你从深处挖了一条沟，冷水涌了上来。白了的珊瑚，慢慢又有了颜色。" },
+      { "text": "去找海龟", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "海灵": 6, "flag": "reef_saved" },
+        "result": "老海龟带来了一股冷流。它说：这片礁，我也住过。" },
+      { "text": "搬去别处", "effect": { "游速": 1 }, "result": "你离开了珊瑚林。走的时候回头看了一眼，很白。" }
+    ]
+  },
+  {
+    "id": "d3_reef_end", "dir": "down", "layers": ["D3"], "maps": ["reef"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:reef_saved",
+    "text": "珊瑚礁长回来了，比以前还密。小鱼们推你当礁主。",
+    "choices": [
+      { "text": "留下来守着", "effect": { "ending": "reef_guardian" }, "result": "你在礁石底下挖了最后一个洞，洞口朝着整片珊瑚。" },
+      { "text": "我要去更远", "effect": { "灵性": 3, "海灵": 10 }, "result": "小鱼们送了你很远。最小的那条一直跟到了礁石边。" }
+    ]
+  },
+
+  {
+    "id": "d4_gate", "dir": "down", "layers": ["D4"], "chainOnly": true,
+    "text": "海沟越往下越黑，水压得你的壳咯吱咯吱响。沟底有光。",
+    "choices": [
+      { "text": "硬往下沉", "effect": { "death": "pressure" }, "result": "光越来越近，壳越来越紧。" },
+      { "text": "深海体扛住", "require": "legacy:deep_body>=2", "effect": { "灵性": 3, "海灵": 6 },
+        "result": "前世这里的水压压扁过你。这一世你的壳扛住了，你看清了那道光。" },
+      { "text": "跟慢爷下去", "require": "companion:old_turtle", "effect": { "灵性": 2, "海灵": 6 },
+        "result": "慢爷驮着你，慢慢沉到了底。它说：这条路，我走过三回。" },
+      { "text": "游回去", "effect": { "back": "down", "体力": -1 }, "result": "你掉头往上游。那道光，下次再说。" }
+    ]
+  },
+  {
+    "id": "d4_gate_light", "dir": "down", "layers": ["D4"], "weight": 12,
+    "text": "沟底有一扇石门，门上刻着龙。门缝里漏出来的光，一闪一闪。",
+    "choices": [
+      { "text": "敲门", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "海灵": 10, "灵性": 2 }, "result": "门没开，但门缝里递出来一片鳞。你闻到了龙的味道。",
+        "fail": { "effect": { "体力": -2 }, "result": "门后有东西吼了一声，你被冲出了老远。" } },
+      { "text": "在门口挖洞", "effect": { "打洞": 2, "体力": 2 }, "result": "你在龙宫门口挖了个洞住下。门口很安静。" }
+    ]
+  },
+  {
+    "id": "d4_dragon", "dir": "down", "layers": ["D4"], "stage": [4, 99], "once": true, "weight": 20,
+    "text": "一条比山还大的海蛇缠住了龙宫的大门，门里传出喊声。",
+    "choices": [
+      { "text": "一拳打它七寸", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 3, "海灵": 15, "flag": "dragon_saved" },
+        "result": "你憋了一辈子的劲，全打在了一个点上。海蛇松开门，逃进了深渊。" },
+      { "text": "冲上去", "chance": 0.4, "chanceAttr": "拳力", "chanceStep": 0.04,
+        "effect": { "拳力": 2, "海灵": 10, "flag": "dragon_saved" }, "result": "你一拳接一拳，打到海蛇松了口。门开了，里面的人都看着你。",
+        "fail": { "effect": { "体力": -4 }, "result": "海蛇一甩尾巴，你被抽出了海沟。" } },
+      { "text": "搅浑水", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "灵性": 2, "海灵": 10, "flag": "dragon_saved" },
+        "result": "沙子扬起来，海蛇什么都看不见。门里的龟丞相趁机把门关紧了。" },
+      { "text": "走开", "effect": { "体力": 1 }, "result": "龙宫的事，跟一只虾有什么关系。" }
+    ]
+  }
+]

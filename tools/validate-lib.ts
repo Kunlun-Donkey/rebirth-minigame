@@ -119,10 +119,17 @@ export function validateDestiny(raw: RawDestiny): Report {
     }
     for (const c of d.companions.values()) if (c.everyEffect) checkEffect(c.everyEffect, `伴生物 ${c.id}`);
 
+    // 出生地图
+    for (const m of d.maps.values()) {
+        if (m.startEffect) checkEffect(m.startEffect, `地图 ${m.id}`);
+        for (const lid of Object.keys(m.layers ?? {})) if (!d.layers.has(lid)) errors.push(`地图 ${m.id}: 覆盖了不存在的层 ${lid}`);
+    }
+
     // 事件
     for (const ev of d.events.values()) {
         const w = `事件 ${ev.id}`;
         checkCond(ev.require, `${w}.require`);
+        for (const m of ev.maps ?? []) if (!d.maps.has(m)) errors.push(`${w}: 地图 ${m} 不存在`);
         for (const l of ev.layers ?? []) {
             const layer = d.layers.get(l);
             if (!layer) errors.push(`${w}: 层 ${l} 不存在`);
@@ -182,7 +189,7 @@ export function validateDestiny(raw: RawDestiny): Report {
         if (n < 2) warnings.push(`层 ${l.id}「${l.name}」只有 ${n} 个专属事件`);
     }
     for (const dir of ['up', 'down', 'side'] as const) {
-        const hasFallback = [...d.events.values()].some(e => e.dir === dir && !e.layers && !e.require && !e.sudden && !e.chainOnly && e.stage[0] === 0 && e.stage[1] >= 99);
+        const hasFallback = [...d.events.values()].some(e => e.dir === dir && !e.layers && !e.maps && !e.require && !e.sudden && !e.chainOnly && e.stage[0] === 0 && e.stage[1] >= 99);
         if (!hasFallback) errors.push(`方向 ${dir} 缺少兜底事件（无层、无条件、全境界）`);
     }
 
@@ -203,6 +210,7 @@ export function validateDestiny(raw: RawDestiny): Report {
             死法: d.deaths.size,
             传承: d.legacies.size,
             结局: d.endings.size,
+            地图: d.maps.size,
         },
     };
 }

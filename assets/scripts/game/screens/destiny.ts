@@ -8,8 +8,8 @@ import type { Game } from '../game';
 import { Platform } from '../platform';
 import { box, button, chip, COLOR, estimateWidth, fadeIn, image, onTap, rect, text } from '../ui/kit';
 
-const CARD_H = 240;
-const ART = 196;
+const MAX_CARD_H = 240;
+const GAP = 20;
 
 export function showDestinySelect(g: Game): void {
     const root = box(g.screen, 0, 0, g.W, g.H, 'destiny');
@@ -22,7 +22,12 @@ export function showDestinySelect(g: Game): void {
     const cur = g.data.meta.id;
     const cardW = g.W - 60;
     let y = CONFIG.safeTop + 140;
-    for (const st of destinyStates(g.index, g.save.profile)) {
+    const states = destinyStates(g.index, g.save.profile);
+    // 命格多了自动压缩卡片高度，保证全部放得下且不压住底部按钮
+    const avail = g.H - 160 - y;
+    const CARD_H = Math.min(MAX_CARD_H, Math.floor((avail - GAP * (states.length - 1)) / Math.max(1, states.length)));
+    const ART = CARD_H - 44;
+    for (const st of states) {
         const { entry } = st;
         const isCur = entry.id === cur;
         const card = box(root, 30, y, cardW, CARD_H, `destiny_${entry.id}`);
@@ -40,7 +45,7 @@ export function showDestinySelect(g: Game): void {
         const tx = 22 + ART + 24;
         const tw = cardW - tx - 24;
         text(card, entry.name, tx, 26, tw, { size: 36, bold: true, color: st.unlocked ? COLOR.ink : COLOR.ink2 });
-        text(card, entry.desc, tx, 82, tw, { size: 22, color: COLOR.ink2, wrap: true, lineHeight: 32 });
+        text(card, entry.desc, tx, 76, tw, { size: 21, color: COLOR.ink2, wrap: true, lineHeight: 30 }, CARD_H - 76 - 56);
         const status = st.unlocked ? (st.lives ? `已轮回 ${st.lives} 世` : '尚未投胎') : `🔒 ${st.lockText ?? '未解锁'}`;
         text(card, status, tx, CARD_H - 52, tw, { size: 22, color: st.unlocked ? COLOR.ochre : COLOR.bad, wrap: true });
         if (isCur) {
@@ -59,7 +64,7 @@ export function showDestinySelect(g: Game): void {
             g.audio.play('card');
             g.switchDestiny(entry.id);
         });
-        y += CARD_H + 24;
+        y += CARD_H + GAP;
     }
 
     button(root, 60, g.H - 140, g.W - 120, { label: '返  回', style: 'ghost', size: 28, onClick: () => g.goDraft() });

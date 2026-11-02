@@ -1,0 +1,14 @@
+[
+  { "id": "sturdy", "name": "壳硬", "icon": "vitality", "rarity": "common", "desc": "体力上限 +2。", "start": { "体力上限": 2 } },
+  { "id": "slow_burn", "name": "省力", "icon": "vitality", "rarity": "common", "desc": "每 2 季才累一次。", "mods": { "waterCostEvery": 2 } },
+  { "id": "fast_tail", "name": "快尾", "icon": "growth", "rarity": "common", "desc": "游速 +3。", "start": { "游速": 3 } },
+  { "id": "digger", "name": "挖洞好手", "icon": "growth", "rarity": "common", "desc": "打洞 +3。", "start": { "打洞": 3 } },
+  { "id": "big_fist", "name": "大拳头", "icon": "defense", "rarity": "common", "desc": "拳力 +3。", "start": { "拳力": 3 } },
+  { "id": "flashy", "name": "花里胡哨", "icon": "social", "rarity": "rare", "desc": "颜色鲜艳，谁见了都多看两眼。灵性 +1，拳力 +1。", "start": { "灵性": 1, "拳力": 1 } },
+  { "id": "unlucky", "name": "倒霉虾", "icon": "cursed", "rarity": "rare", "desc": "【负面】突发事件更频繁，但轮回点 ×1.5。", "mods": { "suddenMul": 1.8, "pointsMul": 1.5 } },
+  { "id": "sharp_eyes", "name": "眼尖", "icon": "wisdom", "rarity": "rare", "desc": "每个事件有 35% 概率看穿一个选项的结果。", "mods": { "hintChance": 0.35 } },
+  { "id": "spare_shell", "name": "备用壳", "icon": "rebirth", "rarity": "epic", "desc": "本局第一次死亡时，脱壳逃生。", "mods": { "reviveOnce": true } },
+  { "id": "dragon_blood", "name": "龙族血脉", "icon": "bloodline", "rarity": "epic", "desc": "海灵获取 ×2。", "mods": { "qiMul": 2 } },
+  { "id": "koi_luck", "name": "锦鲤附体", "icon": "luck", "rarity": "epic", "desc": "金色奇遇概率 ×3，灵性 +2。", "start": { "灵性": 2 }, "mods": { "goldMul": 3 } },
+  { "id": "reincarnated", "name": "虾神转世", "icon": "bloodline", "rarity": "legend", "desc": "全属性 +2，海灵 ×1.5，奇遇 ×2。", "start": { "打洞": 2, "游速": 2, "拳力": 2, "灵性": 2, "体力上限": 2 }, "mods": { "qiMul": 1.5, "goldMul": 2 } }
+]

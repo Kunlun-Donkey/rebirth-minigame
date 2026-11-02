@@ -10,16 +10,21 @@ describe('命格索引与解锁', () => {
         expect(validateIndex(index, listDestinies())).toEqual([]);
     });
 
-    it('新存档只开放默认命格；达成条件后解锁土狗', () => {
+    it('新存档只开放默认命格；草→毛毛虫/土狗，土狗→皮皮虾 逐级解锁', () => {
         const p = createProfile();
         const locked = destinyStates(index, p).find(s => s.entry.id === 'local_dog')!;
         expect(locked.unlocked).toBe(false);
         expect(locked.lockText).toBeTruthy();
         expect(pickDestiny(index, p, 'local_dog')).toBe('desert_grass');
 
+        const st = () => Object.fromEntries(destinyStates(index, p).map(s => [s.entry.id, s.unlocked]));
+        destinyProfile(p, 'desert_grass').bestStage = 1;
+        expect(st()).toMatchObject({ caterpillar: true, local_dog: false, mantis_shrimp: false });
         destinyProfile(p, 'desert_grass').bestStage = 2;
-        expect(destinyStates(index, p).every(s => s.unlocked)).toBe(true);
+        expect(st()).toMatchObject({ local_dog: true, mantis_shrimp: false });
         expect(pickDestiny(index, p, 'local_dog')).toBe('local_dog');
+        destinyProfile(p, 'local_dog').bestStage = 1;
+        expect(destinyStates(index, p).every(s => s.unlocked)).toBe(true);
     });
 });
 

@@ -1,0 +1,138 @@
+[
+  {
+    "id": "up_fallback", "dir": "up", "weight": 3,
+    "text": "你往上游了一季，水越来越亮。",
+    "choices": [ { "text": "接着游", "effect": { "游速": 1 }, "result": "什么都没碰上。尾巴倒是更有劲了。" } ]
+  },
+
+  {
+    "id": "u1_shrimp_school", "dir": "up", "layers": ["U1"], "weight": 12,
+    "text": "一大群小虾从你头顶游过，像一阵亮晶晶的雨。",
+    "choices": [
+      { "text": "混进去", "effect": { "游速": 2 }, "result": "你跟着它们游了一圈。原来游泳要这么甩尾巴。" },
+      { "text": "抓几只吃", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "体力": 3 }, "result": "你一拳一只，吃了个饱。它们终于知道你不是小虾了。",
+        "fail": { "effect": { "体力": -1 }, "result": "它们一哄而散。你连根须都没摸到。" } }
+    ]
+  },
+  {
+    "id": "u1_light", "dir": "up", "layers": ["U1"], "weight": 10,
+    "text": "阳光穿过水面，在沙子上晃成一片一片的网。",
+    "choices": [
+      { "text": "晒一会儿", "effect": { "海灵": 2, "体力": -1 }, "result": "你的壳被晒得发烫。身体里有什么东西在长。" },
+      { "text": "盯着看", "effect": { "灵性": 2 }, "result": "你的眼睛把光拆成了十六种颜色。好看极了。" }
+    ]
+  },
+  {
+    "id": "u1_tank_top", "dir": "up", "layers": ["U1", "U2"], "maps": ["market"], "weight": 14,
+    "text": "水箱上层的水最干净，也离老板的网兜最近。",
+    "choices": [
+      { "text": "抢块好位置", "effect": { "体力": 2, "游速": 1 }, "result": "增氧泵吹出的泡泡正好打在你身上。舒服。" },
+      { "text": "看清网兜规律", "effect": { "灵性": 2, "flag": "boss_seen" }, "result": "你发现老板每次都先捞左边。你搬到了右边。" }
+    ]
+  },
+
+  {
+    "id": "u2_surface", "dir": "up", "layers": ["U2"], "weight": 12,
+    "text": "你把脑袋探出水面。一只海鸥在头顶转圈，眼睛往下看。",
+    "choices": [
+      { "text": "马上沉下去", "effect": { "灵性": 1 }, "result": "你沉了下去。海鸥在上面叫了两声，像在骂人。" },
+      { "text": "多看两眼天", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "海灵": 3 }, "result": "天比海还蓝。海鸥扑下来时，你已经沉下去了。",
+        "fail": { "effect": { "death": "seagull" }, "result": "海鸥比你想的快。" } },
+      { "text": "前世的沙色", "require": "legacy:sand_color>=1", "effect": { "灵性": 2, "海灵": 3 },
+        "result": "前世海鸥叼走过你。这一世你的壳和浪花一个颜色，它看不见你。" }
+    ]
+  },
+  {
+    "id": "u2_jellyfish", "dir": "up", "layers": ["U2", "U3"], "weight": 10,
+    "text": "一只水母慢慢漂过来，透明的须子拖得老长。",
+    "choices": [
+      { "text": "绕开", "effect": { "游速": 1 }, "result": "你绕了一大圈。水母什么也没察觉，接着漂。" },
+      { "text": "一拳打穿", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 1, "海灵": 4 },
+        "result": "啪的一声，水母变成了两半，还在漂。" },
+      { "text": "跟着它漂", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "游速": 2, "海灵": 2 }, "result": "它带你搭了一段顺风车。须子没碰到你。",
+        "fail": { "effect": { "体力": -2 }, "result": "须子扫了你一下。你麻了半天。" } }
+    ]
+  },
+  {
+    "id": "u2_tank_edge", "dir": "up", "layers": ["U2"], "maps": ["market"], "weight": 14,
+    "text": "你扒在箱沿上。外面的地上有条水沟，一直通到市场外面。",
+    "choices": [
+      { "text": "翻出去", "chance": 0.5, "chanceAttr": "游速", "chanceStep": 0.08,
+        "effect": { "游速": 2, "海灵": 3 }, "result": "你落进水沟，顺着水冲了出去。身后有人喊：虾跑了！",
+        "fail": { "effect": { "death": "cooked" }, "result": "你掉在了砧板上。" } },
+      { "text": "再等等", "effect": { "灵性": 1 }, "result": "你缩回水里。还不是时候。" }
+    ]
+  },
+
+  {
+    "id": "u3_net", "dir": "up", "layers": ["U3"], "weight": 12,
+    "text": "渔船放下了网。网眼一格一格地往下沉，像一面墙。",
+    "choices": [
+      { "text": "往深处跑", "chance": 0.6, "chanceAttr": "游速", "chanceStep": 0.08,
+        "effect": { "游速": 2 }, "result": "网擦着你的尾巴过去了。你一口气沉到了底。",
+        "fail": { "effect": { "death": "net" }, "result": "网收紧了。" } },
+      { "text": "前世识网", "require": "legacy:net_sense>=1", "effect": { "灵性": 2, "海灵": 4 },
+        "result": "前世这张网捞走过你。这一世你看准了一个破洞，钻了出去。" },
+      { "text": "尾巴一弹", "showIf": "skill:dart", "useSkill": "dart", "effect": { "游速": 1 }, "result": "你弹出了网的范围。渔夫一网空。" },
+      { "text": "退回去", "effect": { "back": "up", "体力": -1 }, "result": "你往下游，离渔船远远的。" }
+    ]
+  },
+  {
+    "id": "u3_ahai_net", "dir": "up", "layers": ["U3"], "once": true, "weight": 20, "require": "flag:ahai",
+    "text": "网被拖上了船。阿海在船上分拣鱼，看见了你。他偷偷看了一眼爷爷。",
+    "choices": [
+      { "text": "冲他挥拳", "effect": { "item": "bracelet", "灵性": 2, "flag": "ahai_friend" }, "result": "他把你扔回海里，还扔下来一串贝壳手链。他说：下次别被抓了。" },
+      { "text": "装死", "effect": { "灵性": 1, "flag": "ahai_friend" }, "result": "他趁爷爷不注意，把你扔回了海里。" }
+    ]
+  },
+  {
+    "id": "u3_octopus_revenge", "dir": "up", "layers": ["U3", "U4"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:octopus_grudge",
+    "text": "章鱼墨斗缠住了一条渔船的锚链在打盹。它老了，紫色变成了灰色。",
+    "choices": [
+      { "text": "一拳打醒它", "showIf": "skill:punch", "useSkill": "punch", "effect": { "item": "ink_sac", "海灵": 10 },
+        "result": "它吓得喷了一大口墨，墨囊都瘪了。你把墨囊捡走了。" },
+      { "text": "搅浑水吓它", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "海灵": 8, "灵性": 2 },
+        "result": "沙子扑了它一脸。它看不见，慌得八条腿缠成了一团。" },
+      { "text": "算了", "effect": { "灵性": 3 }, "result": "你从它头顶游过去。不是原谅，是它不配。" }
+    ]
+  },
+
+  {
+    "id": "u4_wave", "dir": "up", "layers": ["U4"], "weight": 12,
+    "text": "一个大浪从远处推过来，越推越高，像一堵会走的墙。",
+    "choices": [
+      { "text": "骑上去", "chance": 0.5, "chanceAttr": "游速", "chanceStep": 0.05,
+        "effect": { "游速": 3, "海灵": 8 }, "result": "你站在浪尖上冲了很远。那一刻你觉得自己是条鱼。",
+        "fail": { "effect": { "death": "wave" }, "result": "浪把你拍在了礁石上。" } },
+      { "text": "潜下去躲", "effect": { "体力": 1 }, "result": "你潜到浪底下。浪从头顶滚过去，像打雷。" },
+      { "text": "稳如礁", "require": "legacy:steady>=1", "effect": { "游速": 2, "海灵": 6 },
+        "result": "前世这样的浪把你拍上了礁石。这一世你扒住了浪的背。" }
+    ]
+  },
+  {
+    "id": "u4_thunder", "dir": "up", "layers": ["U4"], "stage": [3, 99], "weight": 12,
+    "text": "海面上压着雷云。一道闪电劈进海里，水面亮得发白。",
+    "choices": [
+      { "text": "迎着雷挥拳", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "海灵": 15, "item": "thunder_coral" }, "result": "你一拳打在电光里。一截珊瑚被劈断了，带着电落在你面前。",
+        "fail": { "effect": { "death": "lightning" }, "result": "你的拳头没有雷快。" } },
+      { "text": "沉到海底", "effect": { "灵性": 1 }, "result": "你沉到海底，听了一夜的雷。" },
+      { "text": "钳上有雷纹", "require": "legacy:thunder_mark>=1", "effect": { "海灵": 20, "灵性": 2 },
+        "result": "前世雷劈过你。这一世雷落下来，被你一拳接住了。" }
+    ]
+  },
+  {
+    "id": "u4_storm_boat", "dir": "up", "layers": ["U4"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:ahai_friend",
+    "text": "风暴里，一条小渔船翻了。阿海抱着一块船板，在浪里一沉一浮。",
+    "choices": [
+      { "text": "让他骑上来", "require": "游速>=8", "effect": { "海灵": 15, "flag": "carry_ahai" },
+        "result": "他抓住你的背壳，你驮着他冲出了风暴。他在你背上喊：皮皮虾，我们走！" },
+      { "text": "把船板推上岸", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.05,
+        "effect": { "拳力": 2, "海灵": 8 }, "result": "你一拳一拳把船板推到了浅滩。他爬上岸，回头找了你很久。",
+        "fail": { "effect": { "体力": -3 }, "result": "浪太大了，你被冲开了。后来你听说，他被别的船救了。" } }
+    ]
+  }
+]

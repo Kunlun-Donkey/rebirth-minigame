@@ -1,0 +1,123 @@
+[
+  {
+    "id": "side_fallback", "dir": "side", "weight": 3,
+    "text": "你随着潮水漂了一季，漂到哪儿算哪儿。",
+    "choices": [ { "text": "接着漂", "effect": { "游速": 1, "灵性": 1 }, "result": "海比你想的大。" } ]
+  },
+
+  {
+    "id": "l1_low_tide", "dir": "side", "layers": ["L1"], "weight": 12,
+    "text": "潮水退了。泥滩上留下一个个小水洼，太阳越来越毒。",
+    "choices": [
+      { "text": "钻进泥里", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.1,
+        "effect": { "打洞": 2 }, "result": "你钻到了湿泥底下。等潮水回来，你又是一条好虾。",
+        "fail": { "effect": { "death": "dry" }, "result": "泥太硬了，太阳太大了。" } },
+      { "text": "跳回水洼", "effect": { "体力": -1, "游速": 1 }, "result": "你连蹦带跳，跳进了一个小水洼。挤，但能活。" },
+      { "text": "前世晒干过", "require": "legacy:moist>=1", "effect": { "打洞": 1, "体力": 1 },
+        "result": "前世潮水忘了带你走。这一世你提前钻进了最深的泥。" }
+    ]
+  },
+  {
+    "id": "l1_catchers", "dir": "side", "layers": ["L1"], "maps": ["tidal"], "weight": 14,
+    "text": "赶海的人来了。他们拎着桶，拿着小铲，一个洞一个洞地挖。",
+    "choices": [
+      { "text": "堵住洞口", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 2, "灵性": 1 }, "result": "你把洞口用沙堵住了。铲子从旁边挖过去，没碰到你。",
+        "fail": { "effect": { "death": "net" }, "result": "铲子一翻，你就进了桶里。" } },
+      { "text": "从后门跑", "effect": { "游速": 1 }, "result": "你从 U 形洞的另一头溜了。人还在前门挖。" },
+      { "text": "一拳打铲子", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2 },
+        "result": "当的一声，铲子磕出个口子。那人嘀咕：这下面有石头？" }
+    ]
+  },
+  {
+    "id": "l1_drain", "dir": "side", "layers": ["L1"], "maps": ["market"], "weight": 14,
+    "text": "排水沟里全是菜叶子和鱼鳞，水一直往低处流。",
+    "choices": [
+      { "text": "顺水冲出去", "effect": { "游速": 2, "海灵": 3 }, "result": "水沟通向码头。你闻到了真正的海。" },
+      { "text": "捡点吃的", "effect": { "体力": 3 }, "result": "市场扔掉的东西，比水箱里喂的强多了。" }
+    ]
+  },
+  {
+    "id": "l1_hermit", "dir": "side", "layers": ["L1"], "weight": 10,
+    "text": "一只寄居蟹在搬家，背着个太大的螺壳，走两步歇一步。",
+    "choices": [
+      { "text": "帮它推", "effect": { "灵性": 1, "拳力": 1 }, "result": "你一拳一拳把壳推到了新家。它送了你一个小海螺。" },
+      { "text": "捡它扔的壳", "effect": { "item": "conch" }, "result": "它扔下的旧螺壳，贴在耳边能听见海的动静。" }
+    ]
+  },
+
+  {
+    "id": "l2_dock", "dir": "side", "layers": ["L2"], "weight": 12,
+    "text": "码头底下的木桩上长满了牡蛎。头顶，有人在卸货。",
+    "choices": [
+      { "text": "敲牡蛎", "effect": { "item": "oyster" }, "result": "你敲下一个生蚝，壳硬得震手。值了。" },
+      { "text": "听人说话", "effect": { "灵性": 2 }, "result": "他们说城里新开了个水族馆，在收稀奇的海货。" }
+    ]
+  },
+  {
+    "id": "l2_ahai", "dir": "side", "layers": ["L2"], "once": true, "weight": 18, "require": "flag:ahai",
+    "text": "阿海坐在码头边钓鱼。他认出了你：是你！你长这么大了！",
+    "choices": [
+      { "text": "游到他脚边", "effect": { "灵性": 2, "flag": "ahai_friend" }, "result": "他把鱼饵分了你一半。他说以后天天来这儿。" },
+      { "text": "抢他的鱼饵", "effect": { "体力": 3 }, "result": "他哈哈大笑：还是那么凶！" }
+    ]
+  },
+  {
+    "id": "l2_aquarium", "dir": "side", "layers": ["L2"], "stage": [3, 99], "once": true, "weight": 6, "require": "灵性>=8",
+    "text": "一个穿制服的人蹲在码头边，盯着你看：这个颜色，这个个头，太漂亮了。",
+    "choices": [
+      { "text": "给他打一套拳", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.05,
+        "effect": { "拳力": 1, "flag": "aquarium_scout" }, "result": "他看呆了，说：你得去水族馆，你会火的。",
+        "fail": { "effect": { "体力": -1 }, "result": "你一拳打空，栽了个跟头。他笑了笑，走了。" } },
+      { "text": "躲进木桩", "effect": { "打洞": 1 }, "result": "你躲了起来。外面再好，也不如海里自在。" }
+    ]
+  },
+  {
+    "id": "l2_aquarium_end", "dir": "side", "layers": ["L2", "L3"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:aquarium_scout",
+    "text": "穿制服的人又来了，这回带着一个大水箱：最大的展厅，给你留着。",
+    "choices": [
+      { "text": "跟他走", "require": "拳力>=10", "effect": { "ending": "aquarium_star" }, "result": "你游进了水箱。玻璃外面，第一个小孩已经趴上来了。" },
+      { "text": "回大海", "effect": { "游速": 3, "海灵": 10 }, "result": "你一拳打翻了水箱，游回了海里。他在后面叹气。" }
+    ]
+  },
+  {
+    "id": "l2_boss_end", "dir": "side", "layers": ["L2"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:boss_seen", "maps": ["market"],
+    "text": "你游回了海鲜市场。胖老板正在捞虾，抬头看见一只半米长的皮皮虾趴在箱沿上。",
+    "choices": [
+      { "text": "一拳打碎水箱", "require": "拳力>=10", "effect": { "ending": "boss_tank" }, "result": "玻璃哗啦碎了一地，满箱的虾全跑了。老板坐在地上，半天没说话。" },
+      { "text": "放走所有的虾", "effect": { "灵性": 3, "海灵": 10 }, "result": "你掀开了排水口。那天晚上，市场里一只虾都不剩。" }
+    ]
+  },
+
+  {
+    "id": "l3_turtle", "dir": "side", "layers": ["L3"], "weight": 12,
+    "text": "远海上漂着一只老海龟，壳上长满了藤壶，像一座小岛。",
+    "choices": [
+      { "text": "爬上去歇会儿", "effect": { "体力": 3, "灵性": 1 }, "result": "你在龟壳上睡了一觉。醒来时，已经漂出了好远。" },
+      { "text": "跟它说话", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "海灵": 5 },
+        "result": "它说它游过半个地球，见过一只会发光的鲸。你听得入了迷。" }
+    ]
+  },
+  {
+    "id": "l3_whale", "dir": "side", "layers": ["L3"], "weight": 10, "gold": true,
+    "text": "一头鲸从你身下游过，比一座岛还长。它唱了一声，海水都在抖。",
+    "choices": [
+      { "text": "跟着它唱", "effect": { "灵性": 3, "海灵": 8 }, "result": "你唱不出声，但它好像听见了。它回头看了你一眼。" },
+      { "text": "搭顺风车", "chance": 0.5, "chanceAttr": "游速", "chanceStep": 0.05,
+        "effect": { "游速": 4, "海灵": 6 }, "result": "你贴着它的鳍游了一天，游完了一辈子的路。",
+        "fail": { "effect": { "体力": -2 }, "result": "它尾巴一摆，你被冲得翻了十几个跟头。" } }
+    ]
+  },
+  {
+    "id": "l3_storm", "dir": "side", "layers": ["L3"], "stage": [3, 99], "weight": 10,
+    "text": "远海起了风暴，浪一个比一个高，你被卷来卷去。",
+    "choices": [
+      { "text": "潜到浪底", "chance": 0.6, "chanceAttr": "游速", "chanceStep": 0.05,
+        "effect": { "游速": 2 }, "result": "浪底是安静的。你在下面等了一夜。",
+        "fail": { "effect": { "death": "wave" }, "result": "浪把你卷上去，又拍了下来。" } },
+      { "text": "尾巴一弹", "showIf": "skill:dart", "useSkill": "dart", "effect": { "游速": 1 }, "result": "你弹出了浪头，落在了风暴边上。" },
+      { "text": "稳住", "require": "legacy:steady>=2", "effect": { "游速": 2, "海灵": 4 },
+        "result": "前世浪把你拍碎过。这一世你扒住了一块漂木，稳稳地等风停。" }
+    ]
+  }
+]

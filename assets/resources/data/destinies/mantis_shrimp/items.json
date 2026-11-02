@@ -1,0 +1,12 @@
+[
+  { "id": "clam", "name": "小蛤蜊", "icon": "supply", "rarity": "common", "desc": "使用：体力 +3。", "use": { "体力": 3 }, "useText": "你一拳打开蛤蜊，连汤带肉吃了个干净。" },
+  { "id": "kelp_knot", "name": "海带结", "icon": "supply", "rarity": "common", "desc": "使用：体力 +1，灵性 +1，海灵 +2。", "use": { "体力": 1, "灵性": 1, "海灵": 2 }, "useText": "海带结有点咸。你嚼着嚼着，脑子清楚了。" },
+  { "id": "old_shell", "name": "蜕下的旧壳", "icon": "shield", "rarity": "common", "desc": "被动：替你挡下一次死亡。", "saveFromDeath": true },
+  { "id": "conch", "name": "小海螺", "icon": "guide", "rarity": "rare", "desc": "被动：贴在耳边，听得见三个方向的动静。", "mods": { "previewDirs": true } },
+  { "id": "oyster", "name": "生蚝", "icon": "supply", "rarity": "rare", "desc": "使用：海灵 +4，拳力 +1。", "use": { "海灵": 4, "拳力": 1 }, "useText": "生蚝的壳比你的拳头硬。你打了三拳，吃上了。" },
+  { "id": "pearl", "name": "小珍珠", "icon": "gem", "rarity": "rare", "desc": "使用：海灵 +8，灵性 +1。", "use": { "海灵": 8, "灵性": 1 }, "useText": "珍珠在你嘴里化开了，凉凉的，像吞了一口月光。" },
+  { "id": "bracelet", "name": "阿海的贝壳手链", "icon": "relic", "rarity": "epic", "desc": "被动：死后多封存一件遗物。上面串着十二颗小贝壳。", "mods": { "relicSlots": 1 } },
+  { "id": "ink_sac", "name": "墨斗的墨囊", "icon": "token", "rarity": "epic", "desc": "被动：大章鱼墨斗的墨。宿敌事件更好对付。" },
+  { "id": "thunder_coral", "name": "雷击珊瑚", "icon": "crystal", "rarity": "epic", "desc": "使用：海灵 +15。", "use": { "海灵": 15 }, "useText": "你咬碎了那截珊瑚，钳子尖噼啪冒了两下火星。" },
+  { "id": "dragon_scale", "name": "龙鳞", "icon": "artifact", "rarity": "legend", "desc": "使用：游速 +5，海灵 +20。", "use": { "游速": 5, "海灵": 20 }, "useText": "鳞片化成一道水流，绕着你转了三圈。你听见海底有龙在叹气。" }
+]
