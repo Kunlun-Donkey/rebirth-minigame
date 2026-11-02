@@ -74,8 +74,27 @@
         "fail": { "effect": { "death": "eaten_lizard" }, "result": "它说：对不起。" } },
       { "text": "我早看穿你了", "require": "legacy:judge_heart>=1", "effect": { "灵气": 6, "韧性": 1 },
         "result": "前世它吃了你。这一世，你提前把它饿的那一季喂饱了。它哭着认了错。" },
+      { "text": "阿呆，是我", "showIf": "flag:friend_lizard", "effect": { "灵性": 3 },
+        "result": "它想起你们一起晒过的太阳。它合上了嘴。" },
       { "text": "跟它讲道理", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "灵性": 3 },
         "result": "你听懂了它的饿。你们约好：它吃虫，你给它遮阴。" }
+    ]
+  },
+  {
+    "id": "x_wind_call", "dir": "any", "sudden": true, "stage": [4, 99], "once": true, "weight": 1, "require": "dead:sandstorm",
+    "text": "前世把你连根拔起的那阵风，停在你面前：这次跟我走吗？",
+    "choices": [
+      { "text": "松开根", "require": "灵性>=10", "effect": { "ending": "wind_seed" }, "result": "你散成了一千颗种子，跟着风走了。" },
+      { "text": "留下", "effect": { "根系": 2, "灵性": 1 }, "result": "你把根扎得更深。风叹了口气，走了。" }
+    ]
+  },
+  {
+    "id": "x_immortal_return", "dir": "any", "sudden": true, "stage": [4, 99], "once": true, "weight": 20, "require": "flag:immortal_rival",
+    "text": "那个踩过你的仙人又来了。这一回，他渴得嘴唇起皮，来找你讨水。",
+    "choices": [
+      { "text": "缠住他的剑", "require": "韧性>=8", "effect": { "灵气": 40, "韧性": 2 },
+        "result": "他拔了三次，剑没出来。他终于记住了一株草。" },
+      { "text": "分他一口", "effect": { "水分": -2, "灵性": 3, "灵气": 15 }, "result": "他喝完愣了很久，冲你作了个揖。" }
     ]
   },
   {

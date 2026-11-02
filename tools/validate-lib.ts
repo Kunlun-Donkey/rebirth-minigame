@@ -54,11 +54,15 @@ export function validateDestiny(raw: RawDestiny): Report {
         });
     };
 
+    const endingsUsed = new Set<string>();
     const checkEffect = (e: Effect, where: string) => {
         e.flags.forEach(f => flagsSet.add(f));
         for (const it of [...e.items, ...e.loseItems]) if (!d.items.has(it)) errors.push(`${where}: 效果引用了不存在的道具 ${it}`);
         if (e.death && !d.deaths.has(e.death)) errors.push(`${where}: 不存在的死法 ${e.death}`);
-        if (e.ending && !d.endings.has(e.ending)) errors.push(`${where}: 不存在的结局 ${e.ending}`);
+        if (e.ending) {
+            endingsUsed.add(e.ending);
+            if (!d.endings.has(e.ending)) errors.push(`${where}: 不存在的结局 ${e.ending}`);
+        }
         if (e.back && !['up', 'down', 'side'].includes(e.back)) errors.push(`${where}: back 只能是 up/down/side`);
         for (const sk of e.skills) addSource(sk, where);
     };
@@ -99,10 +103,12 @@ export function validateDestiny(raw: RawDestiny): Report {
         checkCond(s.cond, `境界 ${s.level}`);
         for (const sk of s.skillPool ?? []) addSource(sk, `境界 ${s.level}.skillPool`);
         if (s.bonusEffect) checkEffect(s.bonusEffect, `境界 ${s.level}.bonus`);
-        for (const e of s.endingConds ?? []) {
+        (s.endingConds ?? []).forEach((e, i, all) => {
+            endingsUsed.add(e.id);
             checkCond(e.cond, `境界 ${s.level}.endings`);
             if (!d.endings.has(e.id)) errors.push(`境界 ${s.level}: 结局 ${e.id} 不存在`);
-        }
+            if (!e.cond && i < all.length - 1) errors.push(`境界 ${s.level}: 无条件结局 ${e.id} 不是最后一个，后面的结局永远达不成`);
+        });
     }
     for (const dd of d.dirs) checkCond(dd.cond, `方向 ${dd.id}`);
 
@@ -166,6 +172,7 @@ export function validateDestiny(raw: RawDestiny): Report {
     if (d.meta.settings.skillSlots === undefined) errors.push('settings 缺少 skillSlots');
 
     // flag 一致性
+    for (const id of d.endings.keys()) if (!endingsUsed.has(id)) errors.push(`结局 ${id} 没有任何触发途径（境界 endings / 事件效果 ending）`);
     for (const [f, where] of flagsChecked) if (!flagsSet.has(f)) errors.push(`${where}: 检查了 flag:${f}，但没有任何效果设置它`);
     for (const f of flagsSet) if (!flagsChecked.has(f)) warnings.push(`flag:${f} 被设置了，但没有任何条件用到它`);
 

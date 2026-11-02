@@ -106,7 +106,7 @@
     "choices": [
       { "text": "唤醒它", "require": "灵性>=3", "effect": { "灵性": 3, "flag": "ancient_friend" },
         "result": "它说了一句你听不懂的话，又睡了。你觉得那是祝福。" },
-      { "text": "吞了它", "effect": { "灵气": 12, "韧性": 1, "skill": "swallow" }, "result": "你得到了它一万年的力量，和一点点愧疚。" },
+      { "text": "吞了它", "effect": { "灵气": 12, "韧性": 1, "skill": "swallow", "flag": "ate_ancient" }, "result": "你得到了它一万年的力量，和一点点愧疚。" },
       { "text": "收起来", "effect": { "item": "ancient_seed" }, "result": "你用根须把它包好。也许以后用得上。" }
     ]
   },
@@ -152,7 +152,17 @@
       { "text": "打开陶罐", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "item": "pottery" }, "result": "罐里只有一块陶片。骸骨的手松开了。",
         "fail": { "effect": { "death": "curse" }, "result": "罐子里冒出一股黑气。" } },
-      { "text": "绕开", "effect": { "根系": 1 }, "result": "你给他让了路。死人也有死人的尊严。" }
+      { "text": "绕开", "effect": { "根系": 1 }, "result": "你给他让了路。死人也有死人的尊严。" },
+      { "text": "想起那扇门", "require": "flag:saw_door", "effect": { "item": "pottery", "灵性": 1 },
+        "result": "你轻轻掰开他的手。陶片的形状，和门上的缺口一模一样。" }
+    ]
+  },
+  {
+    "id": "d4_ancient_wake", "dir": "down", "layers": ["D4"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:ancient_friend",
+    "text": "那颗比你老一万岁的种子醒了。它说：一万年太长，一起睡吧。",
+    "choices": [
+      { "text": "闭上眼", "effect": { "ending": "ancient_sleep" }, "result": "沙子一层层盖下来。很暖。" },
+      { "text": "我还想往上长", "effect": { "灵性": 3, "item": "ancient_seed" }, "result": "它把一片壳留给你，又睡了。" }
     ]
   },
 

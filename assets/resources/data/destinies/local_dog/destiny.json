@@ -55,7 +55,7 @@
       "skillPool": ["dash", "fang"] },
     { "level": 5, "name": "天狗", "require": "妖气>=400 & 牙口>=14 & 脚力>=14 & 灵性>=10", "lifespan": 99,
       "narration": "你一口吞下了半个月亮。天上的神仙，第一次叫出了一只土狗的名字。",
-      "endings": [ { "id": "guardian", "require": "flag:village_saved" }, { "id": "celestial" } ] }
+      "endings": [ { "id": "guardian", "require": "flag:village_saved" }, { "id": "eclipse", "require": "flag:went_dark" }, { "id": "celestial" } ] }
   ],
   "deaths": [
     { "id": "starve", "name": "饿死", "icon": "thirst", "epitaph": "死于对一根骨头的思念。", "legacy": "hunger_proof",
@@ -111,7 +111,11 @@
   ],
   "endings": [
     { "id": "celestial", "name": "天狗·仙君", "epitaph": "那只被人嫌弃的土狗，成了天上的仙君。村口的柴堆，后来被供了起来。" },
-    { "id": "guardian", "name": "护村神犬", "epitaph": "它没有上天。它留在了村口，守着那扇当年没为它开过的门。" }
+    { "id": "guardian", "name": "护村神犬", "epitaph": "它没有上天。它留在了村口，守着那扇当年没为它开过的门。" },
+    { "id": "eclipse", "name": "天狗食日", "epitaph": "那天，太阳缺了一块。村里人说，是当年被赶走的那条黄狗回来了。" },
+    { "id": "xiaocui_dog", "name": "小翠的狗", "epitaph": "它没有成仙。京城的一个小院里，有人叫了它一辈子小黄。" },
+    { "id": "mountain_god", "name": "山神", "epitaph": "破庙又有了香火。供桌上的泥像，长着一张狗脸。" },
+    { "id": "wild_king", "name": "野狗王", "epitaph": "县城的野狗从此有了规矩：抢食可以，不许欺负小狗。" }
   ],
   "upgrades": [
     { "id": "vigor", "name": "壮骨", "desc": "开局体力上限 +1。", "costs": [120, 360, 900], "start": { "体力上限": 1 } },

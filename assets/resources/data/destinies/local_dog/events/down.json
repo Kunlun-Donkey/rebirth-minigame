@@ -54,16 +54,16 @@
     "text": "刘拐子的板车停在村口。车上的笼子里，挤着好几条狗。",
     "choices": [
       { "text": "去咬开笼子", "chance": 0.35, "chanceAttr": "牙口", "chanceStep": 0.05,
-        "effect": { "忠义": 2, "妖气": 5 }, "result": "你咬开了笼子的插销。狗们四散而逃。",
+        "effect": { "忠义": 2, "妖气": 5, "flag": "trader_foiled" }, "result": "你咬开了笼子的插销。狗们四散而逃。",
         "fail": { "effect": { "death": "dogcatcher" }, "result": "一张网兜头罩了下来。" } },
       { "text": "躲远点", "effect": { "灵性": 1 }, "result": "你躲在草垛后面，听着笼子里的狗叫了一路。" },
-      { "text": "先把狗都叫跑", "require": "legacy:wary>=1", "effect": { "忠义": 2, "脚力": 1 },
+      { "text": "先把狗都叫跑", "require": "legacy:wary>=1", "effect": { "忠义": 2, "脚力": 1, "flag": "trader_foiled" },
         "result": "前世这辆车拉走了你。这一世，它空着来，空着走。" },
-      { "text": "叽喳，去报信", "showIf": "companion:sparrow", "effect": { "忠义": 2 },
+      { "text": "叽喳，去报信", "showIf": "companion:sparrow", "effect": { "忠义": 2, "flag": "trader_foiled" },
         "result": "叽喳满村子叫。村长出来，把刘拐子轰走了。" },
-      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "忠义": 3 },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "忠义": 3, "flag": "trader_foiled" },
         "result": "全村人被你叫了出来。刘拐子灰溜溜地走了。" },
-      { "text": "引开他", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2, "忠义": 2 },
+      { "text": "引开他", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2, "忠义": 2, "flag": "trader_foiled" },
         "result": "你绕着板车跑了三圈。刘拐子追得摔进了沟里。" }
     ]
   },
@@ -73,6 +73,26 @@
     "text": "小翠长高了。她偷偷把一块小铜牌，系在了你脖子上。",
     "choices": [
       { "text": "舔舔她的脸", "effect": { "item": "dog_tag", "忠义": 2 }, "result": "牌子上歪歪扭扭刻着两个字：小黄。" }
+    ]
+  },
+  {
+    "id": "d2_tiger_frame", "dir": "down", "layers": ["D2", "D3"], "once": true, "weight": 15, "require": "flag:tiger_grudge",
+    "text": "主人家的鸡被咬死了。鸡窝边全是黑毛。主人拎着棍子，看向了你。",
+    "choices": [
+      { "text": "叼起那撮黑毛", "require": "灵性>=3", "effect": { "忠义": 3, "牙口": 1 },
+        "result": "主人盯着黑毛看了半天，扛起扁担去了地主家。" },
+      { "text": "低头认了", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
+        "effect": { "忠义": 1, "体力": -1 }, "result": "他打了你两下，没舍得赶你走。",
+        "fail": { "effect": { "death": "driven_out" }, "result": "他说：养你还不如养只猫。滚。" } },
+      { "text": "去地主家门口叫", "effect": { "牙口": 1, "体力": -2 }, "result": "黑虎隔着门缝冲你笑。这笔账，你记下了。" }
+    ]
+  },
+  {
+    "id": "d2_xiaocui_wed", "dir": "down", "layers": ["D2", "D3"], "stage": [2, 99], "once": true, "weight": 20, "require": "flag:xiaocui",
+    "text": "小翠要嫁去京城了。临走前，她蹲下来，把脸埋进你的毛里。",
+    "choices": [
+      { "text": "送她到村口", "effect": { "忠义": 2, "flag": "xiaocui_left" }, "result": "她一步三回头。你在村口，坐到了天黑。" },
+      { "text": "追着花轿跑", "effect": { "脚力": 2, "体力": -1, "flag": "xiaocui_left" }, "result": "你追了十里地。轿帘掀开一角，她冲你挥了挥手。" }
     ]
   },
   {

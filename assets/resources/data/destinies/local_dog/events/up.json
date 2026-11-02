@@ -102,7 +102,7 @@
       { "text": "偷吃", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "体力": 4 }, "result": "你吃得满嘴流油。泥像没说什么。",
         "fail": { "effect": { "妖气": -3, "体力": 1 }, "result": "吃到一半，泥像好像瞪了你一眼。你噎住了。" } },
-      { "text": "替山神守夜", "effect": { "忠义": 1, "灵性": 1, "妖气": 4 }, "result": "天亮时，烧鸡还在。供桌上多了一层月光。" }
+      { "text": "替山神守夜", "effect": { "忠义": 1, "灵性": 1, "妖气": 4, "flag": "temple_vigil" }, "result": "天亮时，烧鸡还在。供桌上多了一层月光。" }
     ]
   },
   {
@@ -119,6 +119,22 @@
     "choices": [
       { "text": "舔一口", "effect": { "妖气": 3 }, "result": "苦的。但舔完，你觉得耳朵更尖了。" },
       { "text": "叼一撮走", "effect": { "item": "incense_ash" }, "result": "你用嘴包了一撮香灰。说不定哪天用得上。" }
+    ]
+  },
+  {
+    "id": "u3_god_seat", "dir": "up", "layers": ["U3"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:temple_vigil",
+    "text": "泥像裂了一道缝。缝里有个苍老的声音：我老了，这座山，你替我守吧。",
+    "choices": [
+      { "text": "坐上神位", "require": "item:incense_ash", "effect": { "ending": "mountain_god" },
+        "result": "你在供桌上趴下。第二天，山下有人来上香了。" },
+      { "text": "我还要往上走", "effect": { "妖气": 20, "灵性": 2 }, "result": "泥像笑了：去吧，山顶有人在等你。" }
+    ]
+  },
+  {
+    "id": "u2_weasel_thanks", "dir": "up", "layers": ["U2", "U3"], "once": true, "weight": 20, "require": "flag:weasel_saved",
+    "text": "二皮带着一窝小黄鼠狼，排成一排，冲你作揖。",
+    "choices": [
+      { "text": "收下谢礼", "effect": { "item": "moonstone", "灵性": 1 }, "result": "它们叼来一块月光石。最小的那只，偷偷舔了你一下。" }
     ]
   },
   {

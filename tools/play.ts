@@ -299,6 +299,7 @@ function simulate(lives: number, seed: number) {
     type B = { n: number; seasons: number; stages: number[]; deaths: Record<string, number>; endings: number };
     const stat: B[] = buckets.map(() => ({ n: 0, seasons: 0, stages: [0, 0, 0, 0, 0, 0], deaths: {}, endings: 0 }));
     const eventHits: Record<string, number> = {};
+    const endingHits: Record<string, number> = {};
     const skillFirst: Record<string, number> = {};
     let skillUses = 0;
     let firstEnding = 0;
@@ -351,7 +352,7 @@ function simulate(lives: number, seed: number) {
         b.n++;
         b.seasons += s.seasons;
         b.stages[s.stage]++;
-        if (s.kind === 'ending') { b.endings++; if (!firstEnding) firstEnding = life; }
+        if (s.kind === 'ending') { b.endings++; endingHits[s.id] = (endingHits[s.id] ?? 0) + 1; if (!firstEnding) firstEnding = life; }
         else b.deaths[s.id] = (b.deaths[s.id] ?? 0) + 1;
     }
 
@@ -371,6 +372,7 @@ function simulate(lives: number, seed: number) {
     console.log(`\n传承：${Object.entries(dp.legacy).map(([id, lv]) => `${data.legacies.get(id)!.name} ${lv}`).join('、')}`);
     const skillLine = [...data.skills.keys()].map(id => `${e.skillName(id)}${skillFirst[id] ? `@${skillFirst[id]}` : '✗'}`);
     console.log(`技能首次领悟（第几世）：${skillLine.join('、')}`);
+    console.log(`结局分布：${[...data.endings.values()].map(en => `${en.name} ${endingHits[en.id] ?? 0}`).join(' · ')}`);
     const never = [...data.events.keys()].filter(id => !eventHits[id]);
     if (never.length) console.log(`从未触发的事件（${never.length}）：${never.join(', ')}`);
 }

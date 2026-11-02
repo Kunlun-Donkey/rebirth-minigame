@@ -19,7 +19,7 @@
     "id": "l1_beggar", "dir": "side", "layers": ["L1"], "once": true,
     "text": "墙根下有个小乞丐，跟你一样瘦，一样脏。",
     "choices": [
-      { "text": "分他半个馒头", "effect": { "忠义": 2, "灵性": 1 }, "result": "他抱着你哭了。他说他叫狗剩。" },
+      { "text": "分他半个馒头", "effect": { "忠义": 2, "灵性": 1, "flag": "goushen" }, "result": "他抱着你哭了。他说他叫狗剩。" },
       { "text": "抢他的", "effect": { "体力": 2, "忠义": -1 }, "result": "他没追。他只是看着你。" }
     ]
   },
@@ -30,7 +30,7 @@
       { "text": "跑", "chance": 0.6, "chanceAttr": "脚力", "chanceStep": 0.04,
         "effect": { "脚力": 1 }, "result": "你钻进人堆，他的拐棍够不着。",
         "fail": { "effect": { "death": "dogcatcher" }, "result": "他的拐棍一勾，你进了麻袋。" } },
-      { "text": "叼着黑虎的牙瞪他", "require": "item:tiger_tooth", "effect": { "牙口": 2, "妖气": 5 },
+      { "text": "叼着黑虎的牙瞪他", "require": "item:tiger_tooth", "effect": { "牙口": 2, "妖气": 5, "flag": "trader_foiled" },
         "result": "他认出了黑虎的牙。他的腿比拐棍还软。" },
       { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2 },
         "result": "你跑得太快，刘拐子连影子都没看清。" }
@@ -41,7 +41,7 @@
     "text": "集市上有人在斗狗。赢的那只，有肉吃。",
     "choices": [
       { "text": "下场", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.06,
-        "effect": { "牙口": 2, "体力": 3 }, "result": "你赢了。那块肉，是你这辈子吃过最香的。",
+        "effect": { "牙口": 2, "体力": 3, "flag": "stray_respect" }, "result": "你赢了。那块肉，是你这辈子吃过最香的。",
         "fail": { "effect": { "体力": -3 }, "result": "你被咬得一瘸一拐。没人给你肉。" } },
       { "text": "看热闹", "effect": { "灵性": 1 }, "result": "你看明白了：咬人的狗，不叫。" }
     ]
@@ -90,12 +90,49 @@
     "text": "酒楼后门的泔水桶，是县城野狗的必争之地。",
     "choices": [
       { "text": "抢位置", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
-        "effect": { "体力": 4 }, "result": "你抢到了一整块红烧肉。县城的狗，记住了你。",
+        "effect": { "体力": 4, "flag": "stray_respect" }, "result": "你抢到了一整块红烧肉。县城的狗，记住了你。",
         "fail": { "effect": { "体力": -2 }, "result": "五条狗一起扑了上来。" } },
       { "text": "等它们吃完", "effect": { "忠义": 1, "灵性": 1, "体力": 1 }, "result": "剩下的不多。但没人咬你。" }
     ]
   },
 
+  {
+    "id": "l2_goushen", "dir": "side", "layers": ["L2"], "stage": [2, 99], "once": true, "weight": 18, "require": "flag:goushen",
+    "text": "狗剩被几个混混堵在巷子里，怀里死死护着半个饼。",
+    "choices": [
+      { "text": "扑上去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "忠义": 3, "flag": "goushen_saved" }, "result": "混混跑了。狗剩把饼掰开，大的那半给了你。",
+        "fail": { "effect": { "体力": -3 }, "result": "你被踹进了水沟。是狗剩把你拖上来的。" } },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "忠义": 3, "flag": "goushen_saved" },
+        "result": "整条街的狗跟着你叫。混混们抱着头跑了。" },
+      { "text": "去喊巡街的官差", "require": "忠义>=6", "effect": { "忠义": 2, "flag": "goushen_saved" },
+        "result": "官差认得你，提着棍子就来了。" }
+    ]
+  },
+  {
+    "id": "l2_trader_end", "dir": "side", "layers": ["L2"], "stage": [3, 99], "once": true, "weight": 20, "require": "flag:trader_foiled",
+    "text": "县衙门口，刘拐子被押着游街。他偷狗，偷到了县太爷家。",
+    "choices": [
+      { "text": "冲他叫一声", "effect": { "妖气": 5, "牙口": 1 }, "result": "他认出了你。这一回，低头的是他。" },
+      { "text": "走开", "effect": { "灵性": 2 }, "result": "你没回头。笼子里那些狗，你替它们看过了。" }
+    ]
+  },
+  {
+    "id": "l2_stray_king", "dir": "side", "layers": ["L2"], "stage": [4, 99], "once": true, "weight": 15, "require": "flag:stray_respect",
+    "text": "县城的野狗围成一圈。最老的那只，把一根大骨头推到你面前。",
+    "choices": [
+      { "text": "留下当王", "require": "牙口>=10", "effect": { "ending": "wild_king" },
+        "result": "你叼起骨头，先分给了最小的那只。" },
+      { "text": "把骨头推回去", "effect": { "忠义": 2, "灵性": 2 }, "result": "你还有村子要回。老狗低下了头。" }
+    ]
+  },
+  {
+    "id": "l3_goushen", "dir": "side", "layers": ["L3"], "once": true, "weight": 18, "require": "flag:goushen_saved",
+    "text": "京城酒楼后门，一个伙计冲你喊：小黄！是狗剩，他长高了。",
+    "choices": [
+      { "text": "扑过去", "effect": { "体力": 5, "忠义": 2 }, "result": "他每天给你留一碗肉汤。和当年那半个饼一样烫。" }
+    ]
+  },
   {
     "id": "l3_lapdog", "dir": "side", "layers": ["L3"],
     "text": "王府的狮子狗穿着绸缎，冲你哼了一声。",
@@ -121,11 +158,13 @@
     ]
   },
   {
-    "id": "l3_xiaocui", "dir": "side", "layers": ["L3"], "once": true, "weight": 20, "require": "flag:xiaocui",
+    "id": "l3_xiaocui", "dir": "side", "layers": ["L3"], "once": true, "weight": 20, "require": "flag:xiaocui_left",
     "text": "你在一户大宅门口停下了。门里，有小翠的味道。",
     "choices": [
       { "text": "挠门", "effect": { "忠义": 3, "体力": 4 }, "result": "她嫁到了京城。她抱着你，叫了一声：小黄。" },
-      { "text": "远远看一眼", "effect": { "灵性": 2, "妖气": 6 }, "result": "她过得很好。你转身，回村去了。" }
+      { "text": "远远看一眼", "effect": { "灵性": 2, "妖气": 6 }, "result": "她过得很好。你转身，回村去了。" },
+      { "text": "留下来陪她", "require": "item:dog_tag", "effect": { "ending": "xiaocui_dog" },
+        "result": "她摸到了你脖子上的狗牌，哭着笑了：小黄，回家了。" }
     ]
   }
 ]

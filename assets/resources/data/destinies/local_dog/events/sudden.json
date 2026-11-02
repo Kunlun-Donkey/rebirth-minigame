@@ -38,10 +38,10 @@
     "text": "半夜，刘拐子拎着麻袋，摸进了村子。",
     "choices": [
       { "text": "叫醒全村", "chance": 0.6, "chanceAttr": "忠义", "chanceStep": 0.05,
-        "effect": { "忠义": 2 }, "result": "灯一盏盏亮了。刘拐子扔下麻袋就跑。",
+        "effect": { "忠义": 2, "flag": "trader_foiled" }, "result": "灯一盏盏亮了。刘拐子扔下麻袋就跑。",
         "fail": { "effect": { "death": "dogcatcher" }, "result": "麻袋套住了你的头。" } },
       { "text": "躲进柴堆", "effect": { "灵性": 1, "体力": -1 }, "result": "你屏着气，听他的脚步走远了。" },
-      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 1, "忠义": 1 },
+      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 1, "忠义": 1, "flag": "trader_foiled" },
         "result": "你把他引到了河边。他一脚踩空，掉了进去。" }
     ]
   },
@@ -82,8 +82,22 @@
       { "text": "不去", "effect": { "灵性": 1 }, "result": "二皮讪讪地走了。从此没再回来。" },
       { "text": "我闻得出你在撒谎", "require": "legacy:judge>=1", "effect": { "灵性": 2, "妖气": 6 },
         "result": "前世它骗死了你。这一世，它跪下认了错。" },
-      { "text": "问它为什么", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3 },
+      { "text": "问它为什么", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "flag": "weasel_saved" },
         "result": "它说猎户抓了它的崽。你们一起，把崽救了回来。" }
+    ]
+  },
+  {
+    "id": "x_cast_out", "dir": "any", "sudden": true, "stage": [3, 99], "once": true, "weight": 18, "require": "!flag:village_saved",
+    "text": "村里人说你成了妖。火把围住了你的窝，领头的是当年踢你的那个人。",
+    "choices": [
+      { "text": "逃进深山", "effect": { "妖气": 10, "flag": "went_dark" }, "result": "你回头看了一眼村子。从此，你不再回头。" },
+      { "text": "趴下不动", "chance": 0.4, "chanceAttr": "忠义", "chanceStep": 0.04,
+        "effect": { "忠义": 3 }, "result": "有人小声说：它守了咱村这么多年。火把一支支放下了。",
+        "fail": { "effect": { "death": "driven_out" }, "result": "他们把你赶过了河。" } },
+      { "text": "小翠挡在你身前", "showIf": "flag:xiaocui & !flag:xiaocui_left", "effect": { "忠义": 5 },
+        "result": "小翠张开手臂，一句话也没说。火把一支支放下了。" },
+      { "text": "装乖", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "忠义": 2 },
+        "result": "你舔了舔领头人的手。他举着火把的手，垂了下来。" }
     ]
   },
   {

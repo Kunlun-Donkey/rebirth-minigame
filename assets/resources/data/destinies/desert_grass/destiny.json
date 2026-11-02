@@ -57,7 +57,7 @@
       "skillPool": ["vine_bind", "swallow"] },
     { "level": 5, "name": "树妖", "require": "灵气>=180 & 根系>=12 & 茎叶>=12", "lifespan": 99,
       "narration": "荒漠第一次有了影子。",
-      "endings": [ { "id": "oasis_lord", "require": "flag:oasis_alive" }, { "id": "tree_demon" } ] }
+      "endings": [ { "id": "jianmu", "require": "item:jianmu_shard & flag:read_stele" }, { "id": "oasis_lord", "require": "flag:oasis_alive" }, { "id": "devourer", "require": "flag:ate_ancient" }, { "id": "tree_demon" } ] }
   ],
   "deaths": [
     { "id": "thirst", "icon": "thirst", "name": "渴死", "epitaph": "死于对水的思念。", "legacy": "water_cells", "skills": [ { "id": "dormancy", "chance": 0.5 } ] },
@@ -102,7 +102,11 @@
   ],
   "endings": [
     { "id": "tree_demon", "name": "荒漠树妖", "epitaph": "你成了荒漠里第一棵会思考的树。故事还没完，世界树还在远方。" },
-    { "id": "oasis_lord", "name": "绿洲之主", "epitaph": "枯井涌水，百鸟归巢。荒漠里的生灵，都知道这片绿洲是谁的。" }
+    { "id": "oasis_lord", "name": "绿洲之主", "epitaph": "枯井涌水，百鸟归巢。荒漠里的生灵，都知道这片绿洲是谁的。" },
+    { "id": "jianmu", "name": "建木重生", "epitaph": "荒漠正中长出了一棵通天的树。三千年前断掉的那一截，接上了。" },
+    { "id": "devourer", "name": "噬荒魔木", "epitaph": "你吞了太多东西。荒漠安静了，再也没有别的草敢在你旁边发芽。" },
+    { "id": "wind_seed", "name": "随风而去", "epitaph": "你没有长成树。第二年春天，整片荒漠都冒出了你的孩子。" },
+    { "id": "ancient_sleep", "name": "与古种同眠", "epitaph": "你们一起睡进了沙里。一万年后，会有谁来叫醒你们。" }
   ],
   "upgrades": [
     { "id": "vigor", "name": "固本", "desc": "开局水分上限 +1。", "costs": [120, 360, 900], "start": { "水分上限": 1 } },
