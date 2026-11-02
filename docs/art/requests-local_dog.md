@@ -19,7 +19,9 @@ P0 四张 + 荒漠封面已用 SVG 程序化生成入库（`npm run art -- local
 | `local_dog/settle_bg.jpg` · `settle_bg_ending.jpg` · `cover.jpg` | ✅ SVG |
 | `desert_grass/cover.jpg` | ✅ SVG |
 | 选命格「未解锁」锁图标 `common/icon/lock.png` | ✅ SVG，已接入 destiny.ts |
-| `stage_1..5` · `companion_*` · `epitaph_card` | ⏳ 角色画留给 AI；缺图已兜底 |
+| `stage_1..5`（透明，叠在通用突破光效上） | ✅ SVG §10（荒漠一株草的 5 张也已补齐） |
+| `companion_*`（圆章头像，与通用图标同款） | ✅ SVG §10（荒漠一株草的 6 张也已补齐） |
+| `epitaph_card` | 可选，未做（回落通用石板） |
 
 ## 交付清单
 
