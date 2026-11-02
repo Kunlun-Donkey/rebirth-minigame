@@ -1,0 +1,212 @@
+[
+  {
+    "id": "up_fallback", "dir": "up", "weight": 3,
+    "text": "这一季风平浪静。你又往上长了一点点，没人注意。",
+    "choices": [ { "text": "继续长", "effect": { "茎叶": 1 }, "result": "一点点，也是长。" } ]
+  },
+
+  {
+    "id": "u1_dew", "dir": "up", "layers": ["U1"], "stage": [1, 99],
+    "text": "清晨，一颗露珠挂在你叶尖上，摇摇欲坠。",
+    "choices": [
+      { "text": "喝掉", "effect": { "水分": 2 }, "result": "甜的。荒漠里居然有甜的东西。" },
+      { "text": "让它滚到根上", "effect": { "水分": 1, "根系": 1 }, "result": "露珠顺着茎滑下去，根尖抖了一下。" },
+      { "text": "留着晒太阳", "effect": { "茎叶": 1, "灵气": 2 }, "result": "阳光穿过露珠，在你叶子上烧了个小光斑。很舒服。" }
+    ]
+  },
+  {
+    "id": "u1_camel", "dir": "up", "layers": ["U1"], "stage": [1, 3], "require": "!dead:eaten_camel",
+    "text": "一片巨大的影子压过来。是一头骆驼，嘴里还嚼着别的草。",
+    "choices": [
+      { "text": "缩成一团", "chance": 0.6, "chanceAttr": "韧性", "chanceStep": 0.08,
+        "effect": { "韧性": 1 }, "result": "骆驼没看见你。也可能是嫌你太小。",
+        "fail": { "effect": { "death": "eaten_camel" }, "result": "骆驼低下头，舌头一卷。" } },
+      { "text": "挺直腰杆", "chance": 0.3, "effect": { "茎叶": 2, "灵性": 1 },
+        "result": "骆驼盯着你看了很久，走了。它可能被你的勇气吓到了。",
+        "fail": { "effect": { "death": "eaten_camel" }, "result": "骆驼被你的勇气吸引了。然后吃了你。" } },
+      { "text": "分泌苦汁", "showIf": "talent:bitter", "effect": { "灵性": 1 },
+        "result": "骆驼嚼了一口，呸了出来，记仇地看了你一眼。" },
+      { "text": "装死", "showIf": "skill:play_dead", "useSkill": "play_dead", "effect": { "灵性": 1, "灵气": 2 },
+        "result": "骆驼闻了闻：死草，不好吃。它嫌弃地走了。" },
+      { "text": "毒刺反击", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "灵气": 6, "韧性": 1 },
+        "result": "骆驼舌头扎成了刺猬，哀嚎着跑了。" }
+    ]
+  },
+  {
+    "id": "u1_daodao_return", "dir": "up", "layers": ["U1", "U2"], "stage": [1, 4], "once": true,
+    "require": "dead:eaten_camel & !flag:daodao_seen", "weight": 30,
+    "text": "那头骆驼又来了。左边少一颗牙，嘴角挂着草沫。前世，它就是这样把你嚼碎的。",
+    "choices": [
+      { "text": "记住它的脸", "effect": { "flag": "daodao_seen", "灵性": 1 },
+        "result": "你给它起了个名字，叫老刀。账，慢慢算。" },
+      { "text": "让它尝尝苦头", "require": "legacy:bitter_sap>=1 | talent:bitter",
+        "effect": { "flag": ["daodao_seen", "daodao_hurt"], "灵气": 5 },
+        "result": "老刀一口下去，苦得原地转了三圈。它跑了，跑出三里地还在吐。" },
+      { "text": "藏进沙里", "effect": { "水分": -1, "flag": "daodao_seen" }, "result": "老刀在你头顶嗅了很久。这一世，还不是时候。" }
+    ]
+  },
+  {
+    "id": "u1_daodao_thorn", "dir": "up", "layers": ["U1", "U2"], "stage": [2, 4], "once": true,
+    "require": "flag:daodao_seen & !flag:daodao_hurt", "weight": 25,
+    "text": "老刀又来了。它记得你，你也记得它。",
+    "choices": [
+      { "text": "竖起尖刺", "require": "韧性>=4 | legacy:thorn>=1", "effect": { "flag": "daodao_hurt", "灵气": 6, "韧性": 1 },
+        "result": "老刀扎了满嘴刺，嗷的一声跑了。荒漠里第一次有骆驼怕草。" },
+      { "text": "用牙吓它", "require": "item:camel_tooth", "effect": { "flag": "daodao_hurt", "灵气": 8 },
+        "result": "你亮出那颗牙。老刀认出了自己的牙，吓得腿都软了。" },
+      { "text": "继续忍", "chance": 0.6, "chanceAttr": "韧性", "chanceStep": 0.05,
+        "effect": { "韧性": 1 }, "result": "老刀啃了一口你旁边的草，走了。下次。",
+        "fail": { "effect": { "death": "eaten_camel" }, "result": "历史重演了。" } },
+      { "text": "藤缚老刀", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "flag": "daodao_hurt", "灵气": 10 },
+        "result": "你把老刀捆了一夜。天亮放它走时，它不敢看你。" },
+      { "text": "毒刺伺候", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "flag": "daodao_hurt", "灵气": 8 },
+        "result": "前世它嚼碎了你。这一世，它满嘴是血地跑了。" }
+    ]
+  },
+  {
+    "id": "u1_daodao_kneel", "dir": "any", "stage": [3, 99], "once": true, "weight": 40,
+    "require": "flag:daodao_hurt",
+    "text": "大旱。老刀瘦得只剩骨架，跪在你身边，盯着你叶子上的露水。",
+    "choices": [
+      { "text": "赏它一滴", "effect": { "水分": -1, "灵性": 3, "灵气": 10, "flag": "daodao_tamed" },
+        "result": "老刀喝完，把头贴在沙上。从此它只给一株草打工。" },
+      { "text": "当着它的面喝掉", "effect": { "水分": 2, "韧性": 2, "灵气": 6 },
+        "result": "你慢慢把露水喝完。前世的账，算清了。" }
+    ]
+  },
+  {
+    "id": "u1_lizard_sun", "dir": "up", "layers": ["U1"], "stage": [1, 4],
+    "text": "一只蜥蜴趴在你旁边晒太阳，挡住了你一半的光。",
+    "choices": [
+      { "text": "绕开它长", "effect": { "茎叶": 1 }, "result": "你往旁边歪了歪。歪着长，也是长。" },
+      { "text": "跟它搭话", "require": "talent:chatter | stage>=3 | skill:beast_talk", "effect": { "灵性": 2, "flag": "friend_lizard", "skill": "beast_talk" },
+        "result": "蜥蜴说它叫阿呆。它答应以后晒太阳往边上挪挪。" },
+      { "text": "用叶子挠它", "chance": 0.5, "effect": { "茎叶": 2 }, "result": "蜥蜴痒得受不了，跑了。阳光都是你的了。",
+        "fail": { "effect": { "茎叶": -1 }, "result": "蜥蜴回头咬掉了你半片叶子。" } }
+    ]
+  },
+  {
+    "id": "u1_noon", "dir": "up", "layers": ["U1", "U2"], "stage": [1, 99],
+    "text": "正午的太阳像一口锅，扣在荒漠上。",
+    "choices": [
+      { "text": "卷起叶子", "effect": { "韧性": 1 }, "result": "你把自己卷成一根细针。熬过去了。" },
+      { "text": "拼命光合", "effect": { "灵气": 4, "水分": -2 }, "result": "你喝下了整个正午的阳光。有点撑，有点渴。" }
+    ]
+  },
+  {
+    "id": "u1_gazelle", "dir": "up", "layers": ["U1"], "stage": [1, 3],
+    "text": "一群羚羊路过。领头的那只停下来，嗅了嗅你。",
+    "choices": [
+      { "text": "一动不动", "chance": 0.55, "chanceAttr": "韧性", "chanceStep": 0.07,
+        "effect": { "灵性": 1 }, "result": "羚羊嗅了半天，走了。你屏住的那口气，终于吐了出来。",
+        "fail": { "effect": { "death": "eaten_beast" }, "result": "羚羊夸了一句：嫩。" } },
+      { "text": "发出苦味", "require": "legacy:bitter_sap>=1 | talent:bitter", "effect": { "灵气": 2 },
+        "result": "羚羊皱起鼻子，带着整个羊群绕开了你。" },
+      { "text": "小狐狸！", "showIf": "companion:fox_cub", "effect": { "灵气": 3 },
+        "result": "狐狸幼崽冲出去叫了两声。羚羊们吓得四散而逃。" },
+      { "text": "装死", "showIf": "skill:play_dead", "useSkill": "play_dead", "effect": { "灵性": 1 },
+        "result": "羚羊们绕着一株死草转了一圈，散了。" },
+      { "text": "跟头羊谈谈", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "灵性": 2, "item": "dung" },
+        "result": "头羊答应不吃你，还给你留了点肥料。" }
+    ]
+  },
+  {
+    "id": "u1_rain", "dir": "any", "stage": [1, 99], "gold": true, "weight": 3, "once": true,
+    "text": "荒漠下雨了。三年一次的那种。",
+    "choices": [
+      { "text": "喝个痛快", "effect": { "水分": 6 }, "result": "你喝到打嗝。" },
+      { "text": "喝一半存一半", "effect": { "水分": 3, "水分上限": 2, "灵性": 1 }, "result": "你把雨水存进了根里。这叫远见。" }
+    ]
+  },
+
+  {
+    "id": "u2_wind_seed", "dir": "up", "layers": ["U2"],
+    "text": "风里卷着一粒别的种子，撞在你身上。",
+    "choices": [
+      { "text": "抓住它", "require": "根系>=3", "effect": { "item": "ancient_seed" }, "result": "是一颗很老很老的种子。你把它收好了。" },
+      { "text": "让它飞走", "effect": { "灵性": 1 }, "result": "它飞走时，好像说了声谢谢。" }
+    ]
+  },
+  {
+    "id": "u2_dust_devil", "dir": "up", "layers": ["U2"],
+    "text": "一个小旋风盯上了你，绕着你越转越快。",
+    "choices": [
+      { "text": "死死抓住沙子", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.06,
+        "effect": { "根系": 1, "韧性": 1 }, "result": "旋风转累了，走了。你的根又深了一寸。",
+        "fail": { "effect": { "death": "sandstorm" }, "result": "你被拔了起来，越飞越高。" } },
+      { "text": "跟着风转", "require": "legacy:grip_root>=1", "effect": { "茎叶": 2, "灵气": 4 },
+        "result": "前世你被风拔起。这一世，你学会了跳舞。" },
+      { "text": "风中之舞", "showIf": "skill:wind_dance", "useSkill": "wind_dance", "effect": { "灵气": 12, "茎叶": 1 },
+        "result": "你跟着旋风转了三圈。风把沙里的灵气，全喂给了你。" }
+    ]
+  },
+  {
+    "id": "u2_pollen", "dir": "up", "layers": ["U2", "U3"], "stage": [2, 99],
+    "text": "风送来一团金色的花粉，在你身边打转。",
+    "choices": [
+      { "text": "接住", "effect": { "灵性": 2, "灵气": 3 }, "result": "你的叶脉里第一次有了金色。" },
+      { "text": "打个喷嚏", "effect": { "灵气": 1 }, "result": "阿嚏。花粉飘走了。" }
+    ]
+  },
+  {
+    "id": "u2_vulture", "dir": "up", "layers": ["U2", "U3"],
+    "text": "一只秃鹫落在你头顶，把你当成了观景台。",
+    "choices": [
+      { "text": "抖落它", "require": "茎叶>=6", "effect": { "茎叶": 1, "灵气": 3 }, "result": "秃鹫摔了个跟头，尴尬地飞走了。" },
+      { "text": "忍着", "effect": { "韧性": 1, "茎叶": -1 }, "result": "它待了一下午，压弯了你一根枝。" },
+      { "text": "跟它谈谈", "require": "talent:chatter | stage>=3 | skill:beast_talk", "effect": { "灵性": 2, "item": "dung" },
+        "result": "秃鹫说它见过远处的绿洲。临走它留了点东西，你不想说是什么。" }
+    ]
+  },
+
+  {
+    "id": "u3_nest", "dir": "up", "layers": ["U3"], "once": true,
+    "text": "一对沙百灵在你枝头筑了巢。",
+    "choices": [
+      { "text": "让它们住", "effect": { "灵性": 3, "flag": "bird_friend" }, "result": "从此每天早上，有人给你唱歌。" },
+      { "text": "摇走它们", "effect": { "茎叶": 2 }, "result": "百灵飞走了。枝头空了，你长得更快了。" }
+    ]
+  },
+  {
+    "id": "u3_eagle", "dir": "up", "layers": ["U3"], "require": "flag:bird_friend", "once": true, "weight": 20,
+    "text": "一只鹰盯上了你枝头的鸟窝。",
+    "choices": [
+      { "text": "用枝条挡", "chance": 0.55, "chanceAttr": "茎叶", "chanceStep": 0.03,
+        "effect": { "灵性": 3, "灵气": 8 }, "result": "鹰撞了一头叶子。百灵一家从此认你做主。",
+        "fail": { "effect": { "茎叶": -2 }, "result": "鹰折断了你一根枝，叼走了一枚蛋。" } },
+      { "text": "装没看见", "effect": { "灵性": -1 }, "result": "百灵哭了一夜。你也没睡着。" }
+    ]
+  },
+  {
+    "id": "u3_far_view", "dir": "up", "layers": ["U3", "U4"], "once": true,
+    "text": "长得够高，你第一次看见了荒漠的尽头。那里有一抹绿。",
+    "choices": [
+      { "text": "记住方向", "effect": { "灵性": 2, "flag": "saw_oasis", "skill": "sky_eye" }, "result": "原来荒漠，不是全世界。你的眼睛，从此看得更远。" }
+    ]
+  },
+  {
+    "id": "u3_sky_qi", "dir": "up", "layers": ["U3", "U4"],
+    "text": "高处的风很干净，带着一丝说不清的灵气。",
+    "choices": [
+      { "text": "张开所有叶子", "effect": { "灵气": 6, "水分": -1 }, "result": "你像喝了一口仙气。" },
+      { "text": "稳住身子", "effect": { "韧性": 1, "茎叶": 1 }, "result": "站得高，先要站得稳。" }
+    ]
+  },
+
+  {
+    "id": "u4_thunder", "dir": "up", "layers": ["U4"],
+    "text": "雷云压到了头顶。荒漠上最高的东西，就是你。",
+    "choices": [
+      { "text": "缩起来", "chance": 0.6, "chanceAttr": "韧性", "chanceStep": 0.03,
+        "effect": { "韧性": 1 }, "result": "雷落在你旁边，烧焦了一片沙。",
+        "fail": { "effect": { "death": "lightning" }, "result": "雷选中了你。" } },
+      { "text": "吞下这道雷", "require": "legacy:thunder_mark>=1", "effect": { "灵气": 25, "灵性": 3, "skill": "thunder_call" },
+        "result": "雷落下来，被你吞了。天道沉默了一会儿。" },
+      { "text": "迎雷而上", "chance": 0.2, "effect": { "灵气": 40, "茎叶": 3, "skill": "thunder_call" },
+        "result": "你接住了一道雷！整片荒漠都看见了那道光。",
+        "fail": { "effect": { "death": "lightning" }, "result": "勇气可嘉。" } },
+      { "text": "以雷引雷", "showIf": "skill:thunder_call", "useSkill": "thunder_call", "effect": { "灵气": 35, "灵性": 2 },
+        "result": "你招来的雷撞上了天上的雷。整片云，被你劈开了。" }
+    ]
+  }
+]

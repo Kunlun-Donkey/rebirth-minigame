@@ -1,0 +1,22 @@
+# Cocos Creator
+library/
+temp/
+local/
+build/
+profiles/
+native/
+
+# Node
+node_modules/
+
+# 本地试玩存档
+.play-profile.json
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+
+# 第三方无许可证内容，仅本地使用，不公开发布
+.claude/skills/game-design/
+# Claude Code 本地设置
+.claude/settings.local.json

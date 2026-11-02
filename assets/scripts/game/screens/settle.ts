@@ -1,0 +1,160 @@
+/** 轮回结算页（布局对照 docs/filing/mock/5-settle.html） */
+import { Node } from 'cc';
+import { SettleResult } from '../../core';
+import { CONFIG, TEX } from '../config';
+import type { Game } from '../game';
+import { Platform } from '../platform';
+import { box, button, chip, COLOR, fadeIn, image, rect, sizeOf, text, textHeight } from '../ui/kit';
+import { showList } from './popups';
+
+/** settle_panel.png 的九宫格（贴图像素：上 右 下 左）与显示缩放 */
+const PANEL_SLICE: [number, number, number, number] = [350, 280, 360, 280];
+const PANEL_SLICE_SCALE = 0.36;
+
+export function showSettle(g: Game): void {
+    const e = g.engine;
+    const s = e.settle();
+    const isEnd = s.kind === 'ending';
+    const root = box(g.screen, 0, 0, g.W, g.H, 'settle');
+    rect(root, { fill: isEnd ? '#e9cf98' : COLOR.night });
+    image(root, isEnd ? TEX.settleBgEnding : TEX.settleBg, 0, 0, g.W, g.H, { cover: true });
+    fadeIn(root, 0.3);
+
+    const light = isEnd ? COLOR.ochreD : COLOR.cream;
+    text(root, isEnd ? '这 一 世 圆 满 了' : '这 一 世 结 束 了', 0, CONFIG.safeTop - 40, g.W, { size: 40, color: light, align: 'center', bold: true });
+    text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + 14, g.W, { size: 24, color: light, alpha: 200, align: 'center' });
+
+    let y = stone(g, root, s, CONFIG.safeTop + 70);
+    y = panel(g, root, s, y + 20);
+    actions(g, root, s, Math.max(y + 24, g.H - 330));
+}
+
+/** 墓志铭石板（分享卡主体） */
+function stone(g: Game, root: Node, s: SettleResult, y: number): number {
+    const w = g.W - 60;
+    const h = 300;
+    const n = box(root, 30, y, w, h, 'stone');
+    rect(n, { fill: '#e6d3ad', stroke: '#b89a6a', lineWidth: 2, radius: 22, shadow: '#00000055', shadowOffset: 10 });
+    // 命格版优先、回落通用版；比例不合（如竖版图）会自动跳过，改用画出来的石板
+    image(n, s.kind === 'ending' ? TEX.endingCard : TEX.epitaphCard, 0, 0, w, h, { maxAspectDiff: 0.5 });
+
+    const pic = box(n, 28, 28, 160, 160, 'pic');
+    rect(pic, { fill: '#f8efdb', stroke: '#c9ad7d', radius: 16 });
+    text(pic, s.title.slice(0, 1), 0, 0, 160, { size: 80, color: COLOR.ochre, align: 'center', valign: 'center', bold: true }, 160);
+    if (s.kind === 'death') {
+        const icon = g.engine.data.deaths.get(s.id)?.icon;
+        if (icon) image(pic, TEX.icon('death', icon), 10, 10, 140, 140);
+    }
+
+    const ix = 214, iw = w - ix - 28;
+    text(n, `第 ${s.life} 世 · ${s.stageName}`, ix, 30, iw, { size: 24, color: COLOR.ink2 });
+    text(n, s.title, ix, 66, iw, { size: 40, color: COLOR.ochreD, bold: true }, 56);
+    if (s.firstTime) chip(n, '首次', w - 28 - 70, 76, COLOR.bad, true, 20);
+    text(n, s.epitaph, ix, 132, iw, { size: 28, wrap: true, lineHeight: 44 });
+
+    const meta = s.explore.map(x => `${x.name.slice(-2)} · ${x.layer || '—'}`).join('    ');
+    rect(box(n, 28, h - 70, w - 56, 2, 'line'), { fill: '#7a4a1f', fillAlpha: 70 });
+    text(n, meta, 28, h - 56, w - 56, { size: 22, color: COLOR.ink2, align: 'center' });
+    return y + h;
+}
+
+/** 收获面板：传承 / 技能 / 轮回点明细 / 图鉴 / 下一世目标 */
+function panel(g: Game, root: Node, s: SettleResult, y: number): number {
+    const w = g.W - 40;
+    const innerX = 70, innerW = w - innerX * 2;
+    const rows: { kind: 'sec' | 'line' | 'goal'; l: string; r?: string; color?: string; rColor?: string }[] = [];
+    rows.push({ kind: 'sec', l: '轮回收获' });
+    if (s.legacy) {
+        const desc = g.engine.data.legacies.get(s.legacy.id)?.desc ?? '';
+        rows.push({ kind: 'line', l: `传承 · ${s.legacy.name}`, r: `Lv${s.legacy.level}/${s.legacy.max}${s.legacy.isNew ? '' : ' 满级'}`, rColor: COLOR.good });
+        rows.push({ kind: 'goal', l: desc, color: COLOR.ink2 });
+    }
+    if (s.skill) rows.push({ kind: 'line', l: `领悟技能 · ${s.skill.name}`, r: '已加入技能图鉴', rColor: COLOR.skill });
+    const learnedAlive = s.learned.filter(x => x.id !== s.skill?.id);
+    if (learnedAlive.length) rows.push({ kind: 'line', l: `本世领悟 · ${learnedAlive.map(x => x.name).join('、')}`, rColor: COLOR.skill });
+    for (const b of s.breakdown) rows.push({ kind: 'line', l: b.label, r: `+${b.value}` });
+    rows.push({ kind: 'line', l: '轮回点', r: `+${s.points}  累计 ${g.save.profile.points}`, color: COLOR.ink, rColor: COLOR.legacy });
+    rows.push({ kind: 'sec', l: '图鉴' });
+    const c = s.codex;
+    rows.push({ kind: 'line', l: `死法 ${c.deaths[0]}/${c.deaths[1]}  技能 ${c.skills[0]}/${c.skills[1]}  道具 ${c.items[0]}/${c.items[1]}  结局 ${c.endings[0]}/${c.endings[1]}` });
+    if (s.goals.length) {
+        rows.push({ kind: 'sec', l: '下一世的目标' });
+        for (const goal of s.goals) {
+            rows.push(goal.ready
+                ? { kind: 'goal', l: `· 「${goal.text}」下一世可选！（${goal.lock}）`, color: COLOR.good }
+                : { kind: 'goal', l: `· 「${goal.text}」需要 ${goal.lock}`, color: COLOR.ink2 });
+        }
+    }
+
+    const rowH = (r: typeof rows[number]) => r.kind === 'sec' ? 52 : r.kind === 'goal' ? textHeight(r.l, innerW, 22, 34) + 4 : 40;
+    const contentH = rows.reduce((n, r) => n + rowH(r), 0);
+    const maxH = g.H - y - 360;
+    const h = Math.min(contentH + 110, Math.max(maxH, 360));
+    const n = box(root, 20, y, w, h, 'panel');
+    rect(n, { fill: COLOR.paper, stroke: COLOR.paperEdge, lineWidth: 2, radius: 24, shadow: '#00000055', shadowOffset: 10 });
+    image(n, TEX.settlePanel, 0, 0, w, h, { slice: PANEL_SLICE, sliceScale: PANEL_SLICE_SCALE });
+
+    let cy = 50;
+    for (const r of rows) {
+        if (cy + rowH(r) > h - 40) break;
+        if (r.kind === 'sec') {
+            text(n, r.l, innerX, cy + 8, innerW, { size: 26, color: COLOR.ochreD, bold: true });
+            rect(box(n, innerX + 130, cy + 26, innerW - 130, 2, 'rule'), { fill: COLOR.ochreD, fillAlpha: 60 });
+        } else if (r.kind === 'goal') {
+            text(n, r.l, innerX, cy, innerW, { size: 22, color: r.color ?? COLOR.ink2, wrap: true, lineHeight: 34 });
+        } else {
+            text(n, r.l, innerX, cy, innerW - (r.r ? 220 : 0), { size: 24, color: r.color ?? COLOR.ink2 });
+            if (r.r) text(n, r.r, innerX + innerW - 300, cy, 300, { size: 24, color: r.rColor ?? COLOR.ink, align: 'right' });
+        }
+        cy += rowH(r);
+    }
+    return y + h;
+}
+
+function actions(g: Game, root: Node, s: SettleResult, y: number): void {
+    const w = g.W - 60;
+    let cy = y;
+    const dbl = button(root, 30, cy, w, {
+        label: '看视频 · 轮回点翻倍', style: 'ad', size: 30,
+        onClick: async () => {
+            if (await g.doublePointsByAd()) {
+                dbl.destroy();
+                Platform.toast(`轮回点翻倍！本世 +${s.points}`);
+            }
+        },
+    });
+    cy += sizeOf(dbl).h + 16;
+    const half = (w - 16) / 2;
+    button(root, 30, cy, half, {
+        label: '分享墓志铭', style: 'ghost', size: 28, align: 'center',
+        onClick: () => Platform.share(`第${s.life}世，我${s.title}了。${s.epitaph}`, `life=${s.life}`),
+    });
+    button(root, 30 + half + 16, cy, half, {
+        label: '再次重生', style: 'primary', size: 30,
+        onClick: () => sealThenRebirth(g, s),
+    });
+}
+
+/** 有可封存的遗物时先选一件，再回到轮回殿 */
+function sealThenRebirth(g: Game, s: SettleResult): void {
+    if (!s.relicCandidates.length) {
+        g.goDraft();
+        return;
+    }
+    let picked = false;
+    showList(g, `封存遗物（${s.relicSlots} 格）`, s.relicCandidates.map(id => {
+        const def = g.engine.data.items.get(id)!;
+        return {
+            title: def.name, desc: def.desc, tag: { text: '封存', color: COLOR.legacy },
+            onPick: () => { picked = true; g.engine.sealRelics([id]); g.persist(); g.goDraft(); },
+        };
+    }), {
+        closeText: '什么都不带',
+        onClose: () => {
+            if (picked) return;
+            g.engine.sealRelics([]);
+            g.persist();
+            g.goDraft();
+        },
+    });
+}

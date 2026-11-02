@@ -1,0 +1,17 @@
+[
+  { "id": "drought_resist", "icon": "vitality", "name": "耐旱", "rarity": "common", "desc": "每 2 季才消耗一次水分。", "mods": { "waterCostEvery": 2 } },
+  { "id": "deep_root", "icon": "growth", "name": "深根", "rarity": "common", "desc": "根系 +3。", "start": { "根系": 3 } },
+  { "id": "sun_born", "icon": "growth", "name": "向阳而生", "rarity": "common", "desc": "茎叶 +3。", "start": { "茎叶": 3 } },
+  { "id": "bitter", "icon": "defense", "name": "苦涩", "rarity": "common", "desc": "你天生很苦。韧性 +1，动物会嫌弃你。", "start": { "韧性": 1 } },
+  { "id": "thick_skin", "icon": "defense", "name": "厚皮", "rarity": "common", "desc": "韧性 +2。", "start": { "韧性": 2 } },
+  { "id": "big_seed", "icon": "vitality", "name": "大种子", "rarity": "common", "desc": "水分上限 +2。", "start": { "水分上限": 2 } },
+  { "id": "chatter", "icon": "social", "name": "话痨", "rarity": "rare", "desc": "能和动物搭话。灵性 +1。", "start": { "灵性": 1 } },
+  { "id": "unlucky", "icon": "cursed", "name": "倒霉蛋", "rarity": "rare", "desc": "【负面】突发事件更频繁，但轮回点 ×1.5。", "mods": { "suddenMul": 1.8, "pointsMul": 1.5 } },
+  { "id": "intuition", "icon": "wisdom", "name": "直觉", "rarity": "rare", "desc": "每个事件有 35% 概率预知一个选项的结果。", "mods": { "hintChance": 0.35 } },
+  { "id": "dew_drinker", "icon": "vitality", "name": "吸露者", "rarity": "rare", "desc": "水分上限 +3，根系 +1。", "start": { "水分上限": 3, "根系": 1 } },
+  { "id": "immortal_grass", "icon": "rebirth", "name": "不死草", "rarity": "epic", "desc": "本局第一次死亡时，从根里重新发芽。", "mods": { "reviveOnce": true } },
+  { "id": "jianmu", "icon": "bloodline", "name": "建木血脉", "rarity": "epic", "desc": "灵气获取 ×2。", "mods": { "qiMul": 2 } },
+  { "id": "lucky_star", "icon": "luck", "name": "气运之子", "rarity": "epic", "desc": "金色奇遇概率 ×3，灵性 +2。", "start": { "灵性": 2 }, "mods": { "goldMul": 3 } },
+  { "id": "destiny", "icon": "bloodline", "name": "天命之草", "rarity": "legend", "desc": "全属性 +2，灵气 ×1.5，奇遇 ×2。", "start": { "根系": 2, "茎叶": 2, "韧性": 2, "灵性": 2, "水分上限": 2 }, "mods": { "qiMul": 1.5, "goldMul": 2 } },
+  { "id": "desert_self", "icon": "defense", "name": "我即荒漠", "rarity": "legend", "desc": "沙暴为你所用。韧性 +3。", "start": { "韧性": 3 } }
+]

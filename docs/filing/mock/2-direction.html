@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .scene { position: absolute; left: 20px; right: 20px; top: 232px; height: 300px; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px rgba(90,55,20,.2); }
+  .log { position: absolute; left: 20px; right: 20px; top: 548px; padding: 14px 18px; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+  .log b { color: var(--ink); font-weight: normal; }
+  .ask { position: absolute; left: 0; right: 0; top: 640px; text-align: center; font-size: 17px; letter-spacing: 3px; color: var(--ochre-d); }
+  .dirs { position: absolute; left: 20px; right: 20px; top: 676px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .dir { padding: 14px 6px 12px; border-radius: 12px; text-align: center; background: #fffaf0; border: 1.5px solid rgba(122,74,31,.35); box-shadow: 0 3px 0 rgba(122,74,31,.25); }
+  .dir .arrow { font-size: 22px; line-height: 1; }
+  .dir .n { margin-top: 6px; font-size: 17px; }
+  .dir .l { margin-top: 4px; font-size: 12px; font-family: var(--sans); color: var(--ink-2); }
+  .dir.up .arrow { color: var(--leaf); } .dir.down .arrow { color: #8a6a3c; } .dir.side .arrow { color: var(--epic); }
+  .skills { position: absolute; left: 20px; right: 20px; top: 800px; display: flex; gap: 8px; align-items: center; font-size: 13px; font-family: var(--sans); color: var(--ink-2); }
+  .sk { display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 16px; background: rgba(92,154,58,.12); color: #3c6b24; border: 1px solid rgba(92,154,58,.35); }
+  .sk.cd { background: rgba(0,0,0,.05); color: #999; border-color: rgba(0,0,0,.1); }
+</style></head>
+<body>
+  <div class="hud">
+    <div class="hud-row"><span class="life"><b>第 7 世</b>荒漠一株草</span><span class="stage-tag">小草</span></div>
+    <div class="water"><span>水分</span><div class="water-bar"><i style="width:71%"></i></div><span>5/7</span></div>
+    <div class="attrs">
+      <div class="attr"><span class="ic root">根</span><b>4</b></div>
+      <div class="attr"><span class="ic stem">叶</span><b>3</b></div>
+      <div class="attr"><span class="ic tough">韧</span><b>2</b></div>
+      <div class="attr"><span class="ic spirit">灵</span><b>3</b></div>
+      <div class="attr"><span class="ic qi">气</span><b>12</b></div>
+    </div>
+    <div class="loc">第 5 季 · 春 · 沙面</div>
+  </div>
+
+  <svg class="scene" viewBox="0 0 500 300" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7d9a0"/><stop offset="1" stop-color="#f3e6cc"/></linearGradient>
+      <linearGradient id="dune" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2b877"/><stop offset="1" stop-color="#c99556"/></linearGradient>
+      <linearGradient id="under" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a52"/><stop offset=".5" stop-color="#8f6a42"/><stop offset="1" stop-color="#6b4b2e"/></linearGradient>
+    </defs>
+    <rect width="500" height="300" fill="url(#sky)"/>
+    <circle cx="410" cy="52" r="26" fill="#fff3c4"/><circle cx="410" cy="52" r="40" fill="#fff3c4" opacity=".35"/>
+    <path d="M0 120 Q90 90 180 112 T360 104 T500 116 V300 H0Z" fill="#d9ad6e" opacity=".7"/>
+    <path d="M0 150 Q120 118 250 148 T500 140 V300 H0Z" fill="url(#dune)"/>
+    <rect y="170" width="500" height="130" fill="url(#under)"/>
+    <path d="M0 170 Q125 160 250 170 T500 168" stroke="#e8c58f" stroke-width="2" fill="none"/>
+    <path d="M0 218 Q125 210 250 222 T500 214" stroke="#a37b4c" stroke-width="1.5" fill="none" stroke-dasharray="6 5" opacity=".8"/>
+    <path d="M0 262 Q125 254 250 266 T500 258" stroke="#7a5638" stroke-width="1.5" fill="none" stroke-dasharray="6 5" opacity=".8"/>
+    <text x="16" y="200" font-size="12" fill="#f6e7c8" font-family="Noto Sans CJK SC">D1 浮沙层</text>
+    <text x="16" y="246" font-size="12" fill="#f6e7c8" font-family="Noto Sans CJK SC" opacity=".8">D2 湿沙层</text>
+    <text x="16" y="290" font-size="12" fill="#f6e7c8" font-family="Noto Sans CJK SC" opacity=".5">D3 古河床 · 需根系 5</text>
+    <text x="16" y="96" font-size="12" fill="#8a6a3c" font-family="Noto Sans CJK SC" opacity=".8">U2 风沙层 · 需茎叶 3</text>
+    <!-- 小草 -->
+    <g transform="translate(250 168)">
+      <path d="M0 0 C-2 18 6 34 0 52 M0 22 C-12 30 -18 40 -26 44 M2 34 C12 40 18 48 22 56" stroke="#f1e2bd" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M0 0 C-4 -20 -2 -36 2 -52" stroke="#4f8a30" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M1 -26 C-16 -34 -26 -30 -34 -22 C-20 -18 -8 -20 1 -26Z" fill="#6aa844"/>
+      <path d="M1 -38 C16 -50 28 -48 34 -40 C22 -34 10 -34 1 -38Z" fill="#8cc95c"/>
+      <path d="M2 -52 C-6 -62 -2 -72 6 -76 C10 -66 8 -58 2 -52Z" fill="#9bd36a"/>
+      <circle cx="0" cy="-30" r="44" fill="#9bd36a" opacity=".12"/>
+    </g>
+    <!-- 骆驼剪影 -->
+    <g transform="translate(400 128) scale(.55)" fill="#a7783f" opacity=".55">
+      <path d="M0 0 q10 -30 30 -30 q12 0 16 14 q8 -18 24 -18 q18 0 22 20 l14 -10 q8 -2 10 6 l-14 16 q-4 14 -14 18 l0 30 h-6 l-2 -26 h-30 l-4 26 h-6 l0 -28 q-28 4 -40 -18z"/>
+    </g>
+  </svg>
+
+  <div class="log paper"><b>上一季：</b>露珠顺着茎滑下去，根尖抖了一下。水分 +1，根系 +1。</div>
+
+  <div class="ask">这一季，往哪里长？</div>
+  <div class="dirs">
+    <div class="dir up"><div class="arrow">▲</div><div class="n">向上生长</div><div class="l">沙面 · 阳光与灵气</div></div>
+    <div class="dir down"><div class="arrow">▼</div><div class="n">向下扎根</div><div class="l">湿沙层 · 水与安全</div></div>
+    <div class="dir side"><div class="arrow">◆</div><div class="n">向旁蔓延</div><div class="l">沙丘背面 · 奇遇</div></div>
+  </div>
+
+  <div class="skills">技能
+    <span class="sk"><img src="../../../assets/resources/textures/common/icon/skill_grow.png" width="20" height="20">深扎</span><span class="sk"><img src="../../../assets/resources/textures/common/icon/skill_burst.png" width="20" height="20">光合爆发</span><span class="sk cd"><img src="../../../assets/resources/textures/common/icon/skill_rest.png" width="20" height="20">假死休眠 · 冷却 2 季</span>
+  </div>
+
+  <div class="toolbar">
+    <div class="tool"><span class="ti">囊</span>道具</div>
+    <div class="tool"><span class="ti">技</span>技能</div>
+    <div class="tool"><span class="ti">伴</span>伙伴</div>
+    <div class="tool"><span class="ti">鉴</span>图鉴</div>
+  </div>
+</body></html>

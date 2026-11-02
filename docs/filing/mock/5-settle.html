@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  body { background: #1b2238 url("img/settle_bg.jpg") center bottom / cover no-repeat; }
+  .stars { position: absolute; inset: 0; }
+  .head { position: absolute; top: 30px; left: 0; right: 0; text-align: center; color: #f6ecd2; }
+  .head .t { font-size: 22px; letter-spacing: 8px; }
+  .head .s { margin-top: 4px; font-size: 13px; color: #c9bfa8; letter-spacing: 2px; }
+  .stone { position: absolute; top: 100px; left: 24px; right: 24px; height: 206px; border-radius: 16px; padding: 30px 34px; display: flex; gap: 16px;
+    background: url("../../../assets/resources/textures/common/ui/epitaph_card.png") 0 0 / 100% 100% no-repeat; }
+  .stone .pic { width: 120px; height: 120px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .stone .info { flex: 1; }
+  .stone .no { font-size: 13px; color: var(--ink-2); letter-spacing: 2px; }
+  .stone .cause { margin-top: 4px; font-size: 26px; letter-spacing: 4px; color: var(--ochre-d); }
+  .stone .first { display: inline-block; margin-left: 6px; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: #c0392b; color: #fff; vertical-align: middle; letter-spacing: 1px; font-family: var(--sans); }
+  .stone .epi { margin-top: 10px; font-size: 17px; line-height: 1.7; color: var(--ink); }
+  .stone .meta { position: absolute; left: 36px; right: 36px; bottom: 26px; display: flex; justify-content: space-between; font-family: var(--sans); font-size: 12px; color: var(--ink-2); border-top: 1px dashed rgba(122,74,31,.35); padding-top: 10px; }
+  .panel { position: absolute; top: 316px; left: 14px; right: 14px; padding: 40px 56px 36px; }
+  .panel::before { content: ""; position: absolute; inset: 0; z-index: -1;
+    border-style: solid; border-width: 112px 90px 116px 90px;
+    border-image: url("img/settle_panel.png") 350 280 360 280 fill / 112px 90px 116px 90px stretch;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,.35)); }
+  .sec { font-size: 14px; color: var(--ochre-d); letter-spacing: 3px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .sec::after { content: ""; flex: 1; height: 1px; background: rgba(122,74,31,.25); }
+  .line { display: flex; justify-content: space-between; font-size: 14px; line-height: 1.75; color: var(--ink-2); font-family: var(--sans); }
+  .line b { color: var(--ink); font-weight: 500; }
+  .line .up { color: #3c8a2a; }
+  .total { font-size: 16px; color: var(--ink); }
+  .total b { font-size: 22px; color: #d99a2b; }
+  .goal { font-size: 13px; font-family: var(--sans); color: var(--ink-2); line-height: 1.9; }
+  .goal .ok { color: #3c8a2a; }
+  .acts { position: absolute; left: 24px; right: 24px; top: 836px; display: flex; flex-direction: column; gap: 12px; }
+  .acts .btn { padding: 12px 18px; }
+</style></head>
+<body>
+
+  <div class="head"><div class="t">这 一 世 结 束 了</div><div class="s">荒漠一株草 · 轮回结算</div></div>
+
+  <div class="stone">
+    <div class="pic"><img src="../../../assets/resources/textures/common/icon/death_old_age.png" width="104" height="104"></div>
+    <div class="info">
+      <div class="no">第 7 世 · 草精</div>
+      <div class="cause">寿终<span class="first">首次</span></div>
+      <div class="epi">享年 22 季。<br>平平淡淡才是真。</div>
+    </div>
+    <div class="meta"><span>最深 · 熔岩层</span><span>最高 · 鸟群高度</span><span>最远 · 枯萎绿洲</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="sec">轮回收获</div>
+    <div class="line"><span>传承 · 老草的智慧</span><b class="up">Lv1 · 开局灵性 +2</b></div>
+    <div class="line"><span>领悟技能 · 根网</span><b class="up">已加入技能图鉴</b></div>
+    <div class="line"><span>存活 22 季 / 境界 草精 / 首次结局</span><b>+18 / +12 / +10</b></div>
+    <div class="line total"><span>轮回点</span><span><b>+40</b>　累计 326</span></div>
+
+    <div class="sec" style="margin-top:12px">图鉴</div>
+    <div class="line"><span>结局 6/15　技能 9/15　道具 8/11　事件 41/62</span></div>
+
+    <div class="sec" style="margin-top:12px">下一世的目标</div>
+    <div class="goal">
+      · 沉没遗迹「读它」— 需要 传承 · 古语<br>
+      · 鸟群高度「跟它谈谈」— <span class="ok">下一世可选！</span>
+    </div>
+  </div>
+
+  <div class="acts">
+    <div class="btn ad">看视频 · 轮回点翻倍</div>
+    <div class="btn primary">封存遗物 · 再次重生</div>
+  </div>
+</body></html>

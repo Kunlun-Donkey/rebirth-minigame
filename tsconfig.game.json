@@ -1,0 +1,16 @@
+{
+  // Linux 端对 Cocos 游戏层做类型检查：用 typings/cc-shim.d.ts 代替真实的 cc 声明。
+  // 真正的编译由 Cocos Creator 完成；不要新建 tsconfig.json（那是 Cocos 的）。
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "lib": ["ES2020", "DOM"],
+    "types": []
+  },
+  "include": ["assets/scripts/**/*.ts", "typings/**/*.d.ts"]
+}

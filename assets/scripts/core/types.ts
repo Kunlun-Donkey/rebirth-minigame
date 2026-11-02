@@ -1,0 +1,461 @@
+/**
+ * 核心类型定义。core/ 目录为纯 TypeScript，不依赖 Cocos（cc），
+ * 可在 Linux 端用 vitest 测试、用 tsx 跑终端试玩。
+ */
+import type { CondNode } from './condition';
+
+export type Dir = 'up' | 'down' | 'side';
+export const DIRS: Dir[] = ['up', 'down', 'side'];
+
+export type Rarity = 'common' | 'rare' | 'epic' | 'legend';
+export const RARITIES: Rarity[] = ['common', 'rare', 'epic', 'legend'];
+
+// ───────────── 剧本原始数据（JSON 格式，给写手用） ─────────────
+
+/** 效果：属性键（id 或中文名）→ 增量；保留键见 RESERVED_EFFECT_KEYS */
+export type RawEffect = Record<string, number | string | string[]>;
+
+export interface RawOutcome {
+    effect?: RawEffect;
+    result?: string;
+    next?: string;
+}
+
+export interface RawChoice extends RawOutcome {
+    text: string;
+    /** 不满足时显示为锁定（告诉玩家下一世的目标） */
+    require?: string;
+    /** 不满足时完全隐藏（天赋/伴生物专属选项） */
+    showIf?: string;
+    /** 成功率 0~1；配合 fail 使用 */
+    chance?: number;
+    /** 每点该属性额外增加的成功率 */
+    chanceAttr?: string;
+    chanceStep?: number;
+    fail?: RawOutcome;
+    /** 技能交互选项：需要该技能已冷却完毕，选择后进入冷却。通常配合 showIf: "skill:x" */
+    useSkill?: string;
+}
+
+export interface RawEvent {
+    id: string;
+    dir: Dir | 'any';
+    layers?: string[];
+    stage?: [number, number];
+    weight?: number;
+    once?: boolean;
+    /** 突发事件：不经方向选择直接触发 */
+    sudden?: boolean;
+    /** 金色稀有事件，权重受 goldMul 加成 */
+    gold?: boolean;
+    /** 仅作为 next / enterEvent 链式触发，不参与随机抽取 */
+    chainOnly?: boolean;
+    require?: string;
+    text: string;
+    choices: RawChoice[];
+}
+
+export interface Mods {
+    /** 每 N 季消耗一次水分（取最大） */
+    waterCostEvery?: number;
+    qiMul?: number;
+    reviveOnce?: boolean;
+    pointsMul?: number;
+    /** 每个事件有该概率预告一个选项结果 */
+    hintChance?: number;
+    suddenMul?: number;
+    goldMul?: number;
+    relicSlots?: number;
+    previewDirs?: boolean;
+}
+
+export interface AttrDef {
+    id: string;
+    name: string;
+    icon?: string;
+    init: number;
+    hidden?: boolean;
+}
+
+export interface DirDef {
+    id: Dir;
+    name: string;
+    require?: string;
+}
+
+export interface LayerDef {
+    id: string;
+    dir: Dir;
+    name: string;
+    /** 进入该层的条件 */
+    require?: string;
+    /** 在该层需要走几次才尝试进入下一层 */
+    span: number;
+    enterText: string;
+    blockedText: string;
+    /** 进入时强制触发的事件（如熔岩层门槛） */
+    enterEvent?: string;
+}
+
+export interface StageDef {
+    level: number;
+    name: string;
+    require?: string;
+    narration: string;
+    /** 寿元：活到第 N 季自然老死 */
+    lifespan: number;
+    bonus?: RawEffect;
+    /** 到达该境界即结局（按顺序匹配第一个满足的） */
+    endings?: { id: string; require?: string }[];
+    /** 突破时从中领悟一个技能（优先未解锁的） */
+    skillPool?: string[];
+}
+
+/** 死亡时可能领悟的技能 */
+export interface SkillChance {
+    id: string;
+    /** 默认 1 */
+    chance?: number;
+    /** 结算传承之后判定，可用 legacy:x>=N */
+    require?: string;
+}
+
+export interface DeathDef {
+    id: string;
+    name: string;
+    /** 通用图标名 → textures/common/icon/death_{icon} */
+    icon?: string;
+    epitaph: string;
+    legacy?: string;
+    skills?: SkillChance[];
+}
+
+/**
+ * 技能。解锁永久保存（技能图鉴），开局最多携带 settings.skillSlots 个；局内领悟的技能立即可用。
+ *   use = 'direction'：选方向阶段使用，结算 effect
+ *   use = 'event'    ：事件中使用，boost 成功率 / reveal 看穿 / skip 化解（链式门槛事件不可化解）
+ *   无 use           ：只能通过事件里 useSkill 的交互选项使用
+ */
+export interface SkillDef {
+    id: string;
+    name: string;
+    /** 通用图标名 → textures/common/icon/skill_{icon} */
+    icon?: string;
+    desc: string;
+    /** 冷却季数 */
+    cd: number;
+    use?: 'direction' | 'event';
+    effect?: RawEffect;
+    boost?: number;
+    reveal?: boolean;
+    skip?: boolean;
+    useText?: string;
+    /** 图鉴里提示如何解锁 */
+    hint: string;
+}
+
+export interface LegacyDef {
+    id: string;
+    name: string;
+    desc: string;
+    max: number;
+    /** levels[i] = 第 i+1 级额外提供的开局效果（累加，体现边际递减） */
+    levels?: RawEffect[];
+}
+
+export interface EndingDef {
+    id: string;
+    name: string;
+    epitaph: string;
+}
+
+export interface PoolEntryBase {
+    id: string;
+    name: string;
+    /** 通用图标名 → textures/common/icon/{talent|item}_{icon}（伙伴用命格层 companion_{id}） */
+    icon?: string;
+    rarity: Rarity;
+    desc: string;
+    mods?: Mods;
+}
+
+export interface TalentDef extends PoolEntryBase {
+    start?: RawEffect;
+}
+
+export interface ItemDef extends PoolEntryBase {
+    /** 主动使用效果；无则为被动道具 */
+    use?: RawEffect;
+    useText?: string;
+    consumable?: boolean;
+    /** 持有时抵挡一次死亡（消耗） */
+    saveFromDeath?: boolean;
+}
+
+export interface CompanionDef extends PoolEntryBase {
+    start?: RawEffect;
+    every?: { n: number; effect: RawEffect; text: string };
+}
+
+export interface DestinyMeta {
+    id: string;
+    name: string;
+    desc: string;
+    attrs: AttrDef[];
+    dirs: DirDef[];
+    layers: LayerDef[];
+    stages: StageDef[];
+    deaths: DeathDef[];
+    legacies: LegacyDef[];
+    endings: EndingDef[];
+    settings: {
+        suddenChance: number;
+        rarityWeights: Record<Rarity, number>;
+        /** 基础光合：每季灵气 = base + floor(茎叶 / per)，境界 0 不产出 */
+        qiBase: number;
+        qiPerStem: number;
+        /** 根系吸水：每季水分 + floor(根系 / waterPerRoot) */
+        waterPerRoot: number;
+        /** 开局可携带技能数 */
+        skillSlots: number;
+    };
+}
+
+export interface RawDestiny {
+    meta: DestinyMeta;
+    talents: TalentDef[];
+    items: ItemDef[];
+    companions: CompanionDef[];
+    skills: SkillDef[];
+    events: RawEvent[];
+}
+
+// ───────────── 归一化后的数据（引擎使用） ─────────────
+
+export interface Cond {
+    src: string;
+    ast: CondNode;
+}
+
+export interface Effect {
+    attrs: Record<string, number>;
+    flags: string[];
+    unflags: string[];
+    items: string[];
+    loseItems: string[];
+    /** 领悟技能（永久解锁 + 本局立即可用） */
+    skills: string[];
+    death?: string;
+    ending?: string;
+    /** 退回该方向的上一层 */
+    back?: Dir;
+}
+
+export interface Outcome {
+    effect: Effect;
+    result?: string;
+    next?: string;
+}
+
+export interface Choice {
+    text: string;
+    require?: Cond;
+    showIf?: Cond;
+    success: Outcome;
+    chance?: number;
+    chanceAttr?: string;
+    chanceStep?: number;
+    fail?: Outcome;
+    useSkill?: string;
+}
+
+export interface GameEvent {
+    id: string;
+    dir: Dir | 'any';
+    layers?: string[];
+    stage: [number, number];
+    weight: number;
+    once: boolean;
+    sudden: boolean;
+    gold: boolean;
+    chainOnly: boolean;
+    require?: Cond;
+    text: string;
+    choices: Choice[];
+}
+
+export interface Destiny {
+    meta: DestinyMeta;
+    attrNames: Record<string, string>;
+    talents: Map<string, TalentDef & { startEffect?: Effect }>;
+    items: Map<string, ItemDef & { useEffect?: Effect }>;
+    companions: Map<string, CompanionDef & { startEffect?: Effect; everyEffect?: Effect }>;
+    events: Map<string, GameEvent>;
+    layers: Map<string, LayerDef & { cond?: Cond }>;
+    /** 每个方向按顺序排列的层 */
+    layersByDir: Record<Dir, (LayerDef & { cond?: Cond })[]>;
+    dirs: (DirDef & { cond?: Cond })[];
+    stages: (StageDef & { cond?: Cond; bonusEffect?: Effect; endingConds?: { id: string; cond?: Cond }[] })[];
+    deaths: Map<string, DeathDef & { skillConds: { id: string; chance: number; cond?: Cond }[] }>;
+    skills: Map<string, SkillDef & { useEffect?: Effect }>;
+    legacies: Map<string, LegacyDef & { levelEffects: Effect[] }>;
+    endings: Map<string, EndingDef>;
+}
+
+// ───────────── 存档 ─────────────
+
+export interface DestinyProfile {
+    lives: number;
+    legacy: Record<string, number>;
+    /** 下一世开局携带的遗物 */
+    sealed: string[];
+    /** key = 事件id#选项序号 */
+    memory: Record<string, { life: number; text: string }>;
+    codex: { deaths: string[]; endings: string[]; items: string[]; events: string[] };
+    bestStage: number;
+    /** 已解锁技能（技能图鉴） */
+    skills: string[];
+}
+
+export interface Profile {
+    version: 1;
+    /** 全局共用的局外货币 */
+    points: number;
+    lives: number;
+    destinies: Record<string, DestinyProfile>;
+}
+
+// ───────────── 局内状态（可直接 JSON 序列化，用于中途存档） ─────────────
+
+export type Phase = 'draft' | 'direction' | 'event' | 'dying' | 'over';
+
+export interface RunState {
+    destiny: string;
+    life: number;
+    rng: number;
+    season: number;
+    stage: number;
+    attrs: Record<string, number>;
+    pos: Record<Dir, number>;
+    push: Record<Dir, number>;
+    maxPos: Record<Dir, number>;
+    flags: string[];
+    items: string[];
+    found: string[];
+    talents: string[];
+    companions: string[];
+    seen: string[];
+    lastEvent?: string;
+    phase: Phase;
+    event?: string;
+    dir?: Dir;
+    pending: string[];
+    hint?: number;
+    revealAll: boolean;
+    dying?: string;
+    over?: { kind: 'death' | 'ending'; id: string };
+    reviveUsed: { talent: boolean; ad: boolean };
+    log: string[];
+    /** 本局可用技能 */
+    skills: string[];
+    /** 技能冷却：第几季起可再次使用 */
+    cd: Record<string, number>;
+    /** 当前事件的成功率加成（技能 boost） */
+    boost: number;
+    /** 本世新领悟的技能（结算页展示） */
+    learned: string[];
+    /** 本世遇到但条件不足而锁定的选项（事件id#选项序号，结算页「下一世的目标」） */
+    missed: string[];
+}
+
+// ───────────── 给 UI 的视图 ─────────────
+
+export interface DraftPick {
+    talents: string[];
+    items: string[];
+    companions: string[];
+}
+
+export interface DirOption {
+    dir: Dir;
+    name: string;
+    enabled: boolean;
+    lockText?: string;
+    layerName: string;
+    nextLayer?: { name: string; lockText?: string };
+}
+
+export interface ChoiceView {
+    index: number;
+    text: string;
+    enabled: boolean;
+    lockText?: string;
+    /** 前世记忆 */
+    memory?: string;
+    /** 满足了传承/天赋/道具/伴生物专属条件 */
+    tag?: string;
+    /** 直觉 / 窥探天命 预告 */
+    preview?: string;
+}
+
+export interface EventView {
+    id: string;
+    text: string;
+    gold: boolean;
+    sudden: boolean;
+    choices: ChoiceView[];
+}
+
+export interface StepResult {
+    text?: string;
+    deltas: Record<string, number>;
+    gained: string[];
+    lost: string[];
+    messages: string[];
+    success?: boolean;
+    /** 本步新领悟的技能 */
+    skills: string[];
+}
+
+export interface SkillView {
+    id: string;
+    name: string;
+    desc: string;
+    use?: 'direction' | 'event';
+    /** 剩余冷却季数，0 = 就绪 */
+    cdLeft: number;
+    /** 当前阶段能否主动使用 */
+    usable: boolean;
+}
+
+export interface SettleResult {
+    kind: 'death' | 'ending';
+    id: string;
+    title: string;
+    epitaph: string;
+    life: number;
+    seasons: number;
+    stage: number;
+    stageName: string;
+    legacy?: { id: string; name: string; level: number; max: number; isNew: boolean };
+    points: number;
+    relicCandidates: string[];
+    relicSlots: number;
+    firstTime: boolean;
+    /** 死亡时领悟的技能 */
+    skill?: { id: string; name: string; desc: string };
+    /** 轮回点明细 */
+    breakdown: { label: string; value: number }[];
+    /** 三个方向到达的最远层 */
+    explore: { dir: Dir; name: string; layer: string }[];
+    /** 最终属性（不含隐藏属性） */
+    attrs: { id: string; name: string; icon?: string; value: number }[];
+    /** 本世领悟的技能（含死亡领悟） */
+    learned: { id: string; name: string }[];
+    /** 图鉴进度 [已收集, 总数] */
+    codex: Record<'deaths' | 'skills' | 'items' | 'endings' | 'events', [number, number]>;
+    /** 下一世的目标（本世被锁住的选项，最多 3 条）；ready = 因本次传承/技能已解锁，下一世可选 */
+    goals: { text: string; lock: string; ready: boolean }[];
+    /** 生平大事 */
+    log: string[];
+}

@@ -1,0 +1,19 @@
+{
+  "name": "rebirth-minigame",
+  "private": true,
+  "description": "我重生了，这一世我将拿回属于我的一切 - 微信小游戏",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.tools.json && tsc -p tsconfig.game.json",
+    "validate": "tsx tools/validate.ts",
+    "play": "tsx tools/play.ts",
+    "sim": "tsx tools/play.ts --sim 2000",
+    "art": "node tools/art/gen-art.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

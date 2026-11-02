@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .card { position: absolute; left: 12px; right: 12px; top: 226px; padding: 24px 26px 30px; background: url("../../../assets/resources/textures/common/ui/event_card.jpg") 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 6px 20px rgba(90,55,20,.18); }
+  .card .season, .card .text { padding: 0 10px; }
+  .scene { display: block; border-radius: 10px; }
+  .season { font-size: 13px; color: var(--ink-2); letter-spacing: 2px; display: flex; justify-content: space-between; }
+  .text { margin-top: 18px; font-size: 21px; line-height: 1.85; letter-spacing: 1px; }
+  .leafs { position: absolute; right: 14px; bottom: 10px; opacity: .55; }
+  .choices { position: absolute; left: 20px; right: 20px; top: 560px; display: flex; flex-direction: column; gap: 14px; }
+  .peek { position: absolute; left: 20px; right: 20px; top: 800px; display: flex; justify-content: center; }
+  .peek .btn { width: auto; padding: 9px 22px; font-size: 14px; }
+</style></head>
+<body>
+  <div class="hud">
+    <div class="hud-row"><span class="life"><b>第 7 世</b>荒漠一株草</span><span class="stage-tag">灵草</span></div>
+    <div class="water"><span>水分</span><div class="water-bar"><i style="width:62%"></i></div><span>5/8</span></div>
+    <div class="attrs">
+      <div class="attr"><span class="ic root">根</span><b>13</b></div>
+      <div class="attr"><span class="ic stem">叶</span><b>6</b></div>
+      <div class="attr"><span class="ic tough">韧</span><b>4</b></div>
+      <div class="attr"><span class="ic spirit">灵</span><b>5</b></div>
+      <div class="attr"><span class="ic qi">气</span><b>47</b></div>
+    </div>
+    <div class="loc">▼ 向下 · 熔岩层</div>
+  </div>
+
+  <div class="card">
+    <svg class="scene" width="100%" height="120" viewBox="0 0 452 120" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="earth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6a44"/><stop offset=".55" stop-color="#5a3a24"/><stop offset="1" stop-color="#3a1c12"/></linearGradient>
+        <radialGradient id="lava" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#ffb347"/><stop offset=".35" stop-color="#e2552b" stop-opacity=".9"/><stop offset="1" stop-color="#e2552b" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="452" height="120" rx="10" fill="url(#earth)"/>
+      <path d="M0 28 Q113 18 226 30 T452 26" stroke="#a88660" stroke-width="2" fill="none" opacity=".6"/>
+      <path d="M0 58 Q113 48 226 62 T452 54" stroke="#7a5638" stroke-width="2" fill="none" opacity=".6"/>
+      <ellipse cx="226" cy="122" rx="280" ry="80" fill="url(#lava)"/>
+      <path d="M226 0 C222 20 232 36 224 56 C218 72 230 82 226 96" stroke="#e9d9a8" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M224 56 C210 62 204 70 196 74 M228 40 C240 44 248 50 254 58" stroke="#e9d9a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="226" cy="96" r="5" fill="#ffd27a"/>
+      <path d="M222 90 q-6 -10 2 -16 M232 92 q6 -10 -1 -18" stroke="#ddd" stroke-width="1.5" fill="none" opacity=".7"/>
+    </svg>
+    <div class="season" style="margin-top:16px"><span>第 11 季 · 夏</span><span>深度 137 米</span></div>
+    <div class="text">热。越往下越热。<br>根尖开始冒烟。</div>
+    <svg style="display:none" class="leafs" width="70" height="40" viewBox="0 0 70 40"><path d="M5 35 Q20 5 45 8 Q30 20 5 35Z" fill="#7bb556"/><path d="M40 36 Q50 18 66 16 Q58 30 40 36Z" fill="#9bd36a"/></svg>
+  </div>
+
+  <div class="choices">
+    <div class="btn"><span>继续向下</span><span class="tag memory">前世：你在这里成了草干</span></div>
+    <div class="btn"><span>用耐火根硬闯</span><span class="tag legacy">传承 · 耐火根 Lv2</span></div>
+    <div class="btn"><span>退回去</span><small style="color:var(--ink-2)">水分 -1</small></div>
+  </div>
+
+  <div class="peek"><div class="btn ad">窥探天命 · 看视频预览结果（3/3）</div></div>
+
+  <div class="toolbar">
+    <div class="tool"><span class="ti">囊</span>道具</div>
+    <div class="tool"><span class="ti">技</span>技能</div>
+    <div class="tool"><span class="ti">伴</span>伙伴</div>
+    <div class="tool"><span class="ti">鉴</span>图鉴</div>
+  </div>
+</body></html>

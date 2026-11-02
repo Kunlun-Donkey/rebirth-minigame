@@ -1,0 +1,113 @@
+[
+  {
+    "id": "side_fallback", "dir": "side", "weight": 3,
+    "text": "根须在沙下悄悄往旁边爬。这一季，没碰到谁。",
+    "choices": [ { "text": "继续爬", "effect": { "灵性": 1, "灵气": 1 }, "result": "你的地盘，又大了一圈。" } ]
+  },
+
+  {
+    "id": "l1_other_grass", "dir": "side", "layers": ["L1"], "once": true,
+    "text": "沙丘背面有一株别的草。它比你高，比你绿，还在笑你。",
+    "choices": [
+      { "text": "抢它的水", "require": "根系>=3", "effect": { "水分": 2, "灵气": 2, "flag": "grass_beaten" }, "result": "它不笑了。" },
+      { "text": "和它结盟", "effect": { "灵性": 2, "flag": "grass_ally", "skill": "root_net" }, "result": "它愣了一下，把根往你这边伸了伸。" },
+      { "text": "不理它", "effect": { "茎叶": 1 }, "result": "你闷头长。笑吧，看谁笑到最后。" }
+    ]
+  },
+  {
+    "id": "l1_grass_payback", "dir": "side", "stage": [3, 99], "once": true, "weight": 20,
+    "require": "seen:l1_other_grass & !flag:grass_ally",
+    "text": "那株笑过你的草，叶子黄了。它小声问你，能不能分点水。",
+    "choices": [
+      { "text": "分它一点", "effect": { "水分": -1, "灵性": 2, "灵气": 5 }, "result": "它哭了。说以后叫你老大。" },
+      { "text": "把它的水也喝了", "effect": { "水分": 3, "灵气": 5, "韧性": 1 }, "result": "你想起它笑你的样子。这一口，很甜。" }
+    ]
+  },
+  {
+    "id": "l1_cactus", "dir": "side", "layers": ["L1", "L2"],
+    "text": "一棵老仙人掌。它活了两百年，脾气很差。",
+    "choices": [
+      { "text": "请教", "effect": { "灵性": 1, "水分上限": 1 }, "result": "它说：少说话，多存水。你记住了。" },
+      { "text": "挑衅", "chance": 0.3, "chanceAttr": "韧性", "chanceStep": 0.06,
+        "effect": { "韧性": 3, "灵气": 5 }, "result": "老仙人掌第一次被一株草顶嘴，愣住了。",
+        "fail": { "effect": { "水分": -2 }, "result": "它扎了你一下。很疼。" } },
+      { "text": "用根网请教", "showIf": "skill:root_net", "useSkill": "root_net", "effect": { "水分上限": 2, "灵性": 1 },
+        "result": "老仙人掌把两百年的存水秘诀，顺着根网传给了你。" }
+    ]
+  },
+  {
+    "id": "l1_beetle_trade", "dir": "side", "layers": ["L1"],
+    "text": "一只屎壳郎推着粪球路过，停下来看你。",
+    "choices": [
+      { "text": "跟它换点东西", "effect": { "item": "dung", "水分": -1 }, "result": "它收了你一滴水，留下了粪球。生意人。" },
+      { "text": "目送它走", "effect": { "灵性": 1 }, "result": "它推着整个世界，越走越远。" }
+    ]
+  },
+
+  {
+    "id": "l2_caravan", "dir": "side", "layers": ["L2"],
+    "text": "一支商队经过。有个孩子指着你喊：快看，沙漠里有草！",
+    "choices": [
+      { "text": "摇摇叶子", "effect": { "灵性": 2, "灵气": 3 }, "result": "孩子笑了。这是你第一次被人类看见。" },
+      { "text": "缩起来", "effect": { "韧性": 1 }, "result": "大人把孩子拉走了：草有什么好看的。" }
+    ]
+  },
+  {
+    "id": "l2_herbalist", "dir": "side", "layers": ["L2", "L3"],
+    "text": "一个采药人蹲下来，盯着你看了很久。",
+    "choices": [
+      { "text": "一动不动", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 1 }, "result": "他摇摇头：普通杂草。走了。",
+        "fail": { "effect": { "death": "plucked" }, "result": "他眼睛一亮，掏出了小铲子。" } },
+      { "text": "装成普通杂草", "require": "legacy:wariness>=1", "effect": { "灵性": 2, "灵气": 4 },
+        "result": "前世他把你熬成了药。这一世，他只看见了一棵杂草。" },
+      { "text": "展示灵气", "chance": 0.35, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "水分": 4, "灵气": 12, "灵性": 2 }, "result": "他朝你磕了三个头，留下一壶水走了。",
+        "fail": { "effect": { "death": "plucked" }, "result": "他眼睛都直了：宝贝！" } },
+      { "text": "拟态", "showIf": "skill:disguise", "useSkill": "disguise", "effect": { "灵性": 2, "灵气": 5 },
+        "result": "你变成了一株枯草。采药人踢了你一脚：晦气。" }
+    ]
+  },
+  {
+    "id": "l2_daodao_caravan", "dir": "side", "layers": ["L2", "L3"], "require": "flag:daodao_tamed", "weight": 20,
+    "text": "老刀驮着商队的货路过，故意绕到你身边，卸下半袋水。",
+    "choices": [
+      { "text": "收下", "effect": { "水分": 5, "灵气": 5 }, "result": "老刀冲你点点头，回去继续打工了。" }
+    ]
+  },
+  {
+    "id": "l2_lost_traveler", "dir": "side", "layers": ["L2"],
+    "text": "一个迷路的旅人倒在你身边，嘴唇干裂。",
+    "choices": [
+      { "text": "把露水给他", "effect": { "水分": -2, "灵性": 3, "灵气": 4 }, "result": "他活了下来。走之前，他给你搭了一圈石头挡风。" },
+      { "text": "什么也不做", "effect": { "韧性": 1 }, "result": "傍晚，商队找到了他。你松了口气。" }
+    ]
+  },
+
+  {
+    "id": "l3_dead_oasis", "dir": "side", "layers": ["L3"], "once": true, "weight": 25,
+    "text": "这里曾经是一片绿洲。现在只剩一口枯井，几根死掉的棕榈。",
+    "choices": [
+      { "text": "把根扎进枯井", "require": "根系>=10", "effect": { "flag": "oasis_root", "灵气": 15 }, "result": "井底，有一丝水还在等。" },
+      { "text": "记住这里", "effect": { "灵性": 2 }, "result": "总有一天，你会回来。" }
+    ]
+  },
+  {
+    "id": "l3_revive", "dir": "side", "layers": ["L3"], "once": true, "weight": 30,
+    "require": "flag:oasis_root & !flag:oasis_alive",
+    "text": "枯井里那一丝水，在等一个够倔的东西。",
+    "choices": [
+      { "text": "灌入所有灵气", "require": "灵性>=8", "effect": { "flag": "oasis_alive", "水分": 10, "水分上限": 5, "灵气": 30 },
+        "result": "枯井涌出了水。三天后，第一只鸟飞了回来。" },
+      { "text": "再等等", "effect": { "灵性": 1 }, "result": "你的根在井底多绕了一圈。" }
+    ]
+  },
+  {
+    "id": "l3_palm_ghost", "dir": "side", "layers": ["L3"],
+    "text": "一棵死去的棕榈对你说话：小家伙，替我们活下去。",
+    "choices": [
+      { "text": "答应它", "effect": { "灵性": 2, "灵气": 6 }, "result": "棕榈最后一点灵气，流进了你的根。" },
+      { "text": "问它怎么死的", "effect": { "灵性": 3 }, "result": "它说：人来了，砍光了，水就走了。你记住了。" }
+    ]
+  }
+]

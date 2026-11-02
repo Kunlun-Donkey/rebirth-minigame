@@ -1,0 +1,52 @@
+[
+  {
+    "id": "s0_up_crack", "dir": "up", "stage": [0, 0], "weight": 20,
+    "text": "你顶到了一层硬壳一样的沙。壳的那一边，有光。",
+    "choices": [
+      { "text": "用力顶", "chance": 0.55, "chanceAttr": "韧性", "chanceStep": 0.1,
+        "effect": { "茎叶": 2 }, "result": "你钻出了沙面。世界很大，很烫。",
+        "fail": { "effect": { "水分": -2 }, "result": "沙壳纹丝不动。你累得想再睡一万年。" } },
+      { "text": "等夜里沙子变软", "effect": { "水分": -1, "茎叶": 1 }, "result": "夜里，沙壳裂开一道缝。你挤了出去。" }
+    ]
+  },
+  {
+    "id": "s0_up_sun", "dir": "up", "stage": [0, 0], "weight": 12,
+    "text": "离沙面只差一指。上面的沙子烫得像刚出锅。",
+    "choices": [
+      { "text": "冲出去", "effect": { "茎叶": 2, "水分": -2 }, "result": "你冲了出去，差点被烫熟。但你看见了天。" },
+      { "text": "等一场风", "effect": { "灵性": 1 }, "result": "风来了，把沙子吹薄了一层。你学会了等。" }
+    ]
+  },
+  {
+    "id": "s0_down_moist", "dir": "down", "stage": [0, 0], "weight": 20,
+    "text": "下面的沙子，好像比上面凉一点。",
+    "choices": [
+      { "text": "拼命往下钻", "effect": { "根系": 2, "水分": -1 }, "result": "你的第一根根须，扎进了凉意里。" },
+      { "text": "慢慢试探", "effect": { "根系": 1 }, "result": "根尖小心翼翼地，往下挪了一粒沙。" }
+    ]
+  },
+  {
+    "id": "s0_down_stone", "dir": "down", "stage": [0, 0], "weight": 12,
+    "text": "根尖撞上一颗小石子。它不让路。",
+    "choices": [
+      { "text": "绕过去", "effect": { "根系": 1 }, "result": "根学会了拐弯。这是你学会的第一件事。" },
+      { "text": "顶开它", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.1,
+        "effect": { "根系": 2, "韧性": 1 }, "result": "石子滚开了。你觉得自己是荒漠最硬的草。",
+        "fail": { "effect": { "水分": -2 }, "result": "石子没动。你的根尖肿了。" } }
+    ]
+  },
+  {
+    "id": "s0_ant", "dir": "any", "stage": [0, 0], "weight": 10,
+    "text": "一只蚂蚁发现了你。它把你当成了食物，正往洞里拖。",
+    "choices": [
+      { "text": "装成一颗石子", "effect": { "灵性": 1, "灵气": 1 }, "result": "蚂蚁摸了摸你，失望地走了。" },
+      { "text": "拼命挣扎", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.12,
+        "effect": { "韧性": 1 }, "result": "蚂蚁放弃了。它会回去吹牛，说遇到一颗很凶的种子。",
+        "fail": { "effect": { "death": "ant" }, "result": "你被拖进了黑暗里。" } },
+      { "text": "用硬壳硬扛", "require": "legacy:hard_shell>=1", "effect": { "韧性": 1, "灵气": 2 },
+        "result": "前世你被搬走过。这一世，蚂蚁咬崩了一颗牙。" },
+      { "text": "装死", "showIf": "skill:play_dead", "useSkill": "play_dead", "effect": { "灵性": 1, "灵气": 2 },
+        "result": "你装得太像了。蚂蚁给你默哀了三秒，走了。" }
+    ]
+  }
+]

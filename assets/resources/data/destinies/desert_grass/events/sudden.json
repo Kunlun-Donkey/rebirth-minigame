@@ -1,0 +1,88 @@
+[
+  {
+    "id": "x_sandstorm", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 12,
+    "text": "沙暴来了。天地一片黄。",
+    "choices": [
+      { "text": "死死抓住", "chance": 0.55, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "根系": 1, "韧性": 1 }, "result": "沙暴过去了。你还在。",
+        "fail": { "effect": { "death": "sandstorm" }, "result": "你被连根拔起，飞上了天。" } },
+      { "text": "顺风弯腰", "require": "韧性>=3", "effect": { "韧性": 1 }, "result": "你弯成一张弓。沙暴从你背上滑了过去。" },
+      { "text": "借沙暴之力", "showIf": "talent:desert_self", "effect": { "灵气": 15, "根系": 1 },
+        "result": "沙暴绕着你转了三圈，把沙里的养分都留给了你。" },
+      { "text": "风中之舞", "showIf": "skill:wind_dance", "useSkill": "wind_dance", "effect": { "灵气": 15, "根系": 1 },
+        "result": "前世沙暴拔起了你。这一世，你在沙暴里跳舞。" }
+    ]
+  },
+  {
+    "id": "x_drought", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 10,
+    "text": "连续三个月，没有一滴露水。",
+    "choices": [
+      { "text": "休眠", "effect": { "灵气": -2 }, "result": "你关上所有气孔，睡了一季。" },
+      { "text": "硬撑着长", "effect": { "水分": -2, "灵气": 5, "韧性": 1 }, "result": "你瘦了，但没停。" }
+    ]
+  },
+  {
+    "id": "x_locust", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8,
+    "text": "蝗虫过境。黑压压一片，从天边压过来。",
+    "choices": [
+      { "text": "把叶子缩进沙里", "effect": { "茎叶": -1 }, "result": "它们啃掉了你露在外面的部分。还好，根还在。" },
+      { "text": "让它们尝尝苦", "require": "legacy:bitter_sap>=1 | talent:bitter", "effect": { "灵气": 5 },
+        "result": "第一只蝗虫咬了一口，全体蝗虫决定绕路。" },
+      { "text": "硬扛", "chance": 0.35, "chanceAttr": "韧性", "chanceStep": 0.05,
+        "effect": { "韧性": 2, "灵气": 4 }, "result": "蝗虫啃不动你，悻悻离开。",
+        "fail": { "effect": { "茎叶": -3 }, "result": "你被啃成了一根秃杆。" } },
+      { "text": "毒刺", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "灵气": 8 },
+        "result": "第一只蝗虫咬上来就倒了。剩下的，原地解散。" }
+    ]
+  },
+  {
+    "id": "x_cold_night", "dir": "any", "sudden": true, "weight": 8,
+    "text": "荒漠的夜，冷得像另一个世界。",
+    "choices": [
+      { "text": "缩进沙里", "effect": { "根系": 1 }, "result": "沙子还留着白天的温度。你熬过去了。" },
+      { "text": "看星星", "effect": { "灵性": 2, "水分": -1 }, "result": "满天的星。你第一次想：上面有什么？" }
+    ]
+  },
+  {
+    "id": "x_meteor", "dir": "any", "sudden": true, "gold": true, "stage": [2, 99], "weight": 2, "once": true,
+    "text": "夜里，一颗流星落在不远处。",
+    "choices": [
+      { "text": "把根伸过去", "effect": { "灵气": 20, "灵性": 3 }, "result": "那不是流星，是一块天外灵石。" },
+      { "text": "先躲一下", "effect": { "item": "fire_crystal" }, "result": "第二天，你在坑边捡到一块还在发烫的石头。" }
+    ]
+  },
+  {
+    "id": "x_immortal", "dir": "any", "sudden": true, "gold": true, "stage": [3, 99], "weight": 2, "once": true,
+    "text": "一个迷路的仙人把剑插在你旁边，忘了拔走。",
+    "choices": [
+      { "text": "吸剑气", "effect": { "灵气": 30, "韧性": 2 }, "result": "剑上的灵气，被你吸得一干二净。" },
+      { "text": "等他回来", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "灵性": 5, "水分": 6, "灵气": 10 }, "result": "仙人回来拔剑，顺手给你浇了一壶仙酿。",
+        "fail": { "effect": { "水分": -2, "flag": "immortal_rival" }, "result": "他一脚踩在你身上，骂了句晦气。你记住了这张脸。" } },
+      { "text": "吞噬剑气", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 45, "韧性": 2 },
+        "result": "仙人回来时，剑已经成了一根铁条。他愣在原地，怀疑人生。" }
+    ]
+  },
+  {
+    "id": "x_lizard_betray", "dir": "any", "sudden": true, "stage": [1, 3], "once": true, "weight": 25,
+    "require": "companion:lizard & season>=4",
+    "text": "你的蜥蜴伙伴最近看你的眼神不对。今天，它张开了嘴。",
+    "choices": [
+      { "text": "喂它一片叶子", "effect": { "茎叶": -2 }, "result": "它吃了，低头走了。从此没再回来。" },
+      { "text": "求它别吃", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 2 }, "result": "它的嘴停在半空。最后，它舔了舔你，趴下了。",
+        "fail": { "effect": { "death": "eaten_lizard" }, "result": "它说：对不起。" } },
+      { "text": "我早看穿你了", "require": "legacy:judge_heart>=1", "effect": { "灵气": 6, "韧性": 1 },
+        "result": "前世它吃了你。这一世，你提前把它饿的那一季喂饱了。它哭着认了错。" },
+      { "text": "跟它讲道理", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "灵性": 3 },
+        "result": "你听懂了它的饿。你们约好：它吃虫，你给它遮阴。" }
+    ]
+  },
+  {
+    "id": "x_dung_gift", "dir": "any", "sudden": true, "weight": 5, "require": "companion:dung_beetle & season>=5", "once": true,
+    "text": "老粪推来一颗巨大的粪球，累得翻了肚皮。",
+    "choices": [
+      { "text": "谢谢老粪", "effect": { "item": "dung", "灵性": 1 }, "result": "老粪很满意。它说下次推个更大的。" }
+    ]
+  }
+]

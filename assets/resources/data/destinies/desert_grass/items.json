@@ -1,0 +1,13 @@
+[
+  { "id": "dew", "icon": "supply", "name": "一滴露水", "rarity": "common", "desc": "使用：水分 +3。", "use": { "水分": 3 }, "useText": "你把那滴露水喝了。荒漠里最贵的东西。" },
+  { "id": "dung", "icon": "supply", "name": "骆驼粪", "rarity": "common", "desc": "使用：灵气 +3，根系 +1，茎叶 +1。", "use": { "灵气": 3, "根系": 1, "茎叶": 1 }, "useText": "味道很冲，但很补。" },
+  { "id": "beetle_shell", "icon": "shield", "name": "半块甲虫壳", "rarity": "common", "desc": "被动：替你挡下一次死亡。", "saveFromDeath": true },
+  { "id": "compass", "icon": "guide", "name": "生锈的指南针", "rarity": "rare", "desc": "被动：能看见三个方向下一层的情况。", "mods": { "previewDirs": true } },
+  { "id": "pottery", "icon": "key", "name": "神秘陶片", "rarity": "rare", "desc": "被动：沉没遗迹里，有扇门在等它。" },
+  { "id": "ancient_seed", "icon": "gem", "name": "古代种子", "rarity": "rare", "desc": "使用：灵性 +2，灵气 +5。", "use": { "灵性": 2, "灵气": 5 }, "useText": "你吸收了一颗一万岁的种子。它在梦里对你点了点头。" },
+  { "id": "pearl", "icon": "gem", "name": "远古珍珠", "rarity": "rare", "desc": "使用：灵气 +8，灵性 +1。", "use": { "灵气": 8, "灵性": 1 }, "useText": "珍珠化成一汪光，渗进了你的根。" },
+  { "id": "seed_husk", "icon": "relic", "name": "古代种壳", "rarity": "epic", "desc": "被动：死亡时多封存一件遗物。", "mods": { "relicSlots": 1 } },
+  { "id": "camel_tooth", "icon": "token", "name": "骆驼的一颗牙", "rarity": "epic", "desc": "被动：上面有老刀的味道。宿敌事件更好对付。" },
+  { "id": "fire_crystal", "icon": "crystal", "name": "火灵晶", "rarity": "epic", "desc": "使用：灵气 +15。", "use": { "灵气": 15 }, "useText": "火灵晶在你根里烧了一整夜。你长大了一圈。" },
+  { "id": "jianmu_shard", "icon": "artifact", "name": "建木残片", "rarity": "legend", "desc": "使用：根系 +5，灵气 +20。", "use": { "根系": 5, "灵气": 20 }, "useText": "建木残片融进了你的身体。你听见地底深处，有什么东西应了一声。" }
+]

@@ -1,0 +1,188 @@
+[
+  {
+    "id": "down_fallback", "dir": "down", "weight": 3,
+    "text": "这一季，根在黑暗里默默往下走。什么也没遇到。",
+    "choices": [ { "text": "继续扎", "effect": { "根系": 1 }, "result": "黑暗里，也在长。" } ]
+  },
+
+  {
+    "id": "d1_camel_bone", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "你的根缠住了一截骆驼骨头。",
+    "choices": [
+      { "text": "吸收骨髓", "effect": { "灵气": 3, "水分": 1 }, "result": "骆驼前辈，谢谢款待。" },
+      { "text": "绕开", "effect": { "根系": 1 }, "result": "你不想和骆驼扯上任何关系。哪怕是死的。" }
+    ]
+  },
+  {
+    "id": "d1_beetle", "dir": "down", "layers": ["D1", "D2"],
+    "text": "一只甲虫在你根边打洞，弄得沙子哗哗响。",
+    "choices": [
+      { "text": "让它挖", "effect": { "根系": 1 }, "result": "它挖出的洞，正好给你的根让路。" },
+      { "text": "缠住它", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "item": "beetle_shell" }, "result": "甲虫挣脱了，留下半块壳。你收下了。",
+        "fail": { "effect": { "水分": -1 }, "result": "甲虫一脚踹开你，跑了。" } }
+    ]
+  },
+  {
+    "id": "d1_wind_scrape", "dir": "down", "layers": ["D1"],
+    "text": "风把你周围的沙刨走了一层，你半截根露在了外面。",
+    "choices": [
+      { "text": "往下多扎一寸", "effect": { "根系": 2, "水分": -1 }, "result": "根钻回了沙里。疼，但稳了。" },
+      { "text": "等沙子回来", "chance": 0.5, "effect": { "灵性": 1 }, "result": "第二天，风又把沙子送回来了。",
+        "fail": { "effect": { "水分": -2 }, "result": "沙子没回来。太阳晒了你一整天。" } }
+    ]
+  },
+
+  {
+    "id": "d2_first_water", "dir": "down", "layers": ["D2"], "once": true, "weight": 25,
+    "text": "根尖一凉。是水。是真的水。",
+    "choices": [
+      { "text": "大口喝", "effect": { "水分": 4 }, "result": "你从来不知道，活着可以这么舒服。" },
+      { "text": "绕着它安家", "effect": { "水分上限": 1, "根系": 1, "水分": 2 }, "result": "你决定在这里扎下去。这是你的第一口井。" }
+    ]
+  },
+  {
+    "id": "d2_scorpion", "dir": "down", "layers": ["D2", "D3"],
+    "text": "一只蝎子把你的根当成了磨牙棒。",
+    "choices": [
+      { "text": "忍着", "effect": { "水分": -1, "韧性": 1 }, "result": "它磨够了牙，走了。你的根上全是牙印。" },
+      { "text": "缠住它", "chance": 0.4, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "灵气": 6, "根系": 1 }, "result": "蝎子被你勒得动弹不得。这是你第一次赢。",
+        "fail": { "effect": { "death": "scorpion" }, "result": "蝎子钳子一合。咔嚓。" } },
+      { "text": "让它扎一嘴刺", "require": "legacy:thorn>=1", "effect": { "灵气": 5, "韧性": 1, "skill": "thorn_burst" },
+        "result": "前世它剪断了你的根。这一世，它的钳子卡在了你的刺里。" },
+      { "text": "毒刺反击", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "灵气": 8, "韧性": 1 },
+        "result": "蝎子一口咬在你的刺上。它被自己的毒放倒了。" },
+      { "text": "藤缚", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "灵气": 6, "item": "beetle_shell" },
+        "result": "你把蝎子捆起来晾了一天。它的壳，归你了。" }
+    ]
+  },
+  {
+    "id": "d2_mole", "dir": "down", "layers": ["D2", "D3"],
+    "text": "一只沙鼹撞上了你的根。它很瞎，也很饿。",
+    "choices": [
+      { "text": "装成石头", "effect": { "韧性": 1 }, "result": "沙鼹舔了舔你，嫌硬，走了。" },
+      { "text": "让它咬一口", "effect": { "水分": -2, "灵性": 1 }, "result": "它咬了一口，说了声谢谢。至少它有礼貌。" },
+      { "text": "小狐狸，上！", "showIf": "companion:fox_cub", "effect": { "灵气": 3 }, "result": "小狐狸一爪子把沙鼹按了出来。今晚加餐。" },
+      { "text": "跟它商量", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "根系": 2 },
+        "result": "沙鼹答应以后帮你松土。它说它叫土豆。" }
+    ]
+  },
+  {
+    "id": "d2_hidden_dew", "dir": "down", "layers": ["D2"],
+    "text": "沙层里有一小汪积水，周围长满了白色的菌丝。",
+    "choices": [
+      { "text": "喝掉", "effect": { "水分": 3 }, "result": "凉的。带一点蘑菇味。" },
+      { "text": "和菌丝打招呼", "effect": { "灵性": 2 }, "result": "菌丝缠了缠你的根。好像是在握手。" }
+    ]
+  },
+
+  {
+    "id": "d3_shell", "dir": "down", "layers": ["D3"], "once": true,
+    "text": "你的根碰到一块硬东西。是一只河蚌的化石。",
+    "choices": [
+      { "text": "吸收里面的灵气", "effect": { "灵气": 8 }, "result": "三千年前的河水味道，有点咸。" },
+      { "text": "把它撬开", "require": "韧性>=3", "effect": { "item": "pearl" }, "result": "里面有一颗珍珠。荒漠里，你是第一株富起来的草。" },
+      { "text": "继续往下", "next": "d3_collapse" },
+      { "text": "吞噬", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 15 },
+        "result": "连壳带灵气，一口吞了。三千年的河，在你肚子里流了一圈。" }
+    ]
+  },
+  {
+    "id": "d3_collapse", "dir": "down", "layers": ["D3"],
+    "text": "头顶的沙层在往下塌。",
+    "choices": [
+      { "text": "往旁边逃", "chance": 0.6, "chanceAttr": "根系", "chanceStep": 0.03,
+        "effect": { "根系": 1 }, "result": "你的根贴着塌方溜了过去。",
+        "fail": { "effect": { "death": "collapse" }, "result": "一整条古河，压在了你身上。" } },
+      { "text": "撑住", "require": "韧性>=5", "effect": { "韧性": 2, "灵气": 5 }, "result": "你撑住了。整片沙层，压在一株草的根上。" },
+      { "text": "藤蔓撑住", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "根系": 2, "韧性": 1 },
+        "result": "藤蔓撑起了整片沙层。你在下面，悠闲地喝了口水。" }
+    ]
+  },
+  {
+    "id": "d3_ancient_seed", "dir": "down", "layers": ["D3", "D4"], "once": true,
+    "text": "你碰到了一颗比你老一万岁的种子。它还活着。",
+    "choices": [
+      { "text": "唤醒它", "require": "灵性>=3", "effect": { "灵性": 3, "flag": "ancient_friend" },
+        "result": "它说了一句你听不懂的话，又睡了。你觉得那是祝福。" },
+      { "text": "吞了它", "effect": { "灵气": 12, "韧性": 1, "skill": "swallow" }, "result": "你得到了它一万年的力量，和一点点愧疚。" },
+      { "text": "收起来", "effect": { "item": "ancient_seed" }, "result": "你用根须把它包好。也许以后用得上。" }
+    ]
+  },
+  {
+    "id": "d3_river", "dir": "down", "layers": ["D3"],
+    "text": "地下有一条暗河，流得很慢，很凉。",
+    "choices": [
+      { "text": "扎进去", "effect": { "水分": 6, "水分上限": 2 }, "result": "你把根泡进了河里。这一世，你不会渴死了。" },
+      { "text": "顺着河摸索", "effect": { "灵气": 3, "灵性": 1, "根系": 1 }, "result": "河水在黑暗里拐了个弯，通向你不知道的地方。" }
+    ]
+  },
+
+  {
+    "id": "d4_stele", "dir": "down", "layers": ["D4"],
+    "text": "你的根摸到一块石碑，上面刻满了字。",
+    "choices": [
+      { "text": "读它", "require": "legacy:ancient_tongue>=1", "effect": { "灵性": 5, "灵气": 15, "flag": "read_stele" },
+        "result": "碑上写：此地之下，有建木残根。前世它诅咒你，这一世你读懂了它。" },
+      { "text": "缠碎它", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵气": 10 }, "result": "石碑碎了。里面封着的灵气全涌进了你的根。",
+        "fail": { "effect": { "death": "curse" }, "result": "碑上的字亮了。你听见三千年前有人在笑。" } },
+      { "text": "离开", "effect": { "灵性": 1 }, "result": "有些东西，现在还碰不得。" },
+      { "text": "以天眼观之", "showIf": "skill:sky_eye", "useSkill": "sky_eye", "effect": { "灵性": 3, "灵气": 10, "flag": "read_stele" },
+        "result": "字在你眼里活了。碑上写着：此地之下，有建木残根。" }
+    ]
+  },
+  {
+    "id": "d4_door", "dir": "down", "layers": ["D4"], "once": true,
+    "text": "一扇石门，门上有个缺口，形状像一块陶片。",
+    "choices": [
+      { "text": "把陶片按进去", "require": "item:pottery", "effect": { "loseItem": "pottery", "item": "jianmu_shard", "灵气": 10 },
+        "result": "门开了。里面只有一块木头，却比整座城还老。" },
+      { "text": "硬推", "chance": 0.25, "chanceAttr": "韧性", "chanceStep": 0.04,
+        "effect": { "item": "fire_crystal" }, "result": "门挪开一条缝，滚出来一块发烫的石头。",
+        "fail": { "effect": { "水分": -2 }, "result": "门没动。你的根倒是快断了。" } },
+      { "text": "记住这里", "effect": { "flag": "saw_door" }, "result": "你记住了缺口的形状。" }
+    ]
+  },
+  {
+    "id": "d4_skeleton", "dir": "down", "layers": ["D4"],
+    "text": "一具人类骸骨，手里攥着一只陶罐。",
+    "choices": [
+      { "text": "打开陶罐", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "item": "pottery" }, "result": "罐里只有一块陶片。骸骨的手松开了。",
+        "fail": { "effect": { "death": "curse" }, "result": "罐子里冒出一股黑气。" } },
+      { "text": "绕开", "effect": { "根系": 1 }, "result": "你给他让了路。死人也有死人的尊严。" }
+    ]
+  },
+
+  {
+    "id": "d5_gate", "dir": "down", "layers": ["D5"], "chainOnly": true,
+    "text": "热。越往下越热。根尖开始冒烟。",
+    "choices": [
+      { "text": "继续向下", "effect": { "death": "lava" }, "result": "岩浆没有给你第二次机会。" },
+      { "text": "用耐火根硬闯", "require": "legacy:fire_root>=2", "effect": { "灵气": 20, "根系": 2 },
+        "result": "前世，你在这里成了草干。这一世，岩浆为你让路。" },
+      { "text": "退回去", "effect": { "back": "down", "水分": -1 }, "result": "你缩回了遗迹。那股热，你记住了。" },
+      { "text": "熔岩行走", "showIf": "skill:lava_walk", "useSkill": "lava_walk", "effect": { "灵气": 25, "根系": 2 },
+        "result": "岩浆像水一样从你根边流过。你在火里散步。" }
+    ]
+  },
+  {
+    "id": "d5_fire_crystal", "dir": "down", "layers": ["D5"],
+    "text": "岩浆里漂着一块会发光的石头。",
+    "choices": [
+      { "text": "捞上来", "effect": { "item": "fire_crystal", "水分": -2 }, "result": "根被烫出了泡。值。" },
+      { "text": "吸收热量", "effect": { "灵气": 15, "水分": -3 }, "result": "你像喝了一口熔化的太阳。" },
+      { "text": "吞噬", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 25 },
+        "result": "火灵晶在你身体里烧成了一团光。" }
+    ]
+  },
+  {
+    "id": "d5_jianmu_root", "dir": "down", "layers": ["D5"], "once": true, "require": "flag:read_stele", "weight": 30,
+    "text": "岩浆深处，有一截通红的木头。它在跳，像一颗心。",
+    "choices": [
+      { "text": "缠上去", "effect": { "item": "jianmu_shard", "灵气": 20 }, "result": "建木残根认出了你。它说：等你很久了。" }
+    ]
+  }
+]

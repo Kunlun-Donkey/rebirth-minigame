@@ -1,0 +1,13 @@
+[
+  { "id": "dung_beetle", "name": "屎壳郎·老粪", "rarity": "common", "desc": "每 3 季推来一颗粪球。",
+    "every": { "n": 3, "effect": { "item": "dung" }, "text": "老粪推来了一颗粪球。它看起来很骄傲。" } },
+  { "id": "earthworm", "name": "蚯蚓·小直", "rarity": "common", "desc": "根系 +2，每 4 季根系 +1。", "start": { "根系": 2 },
+    "every": { "n": 4, "effect": { "根系": 1 }, "text": "小直在你根边松了一圈土。" } },
+  { "id": "lost_bee", "name": "迷路的蜜蜂", "rarity": "rare", "desc": "每 3 季灵气 +2。",
+    "every": { "n": 3, "effect": { "灵气": 2 }, "text": "蜜蜂绕着你飞了三圈，留下一点花粉。" } },
+  { "id": "fox_cub", "name": "沙漠狐幼崽", "rarity": "rare", "desc": "韧性 +1，会替你赶走食草动物。", "start": { "韧性": 1 } },
+  { "id": "lizard", "name": "小蜥蜴", "rarity": "rare", "desc": "每 3 季灵气 +2。它看你的眼神有点怪。",
+    "every": { "n": 3, "effect": { "灵气": 2 }, "text": "小蜥蜴吃掉了啃你叶子的虫子。" } },
+  { "id": "fungus", "name": "共生真菌", "rarity": "epic", "desc": "每 2 季水分 +1。",
+    "every": { "n": 2, "effect": { "水分": 1 }, "text": "菌丝从远处偷来了一点水。" } }
+]

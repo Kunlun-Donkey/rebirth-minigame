@@ -1,0 +1,15 @@
+{
+  // 仅用于 Linux 端类型检查（核心逻辑 + 工具 + 测试）。
+  // 不命名为 tsconfig.json，以免与 Cocos Creator 生成的 tsconfig.json 冲突。
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["assets/scripts/core/**/*.ts", "tools/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["tests/game-smoke.test.ts"]
+}
