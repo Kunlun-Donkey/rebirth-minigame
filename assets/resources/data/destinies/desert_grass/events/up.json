@@ -60,7 +60,7 @@
       { "text": "藤缚老刀", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "flag": "daodao_hurt", "灵气": 10 },
         "result": "你把老刀捆了一夜。天亮放它走时，它不敢看你。" },
       { "text": "毒刺伺候", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "flag": "daodao_hurt", "灵气": 8 },
-        "result": "前世它嚼碎了你。这一世，它满嘴是血地跑了。" }
+        "result": "前世它一口吃了你。这一世，它扎了满嘴刺，边跑边吐。" }
     ]
   },
   {
