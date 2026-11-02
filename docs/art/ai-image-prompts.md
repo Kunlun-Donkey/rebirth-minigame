@@ -28,7 +28,7 @@
 | `ending_card` | 通用 | ✅ `common/ui/ending_card.png` | 顶部叶形徽记视为「新生」符号；介意的话局部重绘成一团光 |
 | `settle_bg` | 荒漠一株草 | ✅ `destiny/desert_grass/settle_bg.jpg` | |
 | `settle_bg_ending` | 荒漠一株草 | ✅ `destiny/desert_grass/settle_bg_ending.jpg` | 比例 3:4，有空重生成 9:16 |
-| `epitaph_card` | 荒漠一株草 | ⚠ `destiny/desert_grass/epitaph_card.jpg` | 带枯草和荒漠背景、竖版，只适合小草。**通用版见 §1.3 重新生成** |
+| `epitaph_card` | 荒漠一株草 | ✗ 已删除 | 竖版 3:4 与墓志铭卡横版位置不符，代码比例保护会跳过它，属于死文件；统一回落通用石板 |
 
 ### SVG 程序化生成（78 张，已入库可用）
 

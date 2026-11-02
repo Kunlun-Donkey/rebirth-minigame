@@ -142,7 +142,6 @@ function dust(r, n, x0, y0, w, h, color, max = 3) {
   <radialGradient id="hl" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fffbe9" stop-opacity=".8"/><stop offset="1" stop-color="#fffbe9" stop-opacity="0"/></radialGradient>
   <g filter="url(#shadow)"><rect x="${I}" y="${I}" width="${W - 2 * I}" height="${H - 2 * I}" rx="26" fill="url(#g)" stroke="#d4a743" stroke-width="5"/></g>
   <rect x="${I}" y="${I}" width="${W - 2 * I}" height="${H - 2 * I}" rx="26" fill="url(#hl)"/>
-  <rect x="${I}" y="${I}" width="${W - 2 * I}" height="${H - 2 * I}" rx="26" fill="#fff" filter="url(#grain)" opacity=".7"/>
   <rect x="${I + 20}" y="${I + 20}" width="${W - 2 * I - 40}" height="${H - 2 * I - 40}" rx="16" fill="none" stroke="#e2bf63" stroke-width="2"/>
   ${corners(W, H, I + 6, cornerCurl('#c9962e', 1.25, 4.5))}
   ${sparkles(r, 7, 60, 50, 200, 150, '#e8b84a')}${sparkles(r, 7, W - 260, H - 200, 200, 150, '#e8b84a')}
@@ -164,7 +163,6 @@ function dust(r, n, x0, y0, w, h, color, max = 3) {
   <g filter="url(#shadow)"><rect x="${I}" y="${I}" width="${W - 2 * I}" height="${H - 2 * I}" rx="22" fill="url(#g)"/></g>
   <g clip-path="url(#c)">
     <rect x="${I}" y="${I}" width="${W - 2 * I}" height="${H - 2 * I}" rx="22" fill="none" stroke="#8c3b1f" stroke-width="56" opacity=".42" filter="url(#soft)"/>
-    <rect x="${I}" y="${I}" width="${W - 2 * I}" height="${H - 2 * I}" fill="#fff" filter="url(#grain)" opacity=".8"/>
     ${cracks}
     ${dust(r2, 140, I, I, W - 2 * I, 70, '#8a4a2a', 2.2)}${dust(r2, 140, I, H - I - 70, W - 2 * I, 70, '#8a4a2a', 2.2)}
     ${dust(r2, 60, I, I, 60, H - 2 * I, '#8a4a2a', 2.2)}${dust(r2, 60, W - I - 60, I, 60, H - 2 * I, '#8a4a2a', 2.2)}
@@ -180,7 +178,6 @@ function dust(r, n, x0, y0, w, h, color, max = 3) {
   <g filter="url(#shadow)"><path d="${chip}" fill="url(#g)"/></g>
   <g clip-path="url(#c)">
     <rect width="${W}" height="${H}" fill="#fff" filter="url(#stone)" opacity=".28"/>
-    <rect width="${W}" height="${H}" fill="#fff" filter="url(#grain)" opacity=".6"/>
     <circle cx="${W - 150}" cy="140" r="56" fill="#e7a47a" opacity=".32"/>
     <circle cx="${W - 150}" cy="140" r="70" fill="none" stroke="#d9906a" stroke-width="2" opacity=".3"/>
     <path d="M${I + 200} ${H - I} l20 -40 l-14 -30 l24 -36" fill="none" stroke="#8a7656" stroke-width="2.5" opacity=".55"/>
@@ -683,8 +680,8 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
   stage('local_dog', 2, `${halo('#f6ecd2')}<path d="M380 90 A60 60 0 1 0 420 190 A48 48 0 1 1 380 90Z" fill="#f6ecd2"/>
     <g transform="rotate(-18 256 440)">${dog(256, 450, 2.7, '#d99a40', '#fff6d6')}</g>`);
   stage('local_dog', 3, `${halo('#e8e4ff', 200)}${sparks(613, '#eef0ff')}
-    <g opacity=".45" filter="url(#soft)">${standDog(256, 430, 3.6, '#e8e4ff')}</g>${standDog(256, 430, 3.2, '#c98a3a')}
-    <circle cx="${256 + 64 * 3.2 - 205}" cy="${430 - 76 * 3.2 + 10}" r="7" fill="#eef0ff"/>`);
+    <g opacity=".45" filter="url(#soft)">${standDog(234, 430, 3.1, '#e8e4ff')}</g>${standDog(234, 430, 2.8, '#c98a3a')}
+    <circle cx="${234 + 64 * 2.8}" cy="${430 - 74 * 2.8}" r="6" fill="#eef0ff"/>`);
   stage('local_dog', 4, `${halo('#ffd27a', 200)}<path d="M150 470 L210 360 Q256 340 302 360 L362 470Z" fill="#8a5a3a"/>
     ${standDog(256, 362, 2.4, '#a8642a')}
     <g fill="#5a3a24" opacity=".7"><ellipse cx="96" cy="470" rx="34" ry="14"/><circle cx="74" cy="458" r="10"/><ellipse cx="420" cy="470" rx="34" ry="14"/><circle cx="442" cy="458" r="10"/></g>`);
