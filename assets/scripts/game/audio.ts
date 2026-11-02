@@ -1,9 +1,10 @@
 /**
  * 音频：背景音乐（循环）+ 音效（一次性），支持静音。
- * 资源在 resources/audio/{bgm,sfx}/，由 tools/audio/gen_audio.py 程序合成（原创，可商用）。
- * 缺文件 / 加载失败时静默跳过，不影响游戏。
+ * 资源在分包 subres/audio/{bgm,sfx}/，由 tools/audio/gen_audio.py 程序合成（原创，可商用）。
+ * 分包下载完之前的播放请求会等待；缺文件 / 加载失败时静默跳过，不影响游戏。
  */
-import { AudioClip, AudioSource, Layers, Node, resources } from 'cc';
+import { AudioClip, AudioSource, Layers, Node } from 'cc';
+import { bundleOf } from './res';
 
 export type BgmName = 'bgm_main' | 'bgm_settle';
 export type SfxName =
@@ -17,7 +18,7 @@ const clips = new Map<string, Promise<AudioClip | null>>();
 function loadClip(path: string): Promise<AudioClip | null> {
     let p = clips.get(path);
     if (!p) {
-        p = new Promise(resolve => resources.load(path, AudioClip, (err, clip) => resolve(err || !clip ? null : clip)));
+        p = bundleOf(path).then(b => new Promise<AudioClip | null>(resolve => b.load(path, AudioClip, (err, clip) => resolve(err || !clip ? null : clip))));
         clips.set(path, p);
     }
     return p;

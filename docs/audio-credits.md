@@ -13,6 +13,6 @@
 - 编码：ffmpeg → 单声道 32kHz mp3（BGM 48kbps、音效 64kbps），共约 600KB
 
 ## 替换为正式音乐
-1. 同名 mp3 覆盖 `assets/resources/audio/bgm/` 或 `sfx/` 下的文件即可，代码无需改动。
+1. 同名 mp3 覆盖 `assets/subres/audio/bgm/`（分包） 或 `sfx/` 下的文件即可，代码无需改动。
 2. 把对应条目从 `tools/audio/gen_audio.py` 删掉，防止下次 `npm run audio` 覆盖。
 3. 外部素材请保留授权证明（购买凭证 / 授权协议 / CC0 声明页截图），并在本文件登记来源。

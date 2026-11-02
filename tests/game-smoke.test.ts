@@ -155,8 +155,8 @@ describe('音频', () => {
         const { existsSync } = await import('node:fs');
         const { audioLog } = await import('./fake-cc');
         const names = ['click', 'card', 'choose', 'success', 'fail', 'item', 'skill', 'breakthrough', 'death', 'revive', 'ending'];
-        for (const n of names) expect(existsSync(`assets/resources/audio/sfx/${n}.mp3`), n).toBe(true);
-        for (const n of ['bgm_main', 'bgm_settle']) expect(existsSync(`assets/resources/audio/bgm/${n}.mp3`), n).toBe(true);
+        for (const n of names) expect(existsSync(`assets/subres/audio/sfx/${n}.mp3`), n).toBe(true);
+        for (const n of ['bgm_main', 'bgm_settle']) expect(existsSync(`assets/subres/audio/bgm/${n}.mp3`), n).toBe(true);
 
         sys.localStorage.clear?.();
         audioLog.length = 0;

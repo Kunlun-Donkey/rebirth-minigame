@@ -8,6 +8,7 @@ import { Audio, SfxName } from './audio';
 import { CONFIG, TEX } from './config';
 import { loadDestiny } from './loader';
 import { Platform } from './platform';
+import { loadSubBundle } from './res';
 import { loadSave, SaveData, writeSave } from './save';
 import { box, clear, COLOR, image, rect, setTapFeedback, text } from './ui/kit';
 import { showDraft } from './screens/draft';
@@ -62,6 +63,17 @@ export class Game {
         } else {
             this.goDraft();
         }
+        // 主界面出来后再后台拉分包（其余贴图、音频）
+        loadSubBundle().then(b => { if (b) this.subReady = true; });
+    }
+
+    /** 分包是否已就绪 */
+    private subReady = false;
+    /** 分包没下完时显示加载提示并等待；下载失败也放行（缺图有兜底） */
+    private async ensureSub(): Promise<void> {
+        if (this.subReady) return;
+        this.loading('正在加载资源……');
+        if (await loadSubBundle()) this.subReady = true;
     }
 
     // ───────────── 界面切换 ─────────────
@@ -102,7 +114,15 @@ export class Game {
 
     // ───────────── 动作 ─────────────
 
-    startRun(pick: { talent: string; item: string; companion: string; skills?: string[] }): void {
+    private starting = false;
+    async startRun(pick: { talent: string; item: string; companion: string; skills?: string[] }): Promise<void> {
+        if (this.starting) return;
+        this.starting = true;
+        try {
+            await this.ensureSub();
+        } finally {
+            this.starting = false;
+        }
         this.engine.startRun(pick, randomSeed());
         this.save.peekUsed = 0;
         this.persist();

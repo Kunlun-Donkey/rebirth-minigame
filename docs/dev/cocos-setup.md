@@ -28,14 +28,19 @@ git clone https://github.com/Kunlun-Donkey/rebirth-minigame.git
 - 设计分辨率 **750 × 1334**，适配屏幕宽度 ✔，适配屏幕高度 ✘
 - 功能裁剪：只保留 2D / UI / Graphics / Tween / WebGL（3D、物理、粒子等已关闭，减小包体）
 
-## 三、配置 resources 为小游戏子包（必做，否则超出主包 4MB）
+## 三、资源分包（主包 4MB 上限）
 
-贴图约 3.8MB，加上引擎会超过微信主包上限。
-1. 资源管理器选中 `assets/resources` 文件夹
-2. 属性检查器：「配置为 Bundle」已勾选 → 展开 **小游戏** 平台设置 → 「配置为子包」✔（或「压缩类型 → 小游戏子包」）
-3. 右上角「应用」
+资源分两个 bundle，两边目录结构相同（`textures/…`、`audio/…`），代码按路径自动找：
 
-> 微信启动时会自动加载这个子包，代码无需改动。子包上限远大于主包（以微信官方当前规则为准）。
+| 目录 | 内容 | 微信平台设置 |
+|---|---|---|
+| `assets/resources` | 剧本数据 + 首屏图（`main_bg`、`logo_title`、`btn_*`、`panel`），约 0.5MB | **主包**（压缩类型「合并依赖」或默认，**不要**勾小游戏子包） |
+| `assets/subres` | 其余贴图和全部音频，约 5.6MB | **小游戏子包**（`assets/subres.meta` 已预设，bundle 名 `subres`） |
+
+- 启动时只加载主包，主界面（轮回殿）出来后后台下载 `subres`；分包没下完时，卡框、图标等用纸张兜底，下完后自动显示。
+- 点「重生」时如果分包还没下完，会显示「正在加载资源……」等待；下载失败也会放行（缺图兜底、无声）。
+- 核对：资源管理器选中 `assets/subres` → 属性检查器「配置为 Bundle」✔、Bundle 名称 `subres`、**小游戏**平台「压缩类型 → 小游戏子包」→「应用」。
+- 新增首屏图时放 `assets/resources`，其余一律放 `assets/subres`（`tools/art/gen-art.mjs` 的 `MAIN_FILES` 决定生成到哪边）。
 
 ## 四、构建微信小游戏
 
@@ -89,7 +94,7 @@ git clone https://github.com/Kunlun-Donkey/rebirth-minigame.git
 
 目录规范与 `docs/art/ai-image-prompts.md` §七 一致：**通用层**任何命格共用，**命格层**同名文件优先。
 
-| 用途 | 路径（`assets/resources/textures/` 下） | 显示方式 |
+| 用途 | 路径（`textures/` 下；首屏图在 `assets/resources/`，其余在 `assets/subres/`） | 显示方式 |
 |---|---|---|
 | 主界面背景（轮回殿 / 局内） | `destiny/<命格>/main_bg` | cover 等比铺满 |
 | 结算背景 | `destiny/<命格>/settle_bg`、`settle_bg_ending` | cover 等比铺满 |

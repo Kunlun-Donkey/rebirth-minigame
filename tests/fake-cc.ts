@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const RES = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources');
+const ASSETS = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets');
 
 export namespace _decorator {
     export const ccclass = (_name?: string) => <T>(ctor: T) => ctor;
@@ -142,51 +142,73 @@ export class Graphics extends Component {
 }
 
 /** 贴图：存在对应图片文件则返回 SpriteFrame（带真实尺寸），否则报错（模拟缺图） */
-function findImage(path: string): string | undefined {
-    return ['.png', '.jpg', '.jpeg'].map(ext => join(RES, path + ext)).find(f => existsSync(f));
+function findImage(root: string, path: string): string | undefined {
+    return ['.png', '.jpg', '.jpeg'].map(ext => join(root, path + ext)).find(f => existsSync(f));
 }
 
-export const resources = {
-    /** 测试开关：模拟图片导入类型不是 sprite-frame */
-    spriteFrameDisabled: false,
-    load(path: string, type: unknown, cb: (err: Error | null, asset: unknown) => void) {
+/** 测试开关：模拟图片导入类型不是 sprite-frame（对所有 bundle 生效） */
+const flags = { spriteFrameDisabled: false };
+
+/** 假 Bundle：从 assets/<dir> 读文件 */
+function makeBundle(root: string) {
+    return {
+        get spriteFrameDisabled() { return flags.spriteFrameDisabled; },
+        set spriteFrameDisabled(v: boolean) { flags.spriteFrameDisabled = v; },
+        getInfoWithPath(path: string): object | null {
+            const hit = ['.json', '.png', '.jpg', '.jpeg', '.mp3'].some(ext => existsSync(join(root, path + ext)));
+            return hit ? { path } : null;
+        },
+        load(path: string, type: unknown, cb: (err: Error | null, asset: unknown) => void) {
+            setTimeout(() => {
+                if (type === AudioClip) {
+                    const file = join(root, `${path}.mp3`);
+                    return existsSync(file) ? cb(null, new AudioClip(path.split('/').pop())) : cb(new Error(`缺音频 ${path}`), null);
+                }
+                if (type === ImageAsset) {
+                    const file = findImage(root, path);
+                    if (!file) return cb(new Error(`缺图 ${path}`), null);
+                    const img = new ImageAsset(path);
+                    Object.assign(img, imageSize(file));
+                    return cb(null, img);
+                }
+                if (type === SpriteFrame) {
+                    if (flags.spriteFrameDisabled) return cb(new Error('模拟：图片未导入为 sprite-frame'), null);
+                    const p = path.replace(/\/spriteFrame$/, '');
+                    const file = findImage(root, p);
+                    if (!file) return cb(new Error(`缺图 ${p}`), null);
+                    const sf = new SpriteFrame(p);
+                    sf.originalSize = imageSize(file);
+                    return cb(null, sf);
+                }
+                const file = join(root, `${path}.json`);
+                if (!existsSync(file)) return cb(new Error(`not found ${path}`), null);
+                const a = new JsonAsset(path.split('/').pop());
+                a.json = JSON.parse(readFileSync(file, 'utf8'));
+                cb(null, a);
+            }, 0);
+        },
+        loadDir(path: string, _type: unknown, cb: (err: Error | null, assets: unknown[]) => void) {
+            setTimeout(() => {
+                const dir = join(root, path);
+                const out = readdirSync(dir).filter(f => f.endsWith('.json')).map(f => {
+                    const a = new JsonAsset(f.replace(/\.json$/, ''));
+                    a.json = JSON.parse(readFileSync(join(dir, f), 'utf8'));
+                    return a;
+                });
+                cb(null, out);
+            }, 0);
+        },
+    };
+}
+
+export const resources = makeBundle(join(ASSETS, 'resources'));
+
+/** 分包：assets/<name> 目录存在即视为可加载 */
+export const assetManager = {
+    loadBundle(name: string, cb: (err: Error | null, bundle: ReturnType<typeof makeBundle> | null) => void) {
         setTimeout(() => {
-            if (type === AudioClip) {
-                const file = join(RES, `${path}.mp3`);
-                return existsSync(file) ? cb(null, new AudioClip(path.split('/').pop())) : cb(new Error(`缺音频 ${path}`), null);
-            }
-            if (type === ImageAsset) {
-                const file = findImage(path);
-                if (!file) return cb(new Error(`缺图 ${path}`), null);
-                const img = new ImageAsset(path);
-                Object.assign(img, imageSize(file));
-                return cb(null, img);
-            }
-            if (type === SpriteFrame) {
-                if (resources.spriteFrameDisabled) return cb(new Error('模拟：图片未导入为 sprite-frame'), null);
-                const p = path.replace(/\/spriteFrame$/, '');
-                const file = findImage(p);
-                if (!file) return cb(new Error(`缺图 ${p}`), null);
-                const sf = new SpriteFrame(p);
-                sf.originalSize = imageSize(file);
-                return cb(null, sf);
-            }
-            const file = join(RES, `${path}.json`);
-            if (!existsSync(file)) return cb(new Error(`not found ${path}`), null);
-            const a = new JsonAsset(path.split('/').pop());
-            a.json = JSON.parse(readFileSync(file, 'utf8'));
-            cb(null, a);
-        }, 0);
-    },
-    loadDir(path: string, _type: unknown, cb: (err: Error | null, assets: unknown[]) => void) {
-        setTimeout(() => {
-            const dir = join(RES, path);
-            const out = readdirSync(dir).filter(f => f.endsWith('.json')).map(f => {
-                const a = new JsonAsset(f.replace(/\.json$/, ''));
-                a.json = JSON.parse(readFileSync(join(dir, f), 'utf8'));
-                return a;
-            });
-            cb(null, out);
+            const dir = join(ASSETS, name);
+            existsSync(dir) ? cb(null, makeBundle(dir)) : cb(new Error(`缺 bundle ${name}`), null);
         }, 0);
     },
 };

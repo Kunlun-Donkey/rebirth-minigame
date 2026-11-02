@@ -8,7 +8,7 @@
 合成器：godot skill 自带的纯 Python 标准库合成器 make_sfx.py / make_music.py（sfxr 风格 + 步进音序器），
 路径默认 ~/.claude/skills/godot/scripts/assets，可用环境变量 SYNTH_DIR 覆盖。
 曲谱、音色参数都在本文件里，属于本项目原创；生成后用 ffmpeg 转成单声道 mp3 放进
-assets/resources/audio/{bgm,sfx}/，文件名与 assets/scripts/game/audio.ts 的 SFX / BGM 一致。
+assets/subres/audio/{bgm,sfx}/（分包），文件名与 assets/scripts/game/audio.ts 的 SFX / BGM 一致。
 
 想换成正式音乐时：同名 mp3 直接覆盖即可（并把对应条目从这里删掉，避免被再次覆盖）。
 """
@@ -23,7 +23,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'assets' / 'resources' / 'audio'
+OUT = ROOT / 'assets' / 'subres' / 'audio'
 SYNTH = Path(os.environ.get('SYNTH_DIR', Path.home() / '.claude/skills/godot/scripts/assets'))
 
 

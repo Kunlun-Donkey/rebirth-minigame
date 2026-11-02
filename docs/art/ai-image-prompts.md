@@ -344,8 +344,10 @@
 
 ## 七、入库目录
 
+首屏图（`main_bg`、`logo_title`、`btn_*`、`panel`）放 `assets/resources/textures/`（主包），其余放 `assets/subres/textures/`（分包），两边子目录结构相同：
+
 ```
-assets/resources/textures/
+textures/
   common/
     ui/      event_card  event_card_gold  event_card_sudden  epitaph_card  ending_card  settle_panel
     frame/   frame_{common|rare|epic|legend}  badge_{talent|item|companion|skill}

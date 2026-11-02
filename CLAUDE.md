@@ -16,16 +16,18 @@
 - `npm run validate` — 剧本静态校验
 - `npm run play` — 终端试玩（`-- --new` 清档）
 - `npm run sim` — 随机 AI 2000 世数值统计
-- `npm run audio` — 程序合成 BGM/音效 → `assets/resources/audio/`（曲谱与音色在 `tools/audio/gen_audio.py`，依赖本机 godot skill 的合成器 + ffmpeg）
+- `npm run audio` — 程序合成 BGM/音效 → `assets/subres/audio/`（曲谱与音色在 `tools/audio/gen_audio.py`，依赖本机 godot skill 的合成器 + ffmpeg）
 
 ## 结构
 - `assets/scripts/core/` 引擎：`types` · `condition` 条件 DSL · `data` 剧本归一化 · `engine` 局内状态机 · `profile` 局外存档 · `rng`
 - `assets/scripts/game/` Cocos 表现层（UI 全部代码生成，入口 `GameRoot` 挂 Canvas）
   - `game.ts` 控制器（界面切换、存档、广告点位）· `config.ts` 配置与贴图路径 `TEX` · `platform.ts` wx 适配（存档/激励视频/分享/埋点，非微信环境自动 Mock）· `loader.ts` · `save.ts`
+  - `res.ts` 资源分包：路径在主包 `resources` 找不到就等分包 `subres`（主界面出来后后台下载，点「重生」前确保就绪）
   - `ui/kit.ts` 代码 UI 工具包（左上角坐标系、纸张卡、按钮、弹窗、缺图兜底）
   - `audio.ts` 背景音乐/音效/静音（点击音效经 `kit.setTapFeedback` 注入）
   - `screens/` draft 轮回殿 · run 局内 · settle 结算 · popups 弹窗
-- `assets/resources/data/destinies/<命格>/` 剧本数据；`assets/resources/textures/` 美术素材
+- `assets/resources/`（主包，≈0.5MB）：`data/destinies/<命格>/` 剧本数据 + 首屏图（main_bg、logo_title、btn_*、panel）
+- `assets/subres/`（微信分包，bundle 名 subres）：其余 `textures/` 与全部 `audio/`，目录结构与 resources 一致；**新素材默认放这里**
 - `tools/` Node 端加载、校验、试玩、模拟；`tests/fake-cc.ts` 测试用假 cc
 - `docs/design/` 设计 · `docs/art/` 生图提示词 · `docs/filing/` 备案材料与界面原型 · `docs/dev/` 接入文档
 

@@ -136,9 +136,14 @@ declare module 'cc' {
     }
 
     type AssetCtor<T> = new (...args: never[]) => T;
-    export const resources: {
+    interface Bundle {
         load<T extends Asset>(path: string, type: AssetCtor<T>, cb: (err: Error | null, asset: T) => void): void;
         loadDir<T extends Asset>(path: string, type: AssetCtor<T>, cb: (err: Error | null, assets: T[]) => void): void;
+        getInfoWithPath(path: string): object | null;
+    }
+    export const resources: Bundle;
+    export const assetManager: {
+        loadBundle(name: string, cb: (err: Error | null, bundle: Bundle) => void): void;
     };
 
     export const view: { getVisibleSize(): Size };

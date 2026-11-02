@@ -9,7 +9,11 @@ import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const TEX = join(ROOT, 'assets/resources/textures');
+// 首屏用到的图进主包 resources，其余进分包 subres（见 assets/scripts/game/res.ts）
+const MAIN_TEX = join(ROOT, 'assets/resources/textures');
+const SUB_TEX = join(ROOT, 'assets/subres/textures');
+const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'common/ui/logo_title', 'common/ui/panel',
+  'common/ui/btn_normal', 'common/ui/btn_primary', 'common/ui/btn_ad', 'common/ui/btn_locked']);
 const TMP = join(tmpdir(), 'rebirth-art');
 const filter = process.argv[2] ?? '';
 
@@ -87,7 +91,7 @@ function run() {
     execFileSync('google-chrome', ['--headless=old', '--disable-gpu', '--hide-scrollbars',
       '--default-background-color=00000000', `--window-size=${j.w},${j.h}`, `--screenshot=${png}`, `file://${html}`],
       { stdio: 'ignore' });
-    const out = join(TEX, j.rel + (j.jpg ? '.jpg' : '.png'));
+    const out = join(MAIN_FILES.has(j.rel) ? MAIN_TEX : SUB_TEX, j.rel + (j.jpg ? '.jpg' : '.png'));
     mkdirSync(dirname(out), { recursive: true });
     // JPG：不透明大图；PNG：libimagequant 量化为 256 色调色板（保留半透明边缘与发光，体积约为 1/5）
     if (j.jpg) execFileSync('convert', [png, '-quality', '86', out]);
