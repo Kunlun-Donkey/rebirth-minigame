@@ -79,7 +79,7 @@
     "id": "d2_tiger_frame", "dir": "down", "layers": ["D2", "D3"], "once": true, "weight": 15, "require": "flag:tiger_grudge",
     "text": "主人家的鸡被咬死了。鸡窝边全是黑毛。主人拎着棍子，看向了你。",
     "choices": [
-      { "text": "叼起那撮黑毛", "require": "灵性>=3", "effect": { "忠义": 3, "牙口": 1 },
+      { "text": "叼起那撮黑毛", "require": "灵性>=3", "effect": { "follow": "f_tiger_punished", "忠义": 3, "牙口": 1 },
         "result": "主人盯着黑毛看了半天，扛起扁担去了地主家。" },
       { "text": "低头认了", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
         "effect": { "忠义": 1, "体力": -1 }, "result": "他打了你两下，没舍得赶你走。",
@@ -122,7 +122,7 @@
     "text": "院里那口井，夏天打上来的水也是凉的。",
     "choices": [
       { "text": "喝个饱", "effect": { "体力": 2 }, "result": "你喝得肚子圆滚滚的，在枣树下睡了一觉。" },
-      { "text": "守着井口", "effect": { "忠义": 1, "灵性": 1 }, "result": "井里倒映着月亮。你守着它，像守着一块骨头。" }
+      { "text": "守着井口", "effect": { "follow": "f_well_moon", "忠义": 1, "灵性": 1 }, "result": "井里倒映着月亮。你守着它，像守着一块骨头。" }
     ]
   },
   {
@@ -163,22 +163,22 @@
     "text": "半夜，祠堂起火了。火光里，牌位在烧。",
     "choices": [
       { "text": "冲进去叼牌位", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
-        "effect": { "忠义": 4, "妖气": 6 }, "result": "你叼出了最老的那块牌位。全村人都跪下了。",
+        "effect": { "follow": "f_fire_honor", "忠义": 4, "妖气": 6 }, "result": "你叼出了最老的那块牌位。全村人都跪下了。",
         "fail": { "effect": { "体力": -4 }, "result": "火舌舔过你的背，毛烧掉了一半。" } },
-      { "text": "满村叫人", "effect": { "忠义": 3 }, "result": "全村人提着水桶跑来。火灭了。" }
+      { "text": "满村叫人", "effect": { "follow": "f_fire_rebuild", "忠义": 3 }, "result": "全村人提着水桶跑来。火灭了。" }
     ]
   },
   {
     "id": "d3_bandits", "dir": "down", "layers": ["D3"], "stage": [3, 99], "once": true, "weight": 20,
     "text": "山匪来了。火把从村口一路烧向祠堂。",
     "choices": [
-      { "text": "挡在村口", "require": "牙口>=8", "effect": { "flag": "village_saved", "忠义": 5, "妖气": 15 },
+      { "text": "挡在村口", "require": "牙口>=8", "effect": { "follow": { "id": "f_bandit_back", "delay": 2 }, "flag": "village_saved", "忠义": 5, "妖气": 15 },
         "result": "你一条狗，堵住了整条路。那夜之后，村里叫你神犬。" },
       { "text": "带人躲进祠堂", "require": "忠义>=10", "effect": { "flag": "village_saved", "忠义": 4, "妖气": 10 },
         "result": "全村老小跟着你躲进了地窖。一个也没少。" },
       { "text": "狂吠示警", "showIf": "skill:bark", "useSkill": "bark", "effect": { "flag": "village_saved", "忠义": 4, "妖气": 12 },
         "result": "你的叫声比锣还响。村里人抄起锄头，山匪退了。" },
-      { "text": "逃", "effect": { "体力": -2, "忠义": -3 }, "result": "你跑了。回来时，村子烧了一半。" }
+      { "text": "逃", "effect": { "follow": "f_bandit_shame", "体力": -2, "忠义": -3 }, "result": "你跑了。回来时，村子烧了一半。" }
     ]
   },
 
@@ -207,7 +207,7 @@
         "result": "鸡叫了。僵尸僵在半路，倒了下去。" },
       { "text": "过阴引路", "showIf": "skill:ghost_walk", "useSkill": "ghost_walk", "effect": { "flag": "village_saved", "妖气": 20 },
         "result": "你走在阴气前面，把它领回了棺材。" },
-      { "text": "跑回村报信", "effect": { "忠义": 2 }, "result": "村里人不信。好在它天亮前自己躺回去了。" }
+      { "text": "跑回村报信", "effect": { "follow": "f_zombie_mark", "忠义": 2 }, "result": "村里人不信。好在它天亮前自己躺回去了。" }
     ]
   },
   {
@@ -219,14 +219,14 @@
         "fail": { "effect": { "death": "yin" }, "result": "符一撕开，罐里涌出一股黑气。" } },
       { "text": "在罐底刨坑", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "tiangou_bone" },
         "result": "罐子底下，埋着一截会发光的骨头。" },
-      { "text": "不碰", "effect": { "灵性": 1 }, "result": "有些东西，封着是有道理的。" }
+      { "text": "不碰", "effect": { "follow": { "id": "f_jar_whisper", "delay": 2 }, "灵性": 1 }, "result": "有些东西，封着是有道理的。" }
     ]
   },
   {
     "id": "d4_tomb_lord", "dir": "down", "layers": ["D4"],
     "text": "墓主人的魂坐在墓顶上，问你：一条狗，来这儿做什么？",
     "choices": [
-      { "text": "说来守村", "effect": { "忠义": 3, "妖气": 8 }, "result": "他笑了：我守了这村子三百年，该换班了。" },
+      { "text": "说来守村", "effect": { "follow": "f_tomb_shift", "忠义": 3, "妖气": 8 }, "result": "他笑了：我守了这村子三百年，该换班了。" },
       { "text": "跟他细聊", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "妖气": 12 },
         "result": "他讲了一夜村子的来历。天亮时，他把守村的法子教给了你。" }
     ]

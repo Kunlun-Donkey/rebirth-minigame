@@ -28,9 +28,9 @@
     "text": "刘拐子在集市上收狗。他一眼就盯上了你。",
     "choices": [
       { "text": "跑", "chance": 0.6, "chanceAttr": "脚力", "chanceStep": 0.04,
-        "effect": { "脚力": 1 }, "result": "你钻进人堆，他的拐棍够不着。",
+        "effect": { "follow": { "id": "f_trader_stake", "delay": 2 }, "脚力": 1 }, "result": "你钻进人堆，他的拐棍够不着。",
         "fail": { "effect": { "death": "dogcatcher" }, "result": "他的拐棍一勾，你进了麻袋。" } },
-      { "text": "叼着黑虎的牙瞪他", "require": "item:tiger_tooth", "effect": { "牙口": 2, "妖气": 5, "flag": "trader_foiled" },
+      { "text": "叼着黑虎的牙瞪他", "require": "item:tiger_tooth", "effect": { "follow": "f_trader_rumor", "牙口": 2, "妖气": 5, "flag": "trader_foiled" },
         "result": "他认出了黑虎的牙。他的腿比拐棍还软。" },
       { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2 },
         "result": "你跑得太快，刘拐子连影子都没看清。" }
@@ -52,11 +52,11 @@
     "text": "县城里有个摆摊捉妖的道士。他的罗盘冲你转个不停。",
     "choices": [
       { "text": "夹着尾巴走开", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "灵性": 1 }, "result": "罗盘转了两圈，停了。他嘟囔：坏了？",
+        "effect": { "follow": { "id": "f_taoist_compass", "delay": 2 }, "灵性": 1 }, "result": "罗盘转了两圈，停了。他嘟囔：坏了？",
         "fail": { "effect": { "death": "taoist" }, "result": "他掏出一只葫芦，喊了一声你的名字。" } },
       { "text": "把妖气藏起来", "require": "legacy:hide_aura>=1", "effect": { "灵性": 2, "妖气": 5 },
         "result": "前世你进过他的葫芦。这一世，罗盘一动不动。" },
-      { "text": "装乖", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "体力": 3 },
+      { "text": "装乖", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "follow": "f_taoist_snack", "体力": 3 },
         "result": "你蹭了蹭他的腿。他把罗盘往桌上一拍：一条家狗，转什么转。" }
     ]
   },
@@ -76,10 +76,10 @@
     "text": "一只黄鼠狼凑过来说：城外有个鸡窝，没人看。",
     "choices": [
       { "text": "跟它去", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
-        "effect": { "体力": 4 }, "result": "真有个鸡窝。它吃鸡，你吃蛋。",
+        "effect": { "follow": { "id": "f_weasel_hen", "delay": 2 }, "体力": 4 }, "result": "真有个鸡窝。它吃鸡，你吃蛋。",
         "fail": { "effect": { "death": "betrayed" }, "result": "那是猎户下的套。黄鼠狼在树上笑。" } },
       { "text": "不信", "effect": { "灵性": 1 }, "result": "它撇撇嘴，去找别的狗了。" },
-      { "text": "盯着它的眼睛", "require": "legacy:judge>=1", "effect": { "灵性": 2, "妖气": 5 },
+      { "text": "盯着它的眼睛", "require": "legacy:judge>=1", "effect": { "follow": "f_weasel_confess", "灵性": 2, "妖气": 5 },
         "result": "前世它骗过你。你咬住它的尾巴，它吐出了真话。" },
       { "text": "跟它对质", "showIf": "skill:talk", "useSkill": "talk", "effect": { "妖气": 6 },
         "result": "你一句一句问。它说不圆，哭着跑了。" }
@@ -101,7 +101,7 @@
     "text": "狗剩被几个混混堵在巷子里，怀里死死护着半个饼。",
     "choices": [
       { "text": "扑上去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
-        "effect": { "忠义": 3, "flag": "goushen_saved" }, "result": "混混跑了。狗剩把饼掰开，大的那半给了你。",
+        "effect": { "follow": "f_goushen_gang", "忠义": 3, "flag": "goushen_saved" }, "result": "混混跑了。狗剩把饼掰开，大的那半给了你。",
         "fail": { "effect": { "体力": -3 }, "result": "你被踹进了水沟。是狗剩把你拖上来的。" } },
       { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "忠义": 3, "flag": "goushen_saved" },
         "result": "整条街的狗跟着你叫。混混们抱着头跑了。" },
@@ -123,7 +123,7 @@
     "choices": [
       { "text": "留下当王", "require": "牙口>=10", "effect": { "ending": "wild_king" },
         "result": "你叼起骨头，先分给了最小的那只。" },
-      { "text": "把骨头推回去", "effect": { "忠义": 2, "灵性": 2 }, "result": "你还有村子要回。老狗低下了头。" }
+      { "text": "把骨头推回去", "effect": { "follow": "f_stray_send", "忠义": 2, "灵性": 2 }, "result": "你还有村子要回。老狗低下了头。" }
     ]
   },
   {
@@ -137,8 +137,8 @@
     "id": "l3_lapdog", "dir": "side", "layers": ["L3"],
     "text": "王府的狮子狗穿着绸缎，冲你哼了一声。",
     "choices": [
-      { "text": "冲它叫", "effect": { "牙口": 1, "妖气": 3 }, "result": "它吓得钻进了轿子。轿夫们笑出了声。" },
-      { "text": "不理它", "effect": { "灵性": 1 }, "result": "你想：它这辈子，没追过兔子吧。" }
+      { "text": "冲它叫", "effect": { "follow": "f_lapdog_owner", "牙口": 1, "妖气": 3 }, "result": "它吓得钻进了轿子。轿夫们笑出了声。" },
+      { "text": "不理它", "effect": { "follow": { "id": "f_lapdog_curious", "delay": 2 }, "灵性": 1 }, "result": "你想：它这辈子，没追过兔子吧。" }
     ]
   },
   {
@@ -153,7 +153,7 @@
     "id": "l3_astrologer", "dir": "side", "layers": ["L3"], "stage": [3, 99], "once": true,
     "text": "钦天监的老头拦住你：你身上有天狗相，可愿随我修行？",
     "choices": [
-      { "text": "跟他走", "effect": { "妖气": 20, "灵性": 2, "item": "moonstone" }, "result": "他教你看星星。原来月亮上，也有狗。" },
+      { "text": "跟他走", "effect": { "follow": "f_star_lesson", "妖气": 20, "灵性": 2, "item": "moonstone" }, "result": "他教你看星星。原来月亮上，也有狗。" },
       { "text": "我还要回村", "effect": { "忠义": 3 }, "result": "他叹了口气：也好，也好。" }
     ]
   },
@@ -161,7 +161,7 @@
     "id": "l3_xiaocui", "dir": "side", "layers": ["L3"], "once": true, "weight": 20, "require": "flag:xiaocui_left",
     "text": "你在一户大宅门口停下了。门里，有小翠的味道。",
     "choices": [
-      { "text": "挠门", "effect": { "忠义": 3, "体力": 4 }, "result": "她嫁到了京城。她抱着你，叫了一声：小黄。" },
+      { "text": "挠门", "effect": { "follow": { "id": "f_xiaocui_city", "delay": 2 }, "忠义": 3, "体力": 4 }, "result": "她嫁到了京城。她抱着你，叫了一声：小黄。" },
       { "text": "远远看一眼", "effect": { "灵性": 2, "妖气": 6 }, "result": "她过得很好。你转身，回村去了。" },
       { "text": "留下来陪她", "require": "item:dog_tag", "effect": { "ending": "xiaocui_dog" },
         "result": "她摸到了你脖子上的狗牌，哭着笑了：小黄，回家了。" }

@@ -374,5 +374,329 @@
       { "text": "带他走", "effect": { "脚力": 1, "忠义": 2, "follow": { "id": "l2_goushen", "delay": 2, "ttl": 8 } }, "result": "你们一前一后上了路。他走得比你还快。" },
       { "text": "让他留在镇上", "effect": { "灵性": 1 }, "result": "他点点头，又追了你两步，才停下。" }
     ]
+  },
+  {
+    "id": "f_smell_source", "dir": "up", "chainOnly": true, "layers": ["U1"], "teaser": "那股香味还在山脚",
+    "text": "你顺着那股香味找到了山脚。是野枣，熟透的掉了一地。",
+    "choices": [
+      { "text": "吃个够", "effect": { "体力": 2 }, "result": "你吃到打嗝。枣核吐了一地。" },
+      { "text": "叼一颗回窝", "effect": { "忠义": 1, "脚力": 1 }, "result": "你叼回去给了最小的那只。它啃了一晚上。" }
+    ]
+  },
+  {
+    "id": "f_xiaocui_rope", "dir": "down", "chainOnly": true, "layers": ["D1", "D2"], "teaser": "小翠在编什么东西",
+    "text": "小翠用草绳给你编了个项圈。编歪了，她说不许笑。",
+    "choices": [
+      { "text": "戴着", "effect": { "忠义": 2 }, "result": "你戴着歪项圈满村跑。她跟在后面跑。" },
+      { "text": "咬着玩", "effect": { "牙口": 1, "体力": 1 }, "result": "咬断了。第二天，她又编了一个。" }
+    ]
+  },
+
+  {
+    "id": "f_trader_stake", "dir": "side", "chainOnly": true, "layers": ["L1", "L2"], "teaser": "刘拐子在集市口蹲你",
+    "text": "集市口撒了一把肉渣。刘拐子蹲在箩筐后面，拐棍横在腿上。",
+    "choices": [
+      { "text": "绕开", "effect": { "灵性": 1 }, "result": "你从后巷绕了过去。肉渣让鸽子吃了。" },
+      { "text": "叼了就跑", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "体力": 2, "脚力": 1, "flag": "trader_foiled" }, "result": "你吃了他的肉，他摔了个跟头。集市上的人都在笑。",
+        "fail": { "effect": { "体力": -2 }, "result": "拐棍扫中了你的后腿。你瘸着跑掉了。" } }
+    ]
+  },
+  {
+    "id": "f_trader_rumor", "dir": "side", "chainOnly": true, "layers": ["L1", "L2"], "teaser": "集市上的狗在传你",
+    "text": "集市上的狗都在传：刘拐子怕一条黄狗。几条野狗凑过来，跟在你后面。",
+    "choices": [
+      { "text": "带它们转一圈", "effect": { "牙口": 1, "flag": "stray_respect" }, "result": "你走在前面。卖肉的多切了一刀。" },
+      { "text": "散了吧", "effect": { "灵性": 1 }, "result": "你一个人走惯了。它们在后面看了很久。" }
+    ]
+  },
+  {
+    "id": "f_taoist_compass", "dir": "side", "chainOnly": true, "layers": ["L2", "L3"], "teaser": "道士换了个新罗盘",
+    "text": "那个道士换了个新罗盘，摊子就摆在你常走的巷口。",
+    "choices": [
+      { "text": "绕路走", "effect": { "脚力": 1 }, "result": "你多走了半条街。罗盘没动。" },
+      { "text": "去他摊前趴着", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "妖气": 6 }, "result": "罗盘转了两圈。他又拍了拍：新的也是坏的？",
+        "fail": { "effect": { "体力": -2 }, "result": "罗盘指向你。你跑了三条街才甩掉他。" } }
+    ]
+  },
+  {
+    "id": "f_taoist_snack", "dir": "side", "chainOnly": true, "layers": ["L2", "L3"], "teaser": "道士给你留了饼",
+    "text": "道士每天收摊，都在桌脚放半张饼。他说给家狗的。",
+    "choices": [
+      { "text": "吃饼", "effect": { "体力": 3 }, "result": "饼是热的。他假装没看见你。" },
+      { "text": "帮他看摊", "effect": { "忠义": 1, "灵性": 1 }, "result": "有人来砸摊，你叫了两声。他多给了你一张饼。" }
+    ]
+  },
+  {
+    "id": "f_weasel_hen", "dir": "any", "chainOnly": true, "teaser": "黄鼠狼又来约你",
+    "text": "那只黄鼠狼又来了：上回的鸡窝，主人添了条大狗。咱俩一起？",
+    "choices": [
+      { "text": "不去了", "effect": { "灵性": 1 }, "result": "一次是运气。你没打算试第二次。" },
+      { "text": "去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "体力": 3, "牙口": 1 }, "result": "你引开大狗，它叼走了鸡。蛋还是你的。",
+        "fail": { "effect": { "体力": -3 }, "result": "大狗追了你三里地。黄鼠狼早没影了。" } }
+    ]
+  },
+  {
+    "id": "f_weasel_confess", "dir": "any", "chainOnly": true, "teaser": "被你拆穿的黄鼠狼来了",
+    "text": "那只黄鼠狼叼来一只鸡腿，放在你面前：猎户的套，在西坡。",
+    "choices": [
+      { "text": "记下", "effect": { "灵性": 2 }, "result": "你从此不去西坡。它也没再骗过你。" },
+      { "text": "去把套咬断", "effect": { "牙口": 1, "妖气": 4 }, "result": "你咬断了三个套。猎户骂了一整天。" }
+    ]
+  },
+  {
+    "id": "f_goushen_gang", "dir": "side", "chainOnly": true, "layers": ["L2"], "teaser": "那几个混混又来了",
+    "text": "那几个混混又在巷口转悠，手里多了根棍子。狗剩躲在你身后。",
+    "choices": [
+      { "text": "带狗剩绕路", "effect": { "忠义": 1, "脚力": 1 }, "result": "你们从狗洞钻过去。狗剩钻得比你快。" },
+      { "text": "守在巷口", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "牙口": 2, "忠义": 2 }, "result": "你一声没叫，只是龇牙。他们换了条巷子走。",
+        "fail": { "effect": { "体力": -3 }, "result": "棍子落在你背上。狗剩扑上去，挨了一样多。" } }
+    ]
+  },
+  {
+    "id": "f_stray_send", "dir": "side", "chainOnly": true, "layers": ["L2", "L3"], "teaser": "最小的那只野狗跟着你",
+    "text": "县城的野狗送你到城门口。最小的那只，一直跟出了城。",
+    "choices": [
+      { "text": "让它跟着", "effect": { "忠义": 2, "体力": -1 }, "result": "你们分一块饼。它吃大的那半，你没意见。" },
+      { "text": "赶它回去", "effect": { "灵性": 1 }, "result": "你冲它叫了一声。它回头跑了，跑几步又回头。" }
+    ]
+  },
+  {
+    "id": "f_lapdog_owner", "dir": "side", "chainOnly": true, "layers": ["L3"], "teaser": "王府的管家在找你",
+    "text": "王府管家拎着鞭子满街找：哪条野狗吓了我家宝贝？",
+    "choices": [
+      { "text": "钻进人堆", "effect": { "脚力": 1 }, "result": "京城人多。他找到天黑，找到一条黑狗。" },
+      { "text": "叼走他的鞭子", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 1, "妖气": 4 }, "result": "鞭子扔进了护城河。轿夫们又笑了。",
+        "fail": { "effect": { "体力": -3 }, "result": "鞭梢抽中了你的尾巴。" } }
+    ]
+  },
+  {
+    "id": "f_lapdog_curious", "dir": "side", "chainOnly": true, "layers": ["L3"], "teaser": "狮子狗溜出来了",
+    "text": "那只狮子狗溜出了王府，跟在你后面。绸缎沾了泥，它也不管。",
+    "choices": [
+      { "text": "带它去追兔子", "effect": { "脚力": 1, "灵性": 1 }, "result": "兔子没追上。它跑丢了一只鞋，笑得直喘。" },
+      { "text": "送它回去", "effect": { "忠义": 1, "体力": 3 }, "result": "王府赏了你一碗肉。它趴在门里，看你走远。" }
+    ]
+  },
+  {
+    "id": "f_star_lesson", "dir": "side", "chainOnly": true, "layers": ["L3"], "teaser": "钦天监的老头叫你上台",
+    "text": "老头半夜把你叫上观星台：今晚天狗星最亮。",
+    "choices": [
+      { "text": "陪他看星星", "effect": { "妖气": 8, "灵性": 1 }, "result": "他指给你看哪颗是你。你点了点头，其实没看清。" },
+      { "text": "趴着睡觉", "effect": { "体力": 2 }, "result": "他自己看了一夜。天亮时，把披风盖在了你身上。" }
+    ]
+  },
+  {
+    "id": "f_xiaocui_city", "dir": "side", "chainOnly": true, "layers": ["L3"], "teaser": "小翠家有个小娃娃",
+    "text": "小翠的孩子会走路了。他抓着你的尾巴，喊：黄黄。",
+    "choices": [
+      { "text": "让他抓", "effect": { "忠义": 2 }, "result": "你一动不动。小翠在门口笑。" },
+      { "text": "带他满院跑", "effect": { "脚力": 1, "体力": 1 }, "result": "他摔了一跤，没哭，爬起来接着追你。" }
+    ]
+  },
+
+  {
+    "id": "f_tiger_punished", "dir": "down", "chainOnly": true, "layers": ["D2", "D3"], "teaser": "黑虎被拴起来了",
+    "text": "黑虎被拴在地主家门口，拴了一整个月。它看见你，没出声。",
+    "choices": [
+      { "text": "慢慢走过去", "effect": { "忠义": 1, "妖气": 3 }, "result": "你从它面前走过。它把头扭了过去。" },
+      { "text": "冲它叫一声", "effect": { "牙口": 1 }, "result": "它挣了一下绳子。绳子很结实。" }
+    ]
+  },
+  {
+    "id": "f_well_moon", "dir": "down", "chainOnly": true, "layers": ["D2"], "teaser": "井里的月亮变大了",
+    "text": "井里的月亮，今晚比天上的大一圈。",
+    "choices": [
+      { "text": "舔一口井水", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "妖气": 5, "灵性": 1 }, "result": "水是凉的，月亮是甜的。",
+        "fail": { "effect": { "体力": -1 }, "result": "你差点栽进井里。月亮晃了晃，笑你。" } },
+      { "text": "回窝睡觉", "effect": { "体力": 1 }, "result": "井里的东西，还是别惦记了。" }
+    ]
+  },
+  {
+    "id": "f_fire_honor", "dir": "down", "chainOnly": true, "layers": ["D3"], "teaser": "祠堂门口多了块草垫",
+    "text": "族里在祠堂门口给你铺了块草垫。旁边木牌上写着：义犬。",
+    "choices": [
+      { "text": "趴上去", "effect": { "忠义": 2, "体力": 1 }, "result": "你不识字。但你知道那是你的位置。" },
+      { "text": "叼到阴凉处", "effect": { "灵性": 1, "体力": 1 }, "result": "牌子留在原处，垫子挪到了树下。族长没说什么。" }
+    ]
+  },
+  {
+    "id": "f_fire_rebuild", "dir": "down", "chainOnly": true, "layers": ["D3"], "teaser": "祠堂要重修了",
+    "text": "祠堂重修。木匠们的饭碗，总摆在你够得着的地方。",
+    "choices": [
+      { "text": "帮着叼木料", "effect": { "忠义": 2, "牙口": 1 }, "result": "你叼来一根木楔。木匠说：比我徒弟强。" },
+      { "text": "吃饭", "effect": { "体力": 3 }, "result": "碗空了。木匠们装作没看见。" }
+    ]
+  },
+  {
+    "id": "f_bandit_back", "dir": "any", "chainOnly": true, "teaser": "山匪捎话来了",
+    "text": "逃掉的山匪头子托人捎话：下回，带三十个人来。",
+    "choices": [
+      { "text": "在村口多守几夜", "effect": { "忠义": 2, "体力": -1 }, "result": "他没来。你倒是瘦了一圈。" },
+      { "text": "进山找他们的窝", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "妖气": 8, "牙口": 1 }, "result": "你在他们灶边嚎了一夜。第二天，山匪搬走了。",
+        "fail": { "effect": { "体力": -3 }, "result": "他们放了冷箭。你叼着一身伤回了村。" } }
+    ]
+  },
+  {
+    "id": "f_bandit_shame", "dir": "down", "chainOnly": true, "teaser": "村子在重建",
+    "text": "烧掉的一半村子在重建。没人给你饭，也没人赶你。",
+    "choices": [
+      { "text": "帮着叼砖", "effect": { "忠义": 2, "体力": -1 }, "result": "叼到第三天，有人在你面前放了半个窝头。" },
+      { "text": "走开", "effect": { "脚力": 1 }, "result": "你走到了村外。身后的锤子声，响了一个月。" }
+    ]
+  },
+  {
+    "id": "f_zombie_mark", "dir": "down", "chainOnly": true, "layers": ["D4"], "teaser": "那口棺材没盖严",
+    "text": "那具僵尸的棺材，盖子斜着，没盖严。",
+    "choices": [
+      { "text": "用头把盖子顶上", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "忠义": 1, "妖气": 8 }, "result": "咔哒一声，盖严了。墓里安静了很多。",
+        "fail": { "effect": { "体力": -2 }, "result": "盖子太沉。你顶了一夜，脖子酸了三天。" } },
+      { "text": "不管它", "effect": { "灵性": 1 }, "result": "你绕开那口棺材。里面好像翻了个身。" }
+    ]
+  },
+  {
+    "id": "f_jar_whisper", "dir": "down", "chainOnly": true, "layers": ["D4"], "teaser": "那只陶罐在说话",
+    "text": "那只陶罐夜里说话：放我出来，给你一根大骨头。",
+    "choices": [
+      { "text": "不理", "effect": { "灵性": 2, "妖气": 3 }, "result": "它说到天亮，从骨头讲到了烧鸡。你睡着了。" },
+      { "text": "冲罐子叫", "effect": { "牙口": 1 }, "result": "罐子不出声了。黄符好像贴紧了一点。" }
+    ]
+  },
+  {
+    "id": "f_tomb_shift", "dir": "down", "chainOnly": true, "layers": ["D3", "D4"], "teaser": "墓主人要带你巡村",
+    "text": "墓主人的魂带你巡了一圈村子。哪家门槛松了，他都知道。",
+    "choices": [
+      { "text": "一家一家记", "effect": { "忠义": 2, "灵性": 1 }, "result": "记到天亮。他说：三百年了，总算有人肯听。" },
+      { "text": "跟着走走", "effect": { "妖气": 5 }, "result": "他走过的地方，鸡都不叫了。" }
+    ]
+  },
+  {
+    "id": "f_trader_sack", "dir": "any", "chainOnly": true, "teaser": "刘拐子的麻袋还在动",
+    "text": "刘拐子扔下的麻袋还在村口。里面有东西在动。",
+    "choices": [
+      { "text": "咬开麻袋", "effect": { "忠义": 3 }, "result": "是一窝小狗。它们排着队，从你身边爬过去。" },
+      { "text": "叫人来", "effect": { "忠义": 1, "灵性": 1 }, "result": "村长解开袋子。小狗们被几户人家分了。" }
+    ]
+  },
+  {
+    "id": "f_trader_missing", "dir": "any", "chainOnly": true, "teaser": "村东头的狗不见了",
+    "text": "第二天，村东头的大花不见了。地上有麻袋拖过的印子。",
+    "choices": [
+      { "text": "顺着印子追", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "忠义": 3, "脚力": 1, "flag": "trader_foiled" }, "result": "你追上了板车，咬开了袋口。大花自己跑回了家。",
+        "fail": { "effect": { "体力": -2 }, "result": "印子在河边断了。你在河边坐了一下午。" } },
+      { "text": "算了", "effect": { "灵性": 1, "忠义": -1 }, "result": "那天夜里，你没睡着。" }
+    ]
+  },
+  {
+    "id": "f_tiger_last", "dir": "any", "chainOnly": true, "teaser": "黑虎走了",
+    "text": "黑虎死了。地主把它埋在后山，没立碑。",
+    "choices": [
+      { "text": "去坟前趴一会", "effect": { "灵性": 2, "忠义": 1 }, "result": "你趴到天黑。它咬过你，你也咬过它。两清了。" },
+      { "text": "不去", "effect": { "体力": 1 }, "result": "那天你照常吃饭。吃得比平时慢一点。" }
+    ]
+  },
+  {
+    "id": "f_weasel_gone", "dir": "any", "chainOnly": true, "teaser": "二皮留了东西",
+    "text": "二皮走后，你在窝边发现一根鸡毛。鸡毛底下压着一颗鸡蛋。",
+    "choices": [
+      { "text": "吃了", "effect": { "体力": 2 }, "result": "是好蛋。没下药，没设套。" },
+      { "text": "留着", "effect": { "灵性": 1 }, "result": "蛋放了一个月，最后孵出一只小鸡。它跟着你。" }
+    ]
+  },
+  {
+    "id": "f_cast_out_after", "dir": "down", "chainOnly": true, "teaser": "有人往你窝边放了碗",
+    "text": "火把放下的第二天，你窝边多了一碗剩饭。没人说是谁放的。",
+    "choices": [
+      { "text": "吃", "effect": { "体力": 3 }, "result": "碗是领头那人家的。你认得那个缺口。" },
+      { "text": "去村口守着", "effect": { "忠义": 2 }, "result": "你照常守着。路过的人，开始冲你点头了。" }
+    ]
+  },
+  {
+    "id": "f_dark_mountain", "dir": "up", "chainOnly": true, "teaser": "深山里的野狗在等你",
+    "text": "深山里，几只野狗远远跟着你。它们在等你开口。",
+    "choices": [
+      { "text": "带它们下山抢鸡", "effect": { "妖气": 8, "忠义": -2, "体力": 2 }, "result": "那夜，村里少了九只鸡。没人敢出门。" },
+      { "text": "让它们散了", "effect": { "灵性": 1 }, "result": "你一个人就够了。它们散进了林子。" }
+    ]
+  },
+  {
+    "id": "f_goushen_plan", "dir": "any", "chainOnly": true, "teaser": "狗剩想学手艺",
+    "text": "狗剩说他想学手艺。他在酒楼后门站了一下午，没敢进去。",
+    "choices": [
+      { "text": "陪他站着", "effect": { "忠义": 2 }, "result": "掌柜出来倒泔水，看了你们半天：明天来洗碗。" },
+      { "text": "把他往里拱", "effect": { "灵性": 1, "体力": 1 }, "result": "他一个踉跄进了门。出来时，手里拿着一个包子。" }
+    ]
+  },
+  {
+    "id": "f_trap_setter", "dir": "up", "chainOnly": true, "layers": ["U1", "U2"], "teaser": "下夹子的人来了",
+    "text": "下夹子的人来收夹子。他嘟囔：今年的狗，都成精了。",
+    "choices": [
+      { "text": "跟在后面", "effect": { "灵性": 1, "体力": 1 }, "result": "他把那块肉扔了。你记下了他每个夹子的位置。" },
+      { "text": "冲他叫", "effect": { "牙口": 1 }, "result": "他吓得把夹子扔了，骂着下了山。" }
+    ]
+  },
+  {
+    "id": "f_bamboo_pig", "dir": "up", "chainOnly": true, "layers": ["U2"], "teaser": "野猪也来拱笋",
+    "text": "一头野猪也来拱笋。它看你的眼神，像看一根笋。",
+    "choices": [
+      { "text": "让开", "effect": { "脚力": 1 }, "result": "笋归它了。你本来也不爱吃。" },
+      { "text": "龇牙", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "牙口": 2, "妖气": 4 }, "result": "野猪哼了两声，掉头走了。整片笋地归你了。",
+        "fail": { "effect": { "体力": -3 }, "result": "它一拱，你飞进了竹子堆。" } }
+    ]
+  },
+  {
+    "id": "f_moon_answer", "dir": "up", "chainOnly": true, "layers": ["U3", "U4"], "teaser": "山那头有回应",
+    "text": "山那头，有东西回了你一声长啸。",
+    "choices": [
+      { "text": "再啸一声", "effect": { "妖气": 6 }, "result": "你们一来一回，啸到了月亮下山。" },
+      { "text": "去找它", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "妖气": 10, "灵性": 1 }, "result": "是一只白了毛的老狐狸。它冲你点了点头，走了。",
+        "fail": { "effect": { "体力": -2 }, "result": "你翻了两座山，只找到一堆狐狸毛。" } }
+    ]
+  },
+  {
+    "id": "f_incense_owner", "dir": "up", "chainOnly": true, "layers": ["U3"], "teaser": "上香的人又来了",
+    "text": "上香的人又来了。是个瘸腿的老太太。她拜完泥像，又冲你拜了拜。",
+    "choices": [
+      { "text": "送她下山", "effect": { "忠义": 2, "脚力": 1 }, "result": "你走在前面探路。她说：山神爷派你来的吧。" },
+      { "text": "受了这一拜", "effect": { "妖气": 5 }, "result": "你坐得端端正正。尾巴没忍住，摇了两下。" }
+    ]
+  },
+  {
+    "id": "f_thunder_pool", "dir": "up", "chainOnly": true, "layers": ["U4"], "teaser": "那道细雷又冒头了",
+    "text": "雷池水面上，那道细雷又冒了头。它好像认得你。",
+    "choices": [
+      { "text": "伸爪子", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "妖气": 8, "skill": "thunder" }, "result": "它顺着爪子爬上来，钻进了你的毛里。",
+        "fail": { "effect": { "体力": -2 }, "result": "啪。爪子麻了三天。" } },
+      { "text": "走开", "effect": { "灵性": 1 }, "result": "它在后面跳了两下。你没回头。" }
+    ]
+  },
+  {
+    "id": "f_pine_sprout", "dir": "up", "chainOnly": true, "layers": ["U4"], "teaser": "老松冒了新芽",
+    "text": "雷劈过的老松，焦口上冒出一根新芽。",
+    "choices": [
+      { "text": "守它一季", "effect": { "灵性": 2, "妖气": 5 }, "result": "芽长了一寸。你也没走远。" },
+      { "text": "抬腿做个记号", "effect": { "体力": 1 }, "result": "记好了。这棵树，归你了。" }
+    ]
+  },
+  {
+    "id": "f_moon_closer", "dir": "up", "chainOnly": true, "layers": ["U4"], "teaser": "月亮又近了一点",
+    "text": "月亮又近了一点。你看得清它上面的坑。",
+    "choices": [
+      { "text": "跳", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.03,
+        "effect": { "妖气": 30 }, "result": "你咬下了一小口。和你等的味道一样。",
+        "fail": { "effect": { "体力": -2 }, "result": "又差一点。月亮往上躲了躲。" } },
+      { "text": "接着等", "effect": { "灵性": 2 }, "result": "不急。它跑不了。" }
+    ]
   }
 ]

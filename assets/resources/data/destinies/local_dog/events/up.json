@@ -22,7 +22,7 @@
       { "text": "叼肉", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
         "effect": { "体力": 3 }, "result": "你叼起肉就跑。身后，铁夹子咔地合上了。",
         "fail": { "effect": { "death": "trap" }, "result": "咔嚓。铁夹子咬住了你的腿。" } },
-      { "text": "绕开", "effect": { "脚力": 1 }, "result": "你绕了一大圈。那块肉，留给更傻的狗吧。" },
+      { "text": "绕开", "effect": { "follow": "f_trap_setter", "脚力": 1 }, "result": "你绕了一大圈。那块肉，留给更傻的狗吧。" },
       { "text": "先拿爪子探探", "require": "legacy:nimble>=1", "effect": { "体力": 3, "灵性": 1 },
         "result": "前世你踩过它。这一世，你先把夹子拍合了。" },
       { "text": "刨出夹子", "showIf": "skill:dig", "useSkill": "dig", "effect": { "体力": 3, "妖气": 3 },
@@ -69,7 +69,7 @@
     "id": "u2_bamboo_shoot", "dir": "up", "layers": ["U2"],
     "text": "一场雨后，竹笋一夜冒出半人高。",
     "choices": [
-      { "text": "啃笋", "effect": { "体力": 2 }, "result": "狗不爱吃笋。但饿的时候，什么都爱。" },
+      { "text": "啃笋", "effect": { "follow": "f_bamboo_pig", "体力": 2 }, "result": "狗不爱吃笋。但饿的时候，什么都爱。" },
       { "text": "往深里刨", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "moonstone" },
         "result": "笋底下埋着一块石头，在土里发着光。" }
     ]
@@ -109,7 +109,7 @@
     "id": "u3_moon", "dir": "up", "layers": ["U3"], "once": true, "weight": 20,
     "text": "庙前的空地上，月光亮得像一池水。",
     "choices": [
-      { "text": "对月长啸", "effect": { "妖气": 6, "skill": "howl" }, "result": "你对着月亮长啸。月亮好像往下沉了一点。" },
+      { "text": "对月长啸", "effect": { "follow": "f_moon_answer", "妖气": 6, "skill": "howl" }, "result": "你对着月亮长啸。月亮好像往下沉了一点。" },
       { "text": "趴下晒月亮", "effect": { "妖气": 3, "体力": 1 }, "result": "你在月光里睡着了。梦里有很多骨头。" }
     ]
   },
@@ -118,7 +118,7 @@
     "text": "香炉里的香灰还是温的。有人刚来过。",
     "choices": [
       { "text": "舔一口", "effect": { "妖气": 3 }, "result": "苦的。但舔完，你觉得耳朵更尖了。" },
-      { "text": "叼一撮走", "effect": { "item": "incense_ash" }, "result": "你用嘴包了一撮香灰。说不定哪天用得上。" }
+      { "text": "叼一撮走", "effect": { "follow": { "id": "f_incense_owner", "delay": 2 }, "item": "incense_ash" }, "result": "你用嘴包了一撮香灰。说不定哪天用得上。" }
     ]
   },
   {
@@ -131,7 +131,7 @@
     ]
   },
   {
-    "id": "u2_weasel_thanks", "dir": "up", "layers": ["U2", "U3"], "once": true, "weight": 20, "require": "flag:weasel_saved",
+    "id": "u2_weasel_thanks", "dir": "up", "layers": ["U2", "U3"], "once": true, "weight": 20, "require": "flag:weasel_saved", "teaser": "二皮一家要来谢你",
     "text": "二皮带着一窝小黄鼠狼，排成一排，冲你作揖。",
     "choices": [
       { "text": "收下谢礼", "effect": { "item": "moonstone", "灵性": 1 }, "result": "它们叼来一块月光石。最小的那只，偷偷舔了你一下。" }
@@ -177,14 +177,14 @@
       { "text": "接住它", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "妖气": 10, "skill": "thunder" }, "result": "你一口叼住了那道雷。它乖乖地，钻进了你的毛里。",
         "fail": { "effect": { "体力": -3 }, "result": "雷把你弹出去三丈远。毛焦了一片。" } },
-      { "text": "看着它", "effect": { "灵性": 2 }, "result": "雷跳累了，沉进了水里。你好像懂了点什么。" }
+      { "text": "看着它", "effect": { "follow": "f_thunder_pool", "灵性": 2 }, "result": "雷跳累了，沉进了水里。你好像懂了点什么。" }
     ]
   },
   {
     "id": "u4_thunder_pine", "dir": "up", "layers": ["U4"],
     "text": "一棵被雷劈过的老松，还冒着青烟。",
     "choices": [
-      { "text": "啃一块下来", "effect": { "item": "thunder_wood" }, "result": "木头麻嘴。你叼着它，一路打着喷嚏。" },
+      { "text": "啃一块下来", "effect": { "follow": { "id": "f_pine_sprout", "delay": 2 }, "item": "thunder_wood" }, "result": "木头麻嘴。你叼着它，一路打着喷嚏。" },
       { "text": "在树下刨坑", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "tiangou_bone" },
         "result": "树根底下，埋着一截会发光的骨头。" }
     ]
@@ -196,7 +196,7 @@
       { "text": "跳起来咬", "chance": 0.35, "chanceAttr": "牙口", "chanceStep": 0.03,
         "effect": { "妖气": 40 }, "result": "你咬下了一小口月亮。凉的，甜的。",
         "fail": { "effect": { "体力": -3 }, "result": "差一点。你摔在石头上，月亮在笑。" } },
-      { "text": "再等等", "effect": { "灵性": 2, "妖气": 5 }, "result": "你对着月亮坐了一夜。总有一天。" }
+      { "text": "再等等", "effect": { "follow": "f_moon_closer", "灵性": 2, "妖气": 5 }, "result": "你对着月亮坐了一夜。总有一天。" }
     ]
   }
 ]

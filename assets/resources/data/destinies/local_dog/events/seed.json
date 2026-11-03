@@ -3,7 +3,7 @@
     "id": "s0_up_smell", "dir": "up", "stage": [0, 0], "weight": 20,
     "text": "柴堆外头飘来一股香味，是从山那边来的。你的鼻子比眼睛先醒了。",
     "choices": [
-      { "text": "爬出去闻闻", "effect": { "脚力": 1, "体力": -1 }, "result": "你摔了三个跟头，爬到了柴堆外面。山，好大。" },
+      { "text": "爬出去闻闻", "effect": { "follow": "f_smell_source", "脚力": 1, "体力": -1 }, "result": "你摔了三个跟头，爬到了柴堆外面。山，好大。" },
       { "text": "缩回窝里", "effect": { "体力": 1 }, "result": "窝里暖和。香味明天还会有的。" }
     ]
   },
@@ -21,7 +21,7 @@
     "id": "s0_down_xiaocui", "dir": "down", "stage": [0, 0], "weight": 25, "once": true,
     "text": "一个扎羊角辫的小姑娘蹲下来看你。她说：你就叫小黄吧。",
     "choices": [
-      { "text": "摇尾巴", "effect": { "忠义": 2, "flag": "xiaocui" }, "result": "她笑了。她说她叫小翠。" },
+      { "text": "摇尾巴", "effect": { "follow": { "id": "f_xiaocui_rope", "delay": 2 }, "忠义": 2, "flag": "xiaocui" }, "result": "她笑了。她说她叫小翠。" },
       { "text": "舔她的手", "effect": { "忠义": 1, "体力": 2, "flag": "xiaocui" }, "result": "她把半个窝头塞进了你嘴里。她说她叫小翠。" }
     ]
   },
