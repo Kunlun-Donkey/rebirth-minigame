@@ -4,7 +4,7 @@ import { ChoiceView, DirOption } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import {
-    box, button, ButtonOpts, chip, COLOR, image, onTap, rect, sizeOf, text, textHeight,
+    box, button, ButtonOpts, chip, clampText, COLOR, image, onTap, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
 import { ListEntry, showInfo, showList } from './popups';
 
@@ -34,8 +34,19 @@ function hud(g: Game, root: Node): number {
     text(root, `第 ${r.life} 世`, 30, top, 200, { size: 36, color: COLOR.ochreD, bold: true });
     const map = e.mapDef();
     const label = r.blessed ? `✦ ${e.data.meta.blessed?.name ?? e.data.meta.name}` : e.data.meta.name;
-    const where = text(root, map ? `${label} · ${map.name}` : label, 170, top + 6, g.W - 170 - 190, { size: 26, color: r.blessed ? COLOR.legacy : COLOR.ink2, bold: !!r.blessed });
-    if (map) onTap(where, () => showInfo(g, `出生地 · ${map.name}`, [map.desc]), false);
+    const career = e.careerDef();
+    const sub = [map?.name, career?.name].filter(Boolean).join(' · ');
+    const where = text(root, clampText(sub ? `${label} · ${sub}` : label, g.W - 170 - 190, 26, 34, 34), 170, top + 6, g.W - 170 - 190, { size: 26, color: r.blessed ? COLOR.legacy : COLOR.ink2, bold: !!r.blessed });
+    // 点按看本世的出生地 / 职业 / 系统 / 今日天命
+    const sys = e.data.companions.get(e.systemId() ?? '');
+    const fate = e.data.fates.get(r.fate ?? '');
+    const about = [
+        map ? `出生地 · ${map.name}：${map.desc}` : '',
+        career ? `职业 · ${career.name}：${career.desc}` : '',
+        sys ? `系统 · ${sys.name}：${sys.desc}` : '',
+        fate ? `今日天命 · ${fate.name}：${fate.desc}` : '',
+    ].filter(Boolean);
+    if (about.length) onTap(where, () => showInfo(g, `第 ${r.life} 世`, about), false);
     const stage = e.stageName(r.stage);
     const tag = box(root, g.W - 30 - 140, top, 140, 46, 'stage');
     rect(tag, { fill: COLOR.leaf, radius: 23 });
@@ -189,7 +200,10 @@ function directionArea(g: Game, root: Node, y: number, _bottom: number): void {
     const e = g.engine;
     const r = e.run;
     const cardW = g.W - 60;
-    const prompt = (e.data.meta.rules.dirPrompt ?? '你是{stage}。\n这一季，往哪儿去？').replace('{stage}', e.stageName(r.stage));
+    const career = e.careerDef();
+    const prompt = (e.data.meta.rules.dirPrompt ?? '你是{stage}。\n这一季，往哪儿去？')
+        .replace('{stage}', e.stageName(r.stage))
+        .replace(/[，,]?\{career\}/, career ? `，${career.title}` : '');
     // 不限方向的待续剧情：预告写在提示卡里（限方向的写在对应方向按钮上）
     const anyTeaser = e.threadTeasers().find(t => t.dir === 'any');
     const card = box(root, 30, y, cardW, 230, 'prompt');
@@ -245,12 +259,14 @@ function toolbar(g: Game, root: Node): void {
     rect(bar, { fill: COLOR.paper, fillAlpha: 230, stroke: COLOR.paperEdge, strokeAlpha: 120, lineWidth: 2 });
     const usableItems = e.run.phase === 'direction' ? e.usableItems().length : 0;
     const usableSkills = e.skillViews().filter(s => s.usable).length;
-    const tools: { id: 'items' | 'skills' | 'companions' | 'codex'; ic: string; label: string; badge: number; fn: () => void }[] = [
+    const tools: { id: 'items' | 'skills' | 'companions' | 'lines' | 'codex'; ic: string; label: string; badge: number; fn: () => void }[] = [
         { id: 'items', ic: '囊', label: '道具', badge: usableItems, fn: () => itemsPopup(g) },
         { id: 'skills', ic: '技', label: '技能', badge: usableSkills, fn: () => skillsPopup(g) },
         { id: 'companions', ic: '伴', label: '伙伴', badge: 0, fn: () => companionsPopup(g) },
         { id: 'codex', ic: '鉴', label: '图鉴', badge: 0, fn: () => codexPopup(g) },
     ];
+    // 有故事线的命格才显示「故事」
+    if (e.data.lines.size) tools.splice(3, 0, { id: 'lines', ic: '缘', label: '故事', badge: 0, fn: () => linesPopup(g) });
     const tw = g.W / tools.length;
     tools.forEach((t, i) => {
         const n = box(bar, i * tw, 0, tw, TOOLBAR_H, `tool_${t.label}`);
@@ -308,6 +324,15 @@ function companionsPopup(g: Game): void {
         if (c) lines.push(`【${c.system ? '系统' : '伙伴'}】${c.name}\n${c.desc}`);
     }
     showInfo(g, '伙  伴', lines.length ? lines : ['这一世，你孤身一人。']);
+}
+
+function linesPopup(g: Game): void {
+    const e = g.engine;
+    const entries: ListEntry[] = e.lineViews().map(l => ({
+        title: l.name, desc: `${l.state ? `眼下：${l.state}。` : ''}${l.summary}`,
+        tag: l.state ? { text: '有进展', color: COLOR.legacy } : { text: '刚开始', color: COLOR.ink2 },
+    }));
+    showList(g, '这一世的故事', entries, { emptyText: '这一世的故事，还没有开始。' });
 }
 
 function codexPopup(g: Game): void {

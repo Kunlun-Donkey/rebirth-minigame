@@ -1,6 +1,6 @@
 [
   {
-    "id": "down_fallback", "dir": "down", "weight": 3,
+    "id": "down_fallback", "careers": ["office"], "dir": "down", "weight": 3,
     "text": "你溜出工位，在楼里转了一圈。没人发现你不见了。",
     "choices": [
       { "text": "多转一圈", "effect": { "心态": 1, "精力": 1 }, "result": "你发现这栋楼的楼梯，比工位有意思。" },
@@ -8,7 +8,7 @@
     ]
   },
   {
-    "id": "d1_gossip", "dir": "down", "layers": ["D1"], "weight": 12,
+    "id": "d1_gossip", "careers": ["office"], "dir": "down", "layers": ["D1"], "weight": 12,
     "text": "茶水间里两个同事在小声说：听说要裁员了。看见你进来，他们闭了嘴。",
     "choices": [
       { "text": "装没听见，泡咖啡", "effect": { "心态": 1, "精力": 1 }, "result": "你慢慢泡完咖啡。他们等你走了才接着说。" },
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "id": "d1_coffee_machine", "dir": "down", "layers": ["D1"], "weight": 10,
+    "id": "d1_coffee_machine", "careers": ["office"], "dir": "down", "layers": ["D1"], "weight": 10,
     "text": "咖啡机坏了。全公司的效率下降了一半，大家在茶水间排队等修理工。",
     "choices": [
       { "text": "跟着排队", "effect": { "人脉": 2 }, "result": "排队的时候，你认识了财务、法务和隔壁部门的总监。" },
@@ -31,7 +31,7 @@
     ]
   },
   {
-    "id": "d2_stairwell_call", "dir": "down", "layers": ["D2"], "weight": 12,
+    "id": "d2_stairwell_call", "careers": ["office"], "dir": "down", "layers": ["D2"], "weight": 12,
     "text": "楼梯间里有人在打电话，声音发抖：妈，我这边挺好的，你别担心。",
     "choices": [
       { "text": "悄悄退出去", "effect": { "心态": 1 }, "result": "你轻轻关上了门。每个人都有一个不能在工位上打的电话。" },
@@ -40,7 +40,7 @@
     ]
   },
   {
-    "id": "d2_nap", "dir": "down", "layers": ["D2"], "weight": 10,
+    "id": "d2_nap", "careers": ["office"], "dir": "down", "layers": ["D2"], "weight": 10,
     "text": "楼梯间顶楼的拐角，有一块没人的台阶，阳光正好照在上面。",
     "choices": [
       { "text": "睡二十分钟", "effect": { "精力": 3 }, "result": "你醒来的时候，阳光挪了一格。你觉得自己又能干十年。" },
@@ -50,7 +50,7 @@
     ]
   },
   {
-    "id": "d3_parking", "dir": "down", "layers": ["D3"], "weight": 12,
+    "id": "d3_parking", "careers": ["office"], "dir": "down", "layers": ["D3"], "weight": 12,
     "text": "地下车库很安静。一辆豪车里，副总正一个人坐着发呆。",
     "choices": [
       { "text": "敲敲车窗", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
@@ -63,7 +63,7 @@
     ]
   },
   {
-    "id": "d3_signal", "dir": "down", "layers": ["D3"], "weight": 10,
+    "id": "d3_signal", "careers": ["office"], "dir": "down", "layers": ["D3"], "weight": 10,
     "text": "车库最深处没有信号。手机右上角显示「无服务」，你从来没觉得这三个字这么好看。",
     "choices": [
       { "text": "待一下午", "effect": { "心态": 2, "精力": 2, "能力": -1 }, "result": "一下午没人找到你。上楼的时候，群里多了三百条消息。" },

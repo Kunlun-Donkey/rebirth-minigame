@@ -1,0 +1,628 @@
+{
+  "id": "job_stall",
+  "name": "摆摊",
+  "summary": "一辆三轮车，一口锅。城管、天气、隔壁摊，都是你的江湖。开成一千家店、拿下一颗星，或者只在天气好的晚上出摊。",
+  "careers": [
+    "stall"
+  ],
+  "states": {
+    "signature": "有了招牌小吃",
+    "fixed": "抽中了固定摊位",
+    "brand": "开起了加盟店",
+    "critic": "被美食评审盯上了",
+    "free": "决定随缘出摊"
+  },
+  "events": [
+    {
+      "id": "first_night",
+      "dir": "up",
+      "layers": [
+        "U1"
+      ],
+      "weight": 14,
+      "text": "出摊第一晚。你卖的是煎饼，隔壁卖烤冷面，对面卖臭豆腐。一个小时过去，你卖出了两份。",
+      "choices": [
+        {
+          "text": "吆喝起来",
+          "chance": 0.5,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.06,
+          "effect": {
+            "身价": 4,
+            "脸皮": 1
+          },
+          "result": "你一嗓子喊出去，路过的人都回了头。那晚你卖了四十份。",
+          "easy": "你一开口，半条街都笑了。队伍排到了臭豆腐摊门口。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "你张了张嘴，没喊出来。烤冷面大姐替你喊了一嗓子。"
+          }
+        },
+        {
+          "text": "改配方",
+          "effect": {
+            "能力": 1,
+            "身价": 2
+          },
+          "result": "你偷偷尝了隔壁三家。回家调酱，调到了凌晨三点。"
+        },
+        {
+          "text": "前世卖过七块五",
+          "require": "legacy:hawker>=1",
+          "effect": {
+            "身价": 8,
+            "脸皮": 2
+          },
+          "result": "前世你亏光了。这一世你知道：第一口要辣，第二口要香，第三口要贵。"
+        }
+      ]
+    },
+    {
+      "id": "recipe",
+      "dir": "up",
+      "layers": [
+        "U1",
+        "U2"
+      ],
+      "weight": 12,
+      "text": "你琢磨了三个月，琢磨出一道酸辣土豆丝夹馍。老顾客尝了一口，愣住了：这是啥？",
+      "choices": [
+        {
+          "text": "定为招牌",
+          "effect": {
+            "state": "signature",
+            "能力": 2,
+            "身价": 4
+          },
+          "result": "你在三轮车上挂了块牌子：招牌夹馍，每晚限量。"
+        },
+        {
+          "text": "免费试吃一周",
+          "effect": {
+            "人脉": 3,
+            "身价": -2,
+            "state": "signature"
+          },
+          "result": "一周后，试吃的人都回来了，还带了人。"
+        },
+        {
+          "text": "加点芝士",
+          "absurd": true,
+          "chance": 0.25,
+          "chanceAttr": "能力",
+          "chanceStep": 0.03,
+          "effect": {
+            "身价": 10,
+            "state": "signature",
+            "feud": "芝士夹馍成了网红"
+          },
+          "result": "芝士拉丝的视频火了。年轻人排着队来拍照。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "老顾客吃了一口：你这是在干啥？"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lottery",
+      "dir": "up",
+      "layers": [
+        "U2"
+      ],
+      "weight": 14,
+      "text": "夜市要划线摊位，一个月一百块，抽签分。路口那个黄金位，炸串摊的老马盯了三年。",
+      "choices": [
+        {
+          "text": "老实抽签",
+          "effect": {
+            "state": "fixed",
+            "心态": 1,
+            "身价": 3
+          },
+          "result": "你抽到了厕所旁边。人流量，其实也不小。"
+        },
+        {
+          "text": "找老马合摆",
+          "effect": {
+            "state": "fixed",
+            "人脉": 2,
+            "flag": "mate"
+          },
+          "result": "老马想了想：你卖馍，我卖炸串，正好。"
+        },
+        {
+          "text": "跟老马比嗓门",
+          "absurd": true,
+          "chance": 0.2,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.03,
+          "effect": {
+            "state": "fixed",
+            "脸皮": 2,
+            "身价": 8,
+            "flag": "mate",
+            "feud": "老马把黄金位让给了你"
+          },
+          "result": "你一嗓子吼完，整条街安静了。老马说：这嗓子，不摆摊可惜了。",
+          "fail": {
+            "effect": {
+              "精力": -1
+            },
+            "result": "你吼破了嗓子。老马递过来一杯胖大海。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "urban",
+      "dir": "up",
+      "layers": [
+        "U1",
+        "U2"
+      ],
+      "weight": 10,
+      "text": "城管的车停在街口。旁边的摊主推着车就跑，有个大姐的车轱辘卡进了沟里。",
+      "choices": [
+        {
+          "text": "帮大姐抬车",
+          "effect": {
+            "人脉": 2,
+            "心态": 1
+          },
+          "result": "城管走过来，帮你俩一起抬：别跑了，挪到划线的地方去。"
+        },
+        {
+          "text": "推车就跑",
+          "chance": 0.5,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.05,
+          "effect": {
+            "身价": 2
+          },
+          "result": "你跑出了两条街。回头一看，城管根本没追。",
+          "fail": {
+            "effect": {
+              "身价": -3,
+              "心态": -1
+            },
+            "result": "你跑丢了半车货。城管捡起来，还给了你。"
+          }
+        },
+        {
+          "text": "请城管吃个馍",
+          "effect": {
+            "人脉": 1,
+            "脸皮": 1
+          },
+          "result": "城管摆摆手不吃。第二天，他穿着便服来买了两个。"
+        },
+        {
+          "text": "亮出摊位证",
+          "showIf": "line:job_stall.fixed",
+          "effect": {
+            "心态": 1,
+            "身价": 3
+          },
+          "result": "城管看了一眼你的编号：37 号，挺好。他还帮你扶了扶招牌。"
+        }
+      ]
+    },
+    {
+      "id": "franchise",
+      "dir": "up",
+      "layers": [
+        "U3"
+      ],
+      "weight": 14,
+      "text": "一个穿西装的人蹲在你摊前吃完三个馍：我想加盟。你这个摊，能不能开到一百个城市去？",
+      "choices": [
+        {
+          "text": "自己一家家开",
+          "effect": {
+            "state": "brand",
+            "能力": 2,
+            "身价": 10
+          },
+          "result": "你一条街一条街地开。一年后，第十家店的灯亮了。"
+        },
+        {
+          "text": "签加盟",
+          "chance": 0.45,
+          "chanceAttr": "能力",
+          "chanceStep": 0.04,
+          "effect": {
+            "state": "brand",
+            "身价": 20,
+            "人脉": 2
+          },
+          "result": "合同你逐字看了三遍。半年后，五十个城市挂上了你的招牌。",
+          "fail": {
+            "effect": {
+              "death": "stall_broke"
+            },
+            "result": "合同第九页藏着「配方归甲方」。你发现时，招牌已经不是你的了。"
+          }
+        },
+        {
+          "text": "把配方卖了",
+          "effect": {
+            "身价": 25,
+            "心态": 1
+          },
+          "result": "你拿着钱，继续推着三轮车出摊。招牌夹馍，还是你做的最好吃。"
+        },
+        {
+          "text": "让老马当区域经理",
+          "require": "flag:mate",
+          "effect": {
+            "state": "brand",
+            "人脉": 3,
+            "身价": 12,
+            "feud": "老马成了你的区域经理"
+          },
+          "result": "老马系上了领带。第一次开会，他给每个人带了一把炸串。"
+        }
+      ]
+    },
+    {
+      "id": "brand",
+      "dir": "up",
+      "layers": [
+        "U4"
+      ],
+      "once": true,
+      "weight": 16,
+      "text": "投行的人说，你的小吃品牌可以上市了。你看着会议室墙上那辆旧三轮车的照片。",
+      "choices": [
+        {
+          "text": "敲钟",
+          "require": "stage>=4 & 能力>=12 & line:job_stall.brand",
+          "effect": {
+            "ending": "stall_brand"
+          },
+          "result": "敲钟那天，你在交易所门口支了个摊。第一个馍，给了老马。"
+        },
+        {
+          "text": "不上了",
+          "effect": {
+            "心态": 2,
+            "身价": 15
+          },
+          "result": "你说：上市了，馍就不好吃了。投行的人以为你在开玩笑。"
+        },
+        {
+          "text": "带着三轮车去路演",
+          "absurd": true,
+          "chance": 0.3,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.03,
+          "effect": {
+            "身价": 30,
+            "人脉": 3
+          },
+          "result": "你在路演现场摊了二十个馍。投资人吃完，估值翻了一倍。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "保安说会场不让明火。你的馍，凉了。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stool",
+      "dir": "down",
+      "layers": [
+        "D1"
+      ],
+      "weight": 12,
+      "text": "下雨了，夜市没人。你坐在小马扎上，看着雨点打在锅盖上。隔壁大姐递来一把瓜子。",
+      "choices": [
+        {
+          "text": "嗑瓜子聊天",
+          "effect": {
+            "人脉": 2,
+            "心态": 1
+          },
+          "result": "大姐说她摆了二十年摊，供出了两个大学生。你听得很认真。"
+        },
+        {
+          "text": "早点收摊",
+          "effect": {
+            "精力": 2
+          },
+          "result": "你推着车回家，泡了个脚。偶尔这样，也挺好。"
+        }
+      ]
+    },
+    {
+      "id": "goods",
+      "dir": "down",
+      "layers": [
+        "D1",
+        "D2"
+      ],
+      "weight": 10,
+      "text": "凌晨四点的批发市场。老板冲你招手：这批面粉，便宜三成，就是日子快到了。",
+      "choices": [
+        {
+          "text": "要新鲜的",
+          "effect": {
+            "身价": -2,
+            "能力": 1
+          },
+          "result": "你多花了钱。顾客说：你家的馍，越来越香了。"
+        },
+        {
+          "text": "便宜的来一车",
+          "chance": 0.4,
+          "chanceAttr": "能力",
+          "chanceStep": 0.05,
+          "effect": {
+            "身价": 8
+          },
+          "result": "面粉没问题，你赚了一笔差价。",
+          "fail": {
+            "effect": {
+              "death": "stall_broke"
+            },
+            "result": "有顾客吃坏了肚子。你的摊上了本地新闻，再也没人来了。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rooftop",
+      "dir": "down",
+      "layers": [
+        "D3"
+      ],
+      "weight": 14,
+      "text": "出租屋的天台上，晾满了床单。你搬了把椅子，看着半座城的灯一盏盏亮起来。今晚，你不想出摊。",
+      "choices": [
+        {
+          "text": "以后随缘出摊",
+          "effect": {
+            "state": "free",
+            "心态": 3,
+            "follow": {
+              "id": "free",
+              "delay": 3,
+              "ttl": 10
+            }
+          },
+          "result": "你想好了：天气好就出，卖完一百份就收。"
+        },
+        {
+          "text": "歇一晚就好",
+          "effect": {
+            "精力": 2,
+            "心态": 1
+          },
+          "result": "你在天台上睡着了。第二天一早，你照常进货。"
+        }
+      ]
+    },
+    {
+      "id": "free",
+      "dir": "side",
+      "teaser": "老顾客问你今晚出不出摊",
+      "require": "line:job_stall.free",
+      "text": "老顾客在群里问：今晚出不出摊？你看了看天，晴的。你又看了看自己，懒的。",
+      "choices": [
+        {
+          "text": "看心情",
+          "require": "stage>=3 & 心态>=18",
+          "effect": {
+            "ending": "stall_free"
+          },
+          "result": "你回了一个字：出。群里炸了。一百份，十分钟卖完。"
+        },
+        {
+          "text": "出吧",
+          "effect": {
+            "身价": 6
+          },
+          "result": "你推车出了门。顾客说：等你一周了。"
+        },
+        {
+          "text": "不出",
+          "effect": {
+            "精力": 2,
+            "心态": 1
+          },
+          "result": "你在群里发了张晚霞的照片：今晚歇业。"
+        }
+      ]
+    },
+    {
+      "id": "morning",
+      "dir": "side",
+      "layers": [
+        "L1"
+      ],
+      "weight": 12,
+      "text": "早市五点就热闹了。卖菜的大爷说：小伙子，晚上摆摊白天睡觉，日子过反了。",
+      "choices": [
+        {
+          "text": "早市也摆",
+          "effect": {
+            "身价": 4,
+            "精力": -1
+          },
+          "result": "早上卖豆浆，晚上卖馍。你一天只睡五个钟头。"
+        },
+        {
+          "text": "跟大爷学挑菜",
+          "effect": {
+            "能力": 1,
+            "人脉": 1
+          },
+          "result": "大爷教你一眼看出哪颗白菜心是实的。你的馍，更香了。"
+        }
+      ]
+    },
+    {
+      "id": "critic",
+      "dir": "any",
+      "once": true,
+      "weight": 6,
+      "stage": [
+        1,
+        99
+      ],
+      "require": "line:job_stall.signature",
+      "text": "一个戴眼镜的外国老头连着三晚来吃你的馍，每次都在小本子上写写画画，不说话。",
+      "choices": [
+        {
+          "text": "多送他一个",
+          "effect": {
+            "state": "critic",
+            "心态": 1,
+            "follow": {
+              "id": "star",
+              "delay": 3,
+              "ttl": 8
+            }
+          },
+          "result": "他愣了一下，用蹩脚的中文说：谢谢。小本子上，多了一行字。"
+        },
+        {
+          "text": "问他写啥",
+          "effect": {
+            "人脉": 1
+          },
+          "result": "他合上本子，笑了笑，走了。后来再没来过。"
+        }
+      ]
+    },
+    {
+      "id": "star",
+      "dir": "any",
+      "teaser": "那个外国老头又来了",
+      "require": "line:job_stall.critic",
+      "text": "外国老头带着一群人来了，举着一块牌子。翻译说：恭喜，您的摊位获得了米其林一星。",
+      "choices": [
+        {
+          "text": "照常出摊",
+          "require": "stage>=3 & 能力>=16",
+          "effect": {
+            "ending": "stall_michelin"
+          },
+          "result": "第二天你照常出摊，价格一分没涨。队伍排到了下一个路口。"
+        },
+        {
+          "text": "涨价",
+          "effect": {
+            "身价": 20,
+            "人脉": -2
+          },
+          "result": "馍涨到了三十。老顾客们来了一次，就不来了。"
+        },
+        {
+          "text": "这是啥？",
+          "effect": {
+            "心态": 2,
+            "身价": 8
+          },
+          "result": "你以为是卫生许可证，挂在了三轮车上。"
+        }
+      ]
+    },
+    {
+      "id": "sys_bind",
+      "dir": "up",
+      "layers": [
+        "U1",
+        "U2"
+      ],
+      "once": true,
+      "weight": 8,
+      "require": "!system:any & season>=2",
+      "text": "你在锅前发呆，油冒烟了。脑子里响了一声：【叮！】检测到宿主手艺有潜力，爆款配方系统绑定中……",
+      "choices": [
+        {
+          "text": "绑定",
+          "effect": {
+            "bind": "sys_recipe",
+            "state": "system.bound",
+            "follow": {
+              "id": "sys_task",
+              "delay": 2
+            }
+          },
+          "result": "【叮！】绑定成功。今日爆款：酸辣土豆丝夹馍。"
+        },
+        {
+          "text": "先关火",
+          "effect": {
+            "能力": 1,
+            "心态": 1
+          },
+          "result": "你关了火。等你回过神，系统不见了，馍糊了。"
+        },
+        {
+          "text": "要老马的炸串配方",
+          "absurd": true,
+          "chance": 0.2,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.03,
+          "effect": {
+            "bind": "sys_recipe",
+            "state": "system.bound",
+            "身价": 6
+          },
+          "result": "【叮！】……检索中。老马的配方是：多放盐。已发放。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "【叮！】本系统不提供商业机密。宿主好自为之。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sys_task",
+      "dir": "any",
+      "teaser": "【叮！】配方任务已发布",
+      "require": "system:sys_recipe",
+      "text": "【叮！】任务：用系统配方做一份「让人吃哭的馍」。目标顾客：一个刚失恋的人。",
+      "choices": [
+        {
+          "text": "用系统配方",
+          "effect": {
+            "state": "system.tasked",
+            "身价": 8
+          },
+          "result": "顾客吃了一口，哭了。【叮！】任务完成。你觉得哪里不太对。"
+        },
+        {
+          "text": "用自己的配方",
+          "chance": 0.5,
+          "chanceAttr": "能力",
+          "chanceStep": 0.04,
+          "effect": {
+            "state": "system.tasked",
+            "能力": 2,
+            "心态": 2,
+            "身价": 6
+          },
+          "result": "顾客吃完笑了：好吃。【叮！】……超额完成，系统表示不服。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "顾客吃完没哭，也没笑。【叮！】任务失败，宿主太倔。"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -21,5 +21,16 @@
   { "id": "sys_antijuan", "name": "反卷系统", "system": true, "rarity": "legend", "desc": "每 2 季身价 +3、能力 +1。【叮！】隔壁卷王加班中，您的修为 +1。",
     "every": { "n": 2, "effect": { "身价": 3, "能力": 1 }, "text": "【叮！】检测到同事在加班。宿主修为 +1。" } },
   { "id": "sys_pie", "name": "画饼系统", "system": true, "rarity": "epic", "desc": "每 3 季人脉 +2、身价 +2。从老周那儿夺来的。【叮！】请宿主给别人画饼。",
-    "every": { "n": 3, "effect": { "人脉": 2, "身价": 2 }, "text": "【叮！】宿主画饼成功。对方信了。" } }
+    "every": { "n": 3, "effect": { "人脉": 2, "身价": 2 }, "text": "【叮！】宿主画饼成功。对方信了。" } },
+
+  { "id": "sys_rider", "name": "跑单系统", "system": true, "rarity": "rare", "desc": "每 2 季身价 +3。【叮！】前方三百米有一单，准时送达奖励翻倍。",
+    "every": { "n": 2, "effect": { "身价": 3 }, "text": "【叮！】本周准时率百分百，奖励身价 +3。" } },
+  { "id": "sys_nav", "name": "导航系统", "system": true, "rarity": "epic", "desc": "每个事件 40% 概率预告一个选项的结果；每 3 季人脉 +1。【叮！】前方五百米，有一个改变命运的路口。",
+    "mods": { "hintChance": 0.4 }, "every": { "n": 3, "effect": { "人脉": 1 }, "text": "【叮！】已为您规划最优人生路线。" } },
+  { "id": "sys_recipe", "name": "爆款配方系统", "system": true, "rarity": "epic", "desc": "每 2 季身价 +2、人脉 +1。【叮！】今日爆款配方已发放，成功率 99%。",
+    "every": { "n": 2, "effect": { "身价": 2, "人脉": 1 }, "text": "【叮！】今日爆款：酸辣土豆丝夹馍。排队的人拐了个弯。" } },
+  { "id": "sys_shop", "name": "掌柜系统", "system": true, "rarity": "rare", "desc": "每 3 季身价 +3、能力 +1。【叮！】检测到回头客 +1，掌柜经验 +1。",
+    "every": { "n": 3, "effect": { "身价": 3, "能力": 1 }, "text": "【叮！】本季回头客破百。掌柜经验 +1。" } },
+  { "id": "sys_traffic", "name": "流量系统", "system": true, "rarity": "epic", "desc": "每 2 季人脉 +2、身价 +1。【叮！】本视频已获流量扶持，请宿主保持人设。",
+    "every": { "n": 2, "effect": { "人脉": 2, "身价": 1 }, "text": "【叮！】流量扶持到账。评论区涨了三千条。" } }
 ]

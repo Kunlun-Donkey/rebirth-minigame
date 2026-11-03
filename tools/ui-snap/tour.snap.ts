@@ -117,16 +117,30 @@ it('UI 巡检快照', async () => {
                 (g.engine.run as { over?: unknown; phase: string }).over = { kind: 'ending', id: ending };
                 g.engine.run.phase = 'over';
                 try { g.goSettle(); await flush(4); snap('结局结算'); } catch { /* 引擎不支持强制结局时跳过 */ }
+                // 生平弹窗（塞满生平大事，看分页）
+                const bio = taps(g.screen).find(n => labels(n).some(l => l.startsWith('生平')));
+                if (bio) {
+                    g.engine.settle().log.push(...Array.from({ length: 30 }, (_, i) => `第${i + 1}季，发生了一件值得写进生平的事。`));
+                    tap(bio); await flush(4); snap('生平');
+                    g.overlay.destroyAllChildren();
+                }
             }
-            // 图鉴墙四个页签（收集一部分，看已收集 / 剪影两种卡）
+            // 图鉴墙全部页签（收集一部分，看已收集 / 剪影两种卡）
             const dp = g.engine.dp;
             const v0 = g.engine.codexView();
             dp.codex.deaths = v0.deaths.slice(0, 5).map(x => x.id);
             dp.deathCount = Object.fromEntries(dp.codex.deaths.map((id, i) => [id, i + 1]));
             dp.codex.feuds = v0.feuds.slice(0, 3).map(x => x.text);
             dp.codex.events = [...dp.codex.events, ...v0.cameos.slice(0, 3).map(x => x.id)];
-            for (const tab of ['endings', 'deaths', 'cameos', 'feuds'] as const) {
+            dp.codex.items = v0.items.slice(0, 4).map(x => x.id);
+            dp.ever = [...(dp.ever ?? []), ...v0.lines.slice(0, 3).flatMap(l => [l.id, ...l.states.slice(0, 1).map(s => `${l.id}.${s.id}`)])];
+            for (const tab of ['endings', 'deaths', 'lines', 'skills', 'items', 'cameos', 'feuds'] as const) {
+                if (tab !== 'endings' && tab !== 'deaths' && !v0[tab].length) continue;
                 g.reset(); showCodex(g, tab); await flush(4); snap(`图鉴墙·${tab}`);
+                if (tab === 'lines') {
+                    const c = taps(g.screen).find(n => n.name === 'cell');
+                    if (c) { tap(c); await flush(4); snap('图鉴墙·故事线详情'); g.overlay.destroyAllChildren(); }
+                }
             }
             g.reset(); showCodex(g, 'cameos', 9); await flush(4); snap('图鉴墙·末页');
         }

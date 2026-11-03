@@ -250,6 +250,9 @@ export class Game {
         this.goRun();
         const B = this.data.meta.blessed;
         const remark = this.engine.startRemark();
+        // 认主的系统开局自动绑定：跟在开局说明后面提一句
+        const sys = this.data.companions.get(this.engine.systemId() ?? '');
+        const sysLine = sys ? ['', `【叮！】${sys.name}已自动绑定，继续为宿主服务。`] : [];
         if (this.engine.run.blessed && B) {
             // 天命之子：金色开局（天胡通道）
             Platform.report('blessed', { life: this.engine.run.life });
@@ -259,9 +262,10 @@ export class Game {
                 B.text,
                 `本世：全属性大幅提升${B.lifespanMul && B.lifespanMul > 1 ? `，寿元 ×${B.lifespanMul}` : ''}，奇遇将至。`,
                 ...(map ? [`出生地：${map.name}`] : []),
+                ...sysLine,
             ]);
-        } else if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc, ...(remark ? ['', tiandao(remark)] : [])]);
-        else if (remark) showInfo(this, `第 ${this.engine.run.life} 世`, [tiandao(remark)]);
+        } else if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc, ...(remark ? ['', tiandao(remark)] : []), ...sysLine]);
+        else if (remark || sys) showInfo(this, `第 ${this.engine.run.life} 世`, [...(remark ? [tiandao(remark)] : []), ...sysLine]);
     }
 
     /** 执行一个会产生结果的动作（选项/道具/技能），弹出结果后推进 */

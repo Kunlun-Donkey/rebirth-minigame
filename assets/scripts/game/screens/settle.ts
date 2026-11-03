@@ -5,7 +5,7 @@ import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
 import { box, button, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
-import { showList } from './popups';
+import { showInfo, showList } from './popups';
 import { GAME_NAME } from './splash';
 import { danmaku } from '../ui/danmaku';
 
@@ -29,6 +29,9 @@ export function showSettle(g: Game): void {
     // 回主菜单前也要走完遗物封存，避免白白丢掉本世遗物
     const menu = chip(root, '‹ 菜单', 30, CONFIG.safeTop + 22, light, false, 22);
     onTap(menu, () => sealThenRebirth(g, s, 'menu'));
+    const bio = chip(root, '生平 ›', 0, CONFIG.safeTop + 22, light, false, 22);
+    bio.setPosition(g.W - 30 - sizeOf(bio).w, -(CONFIG.safeTop + 22), 0);
+    onTap(bio, () => showBio(g, s));
 
     let y = stone(g, root, s, CONFIG.safeTop + 70);
     y = panel(g, root, s, y + 20);
@@ -126,6 +129,19 @@ function panel(g: Game, root: Node, s: SettleResult, y: number): number {
         cy += rowH(r);
     }
     return y + h;
+}
+
+/** 生平：最终属性、职业、故事线、生平大事 */
+function showBio(g: Game, s: SettleResult): void {
+    const e = g.engine;
+    const careers = (e.run.careers ?? []).map(id => e.data.careers.get(id)?.name ?? id);
+    const lines = e.lineViews();
+    showInfo(g, `第 ${s.life} 世 · 生平`, [
+        s.attrs.map(a => `${a.name} ${a.value}`).join('　'),
+        ...(careers.length ? [`干过：${careers.join(' → ')}`] : []),
+        ...(lines.length ? ['', '【这一世的故事】', ...lines.map(l => `· ${l.name}${l.state ? `：${l.state}` : ''}`)] : []),
+        ...(s.log.length ? ['', '【生平大事】', ...s.log] : []),
+    ]);
 }
 
 /** 天胡金印：盖在石板左上的图上 */

@@ -23,7 +23,7 @@
       ]
     },
     {
-      "id": "boss_meeting", "dir": "up", "chainOnly": true, "teaser": "老周召集开会", "require": "line:doom",
+      "id": "boss_meeting", "careers": ["office"], "dir": "up", "chainOnly": true, "teaser": "老周召集开会", "require": "line:doom",
       "text": "老周在会议室召集全员开会：末日只是暂时的，我们的季度目标不变。投影仪是用发电机供的电。",
       "choices": [
         { "text": "掐掉发电机", "effect": { "state": "leader", "人脉": 4, "feud": "老周的末日周会被叫停", "follow": { "id": "hoarder", "delay": 1 } }, "result": "会议室黑了。你说：电，留给医务室。全场安静了三秒，然后鼓起了掌。" },
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "id": "hoarder", "dir": "down", "chainOnly": true, "teaser": "有人在偷偷囤物资", "require": "line:doom",
+      "id": "hoarder", "careers": ["office"], "dir": "down", "chainOnly": true, "teaser": "有人在偷偷囤物资", "require": "line:doom",
       "text": "王卷卷把半个仓库的物资搬进了自己的工位，堆得比隔板还高。他说：卷不动了，囤总可以吧。",
       "choices": [
         { "text": "跟他谈", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,

@@ -2,6 +2,7 @@
   "id": "scam_trip",
   "name": "海外团建",
   "summary": "高薪外派是个坑。去了可能回不来；不去会丢工作，但别的门会打开。",
+  "careers": ["office"],
   "maps": ["city", "workshop"],
   "stage": [0, 2],
   "states": {
@@ -94,7 +95,7 @@
       "id": "fired", "dir": "up", "chainOnly": true, "teaser": "老周找你谈话", "require": "line:scam_trip.refused",
       "text": "老周把你叫进办公室：团队需要的是有凝聚力的人。下周，你不用来了。",
       "choices": [
-        { "text": "收拾东西走人", "effect": { "心态": 1, "精力": 2, "身价": -3 }, "result": "你抱着纸箱下楼。阳光很好。你有一种奇怪的预感：躲过了什么。" },
+        { "text": "收拾东西走人", "effect": { "心态": 1, "精力": 2, "身价": -3, "follow": { "id": "career/switch", "delay": 1 } }, "result": "你抱着纸箱下楼。阳光很好。你有一种奇怪的预感：躲过了什么。" },
         { "text": "要补偿", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
           "effect": { "身价": 10, "脸皮": 1 }, "result": "你把劳动法打印出来放在他桌上。他沉默了一会儿，签了补偿。",
           "fail": { "effect": { "心态": -1 }, "result": "老周说：你自己不去的，算主动离职。" } },

@@ -2,6 +2,7 @@
   "id": "wang_juanjuan",
   "name": "卷王王卷卷",
   "summary": "同期的王卷卷抢了你的功，后来脑子里多了个「内卷系统」。他卷到崩溃那天，你可以踩他一脚，也可以拉他一把。",
+  "careers": ["office"],
   "stage": [0, 2],
   "states": {
     "rival": "和王卷卷成了死对头",

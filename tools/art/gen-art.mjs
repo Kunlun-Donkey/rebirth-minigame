@@ -1090,7 +1090,8 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
     <rect x="58" y="150" width="96" height="48" rx="18" fill="#fff"/><path d="M78 196 l-8 18 l22 -16Z" fill="#fff"/><circle cx="86" cy="174" r="6" fill="#4a90c8"/><circle cx="106" cy="174" r="6" fill="#4a90c8"/><circle cx="126" cy="174" r="6" fill="#4a90c8"/>`);
   // 系统：发光屏幕 + 系统专属字
   [['sys_signin', '#3c8a2a', '签'], ['sys_shenhao', '#d99a2b', '豪'], ['sys_slack', '#4a90c8', '摸'], ['sys_eye', '#8e5bc9', '眼'],
-    ['sys_undying', '#c0392b', '命'], ['sys_antijuan', '#e2b04a', '反'], ['sys_pie', '#c9784a', '饼']].forEach(([id, c, ch]) => {
+    ['sys_undying', '#c0392b', '命'], ['sys_antijuan', '#e2b04a', '反'], ['sys_pie', '#c9784a', '饼'],
+    ['sys_rider', '#e2a83a', '骑'], ['sys_nav', '#2f8fb0', '导'], ['sys_recipe', '#c2562a', '馍'], ['sys_shop', '#4f8a3a', '掌'], ['sys_traffic', '#c04a8a', '流']].forEach(([id, c, ch]) => {
     comp('worker', id, `<circle cx="128" cy="128" r="96" fill="${c}" opacity=".25" filter="url(#soft)"/>${screen(128, 128, 1.25, c, ch)}
       <text x="128" y="52" font-size="22" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="${c}">【叮！】</text>`, c);
   });

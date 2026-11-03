@@ -8,7 +8,7 @@ import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
 import {
-    box, button, chip, clear, COLOR, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text, textHeight,
+    box, button, chip, clampText, clear, COLOR, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
 import { ListEntry, showInfo, showList } from './popups';
 
@@ -196,17 +196,22 @@ function header(g: Game, root: Node, rerender: () => void): void {
     const nameN = text(root, nameLine, 0, CONFIG.safeTop + 90, g.W, { size: 26, color: fresh ? COLOR.bad : COLOR.ink2, align: 'center' });
     if (multi) onTap(nameN, () => g.goDestinySelect());
     const legacies = Object.entries(dp.legacy).map(([id, lv]) => `${e.data.legacies.get(id)?.name ?? id} Lv${lv}`);
+    const kept = dp.keptSystem ? e.data.companions.get(dp.keptSystem) : undefined;
     const line2 = [
         legacies.length ? `传承 ${legacies.length}` : '尚无传承',
         `技能 ${dp.skills.length}/${e.data.skills.size}`,
+        kept ? `系统·${kept.name}` : '',
         dp.sealed.length ? `封存：${dp.sealed.map(i => e.itemName(i)).join('、')}` : '',
     ].filter(Boolean).join('  ·  ');
-    const info = text(root, line2, 0, CONFIG.safeTop + 140, g.W, { size: 24, color: COLOR.ochre, align: 'center' });
-    if (legacies.length) {
-        onTap(info, () => showInfo(g, '传承', Object.entries(dp.legacy).map(([id, lv]) => {
-            const l = e.data.legacies.get(id);
-            return `${l?.name ?? id}  Lv${lv}/${l?.max ?? '?'}\n${l?.desc ?? ''}`;
-        })), false);
+    const info = text(root, clampText(line2, g.W - 60, 24, 34, 34), 30, CONFIG.safeTop + 140, g.W - 60, { size: 24, color: COLOR.ochre, align: 'center' });
+    if (legacies.length || kept) {
+        onTap(info, () => showInfo(g, '带进这一世的', [
+            ...Object.entries(dp.legacy).map(([id, lv]) => {
+                const l = e.data.legacies.get(id);
+                return `${l?.name ?? id}  Lv${lv}/${l?.max ?? '?'}\n${l?.desc ?? ''}`;
+            }),
+            ...(kept ? [`【系统·${kept.name}】已认主，每一世开局自动绑定\n${kept.desc}`] : []),
+        ]), false);
     }
 }
 

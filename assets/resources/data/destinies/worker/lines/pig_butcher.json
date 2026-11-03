@@ -10,7 +10,7 @@
   "events": [
     {
       "id": "match", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 18,
-      "text": "加班到十一点，一个陌生头像加了你：「你好，加错人了。不过……你也还没睡？」头像很好看。",
+      "text": "忙到夜里十一点，一个陌生头像加了你：「你好，加错人了。不过……你也还没睡？」头像很好看。",
       "choices": [
         { "text": "陪TA聊两句", "effect": { "心态": 1, "state": "hooked", "follow": { "id": "sweet", "delay": 1 } },
           "result": "你们聊到了凌晨两点。TA说，好久没遇到这么聊得来的人了。" },

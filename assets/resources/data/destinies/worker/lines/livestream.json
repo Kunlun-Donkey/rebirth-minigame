@@ -2,6 +2,7 @@
   "id": "livestream",
   "name": "直播",
   "summary": "楼梯间里录的一段吐槽，一夜三百万播放。前世你一句话说翻了车。这一世，每个打工人都在等你开播。",
+  "careers": ["office"],
   "stage": [1, 99],
   "states": {
     "live": "开始拍视频",

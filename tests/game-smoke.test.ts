@@ -115,7 +115,8 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         expect(seen).toContain('run');
         expect(seen).toContain('settle');
         expect(lives).toBeGreaterThan(2);
-        if (rich === true) expect(Object.keys(g.engine.dp.upgrades).length).toBeGreaterThan(0);
+        // 随机点击可能中途换了命格：任一命格买过命盘即可
+        if (rich === true) expect(Object.values(g.save.profile.destinies).some(d => Object.keys(d.upgrades).length > 0)).toBe(true);
     }, 60_000);
 
     it('命盘全满：4 选 1 卡牌、命盘列表、天命弹窗都在屏幕内', async () => {

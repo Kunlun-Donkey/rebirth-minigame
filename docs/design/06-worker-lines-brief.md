@@ -24,6 +24,9 @@
 - 属性中文名：精力（生命）· 精力上限 · 能力 · 人脉 · 脸皮 · 心态 · 身价（成长货币）。数值参考范例：前期一次 +1～+8 身价，中期 +10～+20，属性一次 +1～+3。
 - 系统：效果 `"bind": "sys_xxx"` 绑定，`"unbind": true` 解绑，`"keepSystem": true` 认主；条件 `system:any` / `system:sys_xxx`。系统台词以「【叮！】」开头。
 
+- 职业限定：线路顶层或单个事件写 `"careers": ["rider"]`，只在这些职业里出现（事件自己写了就以事件为准）；不写 = 所有职业都能遇到。职场题材的线写 `["office"]`。
+- 转行：效果 `"career": "rider"`；想让玩家自己挑，就 `follow` 到 `career/switch`。条件 `career:x` / `career:any` / `pastcareer:x`（之前某世干过）。
+
 ## 每条线的要求
 - 6～10 个事件，至少 1 个「三岔路」（不同选项走向不同后续 / 状态）。
 - 每个事件 3～4 个选项，混用：稳妥 / 冒险（chance + chanceAttr + fail，可加 `easy` 碾压文案）/ 专属（require 传承 `legacy:` 或道具 `item:` 或技能 showIf+useSkill，或系统 `system:`）/ 离谱（`absurd: true`，成功率 0.1～0.3）。每个事件至少一个无条件选项。

@@ -1,7 +1,7 @@
 [
   {
     "id": "z_last_stand", "dir": "any", "chainOnly": true,
-    "text": "你在工位上坐了很多年。体检报告越来越厚，人事开始问你：退休手续，什么时候办？",
+    "text": "你忙了很多年。体检报告越来越厚，身边的人开始问你：什么时候歇一歇？",
     "choices": [
       { "text": "最后一次路演", "showIf": "stage<=3", "chance": 0.35, "chanceAttr": "心态", "chanceStep": 0.015,
         "effect": { "stageUp": 1, "身价": 15 }, "result": "你站上台，讲了一个十年后的故事。台下有人站起来鼓掌。你又年轻了一回。",
@@ -9,7 +9,7 @@
       { "text": "逆天，再拼一轮", "showIf": "stage>=4", "chance": 0.12,
         "effect": { "stageUp": 1, "身价": 15 }, "result": "你推开顶楼的窗，对着整个地球说：再给我一轮。",
         "fail": { "effect": { "death": "old_age" }, "result": "风很大。你关上窗，回到了座位上。" } },
-      { "text": "办退休", "effect": { "death": "old_age" }, "result": "你办完手续，把工位上的绿萝抱回了家。" }
+      { "text": "歇下来", "effect": { "death": "old_age" }, "result": "你收了工，把那盆养了很多年的绿萝抱回了家。" }
     ]
   },
   {

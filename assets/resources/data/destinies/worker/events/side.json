@@ -8,7 +8,7 @@
     ]
   },
   {
-    "id": "l1_lunch", "dir": "side", "layers": ["L1"], "weight": 12,
+    "id": "l1_lunch", "careers": ["office"], "dir": "side", "layers": ["L1"], "weight": 12,
     "text": "中午十二点，楼下小吃街排满了人。你只有四十分钟。",
     "choices": [
       { "text": "排最长的那家", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,

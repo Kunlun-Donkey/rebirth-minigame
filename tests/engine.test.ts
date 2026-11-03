@@ -900,3 +900,71 @@ describe('线路架构：命名空间 / 导出状态 / 交叉事件 / 系统 / �
         expect(e.run.dying).toBe('old_age');
     });
 });
+
+describe('职业：开局择业 / 职业限定事件 / 层名覆盖 / 转行 / 干过的职业', () => {
+    function careerFixture(): RawDestiny {
+        const raw = fixture([
+            { id: 'pick_job', dir: 'any', chainOnly: true, text: '干啥？', choices: [
+                { text: '上班', effect: { career: 'office' }, result: '上班了' },
+                { text: '送外卖', effect: { career: 'rider' }, result: '骑车了' },
+            ] },
+            { id: 'office_only', dir: 'down', layers: ['D1'], careers: ['office'], weight: 5000, text: '开会', choices: [{ text: '开', result: '开了' }] },
+            { id: 'rider_only', dir: 'down', layers: ['D1'], careers: ['rider'], weight: 5000, text: '跑单', choices: [
+                { text: '跑', result: '跑了' },
+                { text: '转行', effect: { career: 'office' }, result: '不跑了' },
+            ] },
+            { id: 'nostalgia', dir: 'down', weight: 99999, require: 'pastcareer:rider & !career:rider', text: '前世跑过单', choices: [{ text: '嗯', result: '嗯' }] },
+        ]);
+        raw.meta.careers = [
+            { id: 'office', name: '写字楼', title: '在上班', desc: '工位', start: { 茎叶: 1 } },
+            { id: 'rider', name: '外卖骑手', title: '跑外卖', desc: '电动车', start: { 茎叶: 2 }, layers: { D1: { name: '电动车上' } } },
+        ];
+        raw.meta.rules.careerEvent = 'pick_job';
+        return raw;
+    }
+
+    it('第 1 季开头强制择业；职业开局效果与层名覆盖；只抽本职业的事件；转行后换池子', () => {
+        const e = new Engine(buildDestiny(careerFixture()), createProfile());
+        e.startRun(pick, 1);
+        Object.assign(e.run.attrs, { water: 99, waterMax: 99 });
+        expect(e.eventView().id).toBe('pick_job');
+        e.choose(1);
+        expect(e.run.career).toBe('rider');
+        expect(e.run.attrs.stem).toBe(2);
+        expect(e.careerDef()!.title).toBe('跑外卖');
+        expect(e.layerName('down', 0)).toBe('电动车上');
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('rider_only');
+        const st = e.choose(1);
+        expect(st.messages.some(m => m.startsWith('【转行·写字楼】'))).toBe(true);
+        expect(e.run.career).toBe('office');
+        expect(e.run.careers).toEqual(['rider', 'office']);
+        expect(e.layerName('down', 0)).toBe('一层');
+        if (e.run.phase === 'event') e.choose(0);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('office_only');
+    });
+
+    it('pastcareer 只认之前的世：结算后写入存档，下一世才成立', () => {
+        const e = new Engine(buildDestiny(careerFixture()), createProfile());
+        e.startRun(pick, 1);
+        Object.assign(e.run.attrs, { water: 99, waterMax: 99 });
+        e.choose(1);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('rider_only');
+        e.choose(0);
+        e.run.attrs.water = 0;
+        e.run.phase = 'direction';
+        e.chooseDirection('down');
+        if ((e.run.phase as string) === 'event') e.choose(0);
+        e.settle();
+        expect(e.dp.careers).toEqual(['rider']);
+        e.startRun(pick, 2);
+        Object.assign(e.run.attrs, { water: 99, waterMax: 99 });
+        expect(e.run.career).toBeUndefined();
+        e.choose(0);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('nostalgia');
+    });
+});
+

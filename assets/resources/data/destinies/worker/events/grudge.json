@@ -1,6 +1,6 @@
 [
   {
-    "id": "r_layoff_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 14, "require": "died:laid_off>=2",
+    "id": "r_layoff_again", "careers": ["office"], "dir": "up", "stage": [1, 99], "once": true, "weight": 14, "require": "died:laid_off>=2",
     "text": "人事部又来了个新的优化专员，抱着一摞名单。他优化过你{died:laid_off}回，这次他先看了你一眼。",
     "choices": [
       { "text": "先把他优化了", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
@@ -15,7 +15,7 @@
     ]
   },
   {
-    "id": "r_rolled_again", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 14, "require": "died:out_rolled>=2",
+    "id": "r_rolled_again", "careers": ["office"], "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 14, "require": "died:out_rolled>=2",
     "text": "凌晨一点，王卷卷的工位还亮着灯。他把你挤走过{died:out_rolled}回，今天他在你的工位上放了一杯咖啡。",
     "choices": [
       { "text": "跟他比", "chance": 0.35, "chanceAttr": "能力", "chanceStep": 0.05,

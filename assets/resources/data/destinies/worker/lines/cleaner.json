@@ -2,6 +2,7 @@
   "id": "cleaner",
   "name": "保洁阿姨",
   "summary": "她在这栋楼里擦了二十年的地。每个加班到深夜的人，她都记得。",
+  "careers": ["office"],
   "maps": ["city", "workshop"],
   "states": {
     "helped": "帮过保洁阿姨",

@@ -1,6 +1,6 @@
 [
   {
-    "id": "xo_grass_desk", "dir": "up", "layers": ["U1", "U2"], "cameo": true, "once": true, "weight": 10, "require": "xlives:desert_grass>=1",
+    "id": "xo_grass_desk", "careers": ["office"], "dir": "up", "layers": ["U1", "U2"], "cameo": true, "once": true, "weight": 10, "require": "xlives:desert_grass>=1",
     "text": "你工位上有一盆快干死的小草，是前一个人留下的。它的叶子，正朝着你这边歪。",
     "choices": [
       { "text": "给它浇水", "effect": { "心态": 2, "精力": 1 }, "result": "你浇完水，它好像挺直了一点。你总觉得，前世你也这样渴过。" },
@@ -30,7 +30,7 @@
     ]
   },
   {
-    "id": "xo_caterpillar_pothos", "dir": "up", "layers": ["U1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
+    "id": "xo_caterpillar_pothos", "careers": ["office"], "dir": "up", "layers": ["U1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
     "text": "工位绿萝上爬着一条小毛毛虫。同事尖叫着要拿纸巾捏死它。",
     "choices": [
       { "text": "护住它", "effect": { "心态": 1, "脸皮": 1 }, "result": "你把它连叶子一起送到了楼下的花坛。前世，你也被捏起来过。" },
@@ -38,7 +38,7 @@
     ]
   },
   {
-    "id": "xo_butterfly_window", "dir": "up", "stage": [2, 99], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar",
+    "id": "xo_butterfly_window", "careers": ["office"], "dir": "up", "stage": [2, 99], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar",
     "text": "会议开到一半，一只蝴蝶从窗缝飞进来，落在了老板的发言稿上。",
     "choices": [
       { "text": "看着它", "effect": { "心态": 2, "身价": 6 }, "result": "老板也看着它，忘了下一句要说什么。会议提前一小时结束了。" },
@@ -46,7 +46,7 @@
     ]
   },
   {
-    "id": "xo_shrimp_teambuild", "dir": "any", "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1",
+    "id": "xo_shrimp_teambuild", "careers": ["office"], "dir": "any", "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1",
     "text": "部门聚餐，桌上端来一大盆皮皮虾。最上面那只，好像冲你挥了一拳。",
     "choices": [
       { "text": "不下筷子", "effect": { "心态": 1, "精力": 1 }, "result": "你吃了一晚上青菜。同事问你是不是过敏，你说：算是吧。" },

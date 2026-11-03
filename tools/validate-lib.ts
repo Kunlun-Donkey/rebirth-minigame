@@ -81,6 +81,8 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
                     leaf.kind === 'xend' ? checkWorld(id) :
                     leaf.kind === 'line' || leaf.kind === 'ever' ? checkLineRef(id, where, 'read') :
                     leaf.kind === 'system' ? id === 'any' || !!d.companions.get(id)?.system :
+                    leaf.kind === 'career' ? id === 'any' || d.careers.has(id) :
+                    leaf.kind === 'pastcareer' ? d.careers.has(id) :
                     d.endings.has(id);
                 if (!ok) errors.push(`${where}: 条件引用了不存在的 ${leaf.kind}:${id}`);
             } else if (leaf.left.kind === 'legacy' && !d.legacies.has(leaf.left.id!)) {
@@ -110,6 +112,7 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
             if (!st.includes('.')) errors.push(`${where}: 线路外的 state 要写成「线路id.状态」：${st}`);
             else if (!checkLineRef(st, where, 'set')) errors.push(`${where}: state 引用了不存在的线路 ${st}`);
         }
+        if (e.career && !d.careers.has(e.career)) errors.push(`${where}: career 引用了不存在的职业 ${e.career}`);
         if (e.bind && !d.companions.get(e.bind)?.system) errors.push(`${where}: bind 的 ${e.bind} 不是系统（companions 里需 system: true）`);
         for (const sk of e.skills) addSource(sk, where);
         for (const f of e.follows) {
@@ -136,6 +139,13 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
         }
         if (!(R.regen?.per > 0) || !(R.yield?.per > 0)) errors.push('rules.regen.per / rules.yield.per 必须大于 0');
         if (!R.startLog) errors.push('rules.startLog 不能为空');
+        if (R.careerEvent) {
+            referencedEvents.add(R.careerEvent);
+            const ce = d.events.get(R.careerEvent);
+            if (!ce) errors.push(`rules.careerEvent 指向不存在的事件 ${R.careerEvent}`);
+            else if (ce.choices.some(c => !c.success.effect.career)) errors.push(`rules.careerEvent ${R.careerEvent}: 每个选项都要写 career`);
+            if (!d.careers.size) errors.push('rules.careerEvent 需要 meta.careers');
+        }
         if (R.lastStand) {
             referencedEvents.add(R.lastStand);
             if (!d.events.has(R.lastStand)) errors.push(`rules.lastStand 指向不存在的事件 ${R.lastStand}`);
@@ -199,11 +209,18 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
         for (const lid of Object.keys(m.layers ?? {})) if (!d.layers.has(lid)) errors.push(`地图 ${m.id}: 覆盖了不存在的层 ${lid}`);
     }
 
+    // 职业
+    for (const c of d.careers.values()) {
+        if (c.startEffect) checkEffect(c.startEffect, `职业 ${c.id}`);
+        for (const lid of Object.keys(c.layers ?? {})) if (!d.layers.has(lid)) errors.push(`职业 ${c.id}: 覆盖了不存在的层 ${lid}`);
+    }
+
     // 事件
     for (const ev of d.events.values()) {
         const w = `事件 ${ev.id}`;
         checkCond(ev.require, `${w}.require`);
         for (const m of ev.maps ?? []) if (!d.maps.has(m)) errors.push(`${w}: 地图 ${m} 不存在`);
+        for (const c of ev.careers ?? []) if (!d.careers.has(c)) errors.push(`${w}: 职业 ${c} 不存在`);
         for (const l of ev.layers ?? []) {
             const layer = d.layers.get(l);
             if (!layer) errors.push(`${w}: 层 ${l} 不存在`);
@@ -286,8 +303,12 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
     for (const ev of d.events.values()) {
         if (!ev.cross) continue;
         const lines = new Set<string>();
-        if (ev.require) walkCond(ev.require.ast, l => { if (l.t === 'has' && (l.kind === 'line' || l.kind === 'ever')) lines.add(l.id.split('.')[0]); });
-        if (lines.size < 2) warnings.push(`事件 ${ev.id}: 交叉事件的 require 只引用了 ${lines.size} 条线路`);
+        // 职业（career / pastcareer）也算一条线
+        if (ev.require) walkCond(ev.require.ast, l => {
+            if (l.t === 'has' && (l.kind === 'line' || l.kind === 'ever')) lines.add(l.id.split('.')[0]);
+            if (l.t === 'has' && (l.kind === 'career' || l.kind === 'pastcareer')) lines.add(`@${l.id}`);
+        });
+        if (lines.size < 2) warnings.push(`事件 ${ev.id}: 交叉事件的 require 只引用了 ${lines.size} 条线路/职业`);
     }
 
     // 层覆盖：每层（不算兜底/any）至少 2 个专属事件
@@ -295,9 +316,22 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
         const n = [...d.events.values()].filter(e => !e.sudden && !e.chainOnly && e.layers?.includes(l.id)).length;
         if (n < 2) warnings.push(`层 ${l.id}「${l.name}」只有 ${n} 个专属事件`);
     }
-    for (const dir of ['up', 'down', 'side'] as const) {
-        const hasFallback = [...d.events.values()].some(e => e.dir === dir && !e.layers && !e.maps && !e.require && !e.sudden && !e.chainOnly && e.stage[0] === 0 && e.stage[1] >= 99);
-        if (!hasFallback) errors.push(`方向 ${dir} 缺少兜底事件（无层、无条件、全境界）`);
+    // 兜底：每个方向（有职业时：每个职业 × 方向）都要有无层、无条件、全境界的事件，否则抽不到事件会卡死
+    const careerIds = d.careers.size ? [...d.careers.keys()] : [undefined];
+    for (const cid of careerIds) {
+        for (const dir of ['up', 'down', 'side'] as const) {
+            const hasFallback = [...d.events.values()].some(e => e.dir === dir && !e.layers && !e.maps && !e.require && !e.sudden && !e.chainOnly && e.stage[0] === 0 && e.stage[1] >= 99
+                && (!e.careers || (!!cid && e.careers.includes(cid))));
+            if (!hasFallback) errors.push(`${cid ? `职业 ${cid} ` : ''}方向 ${dir} 缺少兜底事件（无层、无条件、全境界）`);
+        }
+    }
+    // 职业层覆盖：每个职业每层至少 2 个可抽的专属事件（含通用事件）
+    for (const cid of careerIds) {
+        if (!cid) break;
+        for (const l of d.layers.values()) {
+            const n = [...d.events.values()].filter(e => !e.sudden && !e.chainOnly && e.layers?.includes(l.id) && (!e.careers || e.careers.includes(cid))).length;
+            if (n < 2) warnings.push(`职业 ${cid} 层 ${l.id} 只有 ${n} 个专属事件`);
+        }
     }
 
     const evs = [...d.events.values()];
@@ -318,6 +352,7 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
             传承: d.legacies.size,
             结局: d.endings.size,
             地图: d.maps.size,
+            职业: d.careers.size,
             彩蛋: evs.filter(e => e.cameo).length,
             离谱: evs.reduce((n, e) => n + e.choices.filter(c => c.absurd).length, 0),
             线路: d.lines.size,

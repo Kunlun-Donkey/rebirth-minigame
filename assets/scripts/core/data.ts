@@ -5,7 +5,7 @@ import type {
 } from './types';
 
 /** 效果中的保留键，其余键视为属性增量 */
-export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp', 'feud', 'state', 'bind', 'unbind', 'keepSystem'] as const;
+export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp', 'feud', 'state', 'bind', 'unbind', 'keepSystem', 'career'] as const;
 
 /** 线路内的事件 / flag 引用：不带「/」的 id 加上线路前缀 */
 const localId = (line: string, id: string) => (id.includes('/') ? id : `${line}/${id}`);
@@ -41,6 +41,7 @@ export function flattenLine(l: RawLine): (RawEvent & { line: string })[] {
             id: localId(L, ev.id),
             line: L,
             maps: ev.maps ?? l.maps,
+            careers: ev.careers ?? l.careers,
             stage: ev.stage ?? (ev.entry ? l.stage : undefined),
             require: ev.entry ? (require ? `!line:${L} & (${require})` : `!line:${L}`) : require,
             choices: ev.choices.map(c => ({
@@ -104,6 +105,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
                 case 'bind': e.bind = String(v); break;
                 case 'unbind': e.unbind = !!v; break;
                 case 'keepSystem': e.keepSystem = !!v; break;
+                case 'career': e.career = String(v); break;
                 default: {
                     const id = resolveAttr(k);
                     if (!id) throw new DataError(`${where}: 效果中未知属性「${k}」`);
@@ -167,6 +169,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             gold: ev.gold ?? false,
             chainOnly: ev.chainOnly ?? false,
             maps: ev.maps,
+            careers: ev.careers,
             teaser: ev.teaser,
             cameo: ev.cameo ?? false,
             line: ev.line,
@@ -216,6 +219,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
         fates: new Map((meta.fates ?? []).map(f => [f.id, { ...f, startEffect: f.start ? effect(f.start, `天命 ${f.id}`) : undefined }])),
         blessedStart: meta.blessed?.start ? effect(meta.blessed.start, '天命之子') : undefined,
         maps: new Map((meta.maps ?? []).map(m => [m.id, { ...m, startEffect: m.start ? effect(m.start, `地图 ${m.id}`) : undefined }])),
+        careers: new Map((meta.careers ?? []).map(c => [c.id, { ...c, startEffect: c.start ? effect(c.start, `职业 ${c.id}`) : undefined }])),
         lines: new Map((raw.lines ?? []).map(l => [l.id, { id: l.id, name: l.name, summary: l.summary, states: l.states ?? {} }])),
     };
 }

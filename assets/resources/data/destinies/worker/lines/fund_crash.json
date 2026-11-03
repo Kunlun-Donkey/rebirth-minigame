@@ -2,6 +2,7 @@
   "id": "fund_crash",
   "name": "理财暴雷",
   "summary": "年化十八，保本保息，同事都投了。前世你把积蓄放了进去。这一世，你先问一句：保本写进合同了吗？",
+  "careers": ["office"],
   "stage": [1, 3],
   "states": {
     "invested": "投了高收益理财",

@@ -169,15 +169,45 @@ export function showList(g: Game, title: string, entries: ListEntry[], opts: { e
     return close;
 }
 
-/** 纯文字说明弹窗 */
+/** 纯文字说明弹窗；内容太长时按行分页 */
 export function showInfo(g: Game, title: string, lines: string[]): void {
     const innerW = g.W - 140;
-    const body = lines.join('\n');
-    const h = Math.min(g.H - 200, 200 + textHeight(body, innerW, 26, 42) + 130);
+    const lineH = (l: string) => (l ? textHeight(l, innerW - 39, 26, 42) : 42);
+    const full = lines.reduce((n, l) => n + lineH(l), 0);
+    const h = Math.min(g.H - 200, 200 + full + 130);
     const { panel, close, panelW } = modal(g.overlay, g.W, g.H, h, { tapToClose: false });
     pop(panel);
     text(panel, title, 0, 36, panelW, { size: 36, color: COLOR.ochreD, align: 'center', bold: true });
-    text(panel, body, 40, 110, innerW, { size: 26, color: COLOR.ink2, wrap: true, lineHeight: 42 });
+    // 分页：正文区放不下时留出翻页条
+    const paginate = (limit: number) => {
+        const pages: string[][] = [[]];
+        let y = 0;
+        for (const l of lines) {
+            const lh = lineH(l);
+            if (y + lh > limit && pages[pages.length - 1].length) { pages.push([]); y = 0; }
+            if (!l && !pages[pages.length - 1].length) continue;
+            pages[pages.length - 1].push(l);
+            y += lh;
+        }
+        return pages;
+    };
+    let pages = paginate(h - 110 - 140);
+    if (pages.length > 1) pages = paginate(h - 110 - 140 - 60);
+    const bodyBox = box(panel, 0, 0, panelW, h, 'body');
+    const render = (page: number) => {
+        bodyBox.destroyAllChildren();
+        text(bodyBox, pages[page].join('\n'), 40, 110, innerW, { size: 26, color: COLOR.ink2, wrap: true, lineHeight: 42 });
+        if (pages.length < 2) return;
+        const py = h - 190;
+        text(bodyBox, `${page + 1} / ${pages.length}`, 0, py + 12, panelW, { size: 24, color: COLOR.ink2, align: 'center' }, 36);
+        if (page > 0) onTap(chip(bodyBox, '‹ 上一页', 40, py + 8, COLOR.ochreD, false, 24), () => render(page - 1));
+        if (page + 1 < pages.length) {
+            const nx = chip(bodyBox, '下一页 ›', 0, py + 8, COLOR.ochreD, false, 24);
+            nx.setPosition(panelW - 40 - sizeOf(nx).w, -(py + 8), 0);
+            onTap(nx, () => render(page + 1));
+        }
+    };
+    render(0);
     button(panel, 30, h - 120, panelW - 60, { label: '关  闭', style: 'ghost', align: 'left', size: 28, onClick: close });
 }
 

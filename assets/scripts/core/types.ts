@@ -57,6 +57,8 @@ export interface RawEvent {
     chainOnly?: boolean;
     /** 只在这些出生地图里出现（省略 = 所有地图） */
     maps?: string[];
+    /** 只在这些职业出现（省略 = 所有职业；随机抽取与后续剧情都受限） */
+    careers?: string[];
     /** 作为后续（follow）待触发时，在选方向界面显示的预告，如「那只蝎子说它还会回来」 */
     teaser?: string;
     /** 跨命格彩蛋（前世今生）：事件卡标「似曾相识」，选完飘弹幕 */
@@ -275,6 +277,23 @@ export interface MapDef {
     mods?: Mods;
     /** 层覆盖：层 id → 名字 / 进入旁白 / 受阻旁白 */
     layers?: Record<string, { name?: string; enterText?: string; blockedText?: string }>;
+    /** 世界线压过职业：层覆盖以地图为准（灵气复苏 / 末世这类改天换地的地图） */
+    dominant?: boolean;
+}
+
+/**
+ * 职业：玩家在开局择业事件里选（效果 career: id），也能中途转行。
+ * 可改层的名字/旁白、给开局效果与修正；事件 / 线路用 careers 字段限定只在某些职业出现。
+ */
+export interface CareerDef {
+    id: string;
+    name: string;
+    desc: string;
+    /** 选方向提示里的「{career}」，如「跑外卖」 */
+    title: string;
+    start?: RawEffect;
+    mods?: Mods;
+    layers?: Record<string, { name?: string; enterText?: string; blockedText?: string }>;
 }
 
 /** 每日天命：当天所有轮回生效的全局修正（同一天所有玩家相同，可看视频换一次） */
@@ -300,6 +319,7 @@ export interface DestinyMeta {
     upgrades?: UpgradeDef[];
     fates?: FateDef[];
     maps?: MapDef[];
+    careers?: CareerDef[];
     blessed?: BlessedDef;
     /** 命格规则：生命 / 回复 / 成长等由数据决定，引擎不写死任何属性名 */
     rules: DestinyRules;
@@ -341,6 +361,8 @@ export interface DestinyRules {
     emptyItems?: string;
     /** 濒死弹窗标题（缺省「你 要 死 了」；人类命格用「这一世要到头了」这类温和说法） */
     dyingTitle?: string;
+    /** 开局择业事件：这一世还没有职业时，第 1 季开头强制触发（选项效果里写 career: id） */
+    careerEvent?: string;
 }
 
 /** 命格索引（data/destinies/index.json）：轮回殿里可选的命格及解锁条件 */
@@ -393,6 +415,8 @@ export interface RawLine {
     summary?: string;
     /** 线路所有事件默认只在这些世界线（maps）出现 */
     maps?: string[];
+    /** 线路所有事件默认只在这些职业出现（事件自己写了 careers 则以事件为准） */
+    careers?: string[];
     /** 入口事件默认的境界范围 */
     stage?: [number, number];
     /** 导出状态：状态 id → 说明 */
@@ -433,6 +457,8 @@ export interface Effect {
     unbind?: boolean;
     /** 系统认主：当前系统以后每一世开局自动绑定 */
     keepSystem?: boolean;
+    /** 入行 / 转行（职业 id） */
+    career?: string;
 }
 
 /** 后续事件：在 delay 季之后（默认下一季）、玩家选择匹配方向时触发，ttl 季内没走到就作废 */
@@ -473,6 +499,7 @@ export interface GameEvent {
     gold: boolean;
     chainOnly: boolean;
     maps?: string[];
+    careers?: string[];
     teaser?: string;
     cameo: boolean;
     /** 所属线路 id */
@@ -505,6 +532,7 @@ export interface Destiny {
     upgrades: Map<string, UpgradeDef & { kind: UpgradeKind; startEffect?: Effect }>;
     fates: Map<string, FateDef & { startEffect?: Effect }>;
     maps: Map<string, MapDef & { startEffect?: Effect }>;
+    careers: Map<string, CareerDef & { startEffect?: Effect }>;
     blessedStart?: Effect;
 }
 
@@ -525,6 +553,8 @@ export interface DestinyProfile {
     ever?: string[];
     /** 系统认主：每一世开局自动绑定的系统 */
     keptSystem?: string;
+    /** 之前各世干过的职业（条件 pastcareer:x） */
+    careers?: string[];
     codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number; feuds?: string[] };
     bestStage: number;
     /** 已解锁技能（技能图鉴） */
@@ -594,6 +624,10 @@ export interface RunState {
     firstOfDay?: boolean;
     /** 本世出生地图 */
     map?: string;
+    /** 本世职业（开局择业 / 中途转行） */
+    career?: string;
+    /** 本世干过的职业（结算时记入存档，下一世起 pastcareer:x 成立） */
+    careers?: string[];
     /** 本世是天命之子 */
     blessed?: boolean;
     /** 本世由「随缘投胎」转盘决定命格（结算轮回点加成） */
@@ -679,7 +713,16 @@ export interface CodexView {
     cameos: { id: string; text: string; got: boolean; hint: string[] }[];
     feuds: { text: string; got: boolean }[];
     tianhu: number;
+    /** 故事线（任何一世走进过 = got；states 为导出状态，got = 任何一世到达过） */
+    lines: { id: string; name: string; summary: string; got: boolean; states: { id: string; text: string; got: boolean }[] }[];
+    /** 技能（未领悟时显示 hint） */
+    skills: { id: string; name: string; desc: string; hint: string; got: boolean }[];
+    /** 道具（任何一世得到过） */
+    items: { id: string; name: string; desc: string; got: boolean }[];
 }
+
+/** 本世进行中的故事线；state = 当前状态说明（刚开始时为空） */
+export interface LineView { id: string; name: string; summary: string; state: string }
 
 /** 值得飘弹幕的高光时刻（按优先级取一个） */
 export type Hype = 'ending' | 'tianhu' | 'breakthrough' | 'feud' | 'crush' | 'streak' | 'cameo' | 'crit' | 'revive';

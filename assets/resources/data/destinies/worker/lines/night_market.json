@@ -2,6 +2,7 @@
   "id": "night_market",
   "name": "夜市摆摊",
   "summary": "一辆八百块的三轮车，一个炉子。前世你进了三千块的货，卖出七块五。这一世，这条街要听你的。",
+  "careers": ["office", "rider", "driver", "shop", "media"],
   "stage": [1, 99],
   "states": {
     "stall": "在夜市摆了摊",

@@ -1,6 +1,6 @@
 [
   {
-    "id": "x_subway", "dir": "any", "sudden": true, "weight": 10, "maps": ["city", "workshop", "awaken"],
+    "id": "x_subway", "careers": ["office"], "dir": "any", "sudden": true, "weight": 10, "maps": ["city", "workshop", "awaken"],
     "text": "早高峰，地铁停在两站之间不动了。车厢里挤得连手机都掏不出来。",
     "choices": [
       { "text": "给老板发消息请假", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.08,
@@ -11,7 +11,7 @@
     ]
   },
   {
-    "id": "x_checkup", "dir": "any", "sudden": true, "weight": 10, "stage": [1, 99],
+    "id": "x_checkup", "careers": ["office"], "dir": "any", "sudden": true, "weight": 10, "stage": [1, 99],
     "text": "公司组织体检。报告出来，你看了一眼：颈椎、腰椎、视力、脂肪肝，全是箭头。",
     "choices": [
       { "text": "开始养生", "effect": { "精力上限": 1, "心态": 1 }, "result": "你买了保温杯，泡上枸杞。同事们说你老了。你说你在投资。" },
@@ -21,7 +21,7 @@
     ]
   },
   {
-    "id": "x_salary_late", "dir": "any", "sudden": true, "weight": 9, "stage": [1, 99], "maps": ["workshop", "city"],
+    "id": "x_salary_late", "careers": ["office"], "dir": "any", "sudden": true, "weight": 9, "stage": [1, 99], "maps": ["workshop", "city"],
     "text": "发工资的日子到了，工资没到。财务说：系统问题，下周发。",
     "choices": [
       { "text": "等等吧", "effect": { "心态": -1, "身价": -2 }, "result": "下周过去了。财务说：还是系统问题。" },
@@ -33,7 +33,7 @@
     ]
   },
   {
-    "id": "x_annual_party", "dir": "any", "sudden": true, "weight": 9, "stage": [1, 99],
+    "id": "x_annual_party", "careers": ["office"], "dir": "any", "sudden": true, "weight": 9, "stage": [1, 99],
     "text": "年会抽奖。一等奖是一台手机，二等奖是一箱苹果，三等奖是「和老板共进晚餐」。",
     "choices": [
       { "text": "认真抽", "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
@@ -44,7 +44,7 @@
     ]
   },
   {
-    "id": "x_rainstorm", "dir": "any", "sudden": true, "weight": 8,
+    "id": "x_rainstorm", "careers": ["office"], "dir": "any", "sudden": true, "weight": 8,
     "text": "下暴雨了。写字楼门口挤满了没带伞的人，打车软件排到了第三百位。",
     "choices": [
       { "text": "冲进雨里", "effect": { "精力": -1, "心态": 1 }, "result": "你淋了个透。到家洗了个热水澡，觉得很久没这么痛快了。" },
@@ -53,7 +53,7 @@
     ]
   },
   {
-    "id": "x_boss_patrol", "dir": "any", "sudden": true, "weight": 8,
+    "id": "x_boss_patrol", "careers": ["office"], "dir": "any", "sudden": true, "weight": 8,
     "text": "大老板突然下来巡视，挨个工位看。他停在了你身后。",
     "choices": [
       { "text": "继续干活", "effect": { "能力": 1, "身价": 3 }, "result": "大老板看了一会儿，点点头，走了。第二天，你的名字出现在了表扬名单里。" },

@@ -19,7 +19,7 @@ import {
 import { addUnique, destinyProfile } from './profile';
 import { Rng } from './rng';
 import {
-    Choice, ChoiceView, CodexView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Hype, HYPE_ORDER, Mods, Outcome, Profile,
+    Choice, ChoiceView, CodexView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Hype, HYPE_ORDER, LineView, Mods, Outcome, Profile,
     RARITIES, Rarity, RunState, SettleResult, SkillView, StageProgress, StepResult, UpgradeKind, UpgradeView,
 } from './types';
 
@@ -592,6 +592,7 @@ export class Engine {
             dp.deathRun = undefined;
         }
         for (const it of this.run.found) addUnique(dp.codex.items, it);
+        for (const c of this.run.careers ?? []) addUnique(dp.careers ?? (dp.careers = []), c);
         for (const ev of this.run.seen) addUnique(dp.codex.events, ev);
 
         const r = this.run;
@@ -787,6 +788,8 @@ export class Engine {
             cameos.push({ id: ev.id, text: ev.text, got: seen.has(ev.id), hint: [...hint] });
         }
         const got = new Set(c.feuds ?? []);
+        const ever = new Set(this.dp.ever ?? []);
+        const items = new Set([...c.items, ...(this.run?.found ?? [])]);
         return {
             endings: [...d.endings.values()].map(e => ({ id: e.id, name: e.name, epitaph: e.epitaph, got: c.endings.includes(e.id) })),
             deaths: [...d.deaths.values()].map(x => ({
@@ -796,6 +799,12 @@ export class Engine {
             cameos,
             feuds: [...feuds].map(text => ({ text, got: got.has(text) })).sort((a, b) => Number(b.got) - Number(a.got)),
             tianhu: c.tianhu ?? 0,
+            lines: [...d.lines.values()].map(l => ({
+                id: l.id, name: l.name, summary: l.summary ?? '', got: ever.has(l.id),
+                states: Object.entries(l.states).map(([sid, text]) => ({ id: sid, text, got: ever.has(`${l.id}.${sid}`) })),
+            })),
+            skills: [...d.skills.values()].map(s => ({ id: s.id, name: s.name, desc: s.desc, hint: s.hint, got: this.dp.skills.includes(s.id) })),
+            items: [...d.items.values()].map(x => ({ id: x.id, name: x.name, desc: x.desc, got: items.has(x.id) })),
         };
     }
 
@@ -803,14 +812,30 @@ export class Engine {
     stageName(level: number): string { return this.data.stages.find(s => s.level === level)?.name ?? `境界${level}`; }
     itemName(id: string): string { return this.data.items.get(id)?.name ?? id; }
 
+    /** 本世进行中的故事线（按走进的先后） */
+    lineViews(): LineView[] {
+        return Object.entries(this.run?.lines ?? {}).flatMap(([id, st]) => {
+            const l = this.data.lines.get(id);
+            return l ? [{ id, name: l.name, summary: l.summary ?? '', state: st ? l.states[st] ?? '' : '' }] : [];
+        });
+    }
+
     /** 本世出生地图 */
     mapDef() {
         return this.run?.map ? this.data.maps.get(this.run.map) : undefined;
     }
 
-    /** 层的显示文字（出生地图可覆盖名字与旁白） */
+    /** 本世职业 */
+    careerDef() {
+        return this.run?.career ? this.data.careers.get(this.run.career) : undefined;
+    }
+
+    /** 层的显示文字（职业 / 出生地图可覆盖名字与旁白；dominant 地图压过职业） */
     layerText(layer: { id: string; name: string; enterText: string; blockedText: string }) {
-        const o = this.mapDef()?.layers?.[layer.id];
+        const map = this.mapDef();
+        const m = map?.layers?.[layer.id];
+        const c = this.careerDef()?.layers?.[layer.id];
+        const o = map?.dominant ? { ...c, ...m } : { ...m, ...c };
         return { name: o?.name ?? layer.name, enterText: o?.enterText ?? layer.enterText, blockedText: o?.blockedText ?? layer.blockedText };
     }
 
@@ -823,6 +848,7 @@ export class Engine {
     mods(): Mods {
         const list: (Mods | undefined)[] = [
             this.mapDef()?.mods,
+            this.careerDef()?.mods,
             this.run.fate ? this.data.fates.get(this.run.fate)?.mods : undefined,
             ...this.run.talents.map(id => this.data.talents.get(id)?.mods),
             ...this.run.items.map(id => this.data.items.get(id)?.mods),
@@ -853,6 +879,12 @@ export class Engine {
         if (this.run.lastStand === 'due') {
             this.run.lastStand = 'used';
             this.enterEvent(this.data.meta.rules.lastStand!);
+            return;
+        }
+        // 开局择业：这一世还没有职业
+        const ce = this.data.meta.rules.careerEvent;
+        if (ce && !this.run.career && this.run.season === 1 && this.data.events.has(ce)) {
+            this.enterEvent(ce);
             return;
         }
         const chance = this.data.meta.settings.suddenChance * (this.mods().suddenMul ?? 1);
@@ -929,7 +961,7 @@ export class Engine {
         for (const t of r.threads ?? []) {
             if (t.at > r.season || t.until < r.season) continue;
             const ev = this.data.events.get(t.id);
-            if (!ev || (ev.dir !== dir && ev.dir !== 'any') || !this.check(ev.require)) continue;
+            if (!ev || (ev.dir !== dir && ev.dir !== 'any') || !this.check(ev.require) || !this.careerOk(ev)) continue;
             // 限定了层的后续（如水箱里的事）：所选方向的当前层必须在其中
             if (ev.layers && !ev.layers.includes(this.data.layersByDir[dir][r.pos[dir]]?.id)) continue;
             return ev;
@@ -943,7 +975,7 @@ export class Engine {
         return (r.threads ?? [])
             .filter(t => t.at <= r.season && t.until >= r.season)
             .map(t => this.data.events.get(t.id))
-            .filter((ev): ev is GameEvent => !!ev && !!ev.teaser && this.check(ev.require) &&
+            .filter((ev): ev is GameEvent => !!ev && !!ev.teaser && this.check(ev.require) && this.careerOk(ev) &&
                 (!ev.layers || (['up', 'down', 'side'] as Dir[]).some(d => ev.layers!.includes(this.data.layersByDir[d][r.pos[d]]?.id))))
             .map(ev => ({ dir: ev.dir, text: this.fmt(ev.teaser!) }));
     }
@@ -954,6 +986,7 @@ export class Engine {
         const cands = [...this.data.events.values()].filter(e =>
             !e.chainOnly && filter(e) &&
             (!e.maps || (!!r.map && e.maps.includes(r.map))) &&
+            this.careerOk(e) &&
             r.stage >= e.stage[0] && r.stage <= e.stage[1] &&
             !(e.once && r.seen.includes(e.id)) &&
             e.id !== r.lastEvent &&
@@ -961,6 +994,11 @@ export class Engine {
         );
         // 同一世已经遇到过的事件降权，减少重复
         return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1) * (r.seen.includes(e.id) ? REPEAT_WEIGHT : 1));
+    }
+
+    /** 事件限定的职业与本世职业相符（未限定 = 都行） */
+    private careerOk(e: GameEvent): boolean {
+        return !e.careers || (!!this.run.career && e.careers.includes(this.run.career));
     }
 
     private enterEvent(id: string): void {
@@ -1100,10 +1138,14 @@ export class Engine {
         for (const sk of e.skills) this.grantSkill(sk, step);
         for (const st of e.states) {
             const [line, state] = st.split('.');
-            (r.lines ?? (r.lines = {}))[line] = state;
+            const lines = r.lines ?? (r.lines = {});
+            const def = this.data.lines.get(line);
+            if (lines[line] !== state && def?.states[state]) step.messages.push(`◇ 故事线 · ${def.name}：${def.states[state]}`);
+            lines[line] = state;
             addUnique(this.ever, line);
             addUnique(this.ever, st);
         }
+        if (e.career) this.setCareer(e.career, step);
         if (e.unbind) this.unbindSystem(step);
         if (e.bind) this.bindSystem(e.bind, step);
         if (e.keepSystem) {
@@ -1138,6 +1180,19 @@ export class Engine {
     /** 任何一世到达过的线路 / 状态（存档） */
     private get ever(): string[] {
         return this.dp.ever ?? (this.dp.ever = []);
+    }
+
+    /** 入行 / 转行：换职业、结算职业开局效果，记入「干过的职业」 */
+    private setCareer(id: string, step: StepResult): void {
+        const def = this.data.careers.get(id);
+        const r = this.run;
+        if (!def || r.career === id) return;
+        const first = !r.career;
+        r.career = id;
+        addUnique(r.careers ?? (r.careers = []), id);
+        if (def.startEffect) this.applyEffect(def.startEffect, step, false);
+        if (!first) step.messages.push(`【转行·${def.name}】${def.desc}`);
+        r.log.push(`第${r.season}季，${first ? '入行' : '转行'}：${def.name}。`);
     }
 
     /** 当前绑定的系统 id */
@@ -1228,6 +1283,8 @@ export class Engine {
                 }
                 case 'ever': return this.ever.includes(id) || (() => { const [l, st] = id.split('.'); return st === undefined ? r.lines?.[l] !== undefined : r.lines?.[l] === st; })();
                 case 'system': return id === 'any' ? !!this.systemId() : r.companions.includes(id);
+                case 'career': return id === 'any' ? !!r.career : r.career === id;
+                case 'pastcareer': return !!this.dp.careers?.includes(id);
                 case 'xend': {
                     // xend:命格id 或 xend:命格id/结局id
                     const [did, eid] = id.split('/');
@@ -1249,6 +1306,7 @@ export class Engine {
         item: id => this.itemName(id),
         companion: id => this.data.companions.get(id)?.name ?? id,
         skill: id => this.skillName(id),
+        career: id => this.data.careers.get(id)?.name ?? id,
     };
 
     private describe(c?: Cond): string {
@@ -1289,6 +1347,7 @@ export class Engine {
             if (o.effect.death) return `死亡：${this.data.deaths.get(o.effect.death)?.name}`;
             const parts = Object.entries(o.effect.attrs).map(([k, v]) => `${this.attrName(k)}${v > 0 ? '+' : ''}${v}`);
             if (o.effect.items.length) parts.push(`获得${o.effect.items.map(i => this.itemName(i)).join('、')}`);
+            if (o.effect.career) parts.push(`入行·${this.data.careers.get(o.effect.career)?.name ?? o.effect.career}`);
             return parts.join(' ') || '无事发生';
         };
         if (c.chance !== undefined && c.fail) {

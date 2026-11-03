@@ -10,10 +10,11 @@
  * 布尔项：flag:x talent:x item:x companion:x skill:x（本局拥有该技能） seen:<事件id> dead:<死法id> ending:<结局id>
  *   xend:<命格id>（另一命格达成过任意结局）| xend:<命格id>/<结局id>（达成过指定结局）——跨命格彩蛋
  *   line:<线路>（这一世开始了）| line:<线路>.<状态> | ever:<线路>.<状态>（任何一世到达过）| system:any | system:<系统id>
+ *   career:<职业id>（这一世当前的职业）| career:any（已经择业）| pastcareer:<职业id>（之前某一世干过）
  * 组合：! 非，& 与，| 或（& 优先于 |），括号
  */
 
-export type HasKind = 'flag' | 'talent' | 'item' | 'companion' | 'skill' | 'seen' | 'dead' | 'ending' | 'xend' | 'line' | 'ever' | 'system';
+export type HasKind = 'flag' | 'talent' | 'item' | 'companion' | 'skill' | 'seen' | 'dead' | 'ending' | 'xend' | 'line' | 'ever' | 'system' | 'career' | 'pastcareer';
 export type NumKind = 'attr' | 'stage' | 'season' | 'life' | 'legacy' | 'pos' | 'died' | 'xstage' | 'xlives';
 export type Op = '>=' | '<=' | '>' | '<' | '==' | '!=';
 
@@ -33,7 +34,7 @@ export interface CondCtx {
     has(kind: HasKind, id: string): boolean;
 }
 
-const HAS_KINDS: HasKind[] = ['flag', 'talent', 'item', 'companion', 'skill', 'seen', 'dead', 'ending', 'xend', 'line', 'ever', 'system'];
+const HAS_KINDS: HasKind[] = ['flag', 'talent', 'item', 'companion', 'skill', 'seen', 'dead', 'ending', 'xend', 'line', 'ever', 'system', 'career', 'pastcareer'];
 /** 带 id 的数值项前缀 */
 const NUM_PREFIXES = ['legacy', 'died', 'xstage', 'xlives'] as const;
 const OPS: Op[] = ['>=', '<=', '==', '!=', '>', '<'];
@@ -163,6 +164,7 @@ export interface DescribeNames {
     item(id: string): string;
     companion(id: string): string;
     skill(id: string): string;
+    career?(id: string): string;
 }
 
 const OP_TEXT: Record<Op, string> = { '>=': '≥', '<=': '≤', '>': '>', '<': '<', '==': '=', '!=': '≠' };
@@ -173,7 +175,7 @@ export function describeCond(n: CondNode, names: DescribeNames): string {
     switch (n.t) {
         case 'and': return `${describeCond(n.a, names)} 且 ${describeCond(n.b, names)}`;
         case 'or': return `${describeCond(n.a, names)} 或 ${describeCond(n.b, names)}`;
-        case 'not': return n.a.t === 'has' && ['flag', 'seen', 'dead', 'ending', 'xend', 'line', 'ever', 'system'].includes(n.a.kind) ? '？？？' : `非(${describeCond(n.a, names)})`;
+        case 'not': return n.a.t === 'has' && ['flag', 'seen', 'dead', 'ending', 'xend', 'line', 'ever', 'system', 'pastcareer'].includes(n.a.kind) ? '？？？' : `非(${describeCond(n.a, names)})`;
         case 'has':
             switch (n.kind) {
                 case 'talent': return `天赋·${names.talent(n.id)}`;
@@ -181,6 +183,7 @@ export function describeCond(n: CondNode, names: DescribeNames): string {
                 case 'companion': return `伴生·${names.companion(n.id)}`;
                 case 'skill': return `技能·${names.skill(n.id)}`;
                 case 'system': return n.id === 'any' ? '绑定了系统' : `系统·${names.companion(n.id)}`;
+                case 'career': return n.id === 'any' ? '已经入行' : `职业·${names.career?.(n.id) ?? n.id}`;
                 default: return '？？？';
             }
         case 'cmp': {

@@ -2,6 +2,7 @@
   "id": "go_abroad",
   "name": "出海",
   "summary": "正规外派，合同签证保险齐全，就是那边没人说中文。前世你被一份看不懂的合同坑了。这一世，外面的套路你都见过。",
+  "careers": ["office"],
   "maps": ["city", "workshop", "county"],
   "stage": [3, 99],
   "states": {

@@ -62,7 +62,7 @@ export const TEX = {
     btn: (style: 'normal' | 'primary' | 'ad' | 'locked') => [`${C}/ui/btn_${style}`],
     /** 弹窗面板九宫格（POPUP_SLICE） */
     panel: [`${C}/ui/panel`],
-    tool: (id: 'items' | 'skills' | 'companions' | 'codex') => [`${C}/icon/tool_${id}`],
+    tool: (id: 'items' | 'skills' | 'companions' | 'lines' | 'codex') => [`${C}/icon/tool_${id}`],
     /** 属性图标：剧本 attrs[].stat → stat_{stat} */
     stat: (stat?: string) => (stat ? [`${C}/icon/stat_${stat}`] : []),
     dir: (dir: string) => [`${C}/icon/dir_${dir}`],

@@ -9,7 +9,7 @@
   },
   "events": [
     {
-      "id": "first_order", "entry": true, "dir": "any", "stage": [0, 2], "weight": 14,
+      "id": "first_order", "careers": ["office", "driver", "stall", "shop", "media"], "entry": true, "dir": "any", "stage": [0, 2], "weight": 14,
       "text": "外卖到了，晚了十五分钟。小哥浑身湿透，一直在道歉：哥，求你别给差评，这单扣完我就白跑了。",
       "choices": [
         { "text": "给他五星好评", "effect": { "人脉": 1, "心态": 1, "follow": { "id": "noon", "delay": 2 } }, "result": "他愣了一下，冲你鞠了个躬。你记住了他胸牌上的名字：阿强。" },
@@ -63,7 +63,7 @@
       "text": "你被裁的第二天，门铃响了。阿强站在门口，手里两份饭：哥，今天这单，我请。",
       "choices": [
         { "text": "请他进来吃", "effect": { "心态": 2, "精力": 2, "人脉": 2 }, "result": "你们坐在地上吃完了饭。他说：哥，没啥大不了的，你看我，不也活得好好的。" },
-        { "text": "跟他去跑单", "effect": { "state": "riding", "身价": 6, "脸皮": 2 }, "result": "那个月，你跑遍了这座城。你发现，失业也没那么可怕。" }
+        { "text": "跟他去跑单", "effect": { "state": "riding", "career": "rider", "身价": 6, "脸皮": 2 }, "result": "那个月，你跑遍了这座城。你发现，失业也没那么可怕。" }
       ]
     }
   ]

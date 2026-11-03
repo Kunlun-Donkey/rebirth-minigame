@@ -1,6 +1,6 @@
 [
   {
-    "id": "up_fallback", "dir": "up", "weight": 3,
+    "id": "up_fallback", "careers": ["office"], "dir": "up", "weight": 3,
     "text": "你在工位上坐了一季。键盘敲得很响，日子过得很快。",
     "choices": [
       { "text": "接着干", "effect": { "能力": 1, "身价": 1 }, "result": "活干完了，又来了新的。打工人的日子，就是这样。" },
@@ -8,7 +8,7 @@
     ]
   },
   {
-    "id": "u1_overtime", "dir": "up", "layers": ["U1"], "weight": 12,
+    "id": "u1_overtime", "careers": ["office"], "dir": "up", "layers": ["U1"], "weight": 12,
     "text": "晚上九点，组长在群里说：今晚大家辛苦一下。没人说话，也没人走。",
     "choices": [
       { "text": "留下来", "effect": { "能力": 1, "身价": 2, "精力": -1 }, "result": "你干到了十二点。打车回家，司机问你：又加班啊？" },
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "id": "u1_printer", "dir": "up", "layers": ["U1"], "weight": 10,
+    "id": "u1_printer", "careers": ["office"], "dir": "up", "layers": ["U1"], "weight": 10,
     "text": "打印机又卡纸了。整层楼的人都看着它，没人动。",
     "choices": [
       { "text": "上去修", "chance": 0.6, "chanceAttr": "能力", "chanceStep": 0.06,
@@ -33,7 +33,7 @@
     ]
   },
   {
-    "id": "u2_report", "dir": "up", "layers": ["U2"], "weight": 12,
+    "id": "u2_report", "careers": ["office"], "dir": "up", "layers": ["U2"], "weight": 12,
     "text": "季度汇报。投影仪打在你脸上，你的 PPT 只做了一半。",
     "choices": [
       { "text": "硬着头皮讲", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
@@ -46,7 +46,7 @@
     ]
   },
   {
-    "id": "u2_meeting_marathon", "dir": "up", "layers": ["U2"], "weight": 10,
+    "id": "u2_meeting_marathon", "careers": ["office"], "dir": "up", "layers": ["U2"], "weight": 10,
     "text": "一个会开了四个小时。讨论的问题是：下次会议什么时候开。",
     "choices": [
       { "text": "认真记笔记", "effect": { "能力": 1, "精力": -1, "身价": 2 }, "result": "你记了三页。第三页写着：下周二。" },
@@ -57,7 +57,7 @@
     ]
   },
   {
-    "id": "u3_office", "dir": "up", "layers": ["U3"], "weight": 12,
+    "id": "u3_office", "careers": ["office"], "dir": "up", "layers": ["U3"], "weight": 12,
     "text": "你有了自己的办公室，也有了自己的下属。他们看你的眼神，像你当年看老周。",
     "choices": [
       { "text": "给他们画饼", "effect": { "身价": 8, "人脉": -1 }, "result": "你讲完，他们点头。你突然明白了老周。有点难受。" },
@@ -67,7 +67,7 @@
     ]
   },
   {
-    "id": "u3_headhunter", "dir": "up", "layers": ["U3"], "weight": 10,
+    "id": "u3_headhunter", "careers": ["office"], "dir": "up", "layers": ["U3"], "weight": 10,
     "text": "猎头打来电话：对家公司出双倍，问你有没有兴趣。",
     "choices": [
       { "text": "去谈谈", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
@@ -102,7 +102,7 @@
     ]
   }
   ,{
-    "id": "u3_retire_offer", "dir": "up", "layers": ["U3", "U4"], "stage": [3, 99], "once": true, "weight": 6, "require": "season>=22 & 能力>=16 & 人脉>=12",
+    "id": "u3_retire_offer", "careers": ["office"], "dir": "up", "layers": ["U3", "U4"], "stage": [3, 99], "once": true, "weight": 6, "require": "season>=22 & 能力>=16 & 人脉>=12",
     "text": "人事请你喝咖啡：公司有个政策，干满年头的骨干，可以提前体面退休，待遇一分不少。",
     "choices": [
       { "text": "体面退休", "require": "!line:boss_zhou.fooled & 心态>=12", "effect": { "ending": "retire_well" }, "result": "你签了字。最后一天，全组给你订了个蛋糕，上面写着：老大，常回来摸鱼。" },

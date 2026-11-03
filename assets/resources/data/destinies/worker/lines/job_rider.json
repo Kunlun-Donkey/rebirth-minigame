@@ -1,0 +1,210 @@
+{
+  "id": "job_rider",
+  "name": "外卖骑手",
+  "summary": "一辆电动车，一个保温箱。跑到站长、跑进平台总部，或者把车换成摩托一路向西——这座城的每条小路，都通向一个结局。",
+  "careers": ["rider"],
+  "states": {
+    "station": "当上了站长",
+    "hero": "救过人，成了新闻里的骑手",
+    "road": "想骑出这座城",
+    "crash": "在路上摔过一次狠的",
+    "union": "带骑手们讨回了公道"
+  },
+  "events": [
+    {
+      "id": "peak", "dir": "up", "layers": ["U1"], "weight": 14,
+      "text": "中午十一点半，手机上一口气弹出七单。三家奶茶、两份麻辣烫，还有一单跨区，十八公里。",
+      "choices": [
+        { "text": "七单全接", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "身价": 6, "能力": 1, "精力": -1 }, "result": "你像一条鱼一样在车流里钻。七单，全部准时。",
+          "easy": "你闭着眼都知道哪条路不堵。七单送完，才十二点一刻。",
+          "fail": { "effect": { "身价": -2, "心态": -1 }, "result": "第五单超时，第六单洒了，第七单的顾客给了你一个差评。" } },
+        { "text": "只接顺路的", "effect": { "身价": 3, "心态": 1 }, "result": "你只接了三单，一条线送完。站长说：会跑的不是跑得快的。" },
+        { "text": "前世跑过这片", "require": "pastcareer:rider", "effect": { "身价": 8, "能力": 1 },
+          "result": "前世你在这片跑了三年。哪个小区的门禁坏了，你都记得。" }
+      ]
+    },
+    {
+      "id": "bad_review", "dir": "up", "layers": ["U1"], "weight": 10,
+      "text": "一个顾客给了你差评：汤洒了。可那碗汤是商家没盖严，你在店门口就说过。",
+      "choices": [
+        { "text": "申诉", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 3, "脸皮": 1 }, "result": "你翻出取餐时拍的照片。差评撤了，站长给你点了个赞。",
+          "fail": { "effect": { "身价": -3, "心态": -1 }, "result": "系统回复：申诉驳回。理由那一栏，是空的。" } },
+        { "text": "打电话给顾客", "effect": { "人脉": 1, "心态": 1 }, "result": "顾客是个加班的姑娘，听完说对不起。她第二天又点了一单，备注：辛苦了。" },
+        { "text": "算了", "effect": { "心态": -1, "精力": 1 }, "result": "你把手机揣回兜里。下一单已经在等了。" }
+      ]
+    },
+    {
+      "id": "aqiang", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 12,
+      "text": "站点来了个老骑手，皮肤晒得黝黑，叫阿强。他瞟了一眼你的路线：兄弟，你这么跑，一天亏两单。",
+      "choices": [
+        { "text": "请他喝瓶水", "effect": { "人脉": 2, "能力": 1, "flag": "aqiang" }, "result": "阿强在你的地图上画了七条近路：记住，这些都是命。" },
+        { "text": "跟他比一比", "chance": 0.3, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "脸皮": 1, "flag": "aqiang", "feud": "阿强第一次跑输了新人" }, "result": "你比他早到三分钟。阿强笑了：行啊，以后一起跑。",
+          "fail": { "effect": { "心态": -1, "flag": "aqiang" }, "result": "他比你早到二十分钟，还帮你把单送了。" } },
+        { "text": "不理他", "effect": { "能力": 1 }, "result": "你自己摸路。一个月后，你也画出了那七条近路。" }
+      ]
+    },
+    {
+      "id": "station", "dir": "up", "layers": ["U2"], "weight": 14,
+      "text": "老站长回老家了，走之前问你：站长这个位子，你要不要？二十个骑手，管排班、管投诉、管吵架。",
+      "choices": [
+        { "text": "接下来", "effect": { "state": "station", "人脉": 2, "能力": 1, "身价": 4 }, "result": "你把对讲机别在腰上。第一天，就有三个骑手为一个车位吵了起来。" },
+        { "text": "我还是跑单", "effect": { "身价": 4, "心态": 1 }, "result": "你说你喜欢在路上。老站长说：也好，路上自在。" },
+        { "text": "推荐阿强", "require": "flag:aqiang", "effect": { "人脉": 3, "心态": 1, "state": "station" },
+          "result": "阿强当了站长，你当副站长。他说：大事你定，吵架我来。" }
+      ]
+    },
+    {
+      "id": "newbie", "dir": "up", "layers": ["U2"], "weight": 10,
+      "text": "站里来了个新人，十九岁，第一天就迷路了三次，躲在楼梯间里哭。",
+      "choices": [
+        { "text": "带他跑一天", "effect": { "人脉": 2, "精力": -1, "心态": 1 }, "result": "你跑一单，他跟一单。傍晚他说：哥，我记住路了。" },
+        { "text": "给他画张地图", "effect": { "能力": 1, "人脉": 1 }, "result": "你把七条近路画在一张外卖单背面。他贴在了车把上。" }
+      ]
+    },
+    {
+      "id": "algorithm", "dir": "up", "layers": ["U3"], "weight": 14,
+      "text": "调度室开会：算法建议把配送时长再压三分钟。屏幕上几百个小点，没有一个知道这件事。",
+      "choices": [
+        { "text": "拍桌子反对", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.04,
+          "effect": { "state": "union", "人脉": 3, "身价": 6, "feud": "算法的三分钟被你砍掉了" }, "result": "你把一个月的事故报告摔在桌上。三分钟，没压下去。",
+          "fail": { "effect": { "心态": -2 }, "result": "领导说：数据不会骗人。你说：数据没骑过车。" } },
+        { "text": "提议雨天加时", "effect": { "能力": 2, "身价": 4 }, "result": "你的方案通过了：下雨天，每单多给五分钟。骑手群里刷了一晚上的谢谢。" },
+        { "text": "照做", "effect": { "身价": 8, "心态": -2 }, "result": "你签了字。那天晚上，你梦见自己在雨里跑，怎么也跑不到。" }
+      ]
+    },
+    {
+      "id": "headquarters", "dir": "up", "layers": ["U3", "U4"], "weight": 12, "stage": [3, 99],
+      "text": "平台总部请你去讲讲一线。台下坐着一排算法工程师，没有一个骑过电动车。",
+      "choices": [
+        { "text": "请他们跑一天", "effect": { "人脉": 2, "能力": 2, "feud": "工程师们跑完单都瘫了" }, "result": "工程师们穿上黄马甲跑了一天。第二天，十几条规则改了。" },
+        { "text": "讲讲阿强", "require": "flag:aqiang", "effect": { "人脉": 3, "心态": 2 }, "result": "你讲阿强画的七条近路。讲完，有个工程师偷偷抹了眼泪。" },
+        { "text": "讲PPT", "effect": { "身价": 6 }, "result": "你讲了四十分钟。领导说讲得好，你自己都没记住讲了啥。" }
+      ]
+    },
+    {
+      "id": "platform", "dir": "up", "layers": ["U4"], "once": true, "weight": 16,
+      "text": "投资人坐在你对面：你懂骑手，我们懂钱。要不要做一个自己的外卖平台？",
+      "choices": [
+        { "text": "做骑手的平台", "require": "stage>=4 & 人脉>=12 & (line:job_rider.union | line:job_rider.station)",
+          "effect": { "ending": "rider_platform" }, "result": "你写下第一条规矩：超时不扣骑手的钱。投资人愣了一下，签了字。" },
+        { "text": "先把站点做好", "effect": { "身价": 15, "人脉": 2 }, "result": "你说：我先把手上这二十个人管好。投资人留下了名片。" },
+        { "text": "拿钱就跑", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 40 }, "result": "你拿了天使轮，第二天去买了一辆最好的电动车。投资人：……",
+          "fail": { "effect": { "身价": -10, "心态": -2 }, "result": "投资人的律师比你跑得还快。" } }
+      ]
+    },
+
+    {
+      "id": "rain", "dir": "down", "layers": ["D1"], "weight": 14,
+      "text": "暴雨。路面积水没过了脚踝，手机上还有四单，倒计时一个比一个红。",
+      "choices": [
+        { "text": "冲", "chance": 0.55, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "身价": 8, "精力": -1 }, "result": "你浑身湿透，四单全到。最后一个顾客塞给你一把伞。",
+          "fail": { "effect": { "精力": -2, "state": "crash", "follow": { "id": "hospital", "delay": 1 } }, "result": "路口一滑，车倒了，你也倒了。保温箱里的汤，洒了一地。" } },
+        { "text": "停在屋檐下", "effect": { "身价": -3, "精力": 1, "心态": 1 }, "result": "你给四个顾客打电话道歉。三个说没事，一个说：注意安全。" },
+        { "text": "前世没停的黄灯", "require": "legacy:slow_down>=1", "effect": { "心态": 2, "身价": 4 },
+          "result": "前世你在这个路口没停。这一世你停了，绿灯亮时，雨也小了。" }
+      ]
+    },
+    {
+      "id": "hospital", "dir": "any", "chainOnly": true, "teaser": "你在医院醒了过来", "require": "line:job_rider.crash",
+      "text": "你在医院醒过来，腿上打着石膏。站长发来消息：车修好了，你的单我们分着跑了。",
+      "choices": [
+        { "text": "躺一个月", "effect": { "精力": 3, "心态": 1, "身价": -4 }, "result": "你第一次在白天睡觉。窗外，黄马甲们一个个骑过去。" },
+        { "text": "换个活法", "effect": { "心态": 1, "follow": { "id": "career/switch", "delay": 1 } }, "result": "你盯着石膏想了一个月。这条路，你不想再这么跑了。" },
+        { "text": "瘸着也要跑", "chance": 0.3, "chanceAttr": "精力", "chanceStep": 0.05,
+          "effect": { "身价": 6, "脸皮": 2 }, "result": "你单手扶车，一瘸一拐送了一个月。没人给过你差评。",
+          "fail": { "effect": { "death": "road_accident" }, "result": "伤还没好，你又上了路。那天雨很大。" } }
+      ]
+    },
+    {
+      "id": "elevator", "dir": "down", "layers": ["D1"], "weight": 10,
+      "text": "写字楼的保安拦住你：外卖不能坐客梯。货梯在维修，顾客在三十八楼。",
+      "choices": [
+        { "text": "爬上去", "effect": { "精力": -1, "身价": 3, "脸皮": 1 }, "result": "你爬到三十八楼，腿在抖。顾客开门：怎么这么慢？" },
+        { "text": "跟保安聊两句", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "人脉": 2, "身价": 2 }, "result": "保安是老乡。他把你塞进客梯，自己挡在门口。",
+          "fail": { "effect": { "心态": -1 }, "result": "保安说：规矩就是规矩。你在楼下等了十五分钟。" } },
+        { "text": "前世就在这栋楼上班", "require": "pastcareer:office", "effect": { "心态": 2, "能力": 1 },
+          "result": "前世你在三十八楼当牛马。这一世你站在楼下，看着那扇窗户，笑了。" }
+      ]
+    },
+    {
+      "id": "bridge", "dir": "down", "layers": ["D3"], "weight": 14,
+      "text": "凌晨两点，你把车停在江边桥洞底下。旁边有个骑手在看地图，地图上画着一条线，一直画到西藏。",
+      "choices": [
+        { "text": "问他去哪", "effect": { "state": "road", "心态": 2, "人脉": 1, "follow": { "id": "west", "delay": 3, "ttl": 10 } },
+          "result": "他说攒够一万块，就骑摩托去拉萨。你看着那条线，也想去了。" },
+        { "text": "回去睡觉", "effect": { "精力": 2 }, "result": "你回出租屋睡了个好觉。那条线，在你梦里也画了一会儿。" }
+      ]
+    },
+    {
+      "id": "west", "dir": "side", "teaser": "那条通往西边的线", "require": "line:job_rider.road",
+      "text": "你攒够了钱，买了辆二手摩托。站长问：真走？你的单量全站第一。",
+      "choices": [
+        { "text": "真走", "require": "stage>=3 & 心态>=18", "effect": { "ending": "rider_road" },
+          "result": "你发动了摩托。城市在后视镜里越来越小，路越来越宽。" },
+        { "text": "再跑一年", "effect": { "身价": 8, "心态": -1 }, "result": "你把摩托锁进了车棚。你跟自己说，明年。" },
+        { "text": "周末先骑一圈", "effect": { "心态": 2, "精力": 1 }, "result": "你骑到了城郊的山上。风很大，你喊了一嗓子。" }
+      ]
+    },
+
+    {
+      "id": "shortcut", "dir": "side", "layers": ["L1"], "weight": 12,
+      "text": "商圈后巷，几家餐馆的后厨门都开着。厨师们蹲在门口抽烟，看见你，招了招手。",
+      "choices": [
+        { "text": "帮他们搬两箱菜", "effect": { "人脉": 2, "精力": -1 }, "result": "以后你的单，永远是这几家先出餐。" },
+        { "text": "问哪家最好吃", "effect": { "心态": 1, "精力": 1 }, "result": "厨师给你盛了一碗员工餐。比你送过的所有外卖都香。" }
+      ]
+    },
+    {
+      "id": "fire", "dir": "any", "once": true, "weight": 6, "stage": [1, 99],
+      "text": "送餐路上，你看见一栋老楼的三楼冒着黑烟。楼下的人在喊，消防车还堵在两条街外。",
+      "choices": [
+        { "text": "冲进去", "chance": 0.5, "chanceAttr": "精力", "chanceStep": 0.05,
+          "effect": { "state": "hero", "人脉": 4, "身价": 10, "follow": { "id": "rescue_team", "delay": 2, "ttl": 8 } },
+          "result": "你背出来一个老太太。第二天，你的黄马甲上了热搜。",
+          "fail": { "effect": { "精力": -3, "state": "hero", "follow": { "id": "rescue_team", "delay": 2, "ttl": 8 } }, "result": "你被烟呛晕在楼道里。醒来时，老太太在病床边握着你的手。" } },
+        { "text": "带消防车抄近路", "require": "能力>=6", "effect": { "state": "hero", "人脉": 3, "能力": 1, "follow": { "id": "rescue_team", "delay": 2, "ttl": 8 } },
+          "result": "你骑在消防车前面带路，七条近路用上了三条。消防员说：这兄弟，比导航好使。" },
+        { "text": "打 119", "effect": { "心态": 1 }, "result": "你打完电话，站在楼下等。那单外卖，超时了。" }
+      ]
+    },
+    {
+      "id": "rescue_team", "dir": "any", "teaser": "应急救援队来找你", "require": "line:job_rider.hero",
+      "text": "市里要组一支应急救援队，队长想找个熟悉每条小路的人。他们找到了你。",
+      "choices": [
+        { "text": "当队长", "require": "stage>=3 & 人脉>=14 & 心态>=12", "effect": { "ending": "rider_hero" },
+          "result": "你换上了橙色的救援服。黄马甲，你叠好放进了柜子里。" },
+        { "text": "当队员", "effect": { "人脉": 3, "心态": 2, "身价": 4 }, "result": "你白天跑单，有事就去。队长说：等你攒够经验，这位子是你的。" },
+        { "text": "我还是送外卖", "effect": { "身价": 4 }, "result": "你说：送外卖也是救人，救饿的。队长笑了。" }
+      ]
+    },
+    {
+      "id": "sys_bind", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 8, "require": "!system:any & season>=2",
+      "text": "你在楼下等餐，手机屏幕突然自己亮了：【叮！】检测到宿主今日跑单三十单，跑单系统绑定中……",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_rider", "state": "system.bound", "follow": { "id": "sys_task", "delay": 2 } },
+          "result": "【叮！】绑定成功。前方三百米有一单，准时送达奖励翻倍。" },
+        { "text": "先送完这单", "effect": { "心态": 1, "身价": 2 }, "result": "你送完回来，屏幕暗了。系统好像去找阿强了。" },
+        { "text": "能帮我抢单吗", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "bind": "sys_rider", "state": "system.bound", "身价": 8 }, "result": "【叮！】……本系统不提供外挂。不过，这一单送你了。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】检测到宿主试图作弊。系统拉黑了你。" } }
+      ]
+    },
+    {
+      "id": "sys_task", "dir": "any", "teaser": "【叮！】跑单任务已发布", "require": "system:sys_rider",
+      "text": "【叮！】限时任务：今晚十点前，把一份饺子送到城市另一头。备注：给一个过生日的老人。",
+      "choices": [
+        { "text": "接", "chance": 0.6, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "state": "system.tasked", "身价": 10, "心态": 2 }, "result": "老人开门，看见饺子哭了：儿子说今年回不来。【叮！】任务完成。",
+          "fail": { "effect": { "心态": -1, "身价": 2 }, "result": "你晚到了十分钟。老人说没事，饺子他热一热就行。" } },
+        { "text": "打电话给她儿子", "require": "人脉>=6", "effect": { "state": "system.tasked", "人脉": 3, "身价": 6 },
+          "result": "你接通视频，把手机举到老人面前。【叮！】任务完成，超额奖励。" }
+      ]
+    }
+  ]
+}

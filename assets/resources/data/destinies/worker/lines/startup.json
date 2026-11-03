@@ -2,6 +2,7 @@
   "id": "startup",
   "name": "创业",
   "summary": "烧烤摊上一句「别打工了，跟我干」。前世你被合伙人请出了自己的公司。这一世，股份协议你先写。",
+  "careers": ["office"],
   "maps": ["city", "workshop"],
   "stage": [2, 99],
   "states": {

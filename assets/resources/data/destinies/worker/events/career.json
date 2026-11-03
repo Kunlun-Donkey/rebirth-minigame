@@ -1,0 +1,387 @@
+[
+  {
+    "id": "career/choose",
+    "dir": "any",
+    "chainOnly": true,
+    "text": "重生第一天，人才市场门口。前世你在写字楼熬了十年。这一世，靠什么活？",
+    "choices": [
+      {
+        "text": "进写字楼",
+        "effect": {
+          "career": "office"
+        },
+        "result": "你把简历投给了前世那家公司。前世的坑，这一世你闭着眼都能绕过去。"
+      },
+      {
+        "text": "送外卖",
+        "effect": {
+          "career": "rider"
+        },
+        "result": "你花一千二买了辆二手电动车。站长扔给你一件黄马甲：明早六点，早高峰。"
+      },
+      {
+        "text": "开网约车",
+        "effect": {
+          "career": "driver"
+        },
+        "result": "你租了辆白色电车，月租三千八。第一单去机场，乘客在后座睡着了。"
+      },
+      {
+        "text": "摆摊",
+        "effect": {
+          "career": "stall"
+        },
+        "result": "你淘了辆二手三轮和一口锅。前世这条街三年后会火，你记得。"
+      },
+      {
+        "text": "开个小店",
+        "effect": {
+          "career": "shop"
+        },
+        "result": "你盘下街角一间十几平的铺子。招牌是你自己写的，歪了一点。"
+      },
+      {
+        "text": "做自媒体",
+        "effect": {
+          "career": "media"
+        },
+        "result": "你买了一盏补光灯，对着手机说了第一句话：家人们。说完自己先笑了。"
+      }
+    ]
+  },
+  {
+    "id": "career/switch",
+    "dir": "any",
+    "chainOnly": true,
+    "teaser": "换个活法？",
+    "text": "你坐在出租屋的地上。窗外，有人送外卖，有人摆摊。换个活法？",
+    "choices": [
+      {
+        "text": "回写字楼上班",
+        "showIf": "!career:office",
+        "effect": {
+          "career": "office",
+          "能力": 1
+        },
+        "result": "你穿上衬衫，进了写字楼。工位上那盆绿萝，和前世一模一样。"
+      },
+      {
+        "text": "送外卖",
+        "showIf": "!career:rider",
+        "effect": {
+          "career": "rider",
+          "脸皮": 1
+        },
+        "result": "你骑上电动车，第一单就路过了从前常去的那条街。"
+      },
+      {
+        "text": "开网约车",
+        "showIf": "!career:driver",
+        "effect": {
+          "career": "driver",
+          "心态": 1
+        },
+        "result": "你租了辆车。方向盘在自己手里，这感觉很久没有过了。"
+      },
+      {
+        "text": "摆摊",
+        "showIf": "!career:stall",
+        "effect": {
+          "career": "stall",
+          "脸皮": 1
+        },
+        "result": "你推着三轮车出了门。第一晚卖了四十块，你很高兴。"
+      },
+      {
+        "text": "开个小店",
+        "showIf": "!career:shop",
+        "require": "身价>=8",
+        "effect": {
+          "career": "shop",
+          "身价": -6
+        },
+        "result": "你拿出全部积蓄盘了间小铺子。开业那天，来了一桌老熟人。"
+      },
+      {
+        "text": "做自媒体",
+        "showIf": "!career:media",
+        "effect": {
+          "career": "media",
+          "人脉": 1
+        },
+        "result": "你发的第一条视频叫：我又换工作了。播放量三万。"
+      },
+      {
+        "text": "先歇一阵",
+        "effect": {
+          "精力": 2,
+          "心态": 1
+        },
+        "result": "你什么也没换，先睡了三天。日子还长。"
+      }
+    ]
+  },
+  {
+    "id": "career/hard_year",
+    "dir": "any",
+    "once": true,
+    "weight": 5,
+    "stage": [
+      1,
+      3
+    ],
+    "careers": [
+      "rider",
+      "driver",
+      "stall",
+      "shop",
+      "media"
+    ],
+    "text": "干了一年，腰疼、膝盖疼，晚上睡不着。同学在群里说：我们公司招人，五险一金，朝九晚六。",
+    "choices": [
+      {
+        "text": "去面试",
+        "effect": {
+          "career": "office",
+          "精力": 2
+        },
+        "result": "你穿上衬衫，进了写字楼。工位上有一盆绿萝，和前世一模一样。"
+      },
+      {
+        "text": "再干一年",
+        "effect": {
+          "心态": 1,
+          "脸皮": 1
+        },
+        "result": "你给腰贴了张膏药，第二天照常出门。"
+      },
+      {
+        "text": "前世进过写字楼",
+        "require": "legacy:veteran>=1",
+        "effect": {
+          "心态": 2,
+          "身价": 4
+        },
+        "result": "前世你在写字楼里熬到了退休。这一世，你回了一句：不去，谢谢。"
+      }
+    ]
+  },
+  {
+    "id": "career/up_fallback",
+    "dir": "up",
+    "weight": 3,
+    "careers": [
+      "rider",
+      "driver",
+      "stall",
+      "shop",
+      "media"
+    ],
+    "text": "你埋头干了一季。早出晚归，日子过得很快。",
+    "choices": [
+      {
+        "text": "再多干点",
+        "effect": {
+          "身价": 2,
+          "精力": -1
+        },
+        "result": "月底算账，比上个月多了一截。"
+      },
+      {
+        "text": "按点收工",
+        "effect": {
+          "精力": 1
+        },
+        "result": "你准时收了工，回家煮了一碗面。"
+      }
+    ]
+  },
+  {
+    "id": "career/down_fallback",
+    "dir": "down",
+    "weight": 3,
+    "careers": [
+      "rider",
+      "driver",
+      "stall",
+      "shop",
+      "media"
+    ],
+    "text": "你给自己放了几天假，哪儿也没去，手机也没看。",
+    "choices": [
+      {
+        "text": "睡到自然醒",
+        "effect": {
+          "精力": 2
+        },
+        "result": "你醒来的时候，太阳已经晒到了床尾。"
+      },
+      {
+        "text": "给自己做顿饭",
+        "effect": {
+          "心态": 1,
+          "精力": 1
+        },
+        "result": "你炒了两个菜，一个人吃完了。挺好。"
+      }
+    ]
+  },
+  {
+    "id": "career/side_fallback",
+    "dir": "side",
+    "weight": 3,
+    "careers": [
+      "rider",
+      "driver",
+      "stall",
+      "shop",
+      "media"
+    ],
+    "text": "你在城里随便走了走，看见了很多以前没注意过的店。",
+    "choices": [
+      {
+        "text": "进去逛逛",
+        "effect": {
+          "人脉": 1
+        },
+        "result": "老板跟你聊了半小时，硬塞给你一张名片。"
+      },
+      {
+        "text": "记在本子上",
+        "effect": {
+          "能力": 1
+        },
+        "result": "哪条街人多，哪家店要倒，你都记下了。"
+      }
+    ]
+  },
+  {
+    "id": "career/past_rider",
+    "dir": "any",
+    "once": true,
+    "weight": 8,
+    "require": "pastcareer:rider & !career:rider",
+    "text": "外卖到了，小哥浑身是汗，一直道歉。你看着他的黄马甲——前世，你也穿过这一件。",
+    "choices": [
+      {
+        "text": "给他一瓶冰水",
+        "effect": {
+          "心态": 2,
+          "人脉": 1
+        },
+        "result": "他一口气喝完，说：哥，你咋知道我渴。你没说。"
+      },
+      {
+        "text": "告诉他一条近路",
+        "effect": {
+          "人脉": 2,
+          "能力": 1
+        },
+        "result": "他眼睛一亮：这条我都不知道！你笑了笑：我跑过。"
+      }
+    ]
+  },
+  {
+    "id": "career/past_driver",
+    "dir": "any",
+    "once": true,
+    "weight": 8,
+    "require": "pastcareer:driver & !career:driver",
+    "text": "你打了辆车。司机放着老歌，后座上放着一瓶水。前世，你也在后座放过一瓶水。",
+    "choices": [
+      {
+        "text": "给个五星",
+        "effect": {
+          "心态": 2
+        },
+        "result": "下车时你说：师傅，慢点开。他愣了一下：您也开过车？"
+      },
+      {
+        "text": "跟他聊一路",
+        "effect": {
+          "人脉": 2,
+          "身价": 2
+        },
+        "result": "他说机场哪个口好排，你说哪段高架凌晨最空。他递来一根烟。"
+      }
+    ]
+  },
+  {
+    "id": "career/past_stall",
+    "dir": "any",
+    "once": true,
+    "weight": 8,
+    "require": "pastcareer:stall & !career:stall",
+    "text": "路边有个小摊，摊主手忙脚乱，锅里的油都冒烟了。你一闻就知道：火太大了。",
+    "choices": [
+      {
+        "text": "帮他把火调小",
+        "effect": {
+          "能力": 1,
+          "人脉": 1,
+          "心态": 1
+        },
+        "result": "他手上一缓，摊出来的饼又圆又匀。他问：你也摆过？"
+      },
+      {
+        "text": "买两份",
+        "effect": {
+          "精力": 1,
+          "心态": 1
+        },
+        "result": "有点糊。你吃完了，跟他说：明天会更好。"
+      }
+    ]
+  },
+  {
+    "id": "career/past_shop",
+    "dir": "any",
+    "once": true,
+    "weight": 8,
+    "require": "pastcareer:shop & !career:shop",
+    "text": "街角有间小店贴出了转让告示。你站在门口，看着那块歪了一点的招牌，很久。",
+    "choices": [
+      {
+        "text": "进去买点东西",
+        "effect": {
+          "心态": 2
+        },
+        "result": "老板说：最后一天了，都打折。你买了一瓶水，付了一百。"
+      },
+      {
+        "text": "帮他看看账",
+        "effect": {
+          "能力": 2,
+          "人脉": 1
+        },
+        "result": "你看了十分钟：房租压太狠了，换个位置能活。他留了你的电话。"
+      }
+    ]
+  },
+  {
+    "id": "career/past_media",
+    "dir": "any",
+    "once": true,
+    "weight": 8,
+    "require": "pastcareer:media & !career:media",
+    "text": "刷手机刷到一个新人博主，补光灯打歪了，说话还结巴。播放量：37。",
+    "choices": [
+      {
+        "text": "点赞、评论、转发",
+        "effect": {
+          "心态": 2,
+          "人脉": 1
+        },
+        "result": "你留言：加油，我也是从 37 开始的。他回了一长串感叹号。"
+      },
+      {
+        "text": "私信教他打光",
+        "effect": {
+          "能力": 1,
+          "人脉": 2
+        },
+        "result": "下一条视频亮堂多了。他在片尾写：感谢一位神秘网友。"
+      }
+    ]
+  }
+]

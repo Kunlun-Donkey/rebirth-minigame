@@ -1,0 +1,467 @@
+[
+  {
+    "id": "x_rider_jianbing",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "line:job_rider.station & line:jianbing.friend",
+    "text": "早上六点，煎饼大爷的摊前蹲满了黄马甲。大爷说：你站里的娃，早饭我包了，记你账上。",
+    "choices": [
+      {
+        "text": "给大爷入股",
+        "effect": {
+          "人脉": 3,
+          "心态": 2,
+          "feud": "大爷成了骑手站的食堂"
+        },
+        "result": "你给大爷换了辆新推车。车上贴着：骑手专供，加蛋免费。"
+      },
+      {
+        "text": "我请了",
+        "effect": {
+          "人脉": 2,
+          "身价": -3
+        },
+        "result": "二十个骑手吃完，冲你喊了一声：站长大气！"
+      }
+    ]
+  },
+  {
+    "id": "x_rider_loan",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "career:rider & line:loan.borrowed",
+    "text": "催收电话又打来了。阿强在旁边听见，把手机抢过去：他欠多少？我们二十个人，一人跑一单。",
+    "choices": [
+      {
+        "text": "让兄弟们帮忙",
+        "effect": {
+          "state": "loan.cleared",
+          "人脉": 3,
+          "心态": 2,
+          "feud": "骑手们替你跑清了网贷"
+        },
+        "result": "那个周末，二十个骑手多跑了一百单。周一早上，你的网贷清了。"
+      },
+      {
+        "text": "我自己还",
+        "effect": {
+          "身价": 4,
+          "精力": -2,
+          "脸皮": 1
+        },
+        "result": "你一天跑了六十单。阿强说：你这是不要命了。"
+      }
+    ]
+  },
+  {
+    "id": "x_rider_roommate",
+    "dir": "any",
+    "once": true,
+    "weight": 12,
+    "require": "career:rider & line:roommate.friend",
+    "text": "室友考试那天早上，下起了暴雨。考场在城东，公交停了，打车排到了两百位。",
+    "choices": [
+      {
+        "text": "骑车送他",
+        "chance": 0.6,
+        "chanceAttr": "能力",
+        "chanceStep": 0.04,
+        "effect": {
+          "人脉": 2,
+          "心态": 2,
+          "state": "roommate.landed"
+        },
+        "result": "你抄了七条近路，提前十分钟到。他冲进考场前喊：这单五星！",
+        "easy": "你闭着眼都知道哪条路不淹。他到考场时，门还没开。",
+        "fail": {
+          "effect": {
+            "心态": -1
+          },
+          "result": "晚了两分钟。他站在门外，冲你笑了笑：明年再来。"
+        }
+      },
+      {
+        "text": "给他雨衣",
+        "effect": {
+          "心态": 1
+        },
+        "result": "他穿着你的黄雨衣跑进雨里。你在后面喊：别摔了！"
+      }
+    ]
+  },
+  {
+    "id": "x_driver_parents",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "career:driver & line:parents.close",
+    "text": "老妈在电话里说，想来城里看看你，又怕晕车。老爸说：坐火车，转两趟，不麻烦你。",
+    "choices": [
+      {
+        "text": "开车去接",
+        "effect": {
+          "心态": 3,
+          "精力": -1
+        },
+        "result": "你开了六个小时，老妈一路没晕车。她说：儿子开的车，就是稳。"
+      },
+      {
+        "text": "带他们兜风",
+        "effect": {
+          "心态": 2,
+          "人脉": 1,
+          "feud": "爸妈第一次逛了夜景"
+        },
+        "result": "你载着他们绕江边开了一圈。老爸在后座偷偷拍了一百张照片。"
+      }
+    ]
+  },
+  {
+    "id": "x_driver_pig",
+    "dir": "any",
+    "once": true,
+    "weight": 12,
+    "require": "career:driver & line:pig_butcher.busted",
+    "text": "后座两个人在小声商量：明天那个鱼，要让他把房子也押了。你从后视镜看了一眼。",
+    "choices": [
+      {
+        "text": "直接开进派出所",
+        "effect": {
+          "人脉": 2,
+          "身价": 10,
+          "feud": "骗子坐你的车进了派出所"
+        },
+        "result": "你一脚油门开进了派出所大院。民警说：这俩，我们找了三个月。"
+      },
+      {
+        "text": "偷偷录音报警",
+        "effect": {
+          "心态": 2,
+          "身价": 6
+        },
+        "result": "你把录音发给了上次那个民警。第二天，他给你回了个大拇指。"
+      }
+    ]
+  },
+  {
+    "id": "x_driver_tiandao",
+    "dir": "any",
+    "once": true,
+    "weight": 10,
+    "stage": [
+      3,
+      99
+    ],
+    "require": "career:driver & line:tiandao.met",
+    "text": "凌晨四点，你接了一单。上车的人穿着旧夹克，抱着那本小本子：师傅，能带我下班吗？",
+    "choices": [
+      {
+        "text": "随便开",
+        "require": "心态>=16",
+        "effect": {
+          "ending": "off_with_tiandao"
+        },
+        "result": "你载着天道开出了城。天亮的时候，它在后座睡着了。"
+      },
+      {
+        "text": "送它回机房",
+        "effect": {
+          "心态": 2,
+          "能力": 1
+        },
+        "result": "天道下车前说：你开车的样子，比你上班的样子好看。"
+      }
+    ]
+  },
+  {
+    "id": "x_stall_aqiang",
+    "dir": "any",
+    "once": true,
+    "weight": 12,
+    "require": "career:stall & line:job_stall.signature",
+    "text": "一个外卖小哥每天来你摊上买两个馍，一个自己吃，一个揣兜里。你问他：给谁的？他说：站里新来的娃。",
+    "choices": [
+      {
+        "text": "以后骑手半价",
+        "effect": {
+          "人脉": 3,
+          "身价": -2,
+          "feud": "全城骑手都知道你的摊"
+        },
+        "result": "第二天，你摊前停满了电动车。整个站的骑手都来了。"
+      },
+      {
+        "text": "多给一个",
+        "effect": {
+          "人脉": 1,
+          "心态": 1
+        },
+        "result": "小哥愣了一下，揣了两个走。走出老远，又回头冲你挥手。"
+      }
+    ]
+  },
+  {
+    "id": "x_stall_doom",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "career:stall & line:doom",
+    "text": "末日第七天，避难所里的人都在啃压缩饼干。你的三轮车上，还有半袋面粉和一口锅。",
+    "choices": [
+      {
+        "text": "出摊",
+        "effect": {
+          "state": "doom.shelter",
+          "人脉": 4,
+          "心态": 2,
+          "feud": "末日里也有热馍吃"
+        },
+        "result": "你在大堂支起了锅。第一个馍出锅时，三百个人都站了起来。"
+      },
+      {
+        "text": "留着自己吃",
+        "effect": {
+          "精力": 3
+        },
+        "result": "你躲在楼梯间吃完了。不知道为什么，没有平时香。"
+      }
+    ]
+  },
+  {
+    "id": "x_shop_parents",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "stage": [
+      2,
+      99
+    ],
+    "require": "career:shop & (line:parents.home | line:parents.close)",
+    "text": "老爸打来电话：街口那间铺子还空着。你在城里开店，回老家开，不也一样？",
+    "choices": [
+      {
+        "text": "回老家开",
+        "require": "stage>=3 & 心态>=20 & 人脉>=12",
+        "effect": {
+          "ending": "hometown_shop"
+        },
+        "result": "你把城里的店交给了店员，回了老家。开业那天，爸妈一早就来坐着了。"
+      },
+      {
+        "text": "接他们来城里",
+        "effect": {
+          "心态": 2,
+          "人脉": 1
+        },
+        "result": "老妈在你店里帮忙收银，三天就认识了半条街的人。"
+      },
+      {
+        "text": "再干几年",
+        "effect": {
+          "身价": 4
+        },
+        "result": "老爸说好，又补了一句：铺子我让他给你留着。"
+      }
+    ]
+  },
+  {
+    "id": "x_shop_roommate",
+    "dir": "any",
+    "once": true,
+    "weight": 12,
+    "require": "career:shop & line:roommate.landed",
+    "text": "室友上岸了，穿着新制服来你店里。他把一个红包压在收银台上：考试那三年，泡面都是你这赊的。",
+    "choices": [
+      {
+        "text": "收下",
+        "effect": {
+          "身价": 6,
+          "心态": 2
+        },
+        "result": "红包里是三年的泡面钱，一分不差。还多了一张纸条：谢谢老板。"
+      },
+      {
+        "text": "退给他",
+        "effect": {
+          "人脉": 3,
+          "心态": 1,
+          "feud": "室友成了你店里的常客"
+        },
+        "result": "他说那以后来你这买东西，永远不砍价。"
+      }
+    ]
+  },
+  {
+    "id": "x_media_pig",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "career:media & line:pig_butcher.busted",
+    "text": "你把和那个骗子的聊天记录理了理，三百多页。粉丝在后台催：这个故事，什么时候讲？",
+    "choices": [
+      {
+        "text": "做一期反诈",
+        "effect": {
+          "人脉": 4,
+          "身价": 10,
+          "feud": "骗子的话术被你讲成了段子"
+        },
+        "result": "那期视频三千万播放。反诈中心转发了，配文：这位博主，讲得比我们好。"
+      },
+      {
+        "text": "算了",
+        "effect": {
+          "心态": 1
+        },
+        "result": "你把记录删了。有些事，过去了就过去了。"
+      }
+    ]
+  },
+  {
+    "id": "x_media_scam",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "career:media & line:scam_trip.escaped",
+    "text": "你对着镜头坐了很久，最后开口：我讲讲那趟回不来的团建。",
+    "choices": [
+      {
+        "text": "讲完",
+        "require": "人脉>=8",
+        "effect": {
+          "ending": "anti_scam_star"
+        },
+        "result": "你讲了四十分钟。评论区里，有人说：我刚退了一张机票。"
+      },
+      {
+        "text": "讲一半",
+        "effect": {
+          "心态": 1,
+          "人脉": 2
+        },
+        "result": "你讲到园区的铁门，停了下来。剩下的，以后再说。"
+      }
+    ]
+  },
+  {
+    "id": "x_media_awaken",
+    "dir": "any",
+    "once": true,
+    "weight": 14,
+    "require": "career:media & line:awaken.awakened",
+    "text": "全城的人都在觉醒。你架起补光灯，开了一场直播：《打工人修仙第一天》。",
+    "choices": [
+      {
+        "text": "直播御剑",
+        "chance": 0.4,
+        "chanceAttr": "心态",
+        "chanceStep": 0.04,
+        "effect": {
+          "人脉": 4,
+          "身价": 15,
+          "feud": "你成了修仙区第一个顶流"
+        },
+        "result": "你御剑飞过了江面。直播间在线人数，破了一千万。",
+        "fail": {
+          "effect": {
+            "精力": -2,
+            "身价": 6
+          },
+          "result": "你从剑上掉进了江里。这一段，播放量最高。"
+        }
+      },
+      {
+        "text": "教大家打坐",
+        "effect": {
+          "心态": 3,
+          "人脉": 2
+        },
+        "result": "十万人跟着你在直播间里打坐。弹幕全是：在了。"
+      }
+    ]
+  },
+  {
+    "id": "x_media_office",
+    "dir": "any",
+    "once": true,
+    "weight": 12,
+    "require": "career:media & pastcareer:office",
+    "text": "你拍了一期《我在写字楼的十年》。前世的每个工位、每张大饼，你都记得清清楚楚。",
+    "choices": [
+      {
+        "text": "发",
+        "effect": {
+          "人脉": 3,
+          "身价": 8,
+          "feud": "全网打工人在你评论区哭"
+        },
+        "result": "评论区刷满了：这说的就是我。有人说：主播，你是不是在我们公司装了摄像头？"
+      },
+      {
+        "text": "留着自己看",
+        "effect": {
+          "心态": 2
+        },
+        "result": "你看完一遍，删了。那十年，就留在前世吧。"
+      }
+    ]
+  },
+  {
+    "id": "x_rider_driver",
+    "dir": "any",
+    "once": true,
+    "weight": 12,
+    "require": "career:driver & pastcareer:rider",
+    "text": "你在路口等红灯，旁边停着一辆外卖电动车。骑手看了你一眼：哥，我认得你，你以前也跑过单吧？",
+    "choices": [
+      {
+        "text": "载他一程",
+        "effect": {
+          "人脉": 2,
+          "心态": 2
+        },
+        "result": "你把他的车塞进后备箱，送他回了站点。路上，你们聊的全是近路。"
+      },
+      {
+        "text": "认错人了",
+        "effect": {
+          "心态": 1
+        },
+        "result": "绿灯亮了。你在后视镜里看他骑远，笑了一下。"
+      }
+    ]
+  },
+  {
+    "id": "x_system_career",
+    "dir": "any",
+    "once": true,
+    "weight": 10,
+    "stage": [
+      2,
+      99
+    ],
+    "require": "career:any & (system:sys_rider | system:sys_nav | system:sys_recipe | system:sys_shop | system:sys_traffic) & line:system.tasked",
+    "text": "【叮！】检测到系统总部有个岗位：行业系统联络员。宿主干过一线，是否推荐自己？",
+    "choices": [
+      {
+        "text": "推荐",
+        "effect": {
+          "人脉": 3,
+          "身价": 10,
+          "feud": "系统总部有了你的工牌"
+        },
+        "result": "【叮！】您已成为第一位人类联络员。工牌是全息的，戴着有点晃。"
+      },
+      {
+        "text": "我还是干一线",
+        "effect": {
+          "心态": 2,
+          "能力": 1
+        },
+        "result": "【叮！】……理解。系统给你打了个五星。"
+      }
+    ]
+  }
+]

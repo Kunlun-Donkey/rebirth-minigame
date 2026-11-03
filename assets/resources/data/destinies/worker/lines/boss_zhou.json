@@ -2,6 +2,7 @@
   "id": "boss_zhou",
   "name": "画饼老板老周",
   "summary": "前世他画了你十年饼。这一世，饼你不吃了——你要把他的公司连同他一起买下来。",
+  "careers": ["office"],
   "stage": [0, 2],
   "states": {
     "fooled": "又信了老周的饼",

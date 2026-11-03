@@ -2,6 +2,7 @@
   "id": "project",
   "name": "年终大项目",
   "summary": "年底的大项目落在你头上。熬夜、留痕、汇报会——前世功劳是别人的，锅是你的。这一世，反过来。",
+  "careers": ["office"],
   "maps": ["city", "workshop", "county"],
   "stage": [1, 3],
   "states": {

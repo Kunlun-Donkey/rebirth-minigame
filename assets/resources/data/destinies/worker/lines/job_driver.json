@@ -1,0 +1,171 @@
+{
+  "id": "job_driver",
+  "name": "网约车司机",
+  "summary": "一辆租来的车，后座上每天坐着不同的人生。开成车队、开成平台，或者某天不接单了，一脚油门开上 318。",
+  "careers": ["driver"],
+  "states": {
+    "fleet": "拉起了自己的车队",
+    "vip": "给一位神秘老人开车",
+    "west": "想把车开上 318",
+    "rival": "和平台较上了劲"
+  },
+  "events": [
+    {
+      "id": "drunk", "dir": "up", "layers": ["U1"], "weight": 12,
+      "text": "凌晨一点，酒吧门口。乘客上车就说：师傅，别开了，我想吐。你的座套是新换的。",
+      "choices": [
+        { "text": "递个塑料袋", "effect": { "身价": 3, "心态": 1 }, "result": "他吐完了，下车前多给了五十：师傅，你是好人。" },
+        { "text": "靠边让他下车", "effect": { "身价": -2, "脸皮": 1 }, "result": "他蹲在路边吐完，又爬回了车上：继续。" },
+        { "text": "给他讲前世", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "人脉": 2, "身价": 6 }, "result": "你讲了你前世在写字楼熬十年。他酒醒了一半：兄弟，我公司缺人。",
+          "fail": { "effect": { "心态": -1 }, "result": "你讲到一半，他睡着了。打呼噜的声音盖过了你。" } }
+      ]
+    },
+    {
+      "id": "airport", "dir": "up", "layers": ["U1", "U2"], "weight": 12,
+      "text": "机场单，一百二十块。可在蓄车池排队要三个钟头，排到了还可能是个去隔壁小区的。",
+      "choices": [
+        { "text": "排", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "身价": 8, "心态": 1 }, "result": "排了三小时，拉到一个去市中心的大单。你在车里吹了声口哨。",
+          "fail": { "effect": { "身价": 1, "心态": -1 }, "result": "排了三小时。乘客上车：师傅，去对面的酒店。" } },
+        { "text": "在市区跑短单", "effect": { "身价": 4, "精力": -1 }, "result": "一天二十几单，你嘴皮子都说干了：您好，尾号多少？" },
+        { "text": "跟老司机换情报", "require": "人脉>=4", "effect": { "身价": 6, "人脉": 1 },
+          "result": "老司机告诉你，晚上十点后的红眼航班，排队的车最少。" }
+      ]
+    },
+    {
+      "id": "fleet", "dir": "up", "layers": ["U2"], "weight": 14,
+      "text": "车队群里，几个司机在骂平台又涨了抽成。有人 @ 你：你脑子活，带我们干吧？",
+      "choices": [
+        { "text": "拉起一个车队", "effect": { "state": "fleet", "人脉": 3, "能力": 1 }, "result": "八辆车，一个群。你定了第一条规矩：谁家有事，大家帮着跑。" },
+        { "text": "带大家跑包车", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "fleet", "身价": 10, "人脉": 2 }, "result": "你接了一家婚庆公司的长期包车。八辆车，每天都排满了。",
+          "fail": { "effect": { "心态": -1 }, "result": "婚庆公司说再考虑考虑。群里的人，一个个都不说话了。" } },
+        { "text": "我自己跑", "effect": { "身价": 4 }, "result": "你说你习惯一个人。群里有人说：也是。" }
+      ]
+    },
+    {
+      "id": "company", "dir": "up", "layers": ["U3"], "weight": 14,
+      "text": "车队变成了公司，三十辆车。平台打来电话：要么挂靠我们，要么你们自己接单试试。",
+      "choices": [
+        { "text": "挂靠", "effect": { "身价": 12, "心态": -1 }, "result": "订单稳了，抽成也稳了。司机们说：反正都是给人打工。" },
+        { "text": "自己做接单小程序", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "state": "rival", "身价": 15, "能力": 2, "feud": "平台第一次给你打了电话" }, "result": "小程序上线第一周，接了三千单。平台的经理亲自来了。",
+          "fail": { "effect": { "身价": -6, "心态": -1 }, "result": "小程序上线第一周，接了三单。两单是你妈下的。" } },
+        { "text": "车队一起谈", "require": "line:job_driver.fleet", "effect": { "state": "rival", "人脉": 3, "身价": 10 },
+          "result": "三十个司机一起坐在平台会议室里。抽成，降了五个点。" }
+      ]
+    },
+    {
+      "id": "platform", "dir": "up", "layers": ["U4"], "once": true, "weight": 16,
+      "text": "你的小程序有了十万司机。投资人说：做成平台吧，和那几家巨头掰掰手腕。",
+      "choices": [
+        { "text": "做司机的平台", "require": "stage>=4 & 人脉>=12 & line:job_driver.rival",
+          "effect": { "ending": "driver_platform" }, "result": "你定的抽成，是全行业最低的。司机们说：这回，终于有自己人了。" },
+        { "text": "卖给巨头", "effect": { "身价": 40, "心态": -1 }, "result": "你签了收购协议。钱很多，那十万个司机的群，你退了。" },
+        { "text": "再想想", "effect": { "能力": 1, "心态": 1 }, "result": "你开着那辆旧车在城里绕了一圈，没想好。" }
+      ]
+    },
+
+    {
+      "id": "night_road", "dir": "down", "layers": ["D1"], "weight": 12,
+      "text": "凌晨三点，后座的姑娘一直在哭。导航说还有四十分钟。她说：师傅，能慢点开吗？",
+      "choices": [
+        { "text": "放首歌", "effect": { "心态": 1, "人脉": 1 }, "result": "你放了一首老歌。她不哭了，跟着哼了两句。下车时她说：谢谢。" },
+        { "text": "绕江边走", "effect": { "心态": 2, "身价": -1 }, "result": "你多绕了五公里，没算钱。江边的灯，一盏一盏往后退。" },
+        { "text": "专心开车", "effect": { "身价": 2 }, "result": "你一句话没说。到了，她给了个五星。" }
+      ]
+    },
+    {
+      "id": "fatigue", "dir": "down", "layers": ["D1", "D3"], "weight": 10,
+      "text": "你已经连着开了十四个小时。眼皮在打架，高架上的车灯晃成了一片。",
+      "choices": [
+        { "text": "靠边睡一觉", "effect": { "精力": 2, "身价": -2 }, "result": "你在服务区睡了两个钟头。醒来，天亮了。" },
+        { "text": "再撑一单", "chance": 0.55, "chanceAttr": "精力", "chanceStep": 0.05,
+          "effect": { "身价": 6, "精力": -1 }, "result": "你撑着送完了最后一单，回家倒头就睡。",
+          "fail": { "effect": { "death": "road_accident" }, "result": "你眨了一下眼。再睁开时，护栏离你很近。" } },
+        { "text": "前世没停的黄灯", "require": "legacy:slow_down>=1", "effect": { "精力": 3, "心态": 1 },
+          "result": "前世你就是这样多撑了一单。这一世，你把车停进了服务区。" }
+      ]
+    },
+    {
+      "id": "highway", "dir": "down", "layers": ["D3"], "weight": 14,
+      "text": "凌晨的高架上只有你一辆车。广播里在放一档旅行节目：318 国道，川藏线，此生必驾。",
+      "choices": [
+        { "text": "记下来", "effect": { "state": "west", "心态": 2, "follow": { "id": "west", "delay": 3, "ttl": 10 } },
+          "result": "你在手机备忘录里写下：318。后面打了三个感叹号。" },
+        { "text": "换个台", "effect": { "精力": 1 }, "result": "你换到了相声台。笑着笑着，就到家了。" }
+      ]
+    },
+    {
+      "id": "west", "dir": "side", "teaser": "备忘录里的 318", "require": "line:job_driver.west",
+      "text": "你把车里的座套换成了新的，后备箱塞满了泡面和水。手机上，一单都没接。",
+      "choices": [
+        { "text": "一路向西", "require": "stage>=3 & 心态>=18", "effect": { "ending": "driver_west" },
+          "result": "你关掉接单软件，开上了高速。导航说：前方两千一百公里。" },
+        { "text": "先跑一趟周边", "effect": { "心态": 2, "精力": 1 }, "result": "你开到隔壁省的山里住了一晚。回来以后，又想走了。" },
+        { "text": "下个月再说", "effect": { "身价": 6, "心态": -1 }, "result": "你把泡面搬回了家。车，又开回了市区。" }
+      ]
+    },
+
+    {
+      "id": "gas_station", "dir": "side", "layers": ["L1"], "weight": 12,
+      "text": "城郊加油站，几个货车司机蹲着吃泡面。一个大哥说：小兄弟，跑长途不？一趟顶你半个月。",
+      "choices": [
+        { "text": "跟一趟", "chance": 0.5, "chanceAttr": "精力", "chanceStep": 0.05,
+          "effect": { "身价": 10, "人脉": 2 }, "result": "你跟着跑了一趟广东。回来时，大哥把你拉进了车友群。",
+          "fail": { "effect": { "精力": -2 }, "result": "跑到一半你就扛不住了。大哥把你放在服务区：歇着吧，娃。" } },
+        { "text": "蹭碗泡面", "effect": { "人脉": 1, "心态": 1 }, "result": "大哥给你加了根火腿肠。你们聊到天黑。" }
+      ]
+    },
+    {
+      "id": "old_man", "dir": "any", "once": true, "weight": 6, "stage": [1, 99],
+      "text": "一个穿旧中山装的老人上了车，说去城西养老院。下车时，他问：明天还能叫你吗？",
+      "choices": [
+        { "text": "留个电话", "effect": { "state": "vip", "人脉": 2, "follow": { "id": "old_man_2", "delay": 2, "ttl": 8 } },
+          "result": "他把你的号码记在一个小本子上，字写得很工整。" },
+        { "text": "平台上叫就行", "effect": { "身价": 2 }, "result": "老人点点头，走得很慢。你看着他进了大门。" }
+      ]
+    },
+    {
+      "id": "old_man_2", "dir": "any", "teaser": "那位老人又打来电话", "require": "line:job_driver.vip",
+      "text": "你给老人开了一年车。他每次都坐后座，看窗外。今天他说：带我回一趟老家吧，三百公里。",
+      "choices": [
+        { "text": "带他回去", "effect": { "心态": 2, "人脉": 2, "follow": { "id": "old_man_3", "delay": 2, "ttl": 8 } },
+          "result": "老家的房子塌了一半。他在院子里站了很久，说：走吧。" },
+        { "text": "太远了", "effect": { "身价": 2, "心态": -1 }, "result": "他说也是，不麻烦你了。后来，他再没打过来。" }
+      ]
+    },
+    {
+      "id": "old_man_3", "dir": "any", "teaser": "一个律师在等你", "require": "line:job_driver.vip",
+      "text": "一个律师找到你：老人走了。他是一家上市公司的创始人。遗嘱里，有你的名字。",
+      "choices": [
+        { "text": "去听遗嘱", "require": "stage>=3 & 心态>=16 & 人脉>=10", "effect": { "ending": "driver_vip" },
+          "result": "遗嘱只有一句写你：他开车稳，公司交给他，我放心。" },
+        { "text": "我只是个司机", "effect": { "身价": 20, "心态": 2 }, "result": "你只拿了他留给你的那块旧手表。表背面刻着：慢点开。" }
+      ]
+    },
+    {
+      "id": "sys_bind", "dir": "any", "once": true, "weight": 8, "require": "!system:any & season>=2",
+      "text": "导航突然换了个声音：【叮！】前方五百米，有一个改变命运的路口。导航系统请求绑定。",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_nav", "state": "system.bound", "follow": { "id": "sys_task", "delay": 2 } },
+          "result": "【叮！】绑定成功。已为宿主规划最优人生路线。" },
+        { "text": "关掉导航", "effect": { "心态": 1, "能力": 1 }, "result": "你凭着记忆开。拐错了两个路口，到得也不晚。" },
+        { "text": "导航去天道家", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "bind": "sys_nav", "state": "system.bound", "心态": 2 }, "result": "【叮！】……目的地不在服务区。不过，本系统决定跟你混。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】您已偏离人生路线。正在重新规划……失败。" } }
+      ]
+    },
+    {
+      "id": "sys_task", "dir": "any", "teaser": "【叮！】导航任务已发布", "require": "system:sys_nav",
+      "text": "【叮！】导航任务：前方路口右转，可避开一场车祸。左转，可接到一个大单。",
+      "choices": [
+        { "text": "右转", "effect": { "state": "system.tasked", "心态": 2, "精力": 1 }, "result": "你右转了。后视镜里，左边的路口传来一声巨响。" },
+        { "text": "左转", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "system.tasked", "身价": 15 }, "result": "大单接到了，车祸也没碰上。【叮！】宿主运气不错。",
+          "fail": { "effect": { "精力": -2, "身价": 4 }, "result": "大单接到了。刹车踩得太急，你的脖子扭了一个月。" } }
+      ]
+    }
+  ]
+}

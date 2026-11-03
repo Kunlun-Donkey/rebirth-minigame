@@ -10,7 +10,7 @@
   },
   "events": [
     {
-      "id": "signin_bind", "dir": "up", "layers": ["U1"], "once": true, "weight": 8, "require": "!system:any & season<=3",
+      "id": "signin_bind", "careers": ["office"], "dir": "up", "layers": ["U1"], "once": true, "weight": 8, "require": "!system:any & season<=3",
       "text": "入职第一天，你刚坐到工位上，脑子里响了一声：【叮！】检测到宿主落座，签到系统绑定中……",
       "choices": [
         { "text": "绑定", "effect": { "bind": "sys_signin", "state": "bound", "follow": { "id": "signin_task", "delay": 2 } },
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "id": "slack_bind", "dir": "down", "layers": ["D1"], "once": true, "weight": 7, "require": "!system:any & season>=3",
+      "id": "slack_bind", "careers": ["office"], "dir": "down", "layers": ["D1"], "once": true, "weight": 7, "require": "!system:any & season>=3",
       "text": "你第三次在茶水间被老板撞见。他刚要开口，你脑子里响了：【叮！】摸鱼天赋检测满分。",
       "choices": [
         { "text": "绑定", "effect": { "bind": "sys_slack", "state": "bound", "follow": "slack_task" },
@@ -97,7 +97,7 @@
       ]
     },
     {
-      "id": "eye_bind", "dir": "up", "layers": ["U2"], "once": true, "weight": 18, "stage": [1, 99], "require": "!system:any",
+      "id": "eye_bind", "careers": ["office"], "dir": "up", "layers": ["U2"], "once": true, "weight": 18, "stage": [1, 99], "require": "!system:any",
       "text": "你熬了三个通宵的方案，组长在会上念成了他的。散会时，眼前跳出一行字：【叮！】天眼系统，看清谁在坑你。",
       "choices": [
         { "text": "绑定", "effect": { "bind": "sys_eye", "state": "bound", "follow": "eye_task" },
@@ -158,7 +158,7 @@
       ]
     },
     {
-      "id": "antijuan_bind", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 20, "stage": [1, 99],
+      "id": "antijuan_bind", "careers": ["office"], "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 20, "stage": [1, 99],
       "require": "!system:any & (line:wang_juanjuan.rival | 精力<=2)",
       "text": "隔壁工位凌晨三点还在回邮件。你卷不动了，趴在桌上。【叮！】反卷系统：别人卷，你涨修为。",
       "choices": [

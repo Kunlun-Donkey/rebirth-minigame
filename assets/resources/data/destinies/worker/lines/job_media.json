@@ -1,0 +1,625 @@
+{
+  "id": "job_media",
+  "name": "自媒体",
+  "summary": "一部手机，一盏补光灯。做成全网顶流、回村拍田园，或者让 AI 分身替你直播，自己去钓鱼。",
+  "careers": [
+    "media"
+  ],
+  "states": {
+    "viral": "出过爆款",
+    "mcn": "签了 MCN",
+    "village": "想回老家拍田园",
+    "avatar": "做了一个数字分身",
+    "crash": "翻过车"
+  },
+  "events": [
+    {
+      "id": "first_video",
+      "dir": "up",
+      "layers": [
+        "U1"
+      ],
+      "weight": 14,
+      "text": "你拍了十条视频，播放量加起来四百。评论区只有一条：主播，你后面的墙皮掉了。",
+      "choices": [
+        {
+          "text": "换个选题",
+          "chance": 0.45,
+          "chanceAttr": "能力",
+          "chanceStep": 0.05,
+          "effect": {
+            "state": "viral",
+            "人脉": 3,
+            "身价": 6
+          },
+          "result": "你拍了一条「打工人的十个前世」。一夜之间，三百万播放。",
+          "fail": {
+            "effect": {
+              "心态": -1,
+              "能力": 1
+            },
+            "result": "新选题播放量五百。比上次多了一百，你很欣慰。"
+          }
+        },
+        {
+          "text": "回复那条评论",
+          "effect": {
+            "人脉": 1,
+            "脸皮": 1
+          },
+          "result": "你回：墙皮是我最忠实的观众。那条评论，点赞过了万。"
+        },
+        {
+          "text": "前世做过博主",
+          "require": "pastcareer:media",
+          "effect": {
+            "state": "viral",
+            "身价": 8,
+            "人脉": 2
+          },
+          "result": "前世你知道哪条会火。这一世你只拍那一条。"
+        }
+      ]
+    },
+    {
+      "id": "hater",
+      "dir": "up",
+      "layers": [
+        "U1",
+        "U2"
+      ],
+      "weight": 12,
+      "text": "有个账号每条视频都来骂你，骂得很有文采。你的粉丝和他吵了三百楼。",
+      "choices": [
+        {
+          "text": "拍视频回应",
+          "chance": 0.5,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.05,
+          "effect": {
+            "人脉": 2,
+            "身价": 6,
+            "feud": "黑粉成了你的副主播"
+          },
+          "result": "你把他的骂评念成了单口相声。他私信你：要不要合作？",
+          "fail": {
+            "effect": {
+              "心态": -2
+            },
+            "result": "你越解释越乱。评论区又多了三百楼。"
+          }
+        },
+        {
+          "text": "拉黑",
+          "effect": {
+            "心态": 1
+          },
+          "result": "世界清净了。你有点想他。"
+        },
+        {
+          "text": "已读不回",
+          "showIf": "skill:read_no_reply",
+          "useSkill": "read_no_reply",
+          "effect": {
+            "心态": 2,
+            "脸皮": 1
+          },
+          "result": "你一个字没回。他骂了一个月，没人理，自己走了。"
+        }
+      ]
+    },
+    {
+      "id": "ad_deal",
+      "dir": "up",
+      "layers": [
+        "U2"
+      ],
+      "weight": 14,
+      "text": "第一个广告商找上门：一款「三天瘦十斤」的茶，一条视频五万。样品放在桌上，味道很怪。",
+      "choices": [
+        {
+          "text": "不接",
+          "effect": {
+            "心态": 2,
+            "人脉": 1
+          },
+          "result": "你在视频里说：有个五万的广告我没接。粉丝们刷了一晚上的「好样的」。"
+        },
+        {
+          "text": "接",
+          "chance": 0.4,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.04,
+          "effect": {
+            "身价": 15
+          },
+          "result": "钱到账了。评论区没人发现。你喝了一口那个茶，吐了。",
+          "fail": {
+            "effect": {
+              "state": "crash",
+              "身价": -6,
+              "心态": -2,
+              "follow": {
+                "id": "crash",
+                "delay": 1
+              }
+            },
+            "result": "有粉丝喝完进了医院。你的评论区，炸了。"
+          }
+        },
+        {
+          "text": "自己先喝三天",
+          "absurd": true,
+          "chance": 0.3,
+          "chanceAttr": "精力",
+          "chanceStep": 0.04,
+          "effect": {
+            "身价": 8,
+            "人脉": 3,
+            "feud": "那款茶被你测下架了"
+          },
+          "result": "你拍了三天的测评。结论：瘦了，是拉的。那款茶下架了。",
+          "fail": {
+            "effect": {
+              "精力": -3
+            },
+            "result": "你在厕所里蹲了三天。视频没拍成。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "crash",
+      "dir": "any",
+      "teaser": "评论区炸了",
+      "require": "line:job_media.crash",
+      "text": "你的名字上了热搜第三。私信九十九加，都是骂你的。手机一震，你就心慌。",
+      "choices": [
+        {
+          "text": "道歉，退钱",
+          "effect": {
+            "心态": 1,
+            "身价": -8,
+            "人脉": 1
+          },
+          "result": "你一个个退了钱。有人说：至少他认了。"
+        },
+        {
+          "text": "硬刚",
+          "chance": 0.15,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.02,
+          "effect": {
+            "脸皮": 3,
+            "身价": 5
+          },
+          "result": "你居然刚赢了。可你自己知道，你没赢。",
+          "fail": {
+            "effect": {
+              "death": "stream_crash"
+            },
+            "result": "你说了一句不该说的话。那一秒，弹幕停了。"
+          }
+        },
+        {
+          "text": "换个活法",
+          "effect": {
+            "心态": 1,
+            "follow": {
+              "id": "career/switch",
+              "delay": 1
+            }
+          },
+          "result": "你注销了账号。三天没碰手机，手不抖了。"
+        }
+      ]
+    },
+    {
+      "id": "mcn",
+      "dir": "up",
+      "layers": [
+        "U3"
+      ],
+      "weight": 14,
+      "text": "MCN 公司给你一份合同：保底月薪三万，分成三七。合同有二十八页，第十九页写着违约金。",
+      "choices": [
+        {
+          "text": "逐页看完再签",
+          "effect": {
+            "state": "mcn",
+            "能力": 2,
+            "身价": 10
+          },
+          "result": "你划掉了第十九页三行字。对方犹豫半天，同意了。"
+        },
+        {
+          "text": "当场签",
+          "chance": 0.4,
+          "chanceAttr": "人脉",
+          "chanceStep": 0.04,
+          "effect": {
+            "state": "mcn",
+            "身价": 18
+          },
+          "result": "运气不错，这家公司是正经的。他们把你捧上了首页。",
+          "fail": {
+            "effect": {
+              "身价": -10,
+              "心态": -2
+            },
+            "result": "第十九页写着：账号归公司。你自己的脸，不是你的了。"
+          }
+        },
+        {
+          "text": "自己干",
+          "effect": {
+            "人脉": 2,
+            "心态": 1
+          },
+          "result": "你说：我一个人，一盏灯，够了。"
+        }
+      ]
+    },
+    {
+      "id": "top",
+      "dir": "up",
+      "layers": [
+        "U4"
+      ],
+      "once": true,
+      "weight": 16,
+      "text": "你发了一条「早」，评论区十万条。平台问你：年度盛典，压轴的位置，你来吗？",
+      "choices": [
+        {
+          "text": "上台",
+          "require": "stage>=4 & 人脉>=14 & line:job_media.viral",
+          "effect": {
+            "ending": "media_top"
+          },
+          "result": "你站在台上，镜头扫过台下几千个手机。你说：家人们。全场都笑了。"
+        },
+        {
+          "text": "在出租屋里直播",
+          "effect": {
+            "人脉": 3,
+            "心态": 2
+          },
+          "result": "你没去。你在出租屋里开了播，那盏补光灯，还是第一盏。"
+        },
+        {
+          "text": "带货到天亮",
+          "effect": {
+            "身价": 30,
+            "精力": -2
+          },
+          "result": "你播了十二个小时，卖空了三个仓库。下播时嗓子哑了。"
+        },
+        {
+          "text": "MCN 安排的通稿",
+          "require": "line:job_media.mcn",
+          "effect": {
+            "身价": 25,
+            "人脉": 2
+          },
+          "result": "第二天，全网都是你的通稿。你一条也没写，但每条都很像你。"
+        }
+      ]
+    },
+    {
+      "id": "comments",
+      "dir": "down",
+      "layers": [
+        "D1"
+      ],
+      "weight": 12,
+      "text": "凌晨一点，你翻评论区。有一条说：今天被裁了，看了你的视频，笑了一晚上。",
+      "choices": [
+        {
+          "text": "回复他",
+          "effect": {
+            "心态": 2,
+            "人脉": 1
+          },
+          "result": "你回：我也被裁过。他回了一个笑脸，后面跟着三个哭脸。"
+        },
+        {
+          "text": "截图存下来",
+          "effect": {
+            "心态": 1,
+            "精力": 1
+          },
+          "result": "你把这条存进了相册，叫「不想干的时候看」。"
+        }
+      ]
+    },
+    {
+      "id": "midnight_live",
+      "dir": "down",
+      "layers": [
+        "D2"
+      ],
+      "weight": 12,
+      "text": "凌晨两点开播，直播间只有十几个人：一个夜班护士、一个失眠的高中生、一个刚下夜班的骑手。",
+      "choices": [
+        {
+          "text": "陪他们聊天",
+          "effect": {
+            "人脉": 2,
+            "心态": 1,
+            "精力": -1
+          },
+          "result": "你们聊到天亮。下播前，护士说：明天还来。"
+        },
+        {
+          "text": "给他们唱首歌",
+          "chance": 0.4,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.05,
+          "effect": {
+            "人脉": 3,
+            "身价": 4
+          },
+          "result": "你唱跑了调。直播间刷了一屏的「哈哈哈」，人数翻了十倍。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "你唱完，直播间剩下三个人。其中一个，是你妈。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "village",
+      "dir": "down",
+      "layers": [
+        "D3"
+      ],
+      "weight": 14,
+      "text": "你回了老家，手机只有一格信号。院子里的鸡在叫，老妈在灶台前喊你吃饭。你没开镜头。",
+      "choices": [
+        {
+          "text": "拍下来",
+          "effect": {
+            "state": "village",
+            "心态": 2,
+            "follow": {
+              "id": "village_2",
+              "delay": 3,
+              "ttl": 10
+            }
+          },
+          "result": "你拍了老妈做饭的背影，没配乐，没字幕。那条视频，播放量最高。"
+        },
+        {
+          "text": "就这么待着",
+          "effect": {
+            "精力": 2,
+            "心态": 2
+          },
+          "result": "你在老家待了一周，一条也没发。回城时，你胖了三斤。"
+        }
+      ]
+    },
+    {
+      "id": "village_2",
+      "dir": "down",
+      "teaser": "老家的院子还在等你",
+      "require": "line:job_media.village",
+      "text": "粉丝们在评论区问：什么时候再拍老家？老妈在电话里说：鸡又下蛋了，你回不回来？",
+      "choices": [
+        {
+          "text": "回村",
+          "require": "stage>=3 & 心态>=18",
+          "effect": {
+            "ending": "media_village"
+          },
+          "result": "你把补光灯留在了出租屋。院子里的太阳，比什么灯都好。"
+        },
+        {
+          "text": "过年再回",
+          "effect": {
+            "身价": 6,
+            "心态": -1
+          },
+          "result": "你说过年回。老妈说好。她挂了电话，去喂鸡了。"
+        }
+      ]
+    },
+    {
+      "id": "outdoor",
+      "dir": "side",
+      "layers": [
+        "L1"
+      ],
+      "weight": 12,
+      "text": "你去街头拍「采访路人」。第一个路人看见镜头就跑，第二个是个大爷，拉着你说了一个小时。",
+      "choices": [
+        {
+          "text": "把大爷剪出来",
+          "effect": {
+            "人脉": 2,
+            "身价": 4
+          },
+          "result": "大爷的一个小时，被你剪成了一分钟。那一分钟，三百万播放。"
+        },
+        {
+          "text": "请大爷吃饭",
+          "effect": {
+            "心态": 2,
+            "人脉": 1
+          },
+          "result": "大爷说他年轻时是电影放映员。你们吃到饭馆打烊。"
+        }
+      ]
+    },
+    {
+      "id": "ai_avatar",
+      "dir": "any",
+      "once": true,
+      "weight": 6,
+      "stage": [
+        2,
+        99
+      ],
+      "require": "line:job_media.viral",
+      "text": "一家科技公司找到你：用你的脸和声音，做一个数字分身。它能二十四小时直播，不累，不翻车。",
+      "choices": [
+        {
+          "text": "做一个",
+          "effect": {
+            "state": "avatar",
+            "身价": 10,
+            "follow": {
+              "id": "avatar_2",
+              "delay": 3,
+              "ttl": 10
+            }
+          },
+          "result": "分身上线第一天，比你本人多卖了三倍货。你有点不服。"
+        },
+        {
+          "text": "我就是我",
+          "effect": {
+            "心态": 2,
+            "人脉": 1
+          },
+          "result": "你说：粉丝要的是真人，翻车也是真的。"
+        }
+      ]
+    },
+    {
+      "id": "avatar_2",
+      "dir": "any",
+      "teaser": "你的分身在直播",
+      "require": "line:job_media.avatar",
+      "text": "凌晨四点，你醒了。手机上，你的分身正在直播，笑得比你还好看。它冲镜头说：家人们。",
+      "choices": [
+        {
+          "text": "交给它，去钓鱼",
+          "require": "stage>=3 & 心态>=16 & 能力>=12",
+          "effect": {
+            "ending": "media_avatar"
+          },
+          "result": "你关了手机，扛着鱼竿出了门。那天你钓了一条小鱼，放了。"
+        },
+        {
+          "text": "把它关了",
+          "effect": {
+            "心态": 2,
+            "能力": 1
+          },
+          "result": "你关掉分身，自己开了播。粉丝说：今天的主播，怎么有点憔悴？"
+        },
+        {
+          "text": "跟它连麦",
+          "absurd": true,
+          "chance": 0.3,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.03,
+          "effect": {
+            "人脉": 4,
+            "身价": 10
+          },
+          "result": "你和分身吵了一架。那场直播，破了平台纪录。",
+          "fail": {
+            "effect": {
+              "心态": -2
+            },
+            "result": "粉丝投票：分身更像本人。你沉默了。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sys_bind",
+      "dir": "up",
+      "layers": [
+        "U1",
+        "U2"
+      ],
+      "once": true,
+      "weight": 8,
+      "require": "!system:any & season>=2",
+      "text": "补光灯闪了三下。屏幕上弹出一行字：【叮！】检测到宿主颜值一般、嘴挺能说，流量系统绑定中……",
+      "choices": [
+        {
+          "text": "绑定",
+          "effect": {
+            "bind": "sys_traffic",
+            "state": "system.bound",
+            "follow": {
+              "id": "sys_task",
+              "delay": 2
+            }
+          },
+          "result": "【叮！】绑定成功。下一条视频，已获得流量扶持。"
+        },
+        {
+          "text": "颜值一般？",
+          "effect": {
+            "脸皮": 1,
+            "心态": -1
+          },
+          "result": "你跟系统吵了一架。系统说它只是实话实说，走了。"
+        },
+        {
+          "text": "给我十个亿流量",
+          "absurd": true,
+          "chance": 0.2,
+          "chanceAttr": "脸皮",
+          "chanceStep": 0.03,
+          "effect": {
+            "bind": "sys_traffic",
+            "state": "system.bound",
+            "人脉": 3
+          },
+          "result": "【叮！】……先给你十万。别得寸进尺。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "【叮！】检测到宿主飘了。系统暂停服务。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sys_task",
+      "dir": "any",
+      "teaser": "【叮！】流量任务已发布",
+      "require": "system:sys_traffic",
+      "text": "【叮！】任务：发一条视频，标题必须是「震惊！」。完成奖励：一百万流量。",
+      "choices": [
+        {
+          "text": "震惊！",
+          "effect": {
+            "state": "system.tasked",
+            "人脉": 3,
+            "身价": 6,
+            "心态": -1
+          },
+          "result": "标题：震惊！今天我吃了一碗面。【叮！】任务完成。评论区：就这？"
+        },
+        {
+          "text": "不当标题党",
+          "chance": 0.5,
+          "chanceAttr": "能力",
+          "chanceStep": 0.04,
+          "effect": {
+            "state": "system.tasked",
+            "心态": 2,
+            "身价": 8
+          },
+          "result": "你发了条正经视频，也火了。【叮！】……系统沉默了，给了一半奖励。",
+          "fail": {
+            "effect": {
+              "心态": -1
+            },
+            "result": "【叮！】任务失败。流量扶持，转给了隔壁的震惊哥。"
+          }
+        }
+      ]
+    }
+  ]
+}

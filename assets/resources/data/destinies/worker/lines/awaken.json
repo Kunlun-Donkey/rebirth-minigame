@@ -11,7 +11,7 @@
   "events": [
     {
       "id": "rain", "entry": true, "dir": "any", "weight": 24,
-      "text": "入职第三天，天上下了一场发光的雨。雨停后，你看见键盘缝里，冒出一缕一缕的光。",
+      "text": "重生第三天，天上下了一场发光的雨。雨停后，你看见指甲缝里，冒出一缕一缕的光。",
       "choices": [
         { "text": "伸手去抓", "effect": { "skill": "spirit_sense", "state": "awakened", "心态": 1, "follow": "subway" },
           "result": "光钻进了指尖。你听见整栋楼的呼吸，包括老板在偷吃零食。" },
@@ -26,7 +26,7 @@
       ]
     },
     {
-      "id": "colleague", "dir": "up", "chainOnly": true, "teaser": "隔壁大姐会瞬移了",
+      "id": "colleague", "careers": ["office"], "dir": "up", "chainOnly": true, "teaser": "隔壁大姐会瞬移了",
       "text": "隔壁工位的大姐觉醒了瞬移，专门用来抢电梯。全公司就剩你还没觉醒。",
       "choices": [
         { "text": "求大姐带一程", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,

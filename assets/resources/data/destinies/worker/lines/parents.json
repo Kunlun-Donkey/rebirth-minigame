@@ -101,7 +101,7 @@
       "id": "home_town", "dir": "any", "chainOnly": true, "teaser": "街口空着一间铺子", "require": "line:parents.home",
       "text": "回老家半年，你闲得发慌。街口那间铺子空着，老爸说是他老同学的，房租好商量。",
       "choices": [
-        { "text": "盘下来开店", "require": "stage>=2 & 身价>=80 & 心态>=18", "effect": { "ending": "hometown_shop" },
+        { "text": "把城里的店搬回来", "require": "stage>=3 & 心态>=22 & career:shop", "effect": { "ending": "hometown_shop" },
           "result": "你开了间小店。开业那天，老妈搬了张凳子坐门口，坐了一整天。" },
         { "text": "先找个班上着", "effect": { "心态": 1, "人脉": 1, "身价": 3, "follow": { "id": "shop_again", "delay": 4, "ttl": 10 } },
           "result": "你进了县城单位。朝九晚五，下班回家，饭是热的。" },
@@ -117,9 +117,9 @@
       "id": "shop_again", "dir": "any", "chainOnly": true, "teaser": "街口那间铺子还空着", "require": "line:parents.home",
       "text": "周末路过街口，那间铺子还空着。老爸说，他老同学一直给你留着，没租给别人。",
       "choices": [
-        { "text": "盘下来", "require": "stage>=2 & 身价>=70 & 心态>=16 & 人脉>=10", "effect": { "ending": "hometown_shop" },
+        { "text": "盘下来", "require": "stage>=3 & 心态>=30 & 人脉>=30", "effect": { "ending": "hometown_shop" },
           "result": "招牌挂上去那天，老爸站在马路对面看了很久，说：挂歪了。" },
-        { "text": "拉老同学合伙", "require": "stage>=3 & 人脉>=12", "chance": 0.3, "chanceAttr": "人脉", "chanceStep": 0.03,
+        { "text": "拉老同学合伙", "require": "stage>=3 & 人脉>=20", "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
           "effect": { "ending": "hometown_shop" },
           "result": "老同学出了一半房租，条件是每天来店里喝茶。老爸也来。",
           "fail": { "effect": { "心态": -1 }, "result": "老同学说考虑考虑，考虑到了年底。" } },

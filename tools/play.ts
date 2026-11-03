@@ -236,7 +236,8 @@ async function play() {
         if (r.phase === 'direction') {
             const status = data.meta.attrs.filter(a => !a.hidden).map(a =>
                 a.id === data.meta.rules.life ? `${a.icon}${r.attrs[a.id]}/${r.attrs[data.meta.rules.lifeMax]}` : `${a.icon}${r.attrs[a.id]}`).join(' ');
-            console.log(`\n${C.bold}第${r.season}季 · ${e.stageName(r.stage)}${C.off}  ${status}`);
+            const job = e.careerDef();
+            console.log(`\n${C.bold}第${r.season}季 · ${e.stageName(r.stage)}${job ? ` · ${job.name}` : ""}${C.off}  ${status}`);
             if (skillLine) console.log(skillLine);
             for (const t of e.threadTeasers().filter(t => t.dir === 'any')) console.log(`  ${C.gold}未完的事：${t.text}${C.off}`);
             const opts = e.directionOptions();
@@ -314,6 +315,12 @@ function simulate(lives: number, seed: number) {
     // 线路统计：每条线路这一世开始过的世数、各状态到达的世数；系统绑定次数
     const lineHits: Record<string, number> = {};
     const systemHits: Record<string, number> = {};
+    // 职业：这一世最终职业 → 世数 / 结局数 / 平均境界；转过行的世数
+    const careerStat: Record<string, { n: number; endings: number; stage: number }> = {};
+    let switched = 0;
+    // 61 世后（命盘/传承成型）每世结束时的属性均值，调结局门槛用
+    const lateAttrs: Record<string, number> = {};
+    let lateN = 0;
 
     for (let life = 1; life <= lives; life++) {
         e.todayFate(`day${Math.floor(life / 6)}`); // 假设每天玩 6 世
@@ -347,6 +354,17 @@ function simulate(lives: number, seed: number) {
         for (const [l, st] of Object.entries(e.run.lines ?? {})) {
             lineHits[l] = (lineHits[l] ?? 0) + 1;
             if (st) lineHits[`${l}.${st}`] = (lineHits[`${l}.${st}`] ?? 0) + 1;
+        }
+        if (e.run.career) {
+            const cs = careerStat[e.run.career] ?? (careerStat[e.run.career] = { n: 0, endings: 0, stage: 0 });
+            cs.n++;
+            cs.stage += e.run.stage;
+            if (e.run.over?.kind === 'ending') cs.endings++;
+            if ((e.run.careers?.length ?? 0) > 1) switched++;
+        }
+        if (life > 60) {
+            lateN++;
+            for (const [k, v] of Object.entries(e.run.attrs)) lateAttrs[k] = (lateAttrs[k] ?? 0) + v;
         }
         const sys = e.systemId();
         if (sys) systemHits[sys] = (systemHits[sys] ?? 0) + 1;
@@ -384,6 +402,7 @@ function simulate(lives: number, seed: number) {
         const deaths = Object.entries(b.deaths).sort((a, c) => c[1] - a[1]).map(([id, n]) => `${data.deaths.get(id)!.name} ${pct(n)}`);
         console.log(`  死因：${deaths.join(' · ')}`);
     });
+    if (lateN) console.log(`\n61 世后终局属性均值：${data.meta.attrs.filter(a => !a.hidden).map(a => `${a.name} ${((lateAttrs[a.id] ?? 0) / lateN).toFixed(0)}`).join(' · ')}`);
     const dp = e.dp;
     console.log(`\n传承：${Object.entries(dp.legacy).map(([id, lv]) => `${data.legacies.get(id)!.name} ${lv}`).join('、')}`);
     const skillLine = [...data.skills.keys()].map(id => `${e.skillName(id)}${skillFirst[id] ? `@${skillFirst[id]}` : '✗'}`);
@@ -399,6 +418,13 @@ function simulate(lives: number, seed: number) {
         }
         const systems = [...data.companions.values()].filter(c => c.system);
         if (systems.length) console.log(`系统绑定：${systems.map(c => `${c.name} ${pc(systemHits[c.id])}`).join(' · ')}`);
+    }
+    if (data.careers.size) {
+        const line = [...data.careers.values()].map(c => {
+            const cs = careerStat[c.id];
+            return cs ? `${c.name} ${(cs.n / lives * 100).toFixed(0)}%（结局 ${(cs.endings / cs.n * 100).toFixed(0)}%，均境界 ${(cs.stage / cs.n).toFixed(1)}）` : `${c.name} 0`;
+        });
+        console.log(`职业（最终）：${line.join(' · ')}  转行 ${(switched / lives * 100).toFixed(1)}%`);
     }
     const never = [...data.events.keys()].filter(id => !eventHits[id]);
     if (never.length) console.log(`从未触发的事件（${never.length}）：${never.join(', ')}`);

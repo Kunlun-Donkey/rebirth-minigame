@@ -10,7 +10,7 @@
   "events": [
     {
       "id": "bathroom", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 16,
-      "text": "早上七点半，卫生间门又锁着。室友在里面背书，声音隔着门传出来。你还有二十分钟打卡。",
+      "text": "早上七点半，卫生间门又锁着。室友在里面背书，声音隔着门传出来。你还有二十分钟就得出门。",
       "choices": [
         { "text": "敲门", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.08,
           "effect": { "脸皮": 1, "follow": { "id": "schedule", "delay": 1 } }, "result": "门开了。他抱着书冲出来：对不起对不起，最后一章了。",

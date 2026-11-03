@@ -1,6 +1,6 @@
 [
   {
-    "id": "s0_first_day", "dir": "up", "stage": [0, 0], "weight": 20, "once": true,
+    "id": "s0_first_day", "careers": ["office"], "dir": "up", "stage": [0, 0], "weight": 20, "once": true,
     "text": "闹钟响了。你睁开眼，看见墙上的日历——入职第一天。前世的十年，像一场很长的加班。",
     "choices": [
       { "text": "这一世，早点下班", "effect": { "心态": 1, "精力": 1 }, "result": "你给自己定了个规矩：六点关电脑。先试试。" },
@@ -12,7 +12,7 @@
     ]
   },
   {
-    "id": "s0_badge_photo", "dir": "up", "layers": ["U1"], "stage": [0, 1], "weight": 12, "once": true,
+    "id": "s0_badge_photo", "careers": ["office"], "dir": "up", "layers": ["U1"], "stage": [0, 1], "weight": 12, "once": true,
     "text": "人事让你拍工牌照。前世这张照片，你在工牌上丑了十年。",
     "choices": [
       { "text": "认真拍", "effect": { "脸皮": 1, "人脉": 1 }, "result": "照片拍得不错。前台小姑娘多看了一眼。" },
@@ -23,7 +23,7 @@
     ]
   },
   {
-    "id": "s0_pantry", "dir": "down", "layers": ["D1"], "stage": [0, 1], "weight": 12, "once": true,
+    "id": "s0_pantry", "careers": ["office"], "dir": "down", "layers": ["D1"], "stage": [0, 1], "weight": 12, "once": true,
     "text": "茶水间里有免费的咖啡、饼干和一台按摩椅。前世你一次也没坐过。",
     "choices": [
       { "text": "坐上去", "effect": { "精力": 2, "心态": 1 }, "result": "按摩椅嗡嗡地响。你闭上眼，觉得这一世有点不一样。" },
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "id": "s0_group_chat", "dir": "any", "stage": [0, 1], "weight": 10, "once": true,
+    "id": "s0_group_chat", "careers": ["office"], "dir": "any", "stage": [0, 1], "weight": 10, "once": true,
     "text": "你被拉进了二十几个工作群。手机震了一整天，没停过。",
     "choices": [
       { "text": "每条都回", "effect": { "人脉": 2, "精力": -1 }, "result": "你回到半夜。第二天，大家都记住了这个回消息很快的新人。" },
@@ -41,7 +41,7 @@
     ]
   },
   {
-    "id": "s0_old_desk", "dir": "up", "layers": ["U1"], "stage": [0, 0], "weight": 8, "once": true,
+    "id": "s0_old_desk", "careers": ["office"], "dir": "up", "layers": ["U1"], "stage": [0, 0], "weight": 8, "once": true,
     "text": "你的工位是上一个离职的人留下的。抽屉里有一张字条：快跑。",
     "choices": [
       { "text": "收好字条", "effect": { "心态": 1 }, "result": "你把字条夹进了笔记本。前世你没看见它。" },
