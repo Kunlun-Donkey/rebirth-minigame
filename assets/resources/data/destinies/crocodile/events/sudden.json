@@ -1,0 +1,105 @@
+[
+  {
+    "id": "x_eagle", "dir": "any", "sudden": true, "stage": [1, 2], "weight": 10, "maps": ["river", "swamp"],
+    "text": "天上一个黑影往下扎。是鹰，直冲你来。",
+    "choices": [
+      { "text": "沉进水里", "chance": 0.6, "chanceAttr": "潜水", "chanceStep": 0.08,
+        "effect": { "潜水": 1, "skill": "periscope" }, "result": "你沉下去，只把眼睛留在水面上，看着它在头顶转了三圈。",
+        "fail": { "effect": { "death": "eagle" }, "result": "它比你快。" } },
+      { "text": "前世的泥色", "require": "legacy:mud_color>=1", "effect": { "灵性": 2 },
+        "result": "前世它叼走过你。这一世你往泥上一趴，它扎下来，又飞走了。" }
+    ]
+  },
+  {
+    "id": "x_flood", "dir": "any", "sudden": true, "stage": [3, 99], "once": true, "weight": 14, "require": "flag:village_seen", "maps": ["river", "swamp"],
+    "text": "连下了七天雨。上游的堤垮了一个口子，洪水直冲着村子去了。",
+    "choices": [
+      { "text": "横在缺口上", "chance": 0.4, "chanceAttr": "潜水", "chanceStep": 0.04,
+        "effect": { "flag": "flood_saved", "龙气": 15, "潜水": 2 }, "result": "你横在缺口上，水从你背上漫过去。天亮了，雨停了，村子还在。",
+        "fail": { "effect": { "death": "flood" }, "result": "水太大了。" } },
+      { "text": "老头喊人来", "require": "flag:elder_friend", "effect": { "flag": "flood_saved", "灵性": 3, "龙气": 12 },
+        "result": "老头敲了一夜的锣。全村人扛着沙袋，跟着你堵上了口子。" },
+      { "text": "稳如堤", "require": "legacy:steady>=1", "effect": { "flag": "flood_saved", "龙气": 15 },
+        "result": "前世这样的水冲走过你。这一世你往缺口上一趴，就是一道堤。" },
+      { "text": "躲进深水", "effect": { "潜水": 1 }, "result": "你沉到河底，听了一夜的水声。第二天，村里少了好几间房。" }
+    ]
+  },
+  {
+    "id": "x_drought", "dir": "any", "sudden": true, "weight": 10, "maps": ["river", "swamp"],
+    "text": "旱季到了。河水一天比一天浅，泥滩裂成了一块一块。",
+    "choices": [
+      { "text": "往泥里钻", "chance": 0.6, "chanceAttr": "潜水", "chanceStep": 0.08,
+        "effect": { "潜水": 1, "体温": 1 }, "result": "你钻进最深的泥里，睡过了整个旱季。醒来时，雨来了。",
+        "fail": { "effect": { "death": "drought" }, "result": "泥也干了。" } },
+      { "text": "去找水", "effect": { "体温": -2, "灵性": 1 }, "result": "你爬了三天三夜，找到一个小水塘。挤满了别的鳄鱼。" },
+      { "text": "前世的深窝", "require": "legacy:deep_den>=1", "effect": { "体温": 2, "潜水": 1 },
+        "result": "前世河干那天你还在等雨。这一世你的窝底下，一直留着一汪水。" }
+    ]
+  },
+  {
+    "id": "x_net", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 10, "require": "flag:poacher_seen",
+    "text": "夜里来了一条小船，船头的手电照在你脸上。一张网撒了下来。",
+    "choices": [
+      { "text": "沉底", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.06,
+        "effect": { "潜水": 1, "灵性": 1 }, "result": "网落下来时，你已经在河底了。手电在水面上找了半夜。",
+        "fail": { "effect": { "death": "poacher" }, "result": "网收得很快。" } },
+      { "text": "冲手电流泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 2, "龙气": 5 },
+        "result": "你冲手电流下两行泪。船上的年轻人手一抖：哥，它哭了……咱走吧。" },
+      { "text": "前世的识人", "require": "legacy:wary>=1", "effect": { "灵性": 2, "龙气": 3 },
+        "result": "前世你被这条船带走过。这一世手电一亮，你已经在河对岸了。" }
+    ]
+  },
+  {
+    "id": "x_cold_snap", "dir": "any", "sudden": true, "weight": 10,
+    "text": "寒潮来了。一夜之间，河面结了一层薄冰。",
+    "choices": [
+      { "text": "钻进泥里", "effect": { "体温": -1, "潜水": 1 }, "result": "泥里比冰面暖一点点。你一动不动地熬了一季。" },
+      { "text": "找太阳", "chance": 0.5, "chanceAttr": "晒背", "chanceStep": 0.06,
+        "effect": { "体温": 1, "晒背": 1 }, "result": "你找到一块背风的石头，中午的太阳正好照在上面。",
+        "fail": { "effect": { "体温": -3 }, "result": "太阳一直没出来。你冻得眼皮都抬不起来。" } },
+      { "text": "前世的蓄热", "require": "legacy:warm_heart>=1", "effect": { "体温": 2 },
+        "result": "前世你冻僵过。这一世你身上存着热，冰面上也趴得住。" }
+    ]
+  },
+  {
+    "id": "x_hawk_plover", "dir": "any", "sudden": true, "stage": [1, 99], "once": true, "weight": 18, "require": "flag:plover_trust",
+    "text": "一只鹞子追着叽叽俯冲下来。叽叽尖叫着，直直地朝你飞过来。",
+    "choices": [
+      { "text": "张开嘴", "effect": { "flag": "plover_saved", "item": "feather", "灵性": 2, "follow": { "id": "f_plover_kids", "delay": 3, "ttl": 8 } },
+        "result": "它一头扎进你嘴里。你合上嘴，鹞子在你头顶扑了个空。" },
+      { "text": "甩尾吓鹞子", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 1, "flag": "plover_saved", "follow": { "id": "f_plover_kids", "delay": 3, "ttl": 8 } }, "result": "你尾巴一拍水，水花溅了鹞子一脸。它骂骂咧咧地飞走了。",
+        "fail": { "effect": { "灵性": -1 }, "result": "鹞子叼走了叽叽一根羽毛。叽叽吓坏了，好几天没来。" } }
+    ]
+  },
+  {
+    "id": "x_sewer_storm", "dir": "any", "sudden": true, "weight": 12, "maps": ["sewer"],
+    "text": "外面下暴雨了。管道里的水一下子涨到了顶，什么都在往下冲。",
+    "choices": [
+      { "text": "顺着水冲", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.06,
+        "effect": { "潜水": 2, "龙气": 4 }, "result": "你被冲进了一条更宽的管子。水退了，这儿比原来的窝还好。",
+        "fail": { "effect": { "death": "sewer_plant" }, "result": "水把你冲进了一个很大的池子。" } },
+      { "text": "咬住管壁", "effect": { "咬合": 1, "体温": -1 }, "result": "你死死咬住一根铁架，咬了一夜。水退了，牙也酸了。" },
+      { "text": "前世的认路", "require": "legacy:pathfinder>=1", "effect": { "灵性": 2, "龙气": 4 },
+        "result": "前世你被冲进过那个大池子。这一世你一拐，躲进了一根不进水的老管子。" }
+    ]
+  },
+  {
+    "id": "x_boat", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8, "maps": ["river"],
+    "text": "一条渔船从头顶开过去，螺旋桨搅得水哗哗响。",
+    "choices": [
+      { "text": "沉到底", "effect": { "潜水": 1 }, "result": "你沉到底，等它过去。泥里震了半天。" },
+      { "text": "浮上去看", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 2, "item": "crucian" }, "result": "船上的人看见你，吓得把一桶鱼打翻了。你捡了一条。",
+        "fail": { "effect": { "体温": -2 }, "result": "船浪把你掀了个跟头。" } }
+    ]
+  },
+  {
+    "id": "x_rain_warm", "dir": "any", "sudden": true, "gold": true, "stage": [1, 99], "weight": 3, "once": true,
+    "text": "下了一场暖雨。雨点落在背上，热乎乎的，像有人在给你挠痒。",
+    "choices": [
+      { "text": "躺平淋雨", "effect": { "体温": 5, "龙气": 5 }, "result": "你翻过肚皮，淋了一整夜。这辈子没这么舒服过。" },
+      { "text": "张嘴接雨", "effect": { "灵性": 2, "龙气": 8 }, "result": "雨水是甜的。你喝着喝着，觉得头上有点痒。" }
+    ]
+  }
+]

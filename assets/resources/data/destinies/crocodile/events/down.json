@@ -1,0 +1,195 @@
+[
+  {
+    "id": "down_fallback", "dir": "down", "weight": 3,
+    "text": "你在水底趴了一季，一口气憋得比上回更长了。",
+    "choices": [ { "text": "接着趴", "effect": { "潜水": 1, "龙气": 1 }, "result": "水底很安静。你就喜欢安静。" } ]
+  },
+
+  {
+    "id": "d1_fish", "dir": "down", "layers": ["D1"], "weight": 14,
+    "text": "浑水里有鱼在游，你只看得见一团一团的影子。",
+    "choices": [
+      { "text": "张嘴等着", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "体温": 2, "咬合": 1, "follow": "f_fish_school" }, "result": "一条鱼自己游进了你嘴里。你合上嘴，什么都没做。",
+        "fail": { "effect": { "体温": -1 }, "result": "等了一季，嘴都酸了，一条也没等到。" } },
+      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll", "effect": { "体温": 3, "龙气": 4 },
+        "result": "你一个翻身，搅得一窝鱼晕头转向，顺口吃了个饱。" },
+      { "text": "跟着影子游", "effect": { "潜水": 1, "灵性": 1 }, "result": "影子领着你游到了一处深水。这儿以后就是你的了。" }
+    ]
+  },
+  {
+    "id": "d1_bottle", "dir": "down", "layers": ["D1", "D2"], "weight": 10,
+    "text": "泥里埋着一个玻璃瓶，瓶口塞着软木塞，里面卷着一张纸。",
+    "choices": [
+      { "text": "叼回窝里", "effect": { "灵性": 1, "follow": { "id": "f_bottle_letter", "delay": 2 } }, "result": "你把瓶子叼回了窝里，摆在最显眼的地方。" },
+      { "text": "不理它", "effect": { "潜水": 1 }, "result": "瓶子慢慢陷回了泥里。" }
+    ]
+  },
+  {
+    "id": "d1_pipe", "dir": "down", "layers": ["D1"], "maps": ["sewer"], "weight": 14,
+    "text": "污水管又黑又臭。你往前爬，前面传来吱吱吱的声音。",
+    "choices": [
+      { "text": "往前爬", "effect": { "潜水": 2, "follow": "f_rat_king" }, "result": "吱吱声越来越大。拐过一个弯，你看见了一百双小眼睛。" },
+      { "text": "往回爬", "effect": { "体温": 1 }, "result": "你退回了自己的窝。不该管的事，不管。" }
+    ]
+  },
+  {
+    "id": "d1_catfish", "dir": "down", "layers": ["D1", "D2"], "weight": 10,
+    "text": "一条大鲶鱼趴在泥里，胡子比你的腿还长，懒洋洋地冲你吐泡泡。",
+    "choices": [
+      { "text": "咬它胡子", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "咬合": 2, "龙气": 3 }, "result": "你咬住胡子一扯，它吓得窜出去老远，再也不冲你吐泡泡了。",
+        "fail": { "effect": { "体温": -2 }, "result": "它尾巴一甩，你在水里翻了三个跟头。" } },
+      { "text": "跟它学憋气", "effect": { "潜水": 2, "灵性": 1, "follow": { "id": "f_catfish_hole", "delay": 2 } }, "result": "它在泥里一趴就是一天。你学了一天，憋得眼冒金星。" }
+    ]
+  },
+
+  {
+    "id": "d2_den", "dir": "down", "layers": ["D2"], "weight": 12,
+    "text": "河底的淤泥厚得能把你埋住。你挖了个窝，只露出两只眼睛。",
+    "choices": [
+      { "text": "再挖深一点", "effect": { "潜水": 2, "follow": "f_den_cave" }, "result": "你越挖越深。泥底下，好像是空的。" },
+      { "text": "睡一觉", "effect": { "体温": 2 }, "result": "泥里比水里暖。你睡了一整季。" }
+    ]
+  },
+  {
+    "id": "d2_oneeye", "dir": "down", "layers": ["D2", "D3"], "stage": [1, 3], "weight": 12, "require": "flag:oneeye_grudge",
+    "text": "泥里突然拱起一个大包——是独眼。它在这儿趴着等你很久了。",
+    "choices": [
+      { "text": "钻进窝里", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.08,
+        "effect": { "潜水": 1, "灵性": 1 }, "result": "你一头钻进窝最深处。它的大嘴在洞口拱了半天，拱不进来。",
+        "fail": { "effect": { "death": "one_eye" }, "result": "你的窝不够深。" } },
+      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll", "effect": { "咬合": 2, "龙气": 5, "follow": { "id": "f_oneeye_bait", "delay": 2 } },
+        "result": "你咬住它尾巴尖一个翻身。它疼得一抖，松开了你，游进了浑水里。" },
+      { "text": "铁头顶回去", "require": "legacy:iron_head>=2", "effect": { "咬合": 2, "龙气": 3 },
+        "result": "前世它撞翻过你。这一世你脑袋一顶，它退了三步。" },
+      { "text": "掉头就游", "effect": { "back": "down", "体温": -1 }, "result": "你掉头就游，一口气游回了浅水。它没追。" }
+    ]
+  },
+  {
+    "id": "d2_snail", "dir": "down", "layers": ["D2"], "weight": 10,
+    "text": "淤泥里满是田螺，一个挨着一个，像铺了一层石子。",
+    "choices": [
+      { "text": "嘎嘣嘎嘣吃", "effect": { "体温": 2, "咬合": 1 }, "result": "你吃了一下午。牙缝里全是螺壳。" },
+      { "text": "攒一把", "effect": { "item": "snail" }, "result": "你含了一嘴田螺回窝。慢慢吃。" }
+    ]
+  },
+  {
+    "id": "d2_old_pipe", "dir": "down", "layers": ["D2"], "maps": ["sewer"], "weight": 14,
+    "text": "这一段管道很老了，墙上长着青苔，有人在管壁上刻了一行字：修于一九九八。",
+    "choices": [
+      { "text": "顺着青苔爬", "effect": { "潜水": 2, "灵性": 1, "follow": "f_pipe_map" }, "result": "青苔一路往深处长。你跟着爬，越爬越暖和。" },
+      { "text": "在这儿安家", "effect": { "体温": 2 }, "result": "这段管子没人来，很安静。你趴下就不想动了。" }
+    ]
+  },
+  {
+    "id": "d2_eel", "dir": "down", "layers": ["D2", "D3"], "weight": 10,
+    "text": "一条黄鳝从泥洞里探出头，看见你，滑溜溜地又缩了回去。",
+    "choices": [
+      { "text": "守着洞口", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "体温": 3 }, "result": "你守到半夜，它探出头来透气。晚饭有了。",
+        "fail": { "effect": { "体温": -1 }, "result": "它从另一个洞口溜了。这泥里，全是它的洞。" } },
+      { "text": "搅浑这片泥", "showIf": "skill:mud", "useSkill": "mud", "effect": { "体温": 3, "龙气": 4 },
+        "result": "你一尾巴搅浑了整片泥。黄鳝找不着洞口，自己撞进了你嘴里。" },
+      { "text": "随它去", "effect": { "潜水": 1 }, "result": "你游开了。它从洞里探出头，冲你吐了个泡泡。" }
+    ]
+  },
+
+  {
+    "id": "d3_ship", "dir": "down", "layers": ["D3"], "weight": 12,
+    "text": "河底躺着一条木头沉船，船舱里黑乎乎的，有东西在闪。",
+    "choices": [
+      { "text": "钻进船舱", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "龙气": 6, "item": "pearl" }, "result": "舱底有个破木箱，箱缝里卡着一颗珠子。你叼了出来。",
+        "fail": { "effect": { "体温": -2 }, "result": "舱里卡着一张破网，你差点没钻出来。" } },
+      { "text": "在船底下安家", "effect": { "潜水": 2, "follow": { "id": "f_ship_knock", "delay": 2 } }, "result": "船底下是个好窝，头顶有船板，谁也看不见你。" }
+    ]
+  },
+  {
+    "id": "d3_softshell", "dir": "down", "layers": ["D3"], "weight": 12,
+    "text": "沉船的船舵上趴着一只老鳖，壳上长满了青苔，眼睛半睁半闭。",
+    "choices": [
+      { "text": "跟它打招呼", "effect": { "灵性": 2, "follow": { "id": "f_turtle_teach", "delay": 2 } }, "result": "它慢慢睁开一只眼，看了你半天：哦，是条小鳄。" },
+      { "text": "咬它一口", "chance": 0.3, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 3 }, "result": "你咬在壳边上，它缩进壳里，半天没出来。你的牙更硬了。",
+        "fail": { "effect": { "咬合": -1 }, "result": "壳太硬，你崩掉了一颗牙。没事，还会长的。" } }
+    ]
+  },
+  {
+    "id": "d3_hook", "dir": "down", "layers": ["D2", "D3"], "stage": [1, 99], "weight": 10,
+    "text": "一条鲫鱼在水里一动不动地悬着，嘴边垂着一根细细的线。",
+    "choices": [
+      { "text": "一口吞", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "体温": 3, "咬合": 1 }, "result": "你吞了鱼，咬断了线。岸上有人骂了一声。",
+        "fail": { "effect": { "death": "hook" }, "result": "线一绷。" } },
+      { "text": "咬断线", "effect": { "咬合": 1, "灵性": 1, "item": "crucian" }, "result": "你先咬断了线，再把鱼叼走。不慌。" },
+      { "text": "前世的吐钩", "require": "legacy:spit_hook>=1", "effect": { "体温": 3, "龙气": 4 },
+        "result": "前世这根线把你钓了上去。这一世你看准了钩，只吃鱼，不吃钩。" }
+    ]
+  },
+  {
+    "id": "d3_murk", "dir": "down", "layers": ["D3"], "weight": 10,
+    "text": "水底的泥被搅了起来，什么都看不见。有个很大的东西在里面游。",
+    "choices": [
+      { "text": "搅得更浑", "showIf": "skill:mud", "useSkill": "mud", "effect": { "龙气": 6, "潜水": 1 },
+        "result": "你也甩了一尾巴泥。浑水里，谁也别想看见谁，你悄悄绕到了它后头。" },
+      { "text": "退出去", "effect": { "back": "down", "体温": -1 }, "result": "你慢慢退了出去。有的东西，不看也罢。" },
+      { "text": "一动不动等", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 2, "龙气": 3 }, "result": "泥沉下去了。是一条大青鱼，它看了你一眼，游走了。",
+        "fail": { "effect": { "体温": -2 }, "result": "那东西撞了你一下就跑了。你在泥里转了半天才找到北。" } }
+    ]
+  },
+  {
+    "id": "d3_toys", "dir": "down", "layers": ["D3"], "maps": ["sewer"], "weight": 14,
+    "text": "地下河里漂着好多东西：皮球、拖鞋、一只黄色的塑料小鸭子。",
+    "choices": [
+      { "text": "叼那只鸭子", "effect": { "灵性": 2, "体温": 1 }, "result": "小鸭子一捏就叫。你捏了一整季，自己都乐了。" },
+      { "text": "顺水往下游", "effect": { "潜水": 2, "龙气": 3 }, "result": "地下河越来越宽，越来越深。你不知道它通到哪儿。" }
+    ]
+  },
+
+  {
+    "id": "d4_gate", "dir": "down", "layers": ["D4"], "chainOnly": true,
+    "text": "龙渊越往下越冷，冷得你的血都慢了下来。渊底有光。",
+    "choices": [
+      { "text": "硬往下沉", "effect": { "death": "deep_cold" }, "result": "光越来越近，身子越来越慢。" },
+      { "text": "寒鳞扛住", "require": "legacy:cold_scale>=2", "effect": { "灵性": 3, "龙气": 6 },
+        "result": "前世你冻在了这里。这一世你的鳞扛住了寒气，你看清了那道光。" },
+      { "text": "跟慢慢下去", "require": "companion:softshell", "effect": { "灵性": 2, "龙气": 6 },
+        "result": "慢慢领着你，找了一条有温泉眼的路，一点一点沉到了底。" },
+      { "text": "游回去", "effect": { "back": "down", "体温": -1 }, "result": "你掉头往上游。那道光，下次再说。" }
+    ]
+  },
+  {
+    "id": "d4_bone", "dir": "down", "layers": ["D4"], "weight": 12,
+    "text": "渊底躺着一副巨大的骨头，头上有角，比沉船还长。",
+    "choices": [
+      { "text": "趴在骨头边上", "effect": { "龙气": 10, "灵性": 2, "follow": { "id": "f_bone_voice", "delay": 2 } }, "result": "骨头是凉的，可你趴着趴着，身上热了起来。" },
+      { "text": "叼一截碎骨", "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "item": "dragon_horn" }, "result": "你叼起一截断角。渊底的水，晃了一下。",
+        "fail": { "effect": { "体温": -2 }, "result": "骨头太沉，你拖了半天，一点没动。" } }
+    ]
+  },
+  {
+    "id": "d4_cold_light", "dir": "down", "layers": ["D4"], "weight": 12,
+    "text": "渊底的光是一颗珠子，半埋在泥里，冷得发蓝。",
+    "choices": [
+      { "text": "含进嘴里", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "龙气": 12, "灵性": 2 }, "result": "珠子在你嘴里化了。一股凉气从嘴里，一路走到尾巴尖。",
+        "fail": { "effect": { "体温": -3 }, "result": "珠子冰得你牙疼。你吐了出来，冻得直打哆嗦。" } },
+      { "text": "守着它", "effect": { "潜水": 2, "龙气": 4 }, "result": "你在珠子边上趴了一季。它不亮，你也不走。" }
+    ]
+  },
+  {
+    "id": "d4_door", "dir": "down", "layers": ["D4"], "stage": [4, 99], "once": true, "weight": 20,
+    "text": "渊底有一道石门，门上刻着一条长角的鳄。门缝里有声音：鼍，你来了。",
+    "choices": [
+      { "text": "推门", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "龙气": 20, "灵性": 2 }, "result": "门开了一条缝。里面的光扑在你脸上，你的鳞一片一片立了起来。",
+        "fail": { "effect": { "体温": -3 }, "result": "门纹丝不动。门里的声音笑了：还不到时候。" } },
+      { "text": "咬住门环翻", "showIf": "skill:roll", "useSkill": "roll", "effect": { "龙气": 25, "咬合": 2 },
+        "result": "你咬住石门上的铜环，一个翻身。门轰的一声，开了。" },
+      { "text": "不进", "effect": { "灵性": 2 }, "result": "你在门外趴了一会儿，转身走了。门里的声音叹了口气。" }
+    ]
+  }
+]

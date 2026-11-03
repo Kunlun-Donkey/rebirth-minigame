@@ -1,0 +1,140 @@
+[
+  {
+    "id": "side_fallback", "dir": "side", "weight": 3,
+    "text": "你顺着水漂了一季，看了一路的风景。",
+    "choices": [ { "text": "接着漂", "effect": { "灵性": 1, "体温": 1 }, "result": "河很长。你不急。" } ]
+  },
+
+  {
+    "id": "l1_bend", "dir": "side", "layers": ["L1"], "weight": 12,
+    "text": "河湾的水很缓，岸边一大片泥滩，晒太阳正好。",
+    "choices": [
+      { "text": "占个好位置", "effect": { "晒背": 2, "follow": "f_bend_otter" }, "result": "你找了块向阳的泥滩趴下。邻居们看了你一眼，没说话。" },
+      { "text": "漂过去", "effect": { "灵性": 1, "潜水": 1 }, "result": "你从河湾漂了过去。看着热闹，不凑。" }
+    ]
+  },
+  {
+    "id": "l1_oneeye_rock", "dir": "side", "layers": ["L1"], "stage": [1, 3], "weight": 14, "once": true, "require": "flag:oneeye_grudge", "maps": ["river", "swamp"],
+    "text": "河湾最好的那块晒背石上，趴着独眼。它看都不看你。",
+    "choices": [
+      { "text": "挤上去", "chance": 0.3, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "晒背": 2, "咬合": 2, "follow": "f_oneeye_watch" }, "result": "你硬挤上了石头一角。独眼睁开那只好眼，看了你一下午。",
+        "fail": { "effect": { "体温": -3 }, "result": "它尾巴一扫，你飞回了水里。" } },
+      { "text": "等它走", "effect": { "晒背": 1, "灵性": 1 }, "result": "它晒到天黑才走。你趴上去，蹭到了一点余温。" }
+    ]
+  },
+  {
+    "id": "l1_challenge", "dir": "side", "stage": [3, 99], "weight": 25, "require": "flag:oneeye_grudge & !flag:oneeye_beaten", "maps": ["river", "swamp"],
+    "text": "你游回了河湾。独眼还趴在那块石头上。它比你记得的，要小一些。",
+    "choices": [
+      { "text": "正面挑战", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.04,
+        "effect": { "咬合": 3, "龙气": 12, "flag": "oneeye_beaten", "follow": { "id": "f_oneeye_old", "delay": 3, "ttl": 8 } },
+        "result": "你一头顶上去。它退了一步，又退了一步，最后自己滑进了水里。",
+        "fail": { "effect": { "体温": -4 }, "result": "它还是比你重。你被顶回了水里，岸上一片看热闹的眼睛。" } },
+      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll",
+        "effect": { "咬合": 3, "龙气": 15, "flag": "oneeye_beaten", "follow": { "id": "f_oneeye_old", "delay": 3, "ttl": 8 } },
+        "result": "你咬住它前腿一个翻身。独眼第一次从那块石头上，滚了下来。" },
+      { "text": "亮出它的断牙", "require": "item:one_eye_tooth",
+        "effect": { "灵性": 3, "龙气": 12, "flag": "oneeye_beaten" }, "result": "你把那颗断牙放在石头上。独眼看了很久，自己爬了下去。" },
+      { "text": "算了", "effect": { "灵性": 2 }, "result": "你游走了。那块石头，下回再说。" }
+    ]
+  },
+  {
+    "id": "l1_river_king_end", "dir": "side", "stage": [4, 99], "once": true, "weight": 25, "require": "flag:oneeye_beaten",
+    "text": "你游回了河湾。整条河湾的鳄鱼都趴在岸上，独眼也在。它往旁边挪了挪，给你让出了那块石头。",
+    "choices": [
+      { "text": "趴上去", "require": "咬合>=8", "effect": { "ending": "river_king" }, "result": "你趴上了那块石头。独眼就趴在你旁边，你们一起晒到了天黑。" },
+      { "text": "让给它", "effect": { "灵性": 3, "龙气": 10 }, "result": "你没上去。它是老了，可那块石头，它晒了一辈子。" }
+    ]
+  },
+  {
+    "id": "l1_sewer_main", "dir": "side", "layers": ["L1", "L2"], "maps": ["sewer"], "weight": 16,
+    "text": "下水道的主干像一条地下的河，两边有窄窄的走道，偶尔晃过手电筒的光。",
+    "choices": [
+      { "text": "躲开光", "effect": { "潜水": 1, "灵性": 1 }, "result": "你沉进水里。光从头顶扫了过去，没停。" },
+      { "text": "跟着光走", "effect": { "晒背": 1, "follow": "f_worker" }, "result": "你远远跟着那道光。拿手电的人哼着歌，走得很慢。" }
+    ]
+  },
+  {
+    "id": "l1_mangrove", "dir": "side", "layers": ["L1"], "maps": ["swamp"], "weight": 14,
+    "text": "沼泽水道两边全是红树林，树根扎在水里，像一只只大脚。",
+    "choices": [
+      { "text": "钻进树根", "effect": { "潜水": 2 }, "result": "树根中间又阴又凉，谁也找不着你。" },
+      { "text": "爬上根晒", "effect": { "晒背": 2, "体温": 1, "follow": "f_mangrove_crab" }, "result": "你爬上一截粗树根，四条腿耷拉着。根上，有东西在动。" }
+    ]
+  },
+  {
+    "id": "l1_heron", "dir": "side", "layers": ["L1", "L2"], "weight": 10,
+    "text": "一只白鹭站在浅水里，一条腿缩着，一条腿撑着，好像睡着了。",
+    "choices": [
+      { "text": "悄悄靠近", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "咬合": 1, "龙气": 4 }, "result": "你游到它脚边，它才睁眼。它吓得扑腾起来，掉了一片毛。",
+        "fail": { "effect": { "体温": -1 }, "result": "它一直醒着。它嘎地一声飞走了，还在你头上留了点东西。" } },
+      { "text": "跟它一起站着", "effect": { "灵性": 2 }, "result": "你们俩一动不动地待了一下午。它觉得你是块木头。" }
+    ]
+  },
+
+  {
+    "id": "l2_park", "dir": "side", "layers": ["L2"], "weight": 12,
+    "text": "你漂到了城边的公园湖。湖边有人跑步、有人钓鱼，还有人举着手机。",
+    "choices": [
+      { "text": "冲镜头张嘴", "effect": { "灵性": 1, "follow": { "id": "f_viral", "delay": 2 } }, "result": "岸上一片尖叫。你听见有人说：拍到了拍到了！" },
+      { "text": "沉下去", "effect": { "潜水": 1 }, "result": "你沉进湖底。湖底全是硬币，不知道是谁扔的。" }
+    ]
+  },
+  {
+    "id": "l2_sluice", "dir": "side", "layers": ["L2"], "weight": 10,
+    "text": "城边有一道水闸。开闸的时候，水冲得又急又响。",
+    "choices": [
+      { "text": "冲过去", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.06,
+        "effect": { "潜水": 2, "龙气": 5 }, "result": "你顺着闸口冲了出去，一口气冲出了半里地。痛快。",
+        "fail": { "effect": { "death": "flood" }, "result": "水比你想的快。" } },
+      { "text": "等关闸", "effect": { "体温": 1, "灵性": 1 }, "result": "你在闸口边等了一季。闸关了，你慢慢游了过去。" },
+      { "text": "前世稳如堤", "require": "legacy:steady>=1", "effect": { "潜水": 2, "龙气": 5 },
+        "result": "前世这样的水把你冲走了。这一世你贴着闸底，稳稳地爬了过去。" }
+    ]
+  },
+  {
+    "id": "l2_sewer_end", "dir": "any", "stage": [4, 99], "once": true, "weight": 25, "require": "flag:doudou_friend", "maps": ["sewer"],
+    "text": "老豆要退休了。他最后一次下井，冲着黑漆漆的管道喊：小绿？出来吧。",
+    "choices": [
+      { "text": "游出去见他", "require": "灵性>=8", "effect": { "ending": "sewer_king" }, "result": "你从黑水里浮上来，冲他眨了眨眼。他蹲在走道上，笑出了眼泪。" },
+      { "text": "不出去", "effect": { "灵性": 3, "龙气": 10 }, "result": "你没出去。他在井底站了很久，走的时候，留下了一条鱼。" }
+    ]
+  },
+  {
+    "id": "l2_star_end", "dir": "side", "layers": ["L2"], "stage": [4, 99], "once": true, "weight": 25, "require": "flag:viral",
+    "text": "公园湖边又挤满了人，比过年还多。有人举着牌子：鳄鱼哥，再张一次嘴！",
+    "choices": [
+      { "text": "冲镜头张大嘴", "require": "灵性>=8", "effect": { "ending": "internet_star" }, "result": "你张开大嘴，露出一排白牙。整个湖边，咔嚓声响成了一片。" },
+      { "text": "沉回湖底", "effect": { "潜水": 3, "龙气": 10 }, "result": "你沉下去了。网上的人说，鳄鱼哥退网了。" }
+    ]
+  },
+
+  {
+    "id": "l3_estuary", "dir": "side", "layers": ["L3"], "weight": 12,
+    "text": "江水在这儿撞上海水，一半黄一半蓝。水是咸的。",
+    "choices": [
+      { "text": "往咸水里游", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.06,
+        "effect": { "潜水": 3, "龙气": 8 }, "result": "咸水托着你，比河水轻。你第一次游得这么远。",
+        "fail": { "effect": { "体温": -2 }, "result": "咸水呛得你直打喷嚏，你又游了回来。" } },
+      { "text": "趴在交界处", "effect": { "灵性": 2, "龙气": 3 }, "result": "你一半身子在黄水里，一半在蓝水里。挺好玩。" }
+    ]
+  },
+  {
+    "id": "l3_shrimp", "dir": "side", "layers": ["L3"], "weight": 10,
+    "text": "一只皮皮虾冲你挥了挥拳头。它还没你一颗牙大。",
+    "choices": [
+      { "text": "张嘴吓它", "effect": { "咬合": 1 }, "result": "它一拳打在你鼻尖上，嗖地弹走了。你鼻子酸了一下午。" },
+      { "text": "看它打拳", "effect": { "灵性": 2, "龙气": 3 }, "result": "它打得虎虎生风。你觉得这只虾，前途无量。" }
+    ]
+  },
+  {
+    "id": "l3_seaturtle", "dir": "side", "layers": ["L3"], "weight": 10,
+    "text": "一只海龟从海里游来，绕着你转了一圈：河里的水，是甜的吗？",
+    "choices": [
+      { "text": "跟它聊", "effect": { "灵性": 2, "龙气": 4 }, "result": "它说它见过一条会发光的鲸。你说你见过一副长角的骨头。它不信。" },
+      { "text": "跟它游一段", "effect": { "潜水": 2, "体温": 1 }, "result": "你跟着它游进了蓝水里。游累了，它驮你回来。" }
+    ]
+  }
+]

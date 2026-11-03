@@ -1,0 +1,345 @@
+[
+  {
+    "id": "f_mom_mouth", "dir": "any", "chainOnly": true, "teaser": "妈妈还在沙窝边等着",
+    "text": "鳄鱼妈妈张开大嘴，把你们几个一个一个含了进去。你在她嘴里，一点都不怕。",
+    "choices": [
+      { "text": "乖乖待着", "effect": { "体温": 2, "灵性": 1 }, "result": "她游到浅水，把你们一个个吐了出来。水是暖的。" },
+      { "text": "从牙缝往外看", "effect": { "灵性": 2 }, "result": "你从她的牙缝里，第一次看见了这条河。" }
+    ]
+  },
+
+  {
+    "id": "f_oneeye_watch", "dir": "any", "chainOnly": true, "teaser": "水面上有截木头在跟着你",
+    "text": "水面上浮着一截木头。木头上有一只眼睛，一直跟着你转。",
+    "choices": [
+      { "text": "装没看见", "effect": { "灵性": 1, "潜水": 1 }, "result": "你慢慢游开。那只眼睛跟了你半里地，沉下去了。" },
+      { "text": "冲它张嘴", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "咬合": 2, "龙气": 2 }, "result": "木头沉了下去。独眼走了，它记住你了，你也记住它了。",
+        "fail": { "effect": { "体温": -2 }, "result": "木头一沉，一条尾巴从水底扫了上来。" } }
+    ]
+  },
+  {
+    "id": "f_oneeye_bait", "dir": "down", "chainOnly": true, "teaser": "窝门口摆着一条大鱼",
+    "text": "你的窝门口摆着一条大鱼，一动不动。旁边的泥里，露出一只独眼。",
+    "choices": [
+      { "text": "不上当", "effect": { "灵性": 2 }, "result": "你一动不动。独眼等到天黑，把鱼叼走了。" },
+      { "text": "叼了就跑", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.08,
+        "effect": { "体温": 3, "潜水": 1 }, "result": "你一口叼走鱼，钻进了窝的另一头。独眼慢了半拍。",
+        "fail": { "effect": { "death": "one_eye" }, "result": "那只眼睛，早就等着了。" } }
+    ]
+  },
+  {
+    "id": "f_oneeye_old", "dir": "any", "chainOnly": true, "teaser": "独眼被渔网缠住了",
+    "text": "独眼被一张破渔网缠住了，在浅水里挣不开。它看见你，把头扭开了。",
+    "choices": [
+      { "text": "咬断渔网", "effect": { "灵性": 3, "item": "one_eye_tooth" }, "result": "你一根一根咬断了网。它游走前，在你面前吐下了一颗断牙。" },
+      { "text": "转身走", "effect": { "龙气": 5 }, "result": "你没回头。第二天它自己挣开了，在河湾里晒了一整天的太阳。" }
+    ]
+  },
+
+  {
+    "id": "f_plover_teeth", "dir": "any", "chainOnly": true, "teaser": "叽叽又落在你鼻子上",
+    "text": "叽叽又来了。它跳进你嘴里，一颗一颗啄你的牙缝，痒得要命。",
+    "choices": [
+      { "text": "忍着别合嘴", "effect": { "灵性": 2, "flag": "plover_trust" }, "result": "它啄完最后一颗，在你舌头上蹦了两下，飞走了。" },
+      { "text": "打个喷嚏", "effect": { "体温": 1, "follow": { "id": "f_plover_teeth", "delay": 3 } }, "result": "它被喷出去老远，骂骂咧咧地飞了。过两天，它还是会来。" }
+    ]
+  },
+  {
+    "id": "f_plover_kids", "dir": "any", "chainOnly": true, "teaser": "叽叽带了一家子来",
+    "text": "叽叽领来了四只小鸟，排成一排落在你背上，一起冲你叫。",
+    "choices": [
+      { "text": "张嘴让它们学", "effect": { "灵性": 2, "龙气": 4 }, "result": "四只小鸟挤进你嘴里，学着啄牙。你一动都不敢动。" },
+      { "text": "驮着它们晒", "effect": { "晒背": 2, "体温": 2 }, "result": "你驮着一家子晒了一下午。背上热，心里也热。" }
+    ]
+  },
+
+  {
+    "id": "f_fish_school", "dir": "down", "chainOnly": true, "teaser": "那群鱼又游回来了",
+    "text": "一大群小鱼在浑水里转圈，转成一团，像一捧银子。",
+    "choices": [
+      { "text": "冲进去", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "体温": 3 }, "result": "你冲进鱼群，张嘴就有。吃饱了，你在泥里打了个滚。",
+        "fail": { "effect": { "体温": -1 }, "result": "鱼群哗地散开，一条都没剩。" } },
+      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll", "effect": { "体温": 4, "龙气": 4 },
+        "result": "你在鱼群里一翻身，搅起一个漩涡。鱼自己转进了你嘴里。" },
+      { "text": "看它们转", "effect": { "灵性": 2 }, "result": "你看了一下午。原来鱼也会排队。" }
+    ]
+  },
+  {
+    "id": "f_mud_neighbor", "dir": "down", "chainOnly": true, "teaser": "隔壁泥里有动静",
+    "text": "你隔壁的泥里住进了一条泥鳅。它天天往你窝里钻。",
+    "choices": [
+      { "text": "让它钻", "effect": { "灵性": 1, "体温": 1 }, "result": "它钻进来又钻出去。你的窝，通风了。" },
+      { "text": "吓唬它", "effect": { "咬合": 1 }, "result": "你张了一下嘴。它从此绕着你的窝走。" }
+    ]
+  },
+  {
+    "id": "f_mud_shell", "dir": "down", "chainOnly": true, "teaser": "泥里滚出来一个河蚌",
+    "text": "你滚出来的硬东西是个河蚌，壳半张着，里面有一点光。",
+    "choices": [
+      { "text": "撬开它", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "item": "pearl" }, "result": "你用牙尖撬开了壳，里面躺着一颗小珠子。",
+        "fail": { "effect": { "体温": -1 }, "result": "壳一合，夹住了你的鼻子。你甩了半天才甩掉。" } },
+      { "text": "留着玩", "effect": { "灵性": 1, "item": "clam_shell" }, "result": "你把它贴在耳朵边上，听见了好远好远的水声。" }
+    ]
+  },
+  {
+    "id": "f_rock_fight", "dir": "up", "chainOnly": true, "teaser": "有谁看上了你的石头",
+    "text": "一条比你大的鳄鱼爬上了你的石头，把你挤到了边上。",
+    "choices": [
+      { "text": "挤回去", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "晒背": 2, "咬合": 1 }, "result": "你一点一点挤回了中间。它瞪了你一眼，爬走了。",
+        "fail": { "effect": { "体温": -2 }, "result": "它尾巴一扫，你掉进了水里。" } },
+      { "text": "换一块", "effect": { "晒背": 1, "灵性": 1 }, "result": "你换了块小点的。小石头，热得快。" }
+    ]
+  },
+  {
+    "id": "f_buffalo_back", "dir": "up", "chainOnly": true, "teaser": "那头水牛又来喝水了",
+    "text": "那头水牛又来了。这回它背上站着一只白鹭，水牛走到哪儿，鹭跟到哪儿。",
+    "choices": [
+      { "text": "爬上牛背", "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "晒背": 3, "灵性": 2 }, "result": "水牛没在意。你趴在牛背上，晒到了全村最高的太阳。",
+        "fail": { "effect": { "体温": -2 }, "result": "水牛一甩尾巴，你掉进了水里。白鹭笑了一下午。" } },
+      { "text": "远远看着", "effect": { "灵性": 1, "体温": 1 }, "result": "牛在喝水，鹭在打盹，你在晒太阳。谁也不管谁。" }
+    ]
+  },
+
+  {
+    "id": "f_sewer_first", "dir": "any", "chainOnly": true, "teaser": "管道深处有一点光",
+    "text": "你在管道里漂了一夜，停在一个拐角。头顶有个洞，漏下来一点光和一片菜叶。",
+    "choices": [
+      { "text": "吃菜叶", "effect": { "体温": 1 }, "result": "不好吃。但是热乎。" },
+      { "text": "往光那儿爬", "effect": { "晒背": 1, "灵性": 1 }, "result": "你趴在那点光底下。比玻璃缸里的灯，暖和多了。" }
+    ]
+  },
+  {
+    "id": "f_rat_king", "dir": "down", "chainOnly": true, "teaser": "老鼠帮在开会",
+    "text": "管道深处，一百只老鼠围成一圈。中间那只最胖，头上顶着个瓶盖当帽子。",
+    "choices": [
+      { "text": "冲进去", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "咬合": 2, "龙气": 5, "follow": { "id": "f_rat_crown", "delay": 2 } }, "result": "老鼠们四散而逃。那个瓶盖帽子，滚到了你脚边。",
+        "fail": { "effect": { "体温": -2 }, "result": "一百只老鼠一起冲你吱吱叫。你退了出去。" } },
+      { "text": "掉两滴眼泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 2, "龙气": 4 },
+        "result": "你流了两滴泪。鼠王愣了，把最暖和的那根管子让给了你。" },
+      { "text": "绕开", "effect": { "潜水": 1 }, "result": "你绕了个大圈。开会的事，不掺和。" }
+    ]
+  },
+  {
+    "id": "f_rat_crown", "dir": "any", "chainOnly": true, "teaser": "老鼠们来找新王了",
+    "text": "老鼠们排着队来了，把那个瓶盖恭恭敬敬放在你面前：大王。",
+    "choices": [
+      { "text": "戴上", "effect": { "灵性": 2, "龙气": 4 }, "result": "瓶盖太小，卡在你脑门上。老鼠们一起欢呼。下水道里，你说了算。" },
+      { "text": "推回去", "effect": { "咬合": 1, "体温": 1 }, "result": "你把瓶盖推回去。它们给你留了一块面包，排着队走了。" }
+    ]
+  },
+  {
+    "id": "f_rat_deal", "dir": "any", "chainOnly": true, "teaser": "半只耳朵又来了",
+    "text": "半只耳朵带着两只老鼠回来，扔给你一块面包：以后这段归你，那段归我。",
+    "choices": [
+      { "text": "收下", "effect": { "体温": 2, "灵性": 1 }, "result": "面包有点潮。但下水道里，这就算讲道理了。" },
+      { "text": "连它一起吓走", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "咬合": 2 }, "result": "你吞了面包，冲它张了张嘴。两段，都归你了。",
+        "fail": { "effect": { "体温": -1 }, "result": "它们早有准备，跑得飞快，还顺走了你的面包。" } }
+    ]
+  },
+  {
+    "id": "f_worker", "dir": "any", "chainOnly": true, "teaser": "手电光又照过来了",
+    "text": "手电光停在你脸上。拿手电的年轻人愣了半天：……小绿？",
+    "choices": [
+      { "text": "冲他眨眼", "effect": { "灵性": 2, "flag": "doudou_friend", "follow": { "id": "f_worker_lunch", "delay": 2 } },
+        "result": "他蹲下来，小心地摸了摸你的鼻子：真是你？我是豆豆啊。" },
+      { "text": "游到他脚边", "require": "flag:doudou", "effect": { "灵性": 4, "flag": "doudou_friend", "follow": { "id": "f_worker_lunch", "delay": 2 } },
+        "result": "你记得他趴在马桶边哭的样子。他蹲下来抱住你的脑袋：就知道你还活着。" },
+      { "text": "张嘴吓他", "effect": { "咬合": 1 }, "result": "他吓得手电都掉了，连滚带爬地跑了。" },
+      { "text": "沉下去", "effect": { "潜水": 1 }, "result": "你沉进黑水里。他在走道上站了很久。" }
+    ]
+  },
+  {
+    "id": "f_worker_lunch", "dir": "any", "chainOnly": true, "teaser": "豆豆带了饭盒来",
+    "text": "豆豆每天中午都来，打开饭盒，把里面的鱼夹出来放在走道边。",
+    "choices": [
+      { "text": "爬上去吃", "effect": { "体温": 3, "灵性": 1 }, "result": "你吃鱼，他吃饭。管道里，一个人，一条鳄鱼，谁也不说话。" },
+      { "text": "等他走了再吃", "effect": { "体温": 2, "潜水": 1 }, "result": "他走了你才上去。饭盒盖上画着一条笑着的鳄鱼。" }
+    ]
+  },
+  {
+    "id": "f_pipe_map", "dir": "down", "chainOnly": true, "teaser": "管壁上画着箭头",
+    "text": "管壁上有人用粉笔画了箭头，一路往深处指。最后一个箭头旁边写着：出口。",
+    "choices": [
+      { "text": "跟着箭头", "effect": { "潜水": 2, "龙气": 4 }, "result": "箭头尽头是一道铁栅栏。栅栏外面，是一条地下河。" },
+      { "text": "记住这条路", "effect": { "灵性": 2 }, "result": "你把每个箭头都记住了。下水道，你开始认路了。" }
+    ]
+  },
+  {
+    "id": "f_street_cat", "dir": "up", "chainOnly": true, "teaser": "井盖外面蹲着一只猫",
+    "text": "井盖外面蹲着一只花猫，盯着缝里的你看。它伸进来一只爪子。",
+    "choices": [
+      { "text": "张嘴", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "咬合": 1, "灵性": 1 }, "result": "猫嗷的一声跳上了墙。它从此再也没来过。",
+        "fail": { "effect": { "体温": -1 }, "result": "它比你快，在你鼻子上挠了一下。" } },
+      { "text": "跟它对视", "effect": { "灵性": 2 }, "result": "你们对视了一下午。最后它困了，在井盖上睡着了，把光挡住了。" }
+    ]
+  },
+  {
+    "id": "f_viral", "dir": "any", "chainOnly": true, "teaser": "你好像上了新闻",
+    "text": "第二天，城里的手机上全是你：公园湖惊现鳄鱼，牙齿白得发亮。",
+    "choices": [
+      { "text": "去湖边营业", "effect": { "灵性": 2, "flag": "viral" }, "result": "你又去湖边张了张嘴。岸上的人，比昨天多了一倍。" },
+      { "text": "躲起来", "effect": { "潜水": 2 }, "result": "你躲了一个月。新闻说，可能是看错了。" }
+    ]
+  },
+
+  {
+    "id": "f_kids_return", "dir": "up", "chainOnly": true, "layers": ["U1"], "teaser": "小孩们带着大人来了",
+    "text": "那几个小孩带着大人回来了。大人手里拿着竹竿，往水里乱戳。",
+    "choices": [
+      { "text": "沉到底", "effect": { "潜水": 1 }, "result": "竹竿在你头顶戳来戳去。你在水底，打了个哈欠。" },
+      { "text": "掉两滴眼泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 2, "体温": 2 },
+        "result": "你浮上来，流了两滴泪。最小的那个哭了：别打它！大人把竹竿放下了。" },
+      { "text": "冲上岸吓他们", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 2 }, "result": "你往岸上一冲，大人扔下竹竿就跑。小孩们跑得比大人还快。",
+        "fail": { "effect": { "体温": -2 }, "result": "竹竿戳在你背上。你掉头就跑。" } }
+    ]
+  },
+  {
+    "id": "f_reed_nest", "dir": "up", "chainOnly": true, "teaser": "芦苇深处有个鸟窝",
+    "text": "芦苇深处有个鸟窝，窝里三颗蛋。鸟妈妈不在。",
+    "choices": [
+      { "text": "替它守着", "effect": { "灵性": 2, "龙气": 3 }, "result": "鸟妈妈回来，看见你趴在旁边，吓得直叫。蛋一颗没少。" },
+      { "text": "走开", "effect": { "晒背": 1 }, "result": "你爬走了。蛋是别人的，太阳是大家的。" }
+    ]
+  },
+  {
+    "id": "f_poacher_camp", "dir": "up", "chainOnly": true, "teaser": "河边多了个帐篷",
+    "text": "河边扎了个帐篷，里面有绳子、铁笼子，还有一盏亮了一整夜的灯。",
+    "choices": [
+      { "text": "远远躲开", "effect": { "灵性": 2 }, "result": "你游到了下游。那盏灯，在你心里亮了好几天。" },
+      { "text": "夜里去掀翻", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 2, "龙气": 6 }, "result": "你一尾巴扫翻了笼子。第二天，帐篷不见了。",
+        "fail": { "effect": { "death": "poacher" }, "result": "灯一下照在了你脸上。" } },
+      { "text": "趴在外面哭", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 3, "龙气": 4 },
+        "result": "你在帐篷外哭了一夜。里面的人第二天就收拾东西走了，说这地方闹鬼。" }
+    ]
+  },
+  {
+    "id": "f_frog_choir", "dir": "up", "chainOnly": true, "teaser": "青蛙叫来了一池塘",
+    "text": "那只青蛙叫来了一池塘的兄弟，在荷叶上给你唱了一整夜。",
+    "choices": [
+      { "text": "听着睡着", "effect": { "体温": 2, "灵性": 1 }, "result": "你在蛙声里睡着了。梦里你也在唱，唱得比它们还难听。" },
+      { "text": "一口一个", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "体温": 3 }, "result": "你吃了个半饱。剩下的青蛙，再也不来给你唱了。",
+        "fail": { "effect": { "灵性": -1 }, "result": "青蛙们一哄而散。你一个没吃着，还被骂了一宿。" } }
+    ]
+  },
+  {
+    "id": "f_village_dog", "dir": "up", "chainOnly": true, "teaser": "村里的大黄在河边等你",
+    "text": "村里的大黄狗蹲在河边，冲你摇尾巴。它好像不叫了。",
+    "choices": [
+      { "text": "爬过去", "effect": { "灵性": 2, "体温": 1 }, "result": "它闻了闻你的鼻子，舔了一口。你们趴着晒了一下午。" },
+      { "text": "张嘴", "effect": { "咬合": 1 }, "result": "它汪了一声跑了。跑出去十步，又回头看你。" }
+    ]
+  },
+  {
+    "id": "f_elder_story", "dir": "up", "chainOnly": true, "teaser": "老头在晒场讲古",
+    "text": "老头冲着你讲古：五十年前发大水，也有条鳄鱼横在堤上。后来村里给它修了座小庙。",
+    "choices": [
+      { "text": "认真听", "effect": { "灵性": 3, "龙气": 3 }, "result": "他讲完了，磕磕烟锅：要是再发大水，你可得管管。" },
+      { "text": "打个哈欠", "effect": { "体温": 1, "晒背": 1 }, "result": "老头笑了：跟那条一样，也是个懒的。" }
+    ]
+  },
+  {
+    "id": "f_stone_storm", "dir": "up", "chainOnly": true, "teaser": "江心石上起风了",
+    "text": "江心石上起了大风，浪一层一层拍上来。你死死扒住石头。",
+    "choices": [
+      { "text": "扒住", "chance": 0.5, "chanceAttr": "晒背", "chanceStep": 0.04,
+        "effect": { "晒背": 2, "龙气": 6 }, "result": "你扒了一夜。天亮时风停了，你的爪子嵌进了石头里。",
+        "fail": { "effect": { "体温": -3 }, "result": "一个浪把你卷下了石头。你在江里转了半天才游回来。" } },
+      { "text": "沉下去躲", "effect": { "潜水": 1 }, "result": "你沉到石头底下。风浪都在头顶。" },
+      { "text": "稳如堤", "require": "legacy:steady>=1", "effect": { "晒背": 2, "龙气": 8 },
+        "result": "前世浪冲走过你。这一世你趴在石头上，浪拍过来，又退了回去。" }
+    ]
+  },
+  {
+    "id": "f_thunder_stone", "dir": "up", "chainOnly": true, "teaser": "江心石的裂缝在发光",
+    "text": "被雷劈开的裂缝里，卡着一块黑石头，摸上去还在发麻。",
+    "choices": [
+      { "text": "叼出来", "effect": { "item": "thunder_stone" }, "result": "你把石头叼了出来。牙麻了一整季。" },
+      { "text": "舔一舔", "effect": { "灵性": 2, "龙气": 4 }, "result": "舌头麻了一整季。你觉得自己聪明了一点。" }
+    ]
+  },
+
+  {
+    "id": "f_bottle_letter", "dir": "down", "chainOnly": true, "teaser": "瓶子里的纸干了",
+    "text": "瓶子里的纸干了。上面歪歪扭扭写着：谁捡到，就是我的好朋友。",
+    "choices": [
+      { "text": "收好", "effect": { "灵性": 2 }, "result": "你看不懂字。但你把瓶子摆在了窝里最好的位置。" },
+      { "text": "叼到岸上", "effect": { "晒背": 1, "灵性": 1 }, "result": "你把瓶子放在河滩上。第二天，瓶子没了，旁边多了半个馒头。" }
+    ]
+  },
+  {
+    "id": "f_catfish_hole", "dir": "down", "chainOnly": true, "teaser": "鲶鱼说带你去个好地方",
+    "text": "大鲶鱼摆摆胡子，领你钻进一个泥洞。洞底下冒着细细的泡，是暖的。",
+    "choices": [
+      { "text": "住下", "effect": { "体温": 3, "潜水": 1 }, "result": "泉眼一直在冒暖水。你和鲶鱼一人一边，谁也不挤谁。" },
+      { "text": "谢谢它", "effect": { "灵性": 2 }, "result": "你冲它点了点头。它也冲你点了点头，胡子在水里晃。" }
+    ]
+  },
+  {
+    "id": "f_den_cave", "dir": "down", "chainOnly": true, "teaser": "窝底下好像是空的",
+    "text": "你往下挖着挖着，泥底下塌出一个洞。洞里干燥、暖和。",
+    "choices": [
+      { "text": "搬进去", "effect": { "体温": 2, "潜水": 1 }, "result": "新家比旧家大一倍。你在里面转了三圈，才趴下。" },
+      { "text": "往里探", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "item": "lotus_seed", "灵性": 1 }, "result": "洞底埋着一颗黑乎乎的莲子，不知道睡了多少年。",
+        "fail": { "effect": { "体温": -1 }, "result": "洞越往里越窄，你卡了一下，退了出来。" } }
+    ]
+  },
+  {
+    "id": "f_ship_knock", "dir": "down", "chainOnly": true, "teaser": "沉船里有敲击声",
+    "text": "夜里，沉船里传出咚咚的敲击声，一下一下，很有耐心。",
+    "choices": [
+      { "text": "进去看", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 2, "龙气": 4 }, "result": "是一只老鳖在敲船板。它说：这是我家，你住楼下。",
+        "fail": { "effect": { "体温": -2 }, "result": "里面黑得伸手不见爪。你撞了三回头，敲击声停了。" } },
+      { "text": "不去", "effect": { "潜水": 1 }, "result": "你翻了个身，接着睡。敲了一夜，挺有节奏。" }
+    ]
+  },
+  {
+    "id": "f_turtle_teach", "dir": "down", "chainOnly": true, "teaser": "老鳖要教你憋气",
+    "text": "老鳖慢慢说：我能在水底憋三天。你想学吗？",
+    "choices": [
+      { "text": "学", "effect": { "潜水": 3, "体温": -1 }, "result": "你在水底憋了一天一夜，憋得眼冒金星。老鳖说：还行。" },
+      { "text": "不学", "effect": { "体温": 1 }, "result": "老鳖缩回壳里：年轻人，没耐心。" }
+    ]
+  },
+  {
+    "id": "f_bone_voice", "dir": "down", "chainOnly": true, "teaser": "那副骨头在说话",
+    "text": "骨头里传出一个声音：后生，你是鳄，我是鼍。你想长成我这样吗？",
+    "choices": [
+      { "text": "想", "effect": { "龙气": 12, "灵性": 2 }, "result": "骨头里的光，顺着泥流进了你的身体。" },
+      { "text": "不想", "effect": { "灵性": 4 }, "result": "声音笑了：好，鳄就做鳄。" }
+    ]
+  },
+
+  {
+    "id": "f_bend_otter", "dir": "side", "chainOnly": true, "teaser": "河湾来了个新邻居",
+    "text": "河湾里来了一只水獭，叼着一条鱼，故意在你眼前晃来晃去。",
+    "choices": [
+      { "text": "抢", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "体温": 3 }, "result": "你一口抢过鱼。水獭愣了一下，又去叼了一条来晃。",
+        "fail": { "effect": { "体温": -1 }, "result": "它叼着鱼翻了个跟头，游走了，还回头冲你笑。" } },
+      { "text": "跟它玩", "effect": { "灵性": 2, "晒背": 1 }, "result": "它在你背上滑滑梯，滑了一下午。你装睡，其实挺开心。" }
+    ]
+  },
+  {
+    "id": "f_mangrove_crab", "dir": "side", "chainOnly": true, "teaser": "树根上爬满了螃蟹",
+    "text": "红树林的根上爬满了小螃蟹，咔咔地举着钳子。",
+    "choices": [
+      { "text": "一口一串", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "体温": 3 }, "result": "你沿着树根一路吃过去。挺脆。",
+        "fail": { "effect": { "体温": -1 }, "result": "一只螃蟹夹住了你的嘴唇。你甩了半天。" } },
+      { "text": "看它们打架", "effect": { "灵性": 1, "龙气": 2 }, "result": "两只螃蟹为了一个洞打了一下午。赢的那只，进洞就睡了。" }
+    ]
+  }
+]

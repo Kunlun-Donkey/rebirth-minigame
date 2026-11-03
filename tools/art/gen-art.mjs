@@ -12,7 +12,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // 首屏用到的图进主包 resources，其余进分包 subres（见 assets/scripts/game/res.ts）
 const MAIN_TEX = join(ROOT, 'assets/resources/textures');
 const SUB_TEX = join(ROOT, 'assets/subres/textures');
-const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'destiny/caterpillar/main_bg', 'destiny/mantis_shrimp/main_bg', 'common/ui/logo_title', 'common/ui/panel',
+const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'destiny/caterpillar/main_bg', 'destiny/mantis_shrimp/main_bg', 'destiny/crocodile/main_bg', 'common/ui/logo_title', 'common/ui/panel',
   'common/ui/btn_normal', 'common/ui/btn_primary', 'common/ui/btn_ad', 'common/ui/btn_locked']);
 const TMP = join(tmpdir(), 'rebirth-art');
 const filter = process.argv[2] ?? '';
@@ -907,6 +907,105 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
     ${[[96, 118], [168, 126], [128, 168]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#e9dcc4"/>`).join('')}
     <ellipse cx="44" cy="134" rx="28" ry="22" fill="#9ab48a"/><path d="M30 130 q6 -6 12 0" stroke="#2a1a10" stroke-width="3" fill="none"/><path d="M28 144 q10 6 20 0" stroke="#2a1a10" stroke-width="3" fill="none"/>
     <path d="M70 186 l-20 20 M190 186 l20 20 M70 108 l-22 -16" stroke="#9ab48a" stroke-width="12" stroke-linecap="round"/>`);
+  // ---------- 13. 一条鳄鱼 crocodile：泥绿 + 暖金 ----------
+  // 鳄鱼侧影（原点腹底中心，面朝右，身长约 260；c 背色，b 腹色）
+  const croc = (x, y, s, c, b, eye = '#2a1a10', flip = false, horns = null) => {
+    const scutes = Array.from({ length: 11 }, (_, i) => { const sx = -104 + i * 13; const top = sx < -40 ? -14 - (sx + 130) * 0.16 : -42 + Math.abs(sx) * 0.02; return `<path d="M${sx} ${f(top + 2)} l5 -8 l5 8Z" fill="${c}"/>`; }).join('');
+    return `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})">
+    <path d="M-36 -34 Q-90 -26 -136 -6 Q-90 -2 -36 -6Z" fill="${c}"/>
+    <ellipse cx="0" cy="-22" rx="52" ry="20" fill="${c}"/><ellipse cx="2" cy="-12" rx="44" ry="9" fill="${b}"/>
+    <path d="M36 -38 Q70 -46 116 -28 L118 -18 Q72 -10 36 -8Z" fill="${c}"/><path d="M50 -15 Q86 -14 116 -19" stroke="${b}" stroke-width="5" fill="none"/>
+    ${Array.from({ length: 5 }, (_, i) => `<path d="M${70 + i * 9} -19 l3 5 l3 -5Z" fill="#fffaf0"/>`).join('')}
+    ${scutes}
+    <circle cx="56" cy="-42" r="8" fill="${c}"/><circle cx="58" cy="-44" r="3.6" fill="${eye}"/><circle cx="59" cy="-45" r="1.2" fill="#fff"/>
+    ${horns ? `<path d="M48 -48 q-6 -26 8 -40 q-2 18 4 34Z M62 -46 q2 -26 18 -34 q-8 16 -6 30Z" fill="${horns}"/>` : ''}
+    ${[[-30, 1], [26, 1]].map(([lx]) => `<path d="M${lx} -10 l-10 12 h12 l4 -12Z" fill="${c}"/>`).join('')}</g>`;
+  };
+  const bird = (x, y, s, c = '#d9d4c8', wing = '#8a8478') => `<g transform="translate(${x} ${y}) scale(${s})">
+    <ellipse cx="0" cy="-14" rx="16" ry="11" fill="${c}"/><circle cx="14" cy="-24" r="8" fill="${c}"/><path d="M21 -25 l9 2 l-9 2Z" fill="#3a2a1a"/>
+    <circle cx="16" cy="-26" r="1.8" fill="#2a1a10"/><path d="M-6 -20 Q-20 -14 -24 -4 Q-10 -8 -2 -12Z" fill="${wing}"/><path d="M14 -30 h-8" stroke="#2a1a10" stroke-width="2"/>
+    <path d="M-4 -4 v6 M4 -4 v6" stroke="#c98a3a" stroke-width="2"/></g>`;
+  const reed = (x, y, h, c) => `<path d="M${x} ${y} q4 ${-h / 2} -2 ${-h}" stroke="${c}" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="${x - 2}" cy="${y - h}" rx="5" ry="16" fill="#a8783e"/>`;
+  const reeds = (seed, x0, x1, y, c) => { const r = rng(seed); let s = ''; for (let x = x0; x < x1; x += 22 + r() * 30) s += reed(f(x), y, f(120 + r() * 140), c); return s; };
+  const water = (y, c1, c2) => `<path d="M0 ${y} Q270 ${y - 20} 540 ${y} T1080 ${y} V1920 H0Z" fill="${c1}"/>${[0, 1, 2].map((i) => `<path d="M${120 + i * 330} ${y + 40 + i * 30} q40 -14 80 0 t80 0" stroke="${c2}" stroke-width="5" fill="none" opacity=".6"/>`).join('')}`;
+  const egg = (x, y, s, c) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="-30" rx="24" ry="30" fill="${c}"/><path d="M-12 -46 q6 -6 10 2" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/></g>`;
+
+  job('destiny/crocodile/main_bg', W, H, `${grad('s', [[0, '#fbf2dc'], [0.55, '#f2e2b8'], [1, '#d9c28a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="780" cy="360" r="260" fill="#fff6dc" opacity=".55" filter="url(#soft)"/>
+    ${hills(1580, 90, '#d8c890', 41)}
+    ${water(1660, '#8fae8a', '#e9f2dc')}
+    <path d="M-20 1700 Q260 1640 560 1690 Q640 1700 700 1720 V1920 H-20Z" fill="#d6b67a"/>
+    ${reeds(42, 700, 1080, 1700, '#7a8a4a')}${reeds(43, -10, 120, 1720, '#7a8a4a')}
+    ${croc(380, 1700, 1.1, '#6a7a42', '#c9c08a')}${bird(470, 1660, 0.9)}
+    ${grain}`, { jpg: true });
+  job('destiny/crocodile/settle_bg', W, H, `${grad('s', [[0, '#0e1a26'], [0.6, '#1a2a30'], [1, '#22302a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${dust(rng(911), 100, 0, 0, W, 1100, '#fff8e0', 2.2)}
+    <circle cx="300" cy="380" r="70" fill="#f6ecd2" opacity=".85"/><circle cx="300" cy="380" r="150" fill="#f6ecd2" opacity=".12" filter="url(#soft)"/>
+    ${hills(1580, 90, '#18242a', 44)}${water(1660, '#1c2c30', '#3a5050')}
+    <path d="M-20 1720 Q300 1680 620 1720 Q760 1740 1100 1730 V1920 H-20Z" fill="#2a2a22"/>
+    ${reeds(45, 760, 1080, 1730, '#2c3a2a')}
+    ${glowDot(540, 1790, 120, '#ffd27a')}${egg(540, 1800, 1.5, '#f6e2a8')}
+    ${dust(rng(912), 16, 420, 1650, 240, 140, '#ffe9a8', 3)}${grain}`, { jpg: true });
+  job('destiny/crocodile/settle_bg_ending', W, H, `${grad('s', [[0, '#fff4da'], [0.5, '#fde0ad'], [1, '#e8b07a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="700" cy="1000" r="170" fill="#fff6e4" opacity=".95"/><circle cx="700" cy="1000" r="340" fill="#fff6dc" opacity=".45" filter="url(#soft)"/>
+    ${cloud(200, 1120, 1.6, '#fff', 0.85)}${cloud(900, 1240, 1.3, '#fff', 0.8)}
+    <path d="M260 1500 Q240 1300 400 1220 Q560 1150 600 1030" stroke="#5a6a3a" stroke-width="70" fill="none" stroke-linecap="round"/>
+    <path d="M260 1500 Q240 1300 400 1220 Q560 1150 600 1030" stroke="#c9b06a" stroke-width="16" fill="none" stroke-dasharray="4 26" stroke-linecap="round"/>
+    <g transform="translate(600 1030) rotate(-60)">${croc(30, 30, 1.7, '#5a6a3a', '#c9c08a', '#2a1a10', false, '#e2b04a')}</g>
+    ${water(1480, '#6a9a9a', '#e9f8ff')}
+    ${dust(rng(913), 30, 300, 900, 480, 300, '#fff8e0', 3)}${grain}`, { jpg: true });
+  job('destiny/crocodile/cover', 512, 512, coverBox([[0, '#f6ecd0'], [1, '#d9c28a']], `
+    <circle cx="390" cy="120" r="60" fill="#fff3c4" opacity=".8" filter="url(#soft)"/><circle cx="390" cy="120" r="32" fill="#fff6dc"/>
+    ${reeds(921, 380, 512, 400, '#7a8a4a')}
+    <path d="M0 360 Q256 340 512 360 V512 H0Z" fill="#7fa48a"/>
+    <g transform="translate(250 372) scale(2.3)"><path d="M-70 -6 Q-20 -24 40 -22 Q70 -24 96 -12 L96 -4 Q40 2 -70 0Z" fill="#6a7a42"/>
+      <circle cx="10" cy="-24" r="9" fill="#6a7a42"/><circle cx="12" cy="-26" r="4" fill="#2a1a10"/><circle cx="13" cy="-27" r="1.3" fill="#fff"/>
+      <circle cx="-14" cy="-22" r="8" fill="#6a7a42"/><circle cx="-12" cy="-24" r="3.6" fill="#2a1a10"/>
+      ${Array.from({ length: 4 }, (_, i) => `<path d="M${50 + i * 10} -5 l3 5 l3 -5Z" fill="#fffaf0"/>`).join('')}</g>
+    ${bird(420, 330, 1.6)}
+    <path d="M0 400 q60 -10 120 0 t120 0 t120 0 t160 0" stroke="#e9f2dc" stroke-width="4" fill="none" opacity=".7"/>`), { jpg: true });
+
+  stage('crocodile', 1, `${halo('#ffe9a8')}
+    <path d="M150 460 q20 -70 60 -60 l10 30 l14 -26 l16 30Z" fill="#f2e2b8" stroke="#c9b48e" stroke-width="3"/>
+    <path d="M300 470 q10 -60 50 -54 l-6 26 l20 -10 l2 40Z" fill="#f2e2b8" stroke="#c9b48e" stroke-width="3"/>
+    ${croc(256, 440, 1.3, '#7a8a4a', '#d9d0a0')}`);
+  stage('crocodile', 2, `${halo('#c8f0ff')}
+    <rect x="40" y="330" width="432" height="150" rx="40" fill="#8fbac0" opacity=".55"/>
+    ${croc(250, 380, 1.6, '#5a7a4a', '#c9c08a')}
+    <path d="M60 340 q60 -16 120 0 t120 0 t120 0" stroke="#e9f8ff" stroke-width="6" fill="none"/>`);
+  stage('crocodile', 3, `${halo('#ffd8a0', 200)}${sparks(931, '#fff1b0')}
+    <path d="M90 470 Q120 380 256 372 Q392 380 422 470Z" fill="#8a7a5a"/>
+    ${croc(250, 380, 1.7, '#566a3a', '#c9c08a')}`);
+  stage('crocodile', 4, `${halo('#ffd27a', 210)}${sparks(932, '#fff1b0')}
+    <path d="M60 470 Q100 360 256 350 Q412 360 452 470Z" fill="#6a5a3a"/>
+    ${croc(276, 358, 1.7, '#4a5a32', '#c9b07a')}
+    <path d="M${276 + 50 * 1.7} ${358 - 58 * 1.7} l10 -24 l12 16 l12 -22 l12 22 l12 -16 l10 24Z" fill="#e2b04a"/>`);
+  stage('crocodile', 5, `${halo('#ffe9a8', 230)}${sparks(933, '#fff1b0')}
+    <g fill="#fff" opacity=".9"><ellipse cx="256" cy="450" rx="200" ry="36"/><ellipse cx="150" cy="430" rx="90" ry="30"/><ellipse cx="360" cy="434" rx="100" ry="30"/></g>
+    <g opacity=".5" filter="url(#glow)">${croc(272, 420, 1.8, '#ffd27a', '#ffd27a', '#ffd27a', false, '#ffd27a')}</g>
+    ${croc(272, 420, 1.65, '#5a6a3a', '#d9c890', '#2a1a10', false, '#e2b04a')}`);
+
+  comp('crocodile', 'plover', `${bird(122, 190, 3.4)}`);
+  comp('crocodile', 'catfish', `<path d="M40 140 Q80 92 160 100 Q206 108 214 136 Q206 164 160 170 Q80 180 40 140Z" fill="#6a6a5a"/>
+    <path d="M40 140 L16 112 L20 140 L14 170Z" fill="#5a5a4a"/><circle cx="182" cy="126" r="6" fill="#fff"/><circle cx="184" cy="126" r="3" fill="#2a1a10"/>
+    <path d="M206 144 q30 10 34 40 M206 150 q20 20 10 46 M200 120 q30 -16 40 -40" stroke="#4a4a3a" stroke-width="4" fill="none" stroke-linecap="round"/>`);
+  comp('crocodile', 'frog', `<ellipse cx="128" cy="160" rx="70" ry="48" fill="#7bb556"/><circle cx="96" cy="104" r="22" fill="#7bb556"/><circle cx="160" cy="104" r="22" fill="#7bb556"/>
+    ${eyes(96, 160, 102, 10)}<circle cx="99" cy="99" r="3" fill="#fff"/><circle cx="163" cy="99" r="3" fill="#fff"/>
+    <path d="M90 168 q38 26 76 0" stroke="#3c6b24" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="128" cy="190" rx="40" ry="14" fill="#c3ec8f" opacity=".7"/>`);
+  comp('crocodile', 'egret', `<ellipse cx="116" cy="150" rx="46" ry="34" fill="#fafafa"/><path d="M146 136 Q170 90 160 60" stroke="#fafafa" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <circle cx="160" cy="58" r="16" fill="#fafafa"/><path d="M172 56 l44 8 l-44 4Z" fill="#e2b04a"/><circle cx="164" cy="54" r="3" fill="#2a1a10"/>
+    <path d="M110 182 v40 M126 182 v40" stroke="#2a2a2a" stroke-width="4"/><path d="M78 140 Q60 150 70 170 Q90 164 96 150Z" fill="#e9e9e0"/>`);
+  comp('crocodile', 'otter', `<ellipse cx="128" cy="160" rx="62" ry="54" fill="#9a6a42"/><circle cx="128" cy="104" r="44" fill="#9a6a42"/>
+    <ellipse cx="128" cy="120" rx="30" ry="20" fill="#e9d4b0"/><circle cx="92" cy="72" r="10" fill="#7a4a2a"/><circle cx="164" cy="72" r="10" fill="#7a4a2a"/>
+    ${eyes(110, 146, 98, 6)}<circle cx="128" cy="112" r="6" fill="#2a1a10"/><path d="M128 118 q-8 8 -14 4 M128 118 q8 8 14 4" stroke="#2a1a10" stroke-width="2.5" fill="none"/>
+    <path d="M96 176 Q128 150 160 176" stroke="#e9d4b0" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M110 168 l40 -6" stroke="#8aa8c8" stroke-width="8" stroke-linecap="round"/>`);
+  comp('crocodile', 'softshell', `<ellipse cx="128" cy="150" rx="78" ry="56" fill="#7a8a5a"/><ellipse cx="128" cy="150" rx="60" ry="42" fill="#8a9a6a"/>
+    ${[[104, 136], [150, 132], [128, 168]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="#6a7a4a"/>`).join('')}
+    <path d="M206 140 Q236 130 232 110" stroke="#9aa87a" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="232" cy="106" r="5" fill="#2a1a10"/>
+    <path d="M72 194 l-16 16 M184 194 l16 16 M70 112 l-18 -14 M186 112 l18 -14" stroke="#9aa87a" stroke-width="12" stroke-linecap="round"/>`);
+
 }
 
 // 锁定图标（选命格界面未解锁时叠加）

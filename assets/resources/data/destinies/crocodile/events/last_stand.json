@@ -1,0 +1,15 @@
+[
+  {
+    "id": "z_last_stand", "dir": "any", "chainOnly": true,
+    "text": "你的鳞越来越重，眼皮也抬不动了。寿元将尽。河水在退。",
+    "choices": [
+      { "text": "冲着太阳最后一扑", "showIf": "stage<=3", "chance": 0.35, "chanceAttr": "灵性", "chanceStep": 0.015,
+        "effect": { "stageUp": 1, "龙气": 15 }, "result": "你扑上了最高的那块石头。旧鳞一片片掉下来，底下是新的。",
+        "fail": { "effect": { "death": "old_age" }, "result": "你扑到一半，停了下来。太阳很暖，你就那样趴着了。" } },
+      { "text": "逆天，冲最后一关", "showIf": "stage>=4", "chance": 0.12,
+        "effect": { "stageUp": 1, "龙气": 15 }, "result": "你冲着雷云张开嘴。旧鳞一片片掉下来，底下是新的。",
+        "fail": { "effect": { "death": "old_age" }, "result": "雷没有来。太阳很暖，你就那样趴着了。" } },
+      { "text": "沉回河底", "effect": { "death": "old_age" }, "result": "你慢慢沉回了河底的窝，听着水声，睡着了。" }
+    ]
+  }
+]

@@ -1,0 +1,176 @@
+[
+  {
+    "id": "up_fallback", "dir": "up", "weight": 3,
+    "text": "你在岸上晒了一季太阳，背上暖洋洋的。",
+    "choices": [ { "text": "接着晒", "effect": { "晒背": 1, "体温": 1 }, "result": "什么也没发生。晒太阳本身，就是最好的事。" } ]
+  },
+
+  {
+    "id": "u1_rock", "dir": "up", "layers": ["U1"], "weight": 14,
+    "text": "河滩上有块大黑石头，晒了一上午，烫得冒烟。",
+    "choices": [
+      { "text": "趴上去", "effect": { "晒背": 2, "体温": 2, "follow": "f_rock_fight" }, "result": "石头烫得你直哈气。可是暖，从肚皮一直暖到尾巴尖。" },
+      { "text": "趴在影子里", "effect": { "体温": 1, "灵性": 1 }, "result": "你在石头影子里眯了一觉。不冷不热，正好。" }
+    ]
+  },
+  {
+    "id": "u1_kids", "dir": "up", "layers": ["U1"], "stage": [1, 3], "weight": 10, "maps": ["river", "swamp"],
+    "text": "几个小孩在河边打水漂，一块石头擦着你的脑门飞了过去。",
+    "choices": [
+      { "text": "张嘴吓他们", "effect": { "咬合": 1, "follow": "f_kids_return" }, "result": "小孩们尖叫着跑了。第二天，他们带着大人回来了。" },
+      { "text": "沉下去", "effect": { "潜水": 1 }, "result": "石头在水面上跳了三下。你在水底数着。" },
+      { "text": "掉两滴眼泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "体温": 2, "灵性": 1 },
+        "result": "你冲他们流了两滴泪。最小的那个说：它哭了！他们扔给你半个馒头。" }
+    ]
+  },
+  {
+    "id": "u1_buffalo", "dir": "up", "layers": ["U1"], "stage": [0, 2], "weight": 10, "maps": ["river", "swamp"],
+    "text": "一头水牛下河喝水，一只蹄子就落在你脑袋边上。",
+    "choices": [
+      { "text": "一动不动", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 1, "follow": { "id": "f_buffalo_back", "delay": 2 } }, "result": "它喝完水，冲你喷了口气，慢悠悠地走了。它压根没看见你。",
+        "fail": { "effect": { "death": "buffalo" }, "result": "它往前挪了一步。" } },
+      { "text": "往旁边挪", "effect": { "体温": -1, "晒背": 1 }, "result": "你挪开了，挪到了太阳底下。水牛冲你甩了甩尾巴。" },
+      { "text": "前世的扁身", "require": "legacy:flat_back>=1", "effect": { "潜水": 1, "灵性": 1 },
+        "result": "前世它踩过你。这一世你往泥里一贴，它一蹄子踩了个空。" }
+    ]
+  },
+  {
+    "id": "u1_plover", "dir": "up", "layers": ["U1", "U2"], "stage": [1, 3], "weight": 12, "once": true, "require": "!flag:plover", "maps": ["river", "swamp"],
+    "text": "你张着嘴晒太阳，一只灰白的小鸟落在你牙上，探头往里看。",
+    "choices": [
+      { "text": "就张着", "effect": { "灵性": 1, "flag": "plover", "follow": { "id": "f_plover_teeth", "delay": 2 } }, "result": "它在你嘴里蹦了一圈，叼走了一块鱼刺。它说它叫叽叽。" },
+      { "text": "合上嘴", "effect": { "咬合": 1 }, "result": "它尖叫着飞了出去，差一点。你们俩都吓了一跳。" }
+    ]
+  },
+  {
+    "id": "u1_grate", "dir": "up", "layers": ["U1"], "maps": ["sewer"], "weight": 14,
+    "text": "井盖的缝里漏下来一道光。你把鼻子凑过去，闻到了烤红薯的味道。",
+    "choices": [
+      { "text": "顶开井盖", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "晒背": 2, "follow": "f_street_cat" }, "result": "井盖挪开了一条缝。你把脑袋探出去，晒到了第一缕太阳。",
+        "fail": { "effect": { "体温": -1 }, "result": "井盖太沉，你的鼻子都顶红了。" } },
+      { "text": "趴在光底下", "effect": { "晒背": 1, "体温": 1 }, "result": "那道光一天只有一会儿。你一天都没错过。" }
+    ]
+  },
+
+  {
+    "id": "u2_reed", "dir": "up", "layers": ["U2"], "weight": 12,
+    "text": "芦苇荡里又暖又静，到处是鸟窝，风一吹哗哗地响。",
+    "choices": [
+      { "text": "钻进去晒", "effect": { "晒背": 2, "体温": 1, "follow": "f_reed_nest" }, "result": "你找了块空地，把自己摊成了一张饼。" },
+      { "text": "在边上守着", "effect": { "咬合": 1, "龙气": 2 }, "result": "一只水鸟从芦苇里钻出来，看见你，又钻了回去。" }
+    ]
+  },
+  {
+    "id": "u2_trap", "dir": "up", "layers": ["U2"], "stage": [1, 99], "weight": 10, "maps": ["river", "swamp"],
+    "text": "芦苇根底下埋着一个绳套，绳套上挂着一块肉。",
+    "choices": [
+      { "text": "不吃", "effect": { "灵性": 2, "flag": "poacher_seen", "follow": "f_poacher_camp" }, "result": "你绕开了。那块肉闻起来，比什么都香。" },
+      { "text": "叼了就跑", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "体温": 3, "咬合": 1, "flag": "poacher_seen" }, "result": "你叼走了肉，绳套啪地在你尾巴后面合上了。",
+        "fail": { "effect": { "death": "poacher" }, "result": "绳子一收。" } },
+      { "text": "前世的识人", "require": "legacy:wary>=1", "effect": { "咬合": 2, "龙气": 4, "flag": "poacher_seen" },
+        "result": "前世你被这样带走过。这一世，你一口咬断了绳套。" }
+    ]
+  },
+  {
+    "id": "u2_frog", "dir": "up", "layers": ["U2"], "weight": 10,
+    "text": "一只青蛙蹲在荷叶上，鼓着腮帮子冲你叫，一点都不怕。",
+    "choices": [
+      { "text": "一口吞", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "体温": 2, "咬合": 1 }, "result": "荷叶空了。你舔了舔嘴，有点凉。",
+        "fail": { "effect": { "体温": -1 }, "result": "它跳得比你扑得快，还在你鼻子上踩了一脚。" } },
+      { "text": "听它唱", "effect": { "灵性": 1, "龙气": 2, "follow": { "id": "f_frog_choir", "delay": 2 } }, "result": "它唱得很难听，但很卖力。你听完了一整首。" }
+    ]
+  },
+  {
+    "id": "u2_snake", "dir": "up", "layers": ["U2"], "stage": [1, 4], "weight": 10,
+    "text": "一条水蛇缠在芦苇上，吐着信子，打量你的尾巴。",
+    "choices": [
+      { "text": "咬它", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "咬合": 2, "龙气": 3 }, "result": "你一口咬住它尾巴。它松开芦苇，灰溜溜地游走了。",
+        "fail": { "effect": { "体温": -2 }, "result": "它缠住你的腿勒了一下，又松开跑了。你腿麻了一季。" } },
+      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll", "effect": { "咬合": 2, "龙气": 6 },
+        "result": "你咬住它一个翻身，把它甩进了芦苇深处。" },
+      { "text": "就地一滚", "chance": 0.3, "effect": { "skill": "roll", "龙气": 3 }, "result": "你咬住它拼命一滚，它被甩了出去。你学会了翻滚。",
+        "fail": { "effect": { "体温": -1 }, "result": "你滚了一身泥，蛇早跑了。" } }
+    ]
+  },
+  {
+    "id": "u2_park_lake", "dir": "up", "layers": ["U2"], "maps": ["sewer"], "weight": 14,
+    "text": "你从排水口探出头。外面是公园的湖，湖边的人举着手机，咔嚓咔嚓。",
+    "choices": [
+      { "text": "冲镜头张嘴", "effect": { "灵性": 1, "follow": { "id": "f_viral", "delay": 2 } }, "result": "他们尖叫，然后拍得更起劲了。" },
+      { "text": "缩回管子", "effect": { "潜水": 1 }, "result": "你缩了回去。外面的人等了半天，说是看错了。" }
+    ]
+  },
+
+  {
+    "id": "u3_village", "dir": "up", "layers": ["U3"], "weight": 14,
+    "text": "你爬上了村口的晒谷场。稻谷晒得金黄，趴上去比石头还暖。",
+    "choices": [
+      { "text": "趴在谷堆上", "effect": { "晒背": 3, "体温": 2, "flag": "village_seen", "follow": "f_village_dog" }, "result": "村里人扛着扫帚冲过来。你溜了。谷子是真暖。" },
+      { "text": "远远看着", "effect": { "灵性": 2, "flag": "village_seen" }, "result": "你趴在田埂上，看了一下午。村子里的人，看着都挺忙。" }
+    ]
+  },
+  {
+    "id": "u3_old_man", "dir": "up", "layers": ["U3"], "stage": [2, 99], "weight": 12, "require": "flag:village_seen",
+    "text": "晒场边坐着个老头，吧嗒吧嗒抽旱烟。他看了你一眼：又是你。",
+    "choices": [
+      { "text": "趴在他脚边", "effect": { "体温": 2, "灵性": 2, "flag": "elder_friend", "follow": { "id": "f_elder_story", "delay": 2 } }, "result": "他没赶你，把烟灰磕在了你脑门上。" },
+      { "text": "爬走", "effect": { "晒背": 1 }, "result": "老头在后面嘟囔：跑什么，又不吃你。" }
+    ]
+  },
+  {
+    "id": "u3_dog", "dir": "up", "layers": ["U3"], "weight": 10,
+    "text": "村里的大黄狗冲你狂叫，叫得全村都听见了。",
+    "choices": [
+      { "text": "张嘴吓它", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 1, "龙气": 3 }, "result": "大黄的叫声卡在了嗓子里，夹着尾巴退了三步。",
+        "fail": { "effect": { "体温": -1 }, "result": "它没怕，叫得更凶了。你灰溜溜地爬回了河里。" } },
+      { "text": "掉两滴眼泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 2, "体温": 2 },
+        "result": "大黄愣了，叼来一根骨头放在你面前。它好像也被人欺负过。" },
+      { "text": "爬回河里", "effect": { "潜水": 1 }, "result": "你慢慢爬回了河里。大黄追到河边，就不追了。" }
+    ]
+  },
+  {
+    "id": "u3_harvest", "dir": "up", "layers": ["U3"], "weight": 10,
+    "text": "秋收了，全村人都在田里。晒场上没人，只有一只看谷子的大白鹅。",
+    "choices": [
+      { "text": "跟鹅抢地方", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,
+        "effect": { "晒背": 2, "咬合": 1 }, "result": "大白鹅扑了你三回，最后让出了一半晒场。",
+        "fail": { "effect": { "体温": -2 }, "result": "大白鹅追着你啄了半里地。村里没有比它更凶的。" } },
+      { "text": "趴在田埂上", "effect": { "体温": 2, "灵性": 1 }, "result": "你看了一下午人割稻子。他们也挺辛苦。" }
+    ]
+  },
+
+  {
+    "id": "u4_stone", "dir": "up", "layers": ["U4"], "weight": 12,
+    "text": "江心石四面是水。你趴在最高处，整条江都在你身子底下。",
+    "choices": [
+      { "text": "趴着晒", "effect": { "晒背": 3, "龙气": 8, "follow": { "id": "f_stone_storm", "delay": 2 } }, "result": "你晒了一整季。江风很大，太阳更大。" },
+      { "text": "绕着石头游", "effect": { "潜水": 2, "体温": 1 }, "result": "你绕着江心石游了一圈又一圈。石头底下，有一圈很老的刻痕。" }
+    ]
+  },
+  {
+    "id": "u4_thunder", "dir": "up", "layers": ["U4"], "stage": [3, 99], "weight": 12,
+    "text": "江面压着雷云。一道闪电劈在江心石上，石头炸开一道缝。",
+    "choices": [
+      { "text": "迎着雷张嘴", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "龙气": 15, "item": "thunder_stone" }, "result": "一道雷落进你嘴里。你吐出来一块黑石头，还在冒火星。",
+        "fail": { "effect": { "death": "lightning" }, "result": "你的嘴没有雷快。" } },
+      { "text": "沉到江底", "effect": { "灵性": 1, "follow": "f_thunder_stone" }, "result": "你沉到江底，听了一夜的雷。" },
+      { "text": "背上有雷纹", "require": "legacy:thunder_mark>=1", "effect": { "龙气": 20, "灵性": 2 },
+        "result": "前世雷劈过你。这一世雷落下来，顺着你背上的纹路，钻进了身体。" }
+    ]
+  },
+  {
+    "id": "u4_plover_end", "dir": "up", "stage": [4, 99], "once": true, "weight": 25, "require": "flag:plover_saved",
+    "text": "叽叽老了，飞不远了。它落在你鼻尖上，像你们第一次见面那样。",
+    "choices": [
+      { "text": "陪它留在河滩", "require": "灵性>=6", "effect": { "ending": "plover_friend" }, "result": "你没再往江心去。你张着嘴趴在河滩上，它在你牙缝里睡着了。" },
+      { "text": "驮它去江心", "effect": { "龙气": 15, "灵性": 3 }, "result": "你驮着它游到江心石。它看了一眼整条江，在你背上睡着了。" }
+    ]
+  }
+]

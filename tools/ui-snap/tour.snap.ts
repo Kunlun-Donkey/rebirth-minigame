@@ -18,7 +18,7 @@ CONFIG.splashMs = 0;
 
 /** 屏幕尺寸：标准 16:9 + 全面屏 19.5:9 */
 const SIZES: [string, number, number][] = [['std', 750, 1334], ['tall', 750, 1624]];
-const DESTINIES = ['desert_grass', 'local_dog', 'caterpillar', 'mantis_shrimp'];
+const DESTINIES = ['desert_grass', 'local_dog', 'caterpillar', 'mantis_shrimp', 'crocodile'];
 
 function walk(n: Node, fn: (n: Node) => void) { fn(n); for (const c of n.children) walk(c, fn); }
 const labels = (n: Node) => { const o: string[] = []; walk(n, x => { const l = x.getComponent(Label); if (l && x.active) o.push(l.string); }); return o; };

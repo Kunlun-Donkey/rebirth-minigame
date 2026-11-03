@@ -1,0 +1,96 @@
+[
+  {
+    "id": "s0_hatch", "dir": "any", "stage": [0, 0], "weight": 18, "once": true, "maps": ["river", "swamp"],
+    "text": "蛋壳裂了。你用鼻尖顶开一条缝，外面的太阳晃得你睁不开眼。",
+    "choices": [
+      { "text": "叫一声妈", "effect": { "灵性": 1, "follow": "f_mom_mouth" }, "result": "你吱了一声。沙窝外面，一张大嘴慢慢凑了过来。" },
+      { "text": "自己爬向水", "effect": { "潜水": 1, "晒背": 1 }, "result": "你连滚带爬地冲进了河里。水是凉的，你喜欢。" }
+    ]
+  },
+  {
+    "id": "s0_oneeye", "dir": "any", "stage": [0, 1], "weight": 16, "once": true, "maps": ["river", "swamp"],
+    "text": "一条独眼的老鳄游过来，把你们一窝小鳄挨个顶开：这片河湾，归我。",
+    "choices": [
+      { "text": "躲进芦苇根", "effect": { "潜水": 1, "flag": "oneeye_grudge" }, "result": "兄弟们被它顶得四散。你躲在芦苇根里，记住了那只瞎眼。" },
+      { "text": "冲它张嘴", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "咬合": 2, "flag": "oneeye_grudge", "follow": "f_oneeye_watch" }, "result": "你张开没长齐牙的小嘴，冲它嘶了一声。独眼停下来，看了你很久。",
+        "fail": { "effect": { "体温": -2, "flag": "oneeye_grudge" }, "result": "它尾巴一扫，你飞出去老远，砸进了泥里。" } },
+      { "text": "前世的铁头", "require": "legacy:iron_head>=1", "effect": { "咬合": 2, "灵性": 1, "flag": "oneeye_grudge" },
+        "result": "前世它撞翻过你。这一世你脑袋一顶，它愣了一下，绕开了。" }
+    ]
+  },
+  {
+    "id": "s0_flush", "dir": "any", "stage": [0, 1], "weight": 20, "once": true, "maps": ["sewer"],
+    "text": "你在一个玻璃缸里长大。今天小主人豆豆哭着说：妈妈说你太大了。哗——",
+    "choices": [
+      { "text": "顺着水走", "effect": { "潜水": 1, "follow": "f_sewer_first" }, "result": "你在管子里转了一百个弯，掉进了一条又黑又臭的河。" },
+      { "text": "回头看他一眼", "effect": { "灵性": 2, "flag": "doudou" }, "result": "最后一眼，你看见豆豆趴在马桶边，哭得一抽一抽的。" }
+    ]
+  },
+  {
+    "id": "s0_plover", "dir": "any", "stage": [0, 1], "weight": 14, "once": true, "maps": ["river", "swamp"],
+    "text": "一只灰白的小鸟落在你鼻子上，歪着头，盯着你的牙看。",
+    "choices": [
+      { "text": "张开嘴", "effect": { "灵性": 1, "flag": "plover", "follow": { "id": "f_plover_teeth", "delay": 2 } }, "result": "它跳进你嘴里，啄走了一块菜叶。你差点合上嘴，忍住了。" },
+      { "text": "甩头赶走", "effect": { "咬合": 1 }, "result": "它扑棱棱飞走了，叽叽喳喳骂得很难听。" }
+    ]
+  },
+  {
+    "id": "s0_first_fish", "dir": "up", "stage": [0, 0], "weight": 14,
+    "text": "一条小鱼从你鼻子前面游过，尾巴一甩一甩的，好像在笑你。",
+    "choices": [
+      { "text": "扑上去", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "体温": 2, "咬合": 1, "follow": { "id": "f_fish_school", "delay": 2 } }, "result": "一口就中。你吃得肚皮滚圆，晒着太阳打了个嗝。",
+        "fail": { "effect": { "体温": -1 }, "result": "你扑了个空，一头扎进泥里。小鱼游走了。" } },
+      { "text": "看着它游走", "effect": { "灵性": 1, "潜水": 1 }, "result": "你看它游进了深水。原来水底下，还有那么大的地方。" }
+    ]
+  },
+  {
+    "id": "s0_mud", "dir": "down", "stage": [0, 0], "weight": 14,
+    "text": "河底的泥又软又暖，你忍不住往里拱。",
+    "choices": [
+      { "text": "拱个窝", "effect": { "潜水": 2, "follow": { "id": "f_mud_neighbor", "delay": 2 } }, "result": "你拱出了一个窝，刚好够你转个身。很满意。" },
+      { "text": "打个滚", "effect": { "体温": 1, "灵性": 1, "follow": { "id": "f_mud_shell", "delay": 2 } }, "result": "你在泥里滚了三圈，滚出来一身泥，和一个硬东西。" }
+    ]
+  },
+  {
+    "id": "s0_sun", "dir": "up", "stage": [0, 0], "weight": 12,
+    "text": "太阳出来了。河滩上的石头，一块比一块暖。",
+    "choices": [
+      { "text": "抢最热那块", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "晒背": 2, "体温": 1, "follow": { "id": "f_rock_fight", "delay": 2 } }, "result": "你挤上了最热的那块石头，四条腿一摊，舒服得直眯眼。",
+        "fail": { "effect": { "体温": -1 }, "result": "兄弟们一挤，你掉进了石头缝里。" } },
+      { "text": "挤在兄弟中间", "effect": { "体温": 2, "灵性": 1 }, "result": "你们七八条挤成一堆。谁也不冷。" }
+    ]
+  },
+  {
+    "id": "s0_eagle", "dir": "any", "sudden": true, "stage": [0, 1], "weight": 10, "maps": ["river", "swamp"],
+    "text": "一个黑影从你身上扫过。天上有只老鹰在转圈，越转越低。",
+    "choices": [
+      { "text": "只露出眼睛", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 1, "skill": "periscope" }, "result": "你沉进水里，只把两只眼睛留在外面。它转了三圈，没找着你。",
+        "fail": { "effect": { "death": "eagle" }, "result": "它比你沉得快。" } },
+      { "text": "往深水钻", "effect": { "潜水": 1, "体温": -1 }, "result": "你一头扎进深水，冻得直打哆嗦。鹰飞走了。" },
+      { "text": "前世的泥色", "require": "legacy:mud_color>=1", "effect": { "灵性": 2 },
+        "result": "前世它叼走过你。这一世你往泥上一趴，它扎下来又飞走了。" }
+    ]
+  },
+  {
+    "id": "s0_rat", "dir": "any", "stage": [0, 1], "weight": 14, "once": true, "maps": ["sewer"],
+    "text": "管道里一群老鼠围住你。领头的那只缺了半只耳朵：新来的？交保护费。",
+    "choices": [
+      { "text": "冲它张嘴", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.1,
+        "effect": { "咬合": 2, "follow": "f_rat_king" }, "result": "半只耳朵吓得一跳：好家伙，带牙的！它们跑了，边跑边回头看。",
+        "fail": { "effect": { "体温": -2 }, "result": "十几只老鼠一起扑上来。你缩进管子缝里，躲了一夜。" } },
+      { "text": "给它们让路", "effect": { "灵性": 1, "follow": { "id": "f_rat_deal", "delay": 2 } }, "result": "你往边上挪了挪。半只耳朵满意地点点头：懂规矩。" }
+    ]
+  },
+  {
+    "id": "s0_rain", "dir": "any", "stage": [0, 0], "weight": 10,
+    "text": "下雨了。雨点砸在水面上，你趴在浅水里数，数到一百就数乱了。",
+    "choices": [
+      { "text": "接着数", "effect": { "灵性": 2 }, "result": "你数了一整夜。天亮时雨停了，你觉得自己聪明了一点。" },
+      { "text": "躲进窝里", "effect": { "体温": 1, "潜水": 1 }, "result": "你缩进窝里，听着雨声睡着了。" }
+    ]
+  }
+]

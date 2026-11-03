@@ -1,0 +1,14 @@
+[
+  { "id": "thick_skin", "name": "皮厚", "icon": "vitality", "rarity": "common", "desc": "体温上限 +2。", "start": { "体温上限": 2 } },
+  { "id": "slow_cool", "name": "慢热", "icon": "vitality", "rarity": "common", "desc": "每 2 季才冷一次。", "mods": { "waterCostEvery": 2 } },
+  { "id": "long_breath", "name": "长气", "icon": "growth", "rarity": "common", "desc": "潜水 +3。", "start": { "潜水": 3 } },
+  { "id": "sun_lover", "name": "爱晒", "icon": "growth", "rarity": "common", "desc": "晒背 +3。", "start": { "晒背": 3 } },
+  { "id": "big_jaw", "name": "大嘴", "icon": "defense", "rarity": "common", "desc": "咬合 +3。", "start": { "咬合": 3 } },
+  { "id": "ugly_cute", "name": "丑萌", "icon": "social", "rarity": "rare", "desc": "丑得让人想多看两眼。灵性 +1，咬合 +1。", "start": { "灵性": 1, "咬合": 1 } },
+  { "id": "unlucky", "name": "倒霉鳄", "icon": "cursed", "rarity": "rare", "desc": "【负面】突发事件更频繁，但轮回点 ×1.5。", "mods": { "suddenMul": 1.8, "pointsMul": 1.5 } },
+  { "id": "keen_eye", "name": "眼尖", "icon": "wisdom", "rarity": "rare", "desc": "每个事件有 35% 概率看穿一个选项的结果。", "mods": { "hintChance": 0.35 } },
+  { "id": "tough_life", "name": "命硬", "icon": "rebirth", "rarity": "epic", "desc": "本局第一次死亡时，在泥里趴三天又活过来。", "mods": { "reviveOnce": true } },
+  { "id": "dragon_blood", "name": "龙族血脉", "icon": "bloodline", "rarity": "epic", "desc": "龙气获取 ×2。", "mods": { "qiMul": 2 } },
+  { "id": "koi_luck", "name": "锦鲤附体", "icon": "luck", "rarity": "epic", "desc": "金色奇遇概率 ×3，灵性 +2。", "start": { "灵性": 2 }, "mods": { "goldMul": 3 } },
+  { "id": "tuo_reborn", "name": "鼍神转世", "icon": "bloodline", "rarity": "legend", "desc": "全属性 +2，龙气 ×1.5，奇遇 ×2。", "start": { "晒背": 2, "潜水": 2, "咬合": 2, "灵性": 2, "体温上限": 2 }, "mods": { "qiMul": 1.5, "goldMul": 2 } }
+]

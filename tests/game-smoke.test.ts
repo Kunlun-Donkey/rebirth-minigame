@@ -150,18 +150,19 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         inScreen(g.overlay);
     });
 
-    it.each(['caterpillar', 'mantis_shrimp'])('新命格 %s：选择页放得下全部命格；开局弹出生地，HUD 显示出生地，随机点击 800 次不出错', async id => {
+    it.each(['caterpillar', 'mantis_shrimp', 'crocodile'])('新命格 %s：选择页放得下全部命格；开局弹出生地，HUD 显示出生地，随机点击 800 次不出错', async id => {
         sys.localStorage.clear?.();
         const g = new Game(new Node('Canvas') as never);
         await g.boot();
         await flush();
         g.save.profile.destinies.desert_grass.bestStage = 2;
         destinyProfile(g.save.profile, 'local_dog').bestStage = 1;
+        destinyProfile(g.save.profile, 'mantis_shrimp').bestStage = 2;
         g.goDestinySelect();
         await flush();
         const root = g.screen.parent!;
         const cards = tappables(g.screen).filter(n => n.name.startsWith('destiny_'));
-        expect(cards.length).toBe(4);
+        expect(cards.length).toBe(g.index.destinies.length);
         const back = tappables(g.screen).find(n => labels(n).some(l => l.includes('返')))!;
         for (const c of cards) expect(absTop(c, root) + heightOf(c), c.name).toBeLessThanOrEqual(absTop(back, root));
         const card = cards.find(n => n.name === `destiny_${id}`)!;

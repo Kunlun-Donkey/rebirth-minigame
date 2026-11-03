@@ -40,6 +40,18 @@
           "level": 1
         }
       }
+    },
+    {
+      "id": "crocodile",
+      "name": "一条鳄鱼",
+      "desc": "谁见了都说丑的小鳄鱼。生在河滩、沼泽，或者城里的下水道。",
+      "unlock": {
+        "text": "一只皮皮虾的任意一世长成「拳虾」",
+        "bestStage": {
+          "destiny": "mantis_shrimp",
+          "level": 2
+        }
+      }
     }
   ]
 }

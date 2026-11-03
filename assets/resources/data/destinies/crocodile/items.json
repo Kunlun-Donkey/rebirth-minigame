@@ -1,0 +1,12 @@
+[
+  { "id": "crucian", "name": "一条小鲫鱼", "icon": "supply", "rarity": "common", "desc": "使用：体温 +3。", "use": { "体温": 3 }, "useText": "你一口吞了鲫鱼。肚子里暖了，身上也暖了。" },
+  { "id": "snail", "name": "一把田螺", "icon": "supply", "rarity": "common", "desc": "使用：体温 +1，灵性 +1，龙气 +2。", "use": { "体温": 1, "灵性": 1, "龙气": 2 }, "useText": "你嘎嘣嘎嘣嚼完了田螺。脑子清楚了一点。" },
+  { "id": "old_scute", "name": "一块旧鳞甲", "icon": "shield", "rarity": "common", "desc": "被动：替你挡下一次死亡。", "saveFromDeath": true },
+  { "id": "clam_shell", "name": "河蚌壳", "icon": "guide", "rarity": "rare", "desc": "被动：贴在耳边，听得见三个方向的水声。", "mods": { "previewDirs": true } },
+  { "id": "lotus_seed", "name": "老莲子", "icon": "supply", "rarity": "rare", "desc": "使用：龙气 +4，咬合 +1。", "use": { "龙气": 4, "咬合": 1 }, "useText": "莲子硬得硌牙。你嚼了一整季，嚼出了一股清香。" },
+  { "id": "pearl", "name": "河珠", "icon": "gem", "rarity": "rare", "desc": "使用：龙气 +8，灵性 +1。", "use": { "龙气": 8, "灵性": 1 }, "useText": "珠子在你嘴里化开，凉凉的，像含了一口月光。" },
+  { "id": "feather", "name": "叽叽的羽毛", "icon": "relic", "rarity": "epic", "desc": "被动：死后多封存一件遗物。一根灰白的小羽毛。", "mods": { "relicSlots": 1 } },
+  { "id": "one_eye_tooth", "name": "独眼的断牙", "icon": "token", "rarity": "epic", "desc": "被动：独眼吐给你的。宿敌事件更好对付。" },
+  { "id": "thunder_stone", "name": "雷击石", "icon": "crystal", "rarity": "epic", "desc": "使用：龙气 +15。", "use": { "龙气": 15 }, "useText": "你一口咬碎了那块石头，牙缝里噼啪冒了两下火星。" },
+  { "id": "dragon_horn", "name": "古鼍的角", "icon": "artifact", "rarity": "legend", "desc": "使用：潜水 +5，龙气 +20。", "use": { "潜水": 5, "龙气": 20 }, "useText": "那截角化成一股凉气钻进你脑门。你头上，鼓起了两个小包。" }
+]
