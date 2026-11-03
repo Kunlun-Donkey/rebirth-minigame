@@ -82,7 +82,7 @@
       "skillPool": ["thunder", "mud"] },
     { "level": 5, "name": "鼍龙", "require": "龙气>=450 & 咬合>=14 & 潜水>=14 & 灵性>=10", "lifespan": 99,
       "narration": "你头上鼓出了两个包，包里长出了角。古书上说，鼍，就是龙。",
-      "endings": [ { "id": "river_god", "require": "flag:flood_saved" }, { "id": "dragon" } ] }
+      "endings": [ { "id": "river_god", "require": "flag:flood_saved" }, { "id": "mars_ancestor", "require": "flag:mars_disciple" }, { "id": "dragon" } ] }
   ],
   "deaths": [
     { "id": "cold", "name": "冻僵了", "icon": "exhaust", "epitaph": "太阳一直没出来。它等着等着，就睡着了。", "legacy": "warm_heart",
@@ -142,6 +142,7 @@
     { "id": "river_king", "name": "河湾霸主", "epitaph": "整条河湾都归它了。那条独眼老鳄，晚年就趴在它旁边晒太阳，谁也不赶谁。" },
     { "id": "plover_friend", "name": "牙签鸟的老朋友", "epitaph": "它没有化龙。它张着嘴在河滩上晒了一百年，嘴里住过一代又一代的牙签鸟。" },
     { "id": "sewer_king", "name": "下水道之王", "epitaph": "城里一直有个传说：下水道里住着一条鳄鱼王。修了一辈子管子的老豆说，那是他小时候养的。没人信。" },
+    { "id": "mars_ancestor", "name": "火星鳄祖", "epitaph": "它没往东海去，一头扎进了天上那颗红星。后来火星的照片里多了一块石头，像两条鳄鱼并排趴着晒太阳。" },
     { "id": "internet_star", "name": "网红鳄鱼", "epitaph": "它成了城里最有名的鳄鱼。每天湖边挤满了人，它学会了对着镜头张大嘴，等人夸它牙白。" }
   ],
   "upgrades": [

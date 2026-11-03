@@ -8,5 +8,6 @@
   { "id": "feather", "name": "叽叽的羽毛", "icon": "relic", "rarity": "epic", "desc": "被动：死后多封存一件遗物。一根灰白的小羽毛。", "mods": { "relicSlots": 1 } },
   { "id": "one_eye_tooth", "name": "独眼的断牙", "icon": "token", "rarity": "epic", "desc": "被动：独眼吐给你的。宿敌事件更好对付。" },
   { "id": "thunder_stone", "name": "雷击石", "icon": "crystal", "rarity": "epic", "desc": "使用：龙气 +15。", "use": { "龙气": 15 }, "useText": "你一口咬碎了那块石头，牙缝里噼啪冒了两下火星。" },
+  { "id": "mars_stone", "name": "荧惑石", "icon": "crystal", "rarity": "legend", "desc": "被动：从红星上掉下来的石头，一直是热的。体温每 2 季才冷 1 点。", "mods": { "waterCostEvery": 2 } },
   { "id": "dragon_horn", "name": "古鼍的角", "icon": "artifact", "rarity": "legend", "desc": "使用：潜水 +5，龙气 +20。", "use": { "潜水": 5, "龙气": 20 }, "useText": "那截角化成一股凉气钻进你脑门。你头上，鼓起了两个小包。" }
 ]

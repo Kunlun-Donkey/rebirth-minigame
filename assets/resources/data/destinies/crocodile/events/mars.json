@@ -1,0 +1,55 @@
+[
+  {
+    "id": "u_mars_star", "dir": "up", "stage": [2, 99], "weight": 8, "once": true, "require": "!flag:mars_star",
+    "text": "夜里你趴在岸上。天边有颗红星，比别的星都亮，像一只眼睛，一直盯着你。",
+    "choices": [
+      { "text": "盯回去", "effect": { "灵性": 2, "flag": "mars_star", "follow": { "id": "f_mars_meteor", "delay": 2, "ttl": 6 } },
+        "result": "你跟它对视了一整夜。天亮前，它好像冲你眨了一下眼。" },
+      { "text": "闭眼睡觉", "effect": { "体温": 1, "晒背": 1 }, "result": "你把脑袋埋进沙里。被一颗星盯着，睡不踏实。" }
+    ]
+  },
+  {
+    "id": "f_mars_meteor", "dir": "any", "chainOnly": true, "teaser": "红星那边掉下来个东西",
+    "text": "半夜一道红光落进河里，水咕嘟咕嘟冒泡。河底躺着一块红石头，烫得像刚出炉。",
+    "choices": [
+      { "text": "潜下去叼上来", "chance": 0.6, "chanceAttr": "潜水", "chanceStep": 0.06,
+        "effect": { "item": "mars_stone", "体温": 2, "follow": { "id": "f_mars_dream", "delay": 2, "ttl": 6 } },
+        "result": "你叼着石头浮上来，嘴里冒白气。石头上全是红沙，不是这条河的沙。",
+        "fail": { "effect": { "体温": -2 }, "result": "太烫了，你缩回了嘴。石头沉进了淤泥，再也找不着了。" } },
+      { "text": "趴在旁边取暖", "effect": { "体温": 3, "晒背": 1 }, "result": "你在那块石头边上，过了这辈子最暖的一个冬天。" }
+    ]
+  },
+  {
+    "id": "f_mars_dream", "dir": "any", "chainOnly": true, "gold": true, "teaser": "红石头在夜里发烫",
+    "text": "红石头在窝里发烫。你梦见一片红沙地，沙地上趴着一条比山还大的老鳄鱼。",
+    "choices": [
+      { "text": "冲它磕头", "effect": { "灵性": 3, "follow": { "id": "f_mars_lesson", "delay": 2, "ttl": 8 } },
+        "result": "老鳄鱼睁开一只眼：哟，地上也还有鳄鱼。小子，明晚再来。" },
+      { "text": "冲它张嘴", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 3, "follow": { "id": "f_mars_lesson", "delay": 2, "ttl": 8 } },
+        "result": "老鳄鱼乐了：好凶的小东西，跟我年轻时一个样。明晚再来。",
+        "fail": { "effect": { "体温": -2 }, "result": "它打了个喷嚏。你被一阵红沙吹醒，浑身冰凉。" } }
+    ]
+  },
+  {
+    "id": "f_mars_lesson", "dir": "any", "chainOnly": true, "gold": true, "teaser": "火星上的老祖要教你本事",
+    "text": "老鳄鱼趴在红沙上：我是这颗星上的鳄祖，在这儿晒了几十万年太阳。今天教你一招。",
+    "choices": [
+      { "text": "学晒星", "effect": { "晒背": 4, "龙气": 15, "flag": "mars_disciple" },
+        "result": "它教你夜里冲着红星晒背。你身上，从骨头里往外冒热气。" },
+      { "text": "学吞火", "effect": { "咬合": 3, "龙气": 15, "flag": "mars_disciple" },
+        "result": "它冲你喷了一口火。你一口吞下，打了个嗝，冒出一缕红烟。" },
+      { "text": "问它为什么在那儿", "effect": { "灵性": 4, "龙气": 10, "flag": "mars_disciple" },
+        "result": "它想了很久：那边的太阳不落山。说完它闭上眼，不肯再讲了。" }
+    ]
+  },
+  {
+    "id": "u_mars_call", "dir": "up", "stage": [4, 99], "weight": 25, "once": true, "require": "flag:mars_disciple",
+    "text": "红星亮得吓人。鳄祖在梦里喊你：上来吧，这儿的太阳，够你晒一万年。",
+    "choices": [
+      { "text": "跃上红星", "require": "灵性>=10 & 晒背>=10", "effect": { "ending": "mars_ancestor" },
+        "result": "你在江心石上一蹬，直直飞进了那片红光。鳄祖往旁边挪了挪，给你让出半块石头。" },
+      { "text": "等我长出角", "effect": { "龙气": 20, "灵性": 2 }, "result": "鳄祖哼了一声：那你快点。我可以等，太阳不等。" }
+    ]
+  }
+]
