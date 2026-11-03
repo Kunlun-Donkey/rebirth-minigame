@@ -4,7 +4,7 @@ import { SettleResult } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { box, button, chip, COLOR, fadeIn, image, rect, sizeOf, text, textHeight } from '../ui/kit';
+import { box, button, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
 import { showList } from './popups';
 
 /** settle_panel.png 的九宫格（贴图像素：上 右 下 左）与显示缩放 */
@@ -24,6 +24,9 @@ export function showSettle(g: Game): void {
     const head = s.tianhu ? '✦ 天 胡 ✦' : isEnd ? '这 一 世 圆 满 了' : '这 一 世 结 束 了';
     text(root, head, 0, CONFIG.safeTop - (s.tianhu ? 46 : 40), g.W, { size: s.tianhu ? 48 : 40, color: s.tianhu ? COLOR.legacy : light, align: 'center', bold: true });
     text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + (s.tianhu ? 22 : 14), g.W, { size: 24, color: light, alpha: 200, align: 'center' });
+    // 回主菜单前也要走完遗物封存，避免白白丢掉本世遗物
+    const menu = chip(root, '‹ 菜单', 30, CONFIG.safeTop + 22, light, false, 22);
+    onTap(menu, () => sealThenRebirth(g, s, 'menu'));
 
     let y = stone(g, root, s, CONFIG.safeTop + 70);
     y = panel(g, root, s, y + 20);
@@ -156,12 +159,13 @@ function actions(g: Game, root: Node, s: SettleResult, y: number): void {
 }
 
 /** 有可封存的遗物时逐格挑选（命盘·藏宝可多封存），再回到轮回殿 */
-function sealThenRebirth(g: Game, s: SettleResult): void {
+function sealThenRebirth(g: Game, s: SettleResult, then: 'draft' | 'menu' = 'draft'): void {
     const chosen: string[] = [];
     const finish = () => {
         g.engine.sealRelics(chosen);
         g.persist();
-        g.goDraft();
+        if (then === 'menu') g.goMenu();
+        else g.goDraft();
     };
     const ask = () => {
         const left = s.relicCandidates.filter(id => !chosen.includes(id));
