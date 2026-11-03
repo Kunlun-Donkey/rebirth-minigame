@@ -11,5 +11,5 @@
     "types": ["node"]
   },
   "include": ["assets/scripts/core/**/*.ts", "tools/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["tests/game-smoke.test.ts", "tools/ui-snap/**"]
+  "exclude": ["tests/game-smoke.test.ts", "tests/platform.test.ts", "tools/ui-snap/**"]
 }

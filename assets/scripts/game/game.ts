@@ -54,6 +54,7 @@ export class Game {
         this.overlay = box(root, 0, 0, this.W, this.H, 'overlay');
         this.fx = box(root, 0, 0, this.W, this.H, 'fx');
 
+        Platform.checkUpdate();
         this.save = loadSave();
         const run = this.save.run;
         // 启动页（游戏名 + 适龄提示 + 健康游戏忠告），加载期间显示，至少停留 splashMs

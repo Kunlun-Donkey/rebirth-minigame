@@ -94,6 +94,27 @@ export const Platform = {
         if (isWx()) wx.vibrateShort?.({ type: 'light' });
     },
 
+    /**
+     * 版本更新检测：微信后台下载好新版本后弹窗提示重启（强制更新，避免新旧版本存档结构不一致）。
+     * 存档在每次操作后都已写入，重启不会丢进度。基础库 1.9.90 以下没有 getUpdateManager，直接跳过。
+     */
+    checkUpdate(): void {
+        if (!isWx() || !wx.getUpdateManager) return;
+        const um = wx.getUpdateManager();
+        um.onUpdateReady(() => {
+            wx.showModal({
+                title: '发现新版本',
+                content: '新版本已经准备好，重启后继续游戏，进度不会丢失。',
+                showCancel: false,
+                confirmText: '立即重启',
+                success: () => um.applyUpdate(),
+            });
+        });
+        um.onUpdateFailed(() => {
+            Platform.toast('新版本下载失败，请删除小游戏后重新打开');
+        });
+    },
+
     /** 埋点：wx.reportEvent（需先在 We分析 注册事件，见 minigame-event-report skill） */
     report(event: string, data: Record<string, string | number> = {}): void {
         if (isWx() && wx.reportEvent) {
