@@ -12,7 +12,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // 首屏用到的图进主包 resources，其余进分包 subres（见 assets/scripts/game/res.ts）
 const MAIN_TEX = join(ROOT, 'assets/resources/textures');
 const SUB_TEX = join(ROOT, 'assets/subres/textures');
-const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'common/ui/logo_title', 'common/ui/panel',
+const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'destiny/caterpillar/main_bg', 'destiny/mantis_shrimp/main_bg', 'common/ui/logo_title', 'common/ui/panel',
   'common/ui/btn_normal', 'common/ui/btn_primary', 'common/ui/btn_ad', 'common/ui/btn_locked']);
 const TMP = join(tmpdir(), 'rebirth-art');
 const filter = process.argv[2] ?? '';
@@ -736,6 +736,177 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
     <path d="M90 230 Q100 170 92 120 L164 120 Q156 170 166 230Z" fill="#7a4a2e"/>
     <path d="M110 150 q8 -6 16 0 M134 150 q8 -6 16 0" stroke="#3a2418" stroke-width="4" fill="none" stroke-linecap="round"/>
     <path d="M112 176 q16 12 32 0" stroke="#3a2418" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M108 190 Q128 214 148 190" stroke="#e9dcc4" stroke-width="4" fill="none"/>`);
+
+  // ---------- 11. 一条毛毛虫 caterpillar：嫩绿 + 花粉黄 ----------
+  // 叶片（原点叶柄，朝上；rot 旋转角）
+  const leaf = (x, y, s, rot, c, vein) => `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})">
+    <path d="M0 0 C-60 -40 -70 -150 0 -220 C70 -150 60 -40 0 0Z" fill="${c}"/>
+    <path d="M0 -6 V-206 M0 -60 L-30 -90 M0 -60 L30 -90 M0 -120 L-26 -146 M0 -120 L26 -146" stroke="${vein}" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
+  // 毛毛虫（原点尾部，向右爬；n 节）
+  const worm = (x, y, s, c, spot, n = 6, eye = '#2a1a10') => `<g transform="translate(${x} ${y}) scale(${s})">
+    ${Array.from({ length: n }, (_, i) => `<circle cx="${i * 22}" cy="${-14 - (i % 2) * 6}" r="${14 + (i === n - 1 ? 2 : 0)}" fill="${c}"/><circle cx="${i * 22}" cy="${-18 - (i % 2) * 6}" r="4" fill="${spot}"/>`).join('')}
+    <circle cx="${(n - 1) * 22 + 6}" cy="${-22 - ((n - 1) % 2) * 6}" r="3.4" fill="${eye}"/>
+    <path d="M${(n - 1) * 22} ${-30 - ((n - 1) % 2) * 6} l6 -14 M${(n - 1) * 22 + 10} ${-28 - ((n - 1) % 2) * 6} l10 -10" stroke="${c}" stroke-width="3" stroke-linecap="round"/></g>`;
+  // 蝴蝶（原点身体中心）
+  const butterfly = (x, y, s, c1, c2, body = '#3a2a1e', rot = 0) => `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})">
+    <path d="M0 0 C-40 -70 -110 -60 -96 -10 C-90 14 -40 10 0 0Z M0 0 C40 -70 110 -60 96 -10 C90 14 40 10 0 0Z" fill="${c1}"/>
+    <path d="M0 4 C-30 20 -70 50 -50 70 C-30 86 -8 40 0 4Z M0 4 C30 20 70 50 50 70 C30 86 8 40 0 4Z" fill="${c2}"/>
+    <circle cx="-58" cy="-26" r="10" fill="#fff" opacity=".7"/><circle cx="58" cy="-26" r="10" fill="#fff" opacity=".7"/>
+    <ellipse cx="0" cy="8" rx="6" ry="30" fill="${body}"/><path d="M-2 -20 q-10 -20 -20 -24 M2 -20 q10 -20 20 -24" stroke="${body}" stroke-width="3" fill="none"/></g>`;
+  const cocoon = (x, y, s, c, line) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 v18" stroke="${line}" stroke-width="3"/>
+    <ellipse cx="0" cy="70" rx="30" ry="54" fill="${c}"/>${[40, 60, 80, 100].map((yy) => `<path d="M-26 ${yy} q26 10 52 0" stroke="${line}" stroke-width="2" fill="none" opacity=".6"/>`).join('')}</g>`;
+  const flower = (x, y, s, c, mid = '#f6c94a') => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 V120" stroke="#6aa844" stroke-width="6"/>
+    ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-26" rx="16" ry="28" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="14" fill="${mid}"/></g>`;
+
+  job('destiny/caterpillar/main_bg', W, H, `${grad('s', [[0, '#f4fbe4'], [0.6, '#e6f4c8'], [1, '#cfe7a0']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="820" cy="360" r="240" fill="#fffbe0" opacity=".6" filter="url(#soft)"/>
+    ${hills(1600, 100, '#d6ebb0', 31)}
+    ${leaf(160, 1920, 2.2, -28, '#8cc35a', '#6aa844')}${leaf(980, 1920, 2.4, 24, '#7bb556', '#5c9a3a')}
+    ${flower(760, 1700, 1.4, '#f7b2c4')}${flower(300, 1740, 1.1, '#f6e08a', '#e2a33a')}
+    ${leaf(540, 1930, 2.6, 0, '#9bd36a', '#6aa844')}
+    ${worm(470, 1640, 1.2, '#a8d86a', '#f6c94a')}
+    ${grain}`, { jpg: true });
+  job('destiny/caterpillar/settle_bg', W, H, `${grad('s', [[0, '#0f1a2a'], [0.6, '#1c2e3a'], [1, '#26383a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${dust(rng(711), 110, 0, 0, W, 1100, '#f4ffe0', 2.2)}
+    <circle cx="300" cy="420" r="70" fill="#eef6d6" opacity=".85"/><circle cx="300" cy="420" r="140" fill="#eef6d6" opacity=".12" filter="url(#soft)"/>
+    ${hills(1580, 100, '#162430', 32)}
+    <path d="M120 1640 Q540 1600 960 1660" stroke="#2a3a34" stroke-width="16" fill="none" stroke-linecap="round"/>
+    ${leaf(280, 1660, 1.2, -60, '#22342e', '#2e4238')}${leaf(800, 1660, 1.1, 60, '#22342e', '#2e4238')}
+    ${glowDot(540, 1720, 120, '#d6f5a8')}${cocoon(540, 1618, 1.4, '#e8f0c8', '#a8b88a')}
+    <path d="M540 1730 q-20 30 0 60" stroke="#d6f5a8" stroke-width="3" fill="none" opacity=".7"/>
+    ${dust(rng(712), 22, 380, 1560, 320, 260, '#e9ffb0', 3)}${grain}`, { jpg: true });
+  job('destiny/caterpillar/settle_bg_ending', W, H, `${grad('s', [[0, '#fffbe8'], [0.5, '#fbe9bd'], [1, '#f4c98e']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="700" cy="1180" r="150" fill="#fff8e6" opacity=".9"/><circle cx="700" cy="1180" r="300" fill="#fffbe0" opacity=".4" filter="url(#soft)"/>
+    ${cloud(240, 1420, 1.5, '#fff', 0.85)}${cloud(900, 1500, 1.3, '#fff', 0.8)}
+    <path d="M0 1640 Q300 1560 540 1600 T1080 1580 V1920 H0Z" fill="#cfe7a0"/>
+    ${[120, 260, 420, 620, 820, 960].map((fx, i) => flower(fx, 1660 + (i % 2) * 40, 0.9, ['#f7b2c4', '#f6e08a', '#c8b4f0'][i % 3])).join('')}
+    ${butterfly(540, 1280, 2.6, '#f2a23a', '#e2733a')}
+    ${butterfly(300, 1100, 0.7, '#9fd0f0', '#c8b4f0', '#3a2a1e', -18)}${butterfly(820, 1000, 0.6, '#f7b2c4', '#f6e08a', '#3a2a1e', 16)}${butterfly(180, 1360, 0.5, '#f6e08a', '#f2a23a', '#3a2a1e', 10)}
+    ${dust(rng(713), 30, 300, 1000, 480, 400, '#fff8e0', 3)}${grain}`, { jpg: true });
+  job('destiny/caterpillar/cover', 512, 512, coverBox([[0, '#eaf7cf'], [1, '#c6e494']], `
+    <circle cx="380" cy="120" r="70" fill="#fffbe0" opacity=".8" filter="url(#soft)"/>
+    <g opacity=".25">${butterfly(380, 150, 1.3, '#f2a23a', '#e2733a')}</g>
+    ${leaf(256, 540, 2.2, -8, '#8cc35a', '#6aa844')}
+    ${worm(150, 380, 1.9, '#b4e070', '#f6c94a')}
+    <path d="M322 250 C322 250 310 266 310 274 A12 12 0 0 0 334 274 C334 266 322 250 322 250Z" fill="#dff4ff" stroke="#fff" stroke-width="2"/>`), { jpg: true });
+
+  stage('caterpillar', 1, `${halo('#e9ffc2')}${leaf(130, 430, 1, 90, '#8cc35a', '#6aa844')}${worm(170, 360, 2, '#b4e070', '#f6c94a', 5)}`);
+  stage('caterpillar', 2, `${halo('#f6f0a0')}${leaf(120, 440, 1.1, 90, '#7bb556', '#5c9a3a')}${worm(130, 370, 2.4, '#9ccf5a', '#f2a23a', 6)}`);
+  stage('caterpillar', 3, `${halo('#eef0ff', 200)}${sparks(733, '#f4ffe0')}<path d="M140 90 H372" stroke="#7a5a3a" stroke-width="14" stroke-linecap="round"/>
+    <g opacity=".5" filter="url(#soft)">${cocoon(256, 90, 3, '#fffbe0', '#fffbe0')}</g>${cocoon(256, 90, 2.7, '#f0f0d0', '#b8b88a')}`);
+  stage('caterpillar', 4, `${halo('#ffd27a', 200)}${sparks(734, '#fff1b0')}${butterfly(256, 250, 1.9, '#f2a23a', '#e2733a')}`);
+  stage('caterpillar', 5, `${halo('#ffe9a8', 220)}${sparks(735, '#fffbe0')}
+    <g opacity=".55" filter="url(#glow)">${butterfly(256, 250, 2.15, '#fff1b0', '#ffd27a', '#ffd27a')}</g>${butterfly(256, 250, 2, '#f6c94a', '#c8b4f0', '#3a2a1e')}
+    <path d="M256 160 l10 -40 l10 40Z" fill="#fff6d6"/>`);
+
+  comp('caterpillar', 'ladybug', `<ellipse cx="128" cy="140" rx="64" ry="56" fill="#d9483b"/><path d="M128 84 V196" stroke="#2a1a10" stroke-width="5"/>
+    <path d="M70 110 Q128 60 186 110 Q170 86 128 84 Q86 86 70 110Z" fill="#2a1a10"/>${eyes(110, 146, 96, 5, '#fff')}
+    ${[[100, 134], [156, 134], [96, 170], [160, 170], [128, 116], [112, 190], [146, 190]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#2a1a10"/>`).join('')}`);
+  comp('caterpillar', 'snail', `<ellipse cx="128" cy="186" rx="84" ry="18" fill="#c9b08a"/><path d="M50 186 Q60 150 96 150" stroke="#c9b08a" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <path d="M56 148 l-10 -30 M70 146 l2 -32" stroke="#b89a70" stroke-width="5" stroke-linecap="round"/><circle cx="46" cy="116" r="6" fill="#2a1a10"/><circle cx="72" cy="112" r="6" fill="#2a1a10"/>
+    <circle cx="146" cy="128" r="56" fill="#d99a5a"/><path d="${spiral(146, 128, 4, 50, 2.4)}" stroke="#8a5a32" stroke-width="7" fill="none"/>`);
+  comp('caterpillar', 'cricket', `<ellipse cx="128" cy="140" rx="60" ry="30" fill="#5a4a2a"/><ellipse cx="120" cy="132" rx="54" ry="20" fill="#7a6a3a"/>
+    <circle cx="70" cy="132" r="22" fill="#5a4a2a"/><circle cx="62" cy="126" r="5" fill="#fff"/>
+    <path d="M56 114 Q30 60 70 40 M66 112 Q60 60 96 46" stroke="#5a4a2a" stroke-width="4" fill="none"/>
+    <path d="M160 150 L200 110 L214 190 M120 160 l-10 30 M100 158 l-16 26" stroke="#5a4a2a" stroke-width="7" stroke-linecap="round" fill="none"/>`);
+  comp('caterpillar', 'ant', `<circle cx="80" cy="120" r="24" fill="#2e2622"/><ellipse cx="128" cy="134" rx="20" ry="16" fill="#2e2622"/><ellipse cx="178" cy="146" rx="32" ry="26" fill="#2e2622"/>
+    ${eyes(72, 88, 114, 4, '#fff')}<path d="M70 100 Q60 70 44 64 M88 98 Q96 70 110 62" stroke="#2e2622" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M118 146 l-20 34 M128 148 l0 38 M138 146 l20 34" stroke="#2e2622" stroke-width="5" stroke-linecap="round"/>
+    <rect x="58" y="62" width="40" height="22" rx="8" fill="#f6efe0" stroke="#c9b48e" stroke-width="2" transform="rotate(-12 78 72)"/>`);
+  comp('caterpillar', 'spider', `<g stroke="#c9b8a0" stroke-width="1.5" fill="none" opacity=".8">${[0, 45, 90, 135].map((a) => `<path d="M128 128 l${f(110 * Math.cos(a * Math.PI / 180))} ${f(110 * Math.sin(a * Math.PI / 180))} M128 128 l${f(-110 * Math.cos(a * Math.PI / 180))} ${f(-110 * Math.sin(a * Math.PI / 180))}"/>`).join('')}
+    <circle cx="128" cy="128" r="40"/><circle cx="128" cy="128" r="70"/><circle cx="128" cy="128" r="98"/></g>
+    <g stroke="#3a2a3a" stroke-width="6" stroke-linecap="round" fill="none">${[-1, 1].map((d) => `<path d="M128 130 q${40 * d} -40 ${64 * d} -10 M128 136 q${44 * d} -10 ${70 * d} 10 M128 140 q${40 * d} 20 ${60 * d} 44 M128 144 q${30 * d} 40 ${40 * d} 64"/>`).join('')}</g>
+    <ellipse cx="128" cy="150" rx="26" ry="30" fill="#3a2a3a"/><circle cx="128" cy="116" r="18" fill="#3a2a3a"/>${eyes(120, 136, 112, 4, '#fff')}
+    <path d="M118 160 q10 -6 20 0" stroke="#d9483b" stroke-width="4" fill="none"/>`);
+  comp('caterpillar', 'old_cicada', `<path d="M128 70 C84 90 70 170 128 214 C186 170 172 90 128 70Z" fill="#7a5a32"/>
+    <path d="M92 110 C40 130 50 200 120 196 Z M164 110 C216 130 206 200 136 196 Z" fill="#e9f4f4" opacity=".75" stroke="#9ab4b4" stroke-width="2"/>
+    <circle cx="104" cy="92" r="12" fill="#3a2a1e"/><circle cx="152" cy="92" r="12" fill="#3a2a1e"/><circle cx="100" cy="88" r="4" fill="#fff"/><circle cx="148" cy="88" r="4" fill="#fff"/>
+    <path d="M110 120 q18 10 36 0" stroke="#f6efe0" stroke-width="4" fill="none"/><path d="M112 130 v20 M144 130 v20" stroke="#f6efe0" stroke-width="3"/>`);
+
+  // ---------- 12. 一只皮皮虾 mantis_shrimp：海蓝 + 珊瑚橙 ----------
+  // 皮皮虾侧影（原点身体底部中心，面朝右；c 身体，fist 拳头色）
+  const shrimp = (x, y, s, c, fist, eye = '#2a1a10', flip = false) => `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})">
+    ${Array.from({ length: 6 }, (_, i) => `<ellipse cx="${-60 + i * 22}" cy="${-20 - Math.sin(i / 5 * Math.PI) * 8}" rx="16" ry="${18 - Math.abs(i - 3)}" fill="${c}"/><path d="M${-60 + i * 22} ${-34} v26" stroke="${fist}" stroke-width="2" opacity=".5"/>`).join('')}
+    <path d="M-72 -22 L-112 -48 L-104 -18 L-116 4 Z" fill="${fist}"/>
+    <ellipse cx="62" cy="-30" rx="22" ry="18" fill="${c}"/>
+    <path d="M66 -46 l8 -22 M76 -42 l14 -16" stroke="${c}" stroke-width="5" stroke-linecap="round"/><circle cx="74" cy="-70" r="7" fill="${fist}"/><circle cx="90" cy="-60" r="7" fill="${fist}"/>
+    <circle cx="74" cy="-70" r="3" fill="${eye}"/><circle cx="90" cy="-60" r="3" fill="${eye}"/>
+    <path d="M72 -18 Q100 -10 96 -36" stroke="${fist}" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="96" cy="-38" r="9" fill="${fist}"/>
+    ${[-40, -16, 8, 30].map((lx) => `<path d="M${lx} -6 l-4 14" stroke="${fist}" stroke-width="4" stroke-linecap="round"/>`).join('')}</g>`;
+  const coral = (x, y, s, c) => `<g transform="translate(${x} ${y}) scale(${s})" fill="none" stroke="${c}" stroke-width="16" stroke-linecap="round">
+    <path d="M0 0 V-90 M0 -50 Q-40 -70 -44 -120 M0 -70 Q36 -90 40 -140 M-30 -100 Q-60 -110 -66 -140"/></g>`;
+  const bubbles = (seed, n, x0, y0, w, h, c) => { const r = rng(seed); return Array.from({ length: n }, () => `<circle cx="${f(x0 + r() * w)}" cy="${f(y0 + r() * h)}" r="${f(4 + r() * 12)}" fill="none" stroke="${c}" stroke-width="2.5" opacity="${f(0.3 + r() * 0.5)}"/>`).join(''); };
+  const rock = (x, y, w, h, c) => `<path d="M${x} ${y} Q${x + w * 0.1} ${y - h} ${x + w * 0.5} ${y - h * 1.05} Q${x + w * 0.9} ${y - h} ${x + w} ${y}Z" fill="${c}"/>`;
+  const rays = (c) => [180, 420, 700, 900].map((rx, i) => `<path d="M${rx} 0 L${rx + 120 + i * 20} 1300 L${rx + 40} 1300Z" fill="${c}" opacity=".12"/>`).join('');
+
+  job('destiny/mantis_shrimp/main_bg', W, H, `${grad('s', [[0, '#e8f7fb'], [0.55, '#bfe6ef'], [1, '#8fcfdc']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${rays('#ffffff')}
+    ${bubbles(801, 24, 100, 300, 880, 1100, '#ffffff')}
+    <path d="M0 1700 Q300 1650 540 1680 T1080 1670 V1920 H0Z" fill="#f2deb0"/>
+    ${rock(-20, 1720, 360, 150, '#7aa8b0')}${rock(780, 1730, 320, 120, '#6a98a4')}
+    ${coral(200, 1710, 1.4, '#f2846a')}${coral(900, 1720, 1.2, '#f6b06a')}${coral(120, 1740, 0.9, '#e86a8a')}
+    <ellipse cx="560" cy="1760" rx="46" ry="14" fill="#c9a870"/>
+    ${shrimp(560, 1756, 1.1, '#f08a5a', '#3aa8a0')}
+    ${grain}`, { jpg: true });
+  job('destiny/mantis_shrimp/settle_bg', W, H, `${grad('s', [[0, '#071426'], [0.6, '#0e2438'], [1, '#14303e']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${dust(rng(811), 90, 0, 0, W, 1100, '#bfefff', 2)}
+    <circle cx="760" cy="300" r="70" fill="#dff6ff" opacity=".6"/><circle cx="760" cy="300" r="160" fill="#dff6ff" opacity=".1" filter="url(#soft)"/>
+    <path d="M0 1700 Q300 1660 540 1680 T1080 1670 V1920 H0Z" fill="#1c3440"/>
+    ${rock(-20, 1720, 360, 150, '#14283a')}${rock(780, 1730, 320, 120, '#122434')}${coral(220, 1710, 1.3, '#24404a')}
+    ${glowDot(540, 1740, 120, '#7fe6e0')}<ellipse cx="540" cy="1748" rx="60" ry="18" fill="#0c1c28"/>
+    <g opacity=".9">${shrimp(540, 1730, 0.9, '#a8e6e0', '#7fe6e0', '#0c1c28')}</g>
+    ${bubbles(812, 18, 440, 1300, 200, 420, '#bff6f0')}${grain}`, { jpg: true });
+  job('destiny/mantis_shrimp/settle_bg_ending', W, H, `${grad('s', [[0, '#fff6e2'], [0.45, '#fde2b4'], [0.62, '#f4b88a'], [0.63, '#5ab4c8'], [1, '#2a7a9a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="540" cy="1180" r="160" fill="#fff6e4" opacity=".95"/><circle cx="540" cy="1180" r="320" fill="#fff6dc" opacity=".4" filter="url(#soft)"/>
+    ${cloud(200, 900, 1.4, '#fff', 0.8)}${cloud(880, 980, 1.2, '#fff', 0.75)}
+    <path d="M0 1260 Q200 1210 380 1250 Q520 1120 700 1190 Q860 1240 1080 1220 V1920 H0Z" fill="#3a9ab4"/>
+    <path d="M380 1250 Q520 1120 700 1190" stroke="#e9f8ff" stroke-width="14" fill="none" stroke-linecap="round"/>
+    ${shrimp(560, 1168, 3.2, '#d9483b', '#f6b06a', '#2a1a10')}
+    <g fill="#e9f8ff" opacity=".6">${[260, 820, 960].map((wx) => `<path d="M${wx} 1330 q30 -20 60 0 t60 0" stroke="#e9f8ff" stroke-width="5" fill="none"/>`).join('')}</g>
+    ${dust(rng(813), 30, 300, 900, 480, 300, '#fff8e0', 3)}${grain}`, { jpg: true });
+  job('destiny/mantis_shrimp/cover', 512, 512, coverBox([[0, '#d9f3f8'], [1, '#7fc4d4']], `
+    ${bubbles(821, 14, 40, 40, 440, 300, '#ffffff')}
+    <path d="M0 420 Q256 390 512 414 V512 H0Z" fill="#f2deb0"/>${coral(80, 430, 1, '#f2846a')}${coral(450, 440, 0.8, '#f6b06a')}
+    ${shrimp(240, 404, 2.6, '#f08a5a', '#3aa8a0')}
+    <g stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"><path d="M${240 + 96 * 2.6 + 18} ${404 - 38 * 2.6} l26 -8 M${240 + 96 * 2.6 + 16} ${404 - 38 * 2.6 + 14} l28 6 M${240 + 96 * 2.6 + 10} ${404 - 38 * 2.6 - 16} l20 -20"/></g>`), { jpg: true });
+
+  stage('mantis_shrimp', 1, `${halo('#bff6f0')}${bubbles(831, 10, 120, 100, 280, 240, '#ffffff')}${shrimp(266, 360, 1.4, '#f6b08a', '#7fd4cc')}`);
+  stage('mantis_shrimp', 2, `${halo('#ffd8b0')}${shrimp(266, 380, 1.7, '#f08a5a', '#3aa8a0')}
+    <g stroke="#fff" stroke-width="6" stroke-linecap="round"><path d="M${266 + 96 * 1.7 + 14} ${380 - 38 * 1.7} l26 -10 M${266 + 96 * 1.7 + 12} ${380 - 38 * 1.7 + 14} l26 8"/></g>`);
+  stage('mantis_shrimp', 3, `${halo('#c8f0ff', 200)}${bubbles(833, 16, 100, 80, 320, 340, '#ffffff')}
+    <g opacity=".45" filter="url(#soft)">${shrimp(266, 390, 2.0, '#c8f0ff', '#c8f0ff')}</g>${shrimp(266, 390, 1.85, '#e86a4a', '#2a9a94')}`);
+  stage('mantis_shrimp', 4, `${halo('#ffd27a', 200)}${rock(110, 470, 300, 90, '#6a98a4')}${shrimp(266, 396, 1.9, '#d9483b', '#f6b06a')}
+    <path d="M${266 + 62 * 1.9 - 30} ${396 - 48 * 1.9 - 24} l12 -30 l14 20 l14 -26 l12 26 l14 -20 l10 30Z" fill="#ffd27a"/>`);
+  stage('mantis_shrimp', 5, `${halo('#ffe9a8', 220)}${sparks(835, '#fff1b0')}
+    <g opacity=".55" filter="url(#glow)">${shrimp(262, 400, 2.1, '#ffd27a', '#ffd27a')}</g>${shrimp(262, 400, 1.95, '#f05a3a', '#3ac4bc')}
+    <path d="M${262 + 96 * 1.95 + 4} ${400 - 38 * 1.95} l30 -36 l-12 32 l30 -16 l-36 46Z" fill="#fff6d6"/>`);
+
+  comp('mantis_shrimp', 'clownfish', `<path d="M60 128 Q100 70 160 92 Q200 108 204 128 Q200 148 160 164 Q100 186 60 128Z" fill="#f2843a"/>
+    <path d="M204 128 L232 104 L228 152Z" fill="#f2843a"/><path d="M100 84 Q92 128 100 172 M150 92 Q140 128 150 164" stroke="#fff" stroke-width="14" fill="none"/>
+    <path d="M100 84 Q92 128 100 172 M150 92 Q140 128 150 164" stroke="#2a1a10" stroke-width="2" fill="none" opacity=".4"/><circle cx="80" cy="120" r="8" fill="#2a1a10"/><circle cx="78" cy="117" r="3" fill="#fff"/>`);
+  comp('mantis_shrimp', 'hermit_crab', `<circle cx="146" cy="120" r="56" fill="#e8c290"/><path d="${spiral(146, 120, 4, 50, 2.2)}" stroke="#b5853e" stroke-width="7" fill="none"/>
+    <ellipse cx="96" cy="170" rx="40" ry="22" fill="#e8734a"/><path d="M70 160 l-14 -30 M86 156 l-4 -32" stroke="#e8734a" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="56" cy="128" r="6" fill="#2a1a10"/><circle cx="82" cy="122" r="6" fill="#2a1a10"/><path d="M60 176 q-20 0 -24 -16 q14 -10 26 4" fill="#d9483b"/>
+    <path d="M80 190 l-8 16 M100 192 l0 18 M118 188 l10 16" stroke="#e8734a" stroke-width="5" stroke-linecap="round"/>`);
+  comp('mantis_shrimp', 'seahorse', `<path d="M128 60 Q170 60 166 100 Q160 130 140 140 Q170 160 150 196 Q136 222 112 206 Q130 196 128 180 Q100 160 110 128 Q94 110 108 84 Q112 66 128 60Z" fill="#f2b84a"/>
+    <path d="M130 64 Q100 50 90 70 L114 80Z" fill="#f2b84a"/><circle cx="140" cy="82" r="6" fill="#2a1a10"/>
+    ${[100, 120, 140, 160, 180].map((yy) => `<path d="M${yy > 150 ? 136 : 118} ${yy} h20" stroke="#d99a2a" stroke-width="3"/>`).join('')}
+    <path d="M160 110 q20 6 16 26" stroke="#f6d88a" stroke-width="8" fill="none" stroke-linecap="round"/>`);
+  comp('mantis_shrimp', 'goby', `<path d="M50 140 Q90 96 160 108 Q200 116 204 140 Q196 160 150 168 Q90 176 50 140Z" fill="#c9d4b0"/>
+    <path d="M204 140 L232 118 L230 160Z" fill="#c9d4b0"/>${[90, 120, 150, 180].map((sx) => `<circle cx="${sx}" cy="136" r="6" fill="#8a9a6a"/>`).join('')}
+    <circle cx="80" cy="122" r="14" fill="#fff"/><circle cx="82" cy="122" r="7" fill="#2a1a10"/><path d="M70 104 Q80 90 96 100" stroke="#8a9a6a" stroke-width="4" fill="none"/>
+    <path d="M110 108 l10 -24 l14 24" fill="#a8b88a"/>`);
+  comp('mantis_shrimp', 'urchin', `<g stroke="#4a2a5a" stroke-width="5" stroke-linecap="round">${Array.from({ length: 20 }, (_, i) => { const a = i / 20 * Math.PI * 2; return `<path d="M${f(128 + 40 * Math.cos(a))} ${f(140 + 40 * Math.sin(a))} L${f(128 + 92 * Math.cos(a))} ${f(140 + 92 * Math.sin(a))}"/>`; }).join('')}</g>
+    <circle cx="128" cy="140" r="46" fill="#6a3a7a"/>${eyes(112, 144, 134, 6, '#fff')}<path d="M104 120 l14 6 M152 120 l-14 6" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <path d="M112 156 q16 -10 32 0" stroke="#fff" stroke-width="4" fill="none"/>`);
+  comp('mantis_shrimp', 'old_turtle', `<ellipse cx="130" cy="146" rx="80" ry="54" fill="#6a8a5a"/>
+    <path d="M90 116 h80 M74 146 h112 M90 176 h80 M110 100 v92 M150 100 v92" stroke="#4a6a3a" stroke-width="4" opacity=".7"/>
+    ${[[96, 118], [168, 126], [128, 168]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#e9dcc4"/>`).join('')}
+    <ellipse cx="44" cy="134" rx="28" ry="22" fill="#9ab48a"/><path d="M30 130 q6 -6 12 0" stroke="#2a1a10" stroke-width="3" fill="none"/><path d="M28 144 q10 6 20 0" stroke="#2a1a10" stroke-width="3" fill="none"/>
+    <path d="M70 186 l-20 20 M190 186 l20 20 M70 108 l-22 -16" stroke="#9ab48a" stroke-width="12" stroke-linecap="round"/>`);
 }
 
 // 锁定图标（选命格界面未解锁时叠加）
