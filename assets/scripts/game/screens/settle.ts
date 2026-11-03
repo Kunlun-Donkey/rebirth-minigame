@@ -137,16 +137,18 @@ function shareText(g: Game, s: SettleResult): string {
 function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     const w = g.W - 60;
     let cy = y;
-    const dbl = button(root, 30, cy, w, {
-        label: '看视频 · 轮回点翻倍', style: 'ad', size: 30,
-        onClick: async () => {
-            if (await g.doublePointsByAd()) {
-                dbl.destroy();
-                Platform.toast(`轮回点翻倍！本世 +${s.points}`);
-            }
-        },
-    });
-    cy += sizeOf(dbl).h + 16;
+    if (CONFIG.adsEnabled) {
+        const dbl = button(root, 30, cy, w, {
+            label: '看视频 · 轮回点翻倍', style: 'ad', size: 30,
+            onClick: async () => {
+                if (await g.doublePointsByAd()) {
+                    dbl.destroy();
+                    Platform.toast(`轮回点翻倍！本世 +${s.points}`);
+                }
+            },
+        });
+        cy += sizeOf(dbl).h + 16;
+    }
     const half = (w - 16) / 2;
     button(root, 30, cy, half, {
         label: '分享墓志铭', style: 'ghost', size: 28, align: 'center',

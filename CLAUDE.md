@@ -14,6 +14,7 @@
 - 根目录 `tsconfig.json` 是 Cocos 的（继承 temp/tsconfig.cocos.json）；Linux 端由 `tools/ensure-cocos-temp.mjs`（npm pre 钩子）生成占位 temp 文件
 - package.json 的 `"type": "2d"` 是 Cocos 要求的，Node 会按 ESM 处理工具脚本：不要用 `__dirname`，用 `import.meta.url`
 - `npm run validate` — 剧本静态校验
+- 广告总开关 `game/config.ts` 的 `CONFIG.adsEnabled`：广告审核通过前为 false（所有看视频入口隐藏，濒死只能接受命运）；通过后填 `rewardedAdUnitId` 并改为 true
 - `npm run play` — 终端试玩（`-- --new` 清档，开局选命格，`-- --destiny <id>` 直接指定）；Windows 双击根目录 `play.bat`：bat 只放纯 ASCII（cmd 读 UTF-8 中文会乱码切行），中文菜单在 `tools/menu.mjs`（首次自动 npm install，用 node 直接启动 tsx）；bat 须保持 CRLF（`.gitattributes`）
 - `npm run sim` — 随机 AI 2000 世数值统计（依次模拟全部命格；`-- --destiny local_dog` 只模拟一个）
 - `npm run audio` — 程序合成 BGM/音效 → `assets/subres/audio/`（曲谱与音色在 `tools/audio/gen_audio.py`，依赖本机 godot skill 的合成器 + ffmpeg）

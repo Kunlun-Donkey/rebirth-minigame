@@ -3,7 +3,7 @@ import { StepResult } from '../../core';
 import type { Game } from '../game';
 import { Platform } from '../platform';
 import { box, button, ButtonOpts, chip, COLOR, image, modal, onTap, pop, sizeOf, text, textHeight } from '../ui/kit';
-import { TEX } from '../config';
+import { CONFIG, TEX } from '../config';
 
 /** 结果弹窗：文本 + 属性变化 + 消息（突破/领悟/层推进）；点「继续」回调 */
 export function showStep(g: Game, s: StepResult, then: () => void): void {
@@ -72,13 +72,15 @@ export function showDying(g: Game): void {
     text(panel, '你 要 死 了', 0, 50, panelW, { size: 44, color: COLOR.bad, align: 'center', bold: true });
     text(panel, `死因：${def?.name ?? '未知'}`, 0, 130, panelW, { size: 30, color: COLOR.ink2, align: 'center' });
     const boost = [...e.data.upgrades.values()].find(u => u.kind === 'reviveBoost' && e.upgradeLevel(u.id) > 0);
-    const hint = boost && e.canReviveByAd() ? `命盘·${boost.name}：${boost.desc}` : '天道打了个盹，也许你还有一次机会。';
+    // 广告未开通时只能接受命运（道具/天赋保命在引擎里已自动生效）
+    const canAd = CONFIG.adsEnabled && e.canReviveByAd();
+    const hint = !canAd ? '这一世到头了。带着记忆，下一世再来。' : boost ? `命盘·${boost.name}：${boost.desc}` : '天道打了个盹，也许你还有一次机会。';
     text(panel, hint, 40, 190, panelW - 80, { size: 26, color: boost ? COLOR.legacy : COLOR.ink2, align: 'center', wrap: true });
     const bw = panelW - 80;
-    if (e.canReviveByAd()) {
+    if (canAd) {
         button(panel, 40, 270, bw, { label: '看视频 · 逆天改命', style: 'ad', onClick: () => { close(); g.reviveByAd(); } });
     }
-    button(panel, 40, e.canReviveByAd() ? 390 : 300, bw, { label: '接受命运', style: 'ghost', align: 'left', onClick: () => { close(); g.acceptDeath(); } });
+    button(panel, 40, canAd ? 390 : 300, bw, { label: '接受命运', style: 'ghost', align: 'left', onClick: () => { close(); g.acceptDeath(); } });
 }
 
 export interface ListEntry {

@@ -133,7 +133,7 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
 
     // 窥探天命（看视频）
     const left = CONFIG.peekPerRun - g.save.peekUsed;
-    if (left > 0 && !r.revealAll && v.choices.some(c => c.enabled)) {
+    if (CONFIG.adsEnabled && left > 0 && !r.revealAll && v.choices.some(c => c.enabled)) {
         const peek = chip(card, `窥探天命 · 看视频（${left}/${CONFIG.peekPerRun}）`, 0, cardH - 54, COLOR.adD, false, 20);
         peek.setPosition(cardW - 30 - sizeOf(peek).w, -(cardH - 54), 0);
         onTap(peek, () => g.peekByAd());

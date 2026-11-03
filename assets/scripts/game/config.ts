@@ -4,6 +4,12 @@ export const CONFIG = {
     defaultDestiny: 'desert_grass',
     /** 微信激励视频广告位 id；为空时使用开发 Mock（直接视为看完） */
     rewardedAdUnitId: '',
+    /**
+     * 激励视频总开关。广告审核通过、填好 rewardedAdUnitId 后改为 true。
+     * 关闭时所有「看视频」入口都不显示：濒死只能靠道具/天赋保命或接受命运进入下一世，
+     * 窥探天命、看视频重演/换天命/轮回点翻倍、随缘投胎的看视频次数、命盘「续命」全部隐藏。
+     */
+    adsEnabled: false,
     /** 存档 key（结构变更时升级版本号） */
     saveKey: 'rebirth_save_v1',
     /** 每局「窥探天命」次数 */

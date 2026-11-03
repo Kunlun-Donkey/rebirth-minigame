@@ -89,9 +89,11 @@ export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): vo
     const half = (g.W - 120 - 20) / 2;
     const free = g.canFreeSpin();
     let busy = false;
+    // 广告未开通：每天只有一次免费，用完显示「明日再来」
+    const none = !free && !CONFIG.adsEnabled;
     button(root, 60, g.H - 140, half, {
-        label: free ? '随缘投胎 · 免费' : '随缘投胎 · 视频', style: free ? 'primary' : 'ad', size: 26, align: 'center',
-        onClick: async () => {
+        label: free ? '随缘投胎 · 免费' : none ? '随缘投胎 · 明日再来' : '随缘投胎 · 视频', style: free ? 'primary' : none ? 'locked' : 'ad', size: 26, align: 'center',
+        onClick: none ? undefined : async () => {
             if (busy) return;
             busy = true;
             const id = await g.rollSpin().finally(() => { busy = false; });

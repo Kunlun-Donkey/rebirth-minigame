@@ -69,7 +69,7 @@ export function showDraft(g: Game): void {
                     render();
                 },
             });
-        } else if (!g.save.rerollUsed) {
+        } else if (CONFIG.adsEnabled && !g.save.rerollUsed) {
             button(root, 60, g.H - 240, g.W - 120, {
                 label: '天机重演 · 看视频刷新这一组', style: 'ad', size: 26,
                 onClick: async () => {
@@ -147,7 +147,7 @@ function header(g: Game, root: Node, rerender: () => void): void {
     const menu = chip(root, '‹ 菜单', 30, CONFIG.safeTop + 22, COLOR.ochreD, false, 22);
     onTap(menu, () => g.goMenu());
     if (e.data.upgrades.size) {
-        const label = e.upgradeViews().some(v => v.affordable) ? '命盘 · 可升级' : '命盘';
+        const label = upgradeViews(g).some(v => v.affordable) ? '命盘 · 可升级' : '命盘';
         const n = chip(root, label, g.W - 30 - (estimateWidth(label, 22) + 20), CONFIG.safeTop + 22, COLOR.legacy, true, 22);
         onTap(n, () => showUpgrades(g, rerender));
     }
@@ -222,10 +222,16 @@ export function soundToggle(g: Game, parent: Node, x: number, y: number): Node {
     return n;
 }
 
+/** 命盘条目；广告未开通时隐藏只对看视频生效的「续命」 */
+function upgradeViews(g: Game) {
+    const e = g.engine;
+    return e.upgradeViews().filter(v => CONFIG.adsEnabled || e.data.upgrades.get(v.id)?.kind !== 'reviveBoost');
+}
+
 /** 命盘：花轮回点永久升级（按下后刷新列表，方便连续购买） */
 function showUpgrades(g: Game, rerender: () => void): void {
     const e = g.engine;
-    showList(g, `命盘 · 轮回点 ${g.save.profile.points}`, e.upgradeViews().map(v => ({
+    showList(g, `命盘 · 轮回点 ${g.save.profile.points}`, upgradeViews(g).map(v => ({
         title: `${v.name}  Lv${v.level}/${v.max}`,
         desc: v.desc,
         tag: v.cost === undefined
@@ -254,7 +260,7 @@ function showFate(g: Game, rerender: () => void): void {
         desc: `${fate.desc}${daily.first ? '\n今天第一世结算时轮回点 +50%。' : ''}`,
         tag: { text: '今日生效', color: COLOR.legacy },
     }];
-    if (e.canSwapFate()) {
+    if (CONFIG.adsEnabled && e.canSwapFate()) {
         entries.push({
             title: '看视频 · 换一个天命',
             desc: '每天一次，换成另一个随机天命。',

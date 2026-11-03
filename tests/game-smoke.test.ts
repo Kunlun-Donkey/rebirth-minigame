@@ -12,6 +12,8 @@ import { destinyProfile, Rng } from '../assets/scripts/core';
 const flush = () => new Promise(r => setTimeout(r, 0));
 // 测试里不等启动页停留时间
 CONFIG.splashMs = 0;
+// 冒烟覆盖看视频入口（正式包在广告审核通过前关闭，见下方「广告未开通」用例）
+CONFIG.adsEnabled = true;
 
 function walk(n: Node, fn: (n: Node) => void): void {
     fn(n);
@@ -523,5 +525,52 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         expect(labels(g.overlay).some(l => l.includes('「一只土狗」已解锁'))).toBe(true);
         tapNode(find(g.overlay, '知  道  了')!);
         expect(g.overlay.children.filter(n => n.isValid).length).toBe(0);
+    });
+
+    it('广告未开通（adsEnabled=false）：所有看视频入口隐藏，濒死只能接受命运', async () => {
+        CONFIG.adsEnabled = false;
+        try {
+            sys.localStorage.clear?.();
+            const g = new Game(new Node('Canvas') as never);
+            await g.boot();
+            await flush();
+            const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
+            const all = () => labels(g.screen).concat(labels(g.overlay));
+            g.goDraft();
+            await flush();
+            expect(all().some(l => l.includes('看视频'))).toBe(false);
+            for (let i = 0; i < 3; i++) {
+                tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+                await flush();
+            }
+            tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('重   生')))!);
+            for (let i = 0; i < 5; i++) await flush();
+            g.overlay.destroyAllChildren();
+            g.engine.chooseDirection('down');
+            g.reset(); g.goRun();
+            expect(all().some(l => l.includes('窥探天命'))).toBe(false);
+            // 濒死：没有看视频复活，只有接受命运
+            g.engine.run.phase = 'dying';
+            g.engine.run.dying = g.data.meta.rules.oldAgeDeath;
+            g.goRun();
+            expect(all().some(l => l.includes('看视频'))).toBe(false);
+            expect(await g.watchAd('revive')).toBe(false);
+            tapNode(tappables(g.overlay).find(n => labels(n).some(l => l.includes('接受命运')))!);
+            await flush();
+            expect(screenName(g)).toBe('settle');
+            expect(all().some(l => l.includes('看视频'))).toBe(false);
+            // 随缘投胎：免费次数用完后显示「明日再来」，点了不转
+            g.save.profile.destinies.desert_grass.bestStage = 2;
+            const { todayKey } = await import('../assets/scripts/game/game');
+            g.save.spinDay = todayKey();
+            g.goDestinySelect('menu');
+            await flush();
+            const spin = tappables(g.screen).find(n => labels(n).some(l => l.includes('随缘投胎')));
+            expect(spin === undefined || labels(spin).some(l => l.includes('明日再来'))).toBe(true);
+            expect(labels(g.screen).some(l => l.includes('明日再来'))).toBe(true);
+            expect(await g.rollSpin()).toBeNull();
+        } finally {
+            CONFIG.adsEnabled = true;
+        }
     });
 });

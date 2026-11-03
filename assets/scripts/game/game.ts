@@ -131,6 +131,7 @@ export class Game {
         const pool = destinyStates(this.index, this.save.profile).filter(s => s.unlocked).map(s => s.entry.id);
         if (pool.length < 2) return null;
         if (this.canFreeSpin()) this.save.spinDay = todayKey();
+        else if (!CONFIG.adsEnabled) return null;
         else if (!(await this.watchAd('spin_destiny'))) return null;
         const id = pool[Math.floor(Math.random() * pool.length)];
         this.save.spinBonus = id;
@@ -349,7 +350,7 @@ export class Game {
     /** 看激励视频（防连点：广告期间重复点击直接忽略） */
     private adBusy = false;
     async watchAd(scene: string): Promise<boolean> {
-        if (this.adBusy) return false;
+        if (this.adBusy || !CONFIG.adsEnabled) return false;
         this.adBusy = true;
         try {
             const ok = await Platform.showRewardedAd(scene);
