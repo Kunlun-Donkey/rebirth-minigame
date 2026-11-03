@@ -6,7 +6,7 @@
       { "text": "吐丝把自己绑住", "chance": 0.6, "chanceAttr": "吐丝", "chanceStep": 0.08,
         "effect": { "吐丝": 1 }, "result": "你被绑在叶柄上淋了一夜。雨停了，丝还在。",
         "fail": { "effect": { "death": "rain" }, "result": "丝断了。你和雨一起落了下去。" } },
-      { "text": "钻进叶子卷里", "effect": { "饱腹": -1, "灵性": 1 }, "result": "你缩在卷起的叶子里。叶子抖了一夜，没掉。" },
+      { "text": "钻进叶子卷里", "effect": { "follow": { "id": "f_snail", "delay": 2 }, "饱腹": -1, "灵性": 1 }, "result": "你缩在卷起的叶子里。叶子抖了一夜，没掉。" },
       { "text": "前世被冲过", "require": "legacy:grip>=1", "effect": { "攀爬": 2 },
         "result": "前世这场雨冲走过你。这一世你的脚扣进了叶脉。" }
     ]
@@ -29,7 +29,7 @@
     "text": "背着药桶的人走过来了。喷头一甩，白雾飘了过来。",
     "choices": [
       { "text": "往风上头爬", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.08,
-        "effect": { "灵性": 1, "攀爬": 1 }, "result": "你爬到了雾吹不到的地方。下面的蚜虫全倒了。",
+        "effect": { "follow": "f_dizzy_ladybug", "灵性": 1, "攀爬": 1 }, "result": "你爬到了雾吹不到的地方。下面的蚜虫全倒了。",
         "fail": { "effect": { "death": "pesticide" }, "result": "风转了方向。" } },
       { "text": "卷成团", "showIf": "skill:curl", "useSkill": "curl", "effect": { "吐丝": 1 }, "result": "你卷成一团滚进了石缝。雾在上面飘过去了。" },
       { "text": "皮厚不怕", "require": "legacy:tough_skin>=1", "effect": { "饱腹": 1 },
@@ -52,9 +52,9 @@
     "id": "x_drought", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 99],
     "text": "一个多月没下雨。叶子边都卷起来了，嚼着像纸。",
     "choices": [
-      { "text": "省着吃", "effect": { "饱腹": -1, "灵性": 1 }, "result": "你每天只啃一小口。饿，但还活着。" },
+      { "text": "省着吃", "effect": { "follow": { "id": "f_rain_end", "delay": 2 }, "饱腹": -1, "灵性": 1 }, "result": "你每天只啃一小口。饿，但还活着。" },
       { "text": "去找嫩叶", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
-        "effect": { "饱腹": 3 }, "result": "你在树荫最深处找到了几片还绿着的叶子。",
+        "effect": { "follow": "f_shade_owner", "饱腹": 3 }, "result": "你在树荫最深处找到了几片还绿着的叶子。",
         "fail": { "effect": { "饱腹": -2 }, "result": "爬了一天，全是干叶子。" } }
     ]
   },
@@ -62,7 +62,7 @@
     "id": "x_cocoon", "dir": "any", "sudden": true, "weight": 14, "stage": [3, 3], "once": true,
     "text": "茧里又暖又黑。你很困，困得想一直睡到明年。",
     "choices": [
-      { "text": "按时醒来", "effect": { "蜕变": 5, "灵性": 1 }, "result": "你咬开茧的一角。外面的光有点刺眼。" },
+      { "text": "按时醒来", "effect": { "follow": "f_empty_cocoon", "蜕变": 5, "灵性": 1 }, "result": "你咬开茧的一角。外面的光有点刺眼。" },
       { "text": "再睡一会儿", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "蜕变": 12 }, "result": "你睡了个好觉。醒来时，身体里多了一对东西。",
         "fail": { "effect": { "death": "no_wake" }, "result": "你睡得太沉了。" } },
@@ -77,7 +77,7 @@
       { "text": "亮出它的尾羽", "require": "item:magpie_feather", "effect": { "蜕变": 10, "灵性": 2 },
         "result": "它看见自己的羽毛，愣住了。然后它低着头飞走了。" },
       { "text": "躲着它", "effect": { "灵性": 1 }, "result": "它没看见你。你也没让它看见。" },
-      { "text": "扔片叶子给它", "effect": { "灵性": 3, "蜕变": 3 }, "result": "它看看叶子，又看看你，不明白。你也不需要它明白。" }
+      { "text": "扔片叶子给它", "effect": { "follow": { "id": "f_magpie_fruit", "delay": 2 }, "灵性": 3, "蜕变": 3 }, "result": "它看看叶子，又看看你，不明白。你也不需要它明白。" }
     ]
   },
   {
@@ -85,7 +85,7 @@
     "text": "老太太又来捉虫了。她弯着腰，看见了你——一只落在白菜上的大蝴蝶。",
     "choices": [
       { "text": "冲她点点头", "effect": { "ending": "garden_boss" }, "result": "老太太手一抖，菜篮子掉了。" },
-      { "text": "飞走", "effect": { "攀爬": 2, "蜕变": 5 }, "result": "她直起腰看着你飞远，嘟囔了一句：今年的蝴蝶真大。" }
+      { "text": "飞走", "effect": { "follow": { "id": "f_granny_cabbage", "delay": 2 }, "攀爬": 2, "蜕变": 5 }, "result": "她直起腰看着你飞远，嘟囔了一句：今年的蝴蝶真大。" }
     ]
   },
   {

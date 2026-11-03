@@ -18,7 +18,7 @@
     "text": "一阵白雾飘过来，闻起来有点像薄荷。叶子上的蚜虫一只接一只掉了下去。",
     "choices": [
       { "text": "屏住气往下钻", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "灵性": 2 }, "result": "你钻到了最底下的叶子背面。雾散了，你还在。",
+        "effect": { "follow": "f_mint_leaf", "灵性": 2 }, "result": "你钻到了最底下的叶子背面。雾散了，你还在。",
         "fail": { "effect": { "death": "pesticide" }, "result": "雾钻进了你的气孔。你的脚一只一只松开了。" } },
       { "text": "卷成团滚开", "showIf": "skill:curl", "useSkill": "curl", "effect": { "吐丝": 1 },
         "result": "你卷成球从叶子上滚了下去，滚出了雾。" },
@@ -44,8 +44,8 @@
     "id": "d2_hide", "dir": "down", "layers": ["D2"], "weight": 12,
     "text": "叶背凉快又安静，一只鸟的影子从叶面上滑过去。",
     "choices": [
-      { "text": "趴着不动", "effect": { "灵性": 1, "饱腹": 1 }, "result": "影子过去了。你啃了一口叶背，接着趴着。" },
-      { "text": "边躲边吃", "effect": { "胃口": 2, "饱腹": 1 }, "result": "你从叶背啃出一个洞。阳光漏进来，正好照着你。" }
+      { "text": "趴着不动", "effect": { "follow": "f_shadow_land", "灵性": 1, "饱腹": 1 }, "result": "影子过去了。你啃了一口叶背，接着趴着。" },
+      { "text": "边躲边吃", "effect": { "follow": "f_leaf_hole", "胃口": 2, "饱腹": 1 }, "result": "你从叶背啃出一个洞。阳光漏进来，正好照着你。" }
     ]
   },
   {
@@ -71,7 +71,7 @@
     "text": "月季的刺比你还粗。叶背倒是干净，就是要从刺中间挤过去。",
     "choices": [
       { "text": "小心挤过去", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
-        "effect": { "胃口": 2, "攀爬": 1 }, "result": "你从两根刺中间挤了过去。叶背上全是你的。",
+        "effect": { "follow": "f_rose_bud", "胃口": 2, "攀爬": 1 }, "result": "你从两根刺中间挤了过去。叶背上全是你的。",
         "fail": { "effect": { "饱腹": -2 }, "result": "刺划了你一道口子。你缩成一团疼了半天。" } },
       { "text": "绕开走", "effect": { "攀爬": 1 }, "result": "你绕了一大圈。腿酸了，叶子还是那么远。" }
     ]

@@ -9,8 +9,8 @@
     "id": "l1_maze", "dir": "side", "layers": ["L1"], "weight": 12,
     "text": "草比你高一百倍。你在草根之间转了三天，转回了原地。",
     "choices": [
-      { "text": "爬上草尖认路", "effect": { "攀爬": 2 }, "result": "你爬上草尖一看：原来往左拐就出去了。" },
-      { "text": "跟着气味走", "effect": { "灵性": 2 }, "result": "你闻着花香走出了草丛。鼻子比眼睛靠谱。" }
+      { "text": "爬上草尖认路", "effect": { "follow": "f_grasshopper", "攀爬": 2 }, "result": "你爬上草尖一看：原来往左拐就出去了。" },
+      { "text": "跟着气味走", "effect": { "follow": "f_wildflower", "灵性": 2 }, "result": "你闻着花香走出了草丛。鼻子比眼睛靠谱。" }
     ]
   },
   {
@@ -31,7 +31,7 @@
     "id": "l1_leaf_boat", "dir": "side", "layers": ["L1"], "weight": 8,
     "text": "下过雨，地上有一摊水。一片卷边的叶子漂在水上。",
     "choices": [
-      { "text": "坐上去", "effect": { "item": "leaf_boat", "灵性": 1 }, "result": "你划着叶子船漂过了水坑。船你留下了。" },
+      { "text": "坐上去", "effect": { "follow": "f_puddle_frog", "item": "leaf_boat", "灵性": 1 }, "result": "你划着叶子船漂过了水坑。船你留下了。" },
       { "text": "绕着水坑走", "effect": { "攀爬": 1 }, "result": "你绕了好远。水坑那边的草，长得一样。" }
     ]
   },
@@ -49,10 +49,10 @@
     "text": "一只蜜蜂嗡的一声落在你面前：这片花是我们的。",
     "choices": [
       { "text": "让开", "effect": { "灵性": 1 }, "result": "你去了隔壁那朵。花多的是。" },
-      { "text": "竖起毛吓它", "showIf": "skill:spines", "useSkill": "spines", "effect": { "胃口": 2, "蜕变": 3 },
+      { "text": "竖起毛吓它", "showIf": "skill:spines", "useSkill": "spines", "effect": { "follow": "f_bee_swarm", "胃口": 2, "蜕变": 3 },
         "result": "它看了看你的毛，嗡嗡两声飞走了。" },
       { "text": "跟它讲理", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "灵性": 2, "蜕变": 2 }, "result": "你说你只吃叶子不吃蜜。它想了想，同意了。",
+        "effect": { "follow": { "id": "f_bee_deal", "delay": 2 }, "灵性": 2, "蜕变": 2 }, "result": "你说你只吃叶子不吃蜜。它想了想，同意了。",
         "fail": { "effect": { "饱腹": -2 }, "result": "它不听，蛰了你一下。你肿了半边。" } },
       { "text": "是我呀", "showIf": "flag:bee_friend", "effect": { "饱腹": 2, "灵性": 1, "蜕变": 4 },
         "result": "是雨里那只蜜蜂。它把你领到了最甜的那朵花跟前。" }
@@ -74,9 +74,9 @@
     "id": "l2_xiaoyu_jar", "dir": "side", "layers": ["L2"], "once": true, "weight": 20, "require": "flag:xiaoyu",
     "text": "小雨找到了你。她把你放进一个玻璃罐，罐里铺满了新鲜叶子。",
     "choices": [
-      { "text": "安心住下", "effect": { "饱腹": 4, "胃口": 2, "flag": "xiaoyu_kept" }, "result": "她天天换叶子，还在罐盖上扎了透气孔。" },
+      { "text": "安心住下", "effect": { "follow": { "id": "f_jar_brother", "delay": 2 }, "饱腹": 4, "胃口": 2, "flag": "xiaoyu_kept" }, "result": "她天天换叶子，还在罐盖上扎了透气孔。" },
       { "text": "爬出罐子", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.1,
-        "effect": { "攀爬": 2, "灵性": 1 }, "result": "你顶开盖子跑了。她在后面喊：你还会回来吗？",
+        "effect": { "follow": "f_xiaoyu_search", "攀爬": 2, "灵性": 1 }, "result": "你顶开盖子跑了。她在后面喊：你还会回来吗？",
         "fail": { "effect": { "饱腹": -1, "flag": "xiaoyu_kept" }, "result": "盖子太紧了。你认命地啃起了叶子。" } }
     ]
   },
@@ -85,7 +85,7 @@
     "text": "你在罐子里结了茧。小雨把罐子放在窗台上，每天看一眼。茧裂了。",
     "choices": [
       { "text": "落在她发梢", "effect": { "item": "ribbon", "灵性": 3 }, "result": "她不敢动，眼睛亮亮的。她把发带系在了罐子上。" },
-      { "text": "从窗口飞走", "effect": { "攀爬": 3, "蜕变": 6 }, "result": "你飞过她头顶，飞出窗外。她一直挥手。" }
+      { "text": "从窗口飞走", "effect": { "follow": { "id": "f_xiaoyu_window", "delay": 2 }, "攀爬": 3, "蜕变": 6 }, "result": "你飞过她头顶，飞出窗外。她一直挥手。" }
     ]
   },
 
@@ -105,12 +105,12 @@
     "id": "l3_storm", "dir": "side", "layers": ["L3"], "stage": [3, 99], "once": true, "weight": 18,
     "text": "暴雨要来了。蝴蝶们的翅膀沾了水就飞不动，全挤在一棵快倒的树上。",
     "choices": [
-      { "text": "吐丝织顶棚", "require": "吐丝>=8", "effect": { "吐丝": 2, "蜕变": 10, "flag": "valley_saved" },
+      { "text": "吐丝织顶棚", "require": "吐丝>=8", "effect": { "follow": "f_valley_thanks", "吐丝": 2, "蜕变": 10, "flag": "valley_saved" },
         "result": "你吐了一夜的丝，在树杈间织出一张大伞。天亮了，一只都没少。" },
       { "text": "带它们挪窝", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "灵性": 3, "蜕变": 6, "flag": "valley_saved" }, "result": "你领着它们躲进了岩缝。雨下了三天，它们记住了你。",
+        "effect": { "follow": "f_valley_thanks", "灵性": 3, "蜕变": 6, "flag": "valley_saved" }, "result": "你领着它们躲进了岩缝。雨下了三天，它们记住了你。",
         "fail": { "effect": { "饱腹": -3 }, "result": "雨来得太快了。你只救下了一小半。" } },
-      { "text": "自己先躲", "effect": { "饱腹": 1 }, "result": "你躲进了树洞。雨停后，谷里安静了很多。" }
+      { "text": "自己先躲", "effect": { "follow": "f_storm_wet", "饱腹": 1 }, "result": "你躲进了树洞。雨停后，谷里安静了很多。" }
     ]
   },
   {
