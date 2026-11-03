@@ -63,6 +63,8 @@ export const TEX = {
     adIcon: [`${C}/icon/ad_video`],
     lock: [`${C}/icon/lock`],
     logo: [`${C}/ui/logo_title`],
+    /** 分享卡（不在 bundle 里：build-templates/wechatgame/share/，构建时原样拷到包根目录；npm run share 生成） */
+    share: (id: string) => `share/${id}.jpg`,
     /** 适龄提示标识（主包；放官方 CADPA 标识图，缺图时代码画兜底） */
     age: (n: number) => [`${C}/ui/age_${n}`],
 };

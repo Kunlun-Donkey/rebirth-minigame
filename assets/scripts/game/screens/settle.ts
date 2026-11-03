@@ -21,7 +21,8 @@ export function showSettle(g: Game): void {
     fadeIn(root, 0.3);
 
     const light = isEnd ? COLOR.ochreD : COLOR.cream;
-    text(root, isEnd ? '这 一 世 圆 满 了' : '这 一 世 结 束 了', 0, CONFIG.safeTop - 40, g.W, { size: 40, color: light, align: 'center', bold: true });
+    const head = s.tianhu ? '✦ 天 胡 ✦' : isEnd ? '这 一 世 圆 满 了' : '这 一 世 结 束 了';
+    text(root, head, 0, CONFIG.safeTop - 40, g.W, { size: s.tianhu ? 48 : 40, color: s.tianhu ? COLOR.legacy : light, align: 'center', bold: true });
     text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + 14, g.W, { size: 24, color: light, alpha: 200, align: 'center' });
 
     let y = stone(g, root, s, CONFIG.safeTop + 70);
@@ -32,15 +33,17 @@ export function showSettle(g: Game): void {
 /** 墓志铭石板（分享卡主体） */
 function stone(g: Game, root: Node, s: SettleResult, y: number): number {
     const w = g.W - 60;
-    const ix = 214, iw = w - ix - 28;
+    // 结局卡（ending_card）边框花饰更宽、顶部有叶形徽记：内容整体内缩，避免压在花边上
+    const P = s.kind === 'ending' ? 22 : 0;
+    const ix = 214 + P, iw = w - ix - 28 - P;
     // 墓志铭较长（结局文案常 3 行）时石板加高，避免压到底部足迹行
-    const h = Math.max(300, 132 + textHeight(s.epitaph, iw, 28, 44) + 84);
+    const h = Math.max(300, 132 + P + textHeight(s.epitaph, iw, 28, 44) + 84 + P);
     const n = box(root, 30, y, w, h, 'stone');
     rect(n, { fill: '#e6d3ad', stroke: '#b89a6a', lineWidth: 2, radius: 22, shadow: '#00000055', shadowOffset: 10 });
     // 命格版优先、回落通用版；比例不合（如竖版图）会自动跳过，改用画出来的石板
     image(n, s.kind === 'ending' ? TEX.endingCard : TEX.epitaphCard, 0, 0, w, h, { maxAspectDiff: 0.5 });
 
-    const pic = box(n, 28, 28, 160, 160, 'pic');
+    const pic = box(n, 28 + P, 28 + P, 160, 160, 'pic');
     rect(pic, { fill: '#f8efdb', stroke: '#c9ad7d', radius: 16 });
     text(pic, s.title.slice(0, 1), 0, 0, 160, { size: 80, color: COLOR.ochre, align: 'center', valign: 'center', bold: true }, 160);
     if (s.kind === 'death') {
@@ -48,14 +51,15 @@ function stone(g: Game, root: Node, s: SettleResult, y: number): number {
         if (icon) image(pic, TEX.icon('death', icon), 10, 10, 140, 140);
     }
 
-    text(n, `第 ${s.life} 世 · ${s.stageName}`, ix, 30, iw, { size: 24, color: COLOR.ink2 });
-    text(n, s.title, ix, 66, iw, { size: 40, color: COLOR.ochreD, bold: true }, 56);
-    if (s.firstTime) chip(n, '首次', w - 28 - 70, 76, COLOR.bad, true, 20);
-    text(n, s.epitaph, ix, 132, iw, { size: 28, wrap: true, lineHeight: 44 });
+    text(n, `第 ${s.life} 世 · ${s.stageName}`, ix, 30 + P, iw, { size: 24, color: COLOR.ink2 });
+    text(n, s.title, ix, 66 + P, iw, { size: 40, color: COLOR.ochreD, bold: true }, 56);
+    if (s.firstTime) chip(n, '首次', w - 28 - 70 - P, 76 + P, COLOR.bad, true, 20);
+    if (s.tianhu) tianhuSeal(pic);
+    text(n, s.epitaph, ix, 132 + P, iw, { size: 28, wrap: true, lineHeight: 44 });
 
     const meta = s.explore.map(x => `${x.name.slice(-2)} · ${x.layer || '—'}`).join('    ');
-    rect(box(n, 28, h - 70, w - 56, 2, 'line'), { fill: '#7a4a1f', fillAlpha: 70 });
-    text(n, meta, 28, h - 56, w - 56, { size: 22, color: COLOR.ink2, align: 'center' });
+    rect(box(n, 28 + P, h - 70 - P, w - 56 - 2 * P, 2, 'line'), { fill: '#7a4a1f', fillAlpha: 70 });
+    text(n, meta, 28 + P, h - 56 - P, w - 56 - 2 * P, { size: 22, color: COLOR.ink2, align: 'center' });
     return y + h;
 }
 
@@ -112,6 +116,21 @@ function panel(g: Game, root: Node, s: SettleResult, y: number): number {
     return y + h;
 }
 
+/** 天胡金印：盖在石板左上的图上 */
+function tianhuSeal(pic: Node): void {
+    const seal = box(pic, 84, 96, 84, 84, 'tianhu');
+    rect(seal, { fill: COLOR.legend, stroke: '#ffffff', lineWidth: 4, radius: 42, shadow: '#00000044', shadowOffset: 4 });
+    text(seal, '天胡', 0, 0, 84, { size: 28, color: COLOR.white, align: 'center', valign: 'center', bold: true }, 84);
+}
+
+/** 分享文案：天胡 / 结局 / 死亡各一种口吻 */
+function shareText(g: Game, s: SettleResult): string {
+    const name = g.data.meta.name;
+    if (s.tianhu) return `天胡！${name}第${s.life}世，直接成了「${s.title}」。${s.epitaph}`;
+    if (s.kind === 'ending') return `轮回${s.life}世，${name}终于成了「${s.title}」。你能更快吗？`;
+    return `第${s.life}世，我${s.title}了。${s.epitaph}`;
+}
+
 function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     const w = g.W - 60;
     let cy = y;
@@ -128,7 +147,7 @@ function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     const half = (w - 16) / 2;
     button(root, 30, cy, half, {
         label: '分享墓志铭', style: 'ghost', size: 28, align: 'center',
-        onClick: () => Platform.share(`第${s.life}世，我${s.title}了。${s.epitaph}`, `life=${s.life}`),
+        onClick: () => Platform.share(shareText(g, s), `life=${s.life}`, TEX.share(g.data.meta.id)),
     });
     button(root, 30 + half + 16, cy, half, {
         label: '再次重生', style: 'primary', size: 30,

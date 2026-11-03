@@ -481,7 +481,6 @@ export class Engine {
         if (tianhu) {
             breakdown.push({ label: '天胡', value: 100 });
             dp.codex.tianhu = (dp.codex.tianhu ?? 0) + 1;
-            epitaph = `【天胡】${epitaph}`;
         }
         let points = breakdown.reduce((n, b) => n + b.value, 0);
         const bonus = (label: string, mul: number) => {

@@ -68,21 +68,21 @@ export const Platform = {
         });
     },
 
-    /** 主动分享 */
-    share(title: string, query = ''): void {
+    /** 主动分享；imageUrl 为小游戏包内路径（build-templates/wechatgame/ 下的文件），缺省用截屏 */
+    share(title: string, query = '', imageUrl?: string): void {
         if (!isWx()) {
-            console.log(`[platform] 分享 Mock：${title}`);
+            console.log(`[platform] 分享 Mock：${title}${imageUrl ? ` [${imageUrl}]` : ''}`);
             return;
         }
-        wx.shareAppMessage({ title, query });
+        wx.shareAppMessage(imageUrl ? { title, query, imageUrl } : { title, query });
     },
 
-    /** 右上角菜单的被动分享 + 朋友圈 */
-    setupPassiveShare(getTitle: () => string): void {
+    /** 右上角菜单的被动分享 + 朋友圈（每次分享时取当前命格的文案与分享卡） */
+    setupPassiveShare(get: () => { title: string; imageUrl?: string }): void {
         if (!isWx()) return;
         wx.showShareMenu?.({ menus: ['shareAppMessage', 'shareTimeline'] });
-        wx.onShareAppMessage(() => ({ title: getTitle() }));
-        wx.onShareTimeline?.(() => ({ title: getTitle() }));
+        wx.onShareAppMessage(() => get());
+        wx.onShareTimeline?.(() => get());
     },
 
     toast(title: string): void {

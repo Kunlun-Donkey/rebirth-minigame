@@ -71,7 +71,10 @@ export class Game {
         this.audio.attach(this.host);
         this.audio.preload(['click', 'choose', 'success', 'fail', 'item']);
         setTapFeedback(() => this.audio.play('click'));
-        Platform.setupPassiveShare(() => '我重生了，这一世我将拿回属于我的一切');
+        Platform.setupPassiveShare(() => ({
+            title: `我重生了，这一世我是${this.data.meta.name}，我将拿回属于我的一切`,
+            imageUrl: TEX.share(this.data.meta.id),
+        }));
 
         // 有中途存档就恢复到引擎里，由主菜单「继续」进入
         if (run && run.destiny === this.data.meta.id && run.phase !== 'over') this.engine.resume(run);

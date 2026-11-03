@@ -546,7 +546,6 @@ describe('天胡通道', () => {
         const st = e.settle();
         expect(st.kind).toBe('ending');
         expect(st.tianhu).toBe(true);
-        expect(st.epitaph.startsWith('【天胡】')).toBe(true);
         expect(st.breakdown.some(b => b.label === '天胡')).toBe(true);
         expect(e.dp.codex.tianhu).toBe(1);
     });
