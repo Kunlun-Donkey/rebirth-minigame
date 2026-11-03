@@ -10,9 +10,9 @@
     "text": "潮水退了。泥滩上留下一个个小水洼，太阳越来越毒。",
     "choices": [
       { "text": "钻进泥里", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.1,
-        "effect": { "打洞": 2 }, "result": "你钻到了湿泥底下。等潮水回来，你又是一条好虾。",
+        "effect": { "打洞": 2, "follow": { "id": "f_mud_worm", "delay": 2 } }, "result": "你钻到了湿泥底下。等潮水回来，你又是一条好虾。",
         "fail": { "effect": { "death": "dry" }, "result": "泥太硬了，太阳太大了。" } },
-      { "text": "跳回水洼", "effect": { "体力": -1, "游速": 1 }, "result": "你连蹦带跳，跳进了一个小水洼。挤，但能活。" },
+      { "text": "跳回水洼", "effect": { "体力": -1, "游速": 1, "follow": { "id": "f_pool_crowd", "delay": 2 } }, "result": "你连蹦带跳，跳进了一个小水洼。挤，但能活。" },
       { "text": "前世晒干过", "require": "legacy:moist>=1", "effect": { "打洞": 1, "体力": 1 },
         "result": "前世潮水忘了带你走。这一世你提前钻进了最深的泥。" }
     ]
@@ -33,8 +33,8 @@
     "id": "l1_drain", "dir": "side", "layers": ["L1"], "maps": ["market"], "weight": 14,
     "text": "排水沟里全是菜叶子和鱼鳞，水一直往低处流。",
     "choices": [
-      { "text": "顺水冲出去", "effect": { "游速": 2, "海灵": 3 }, "result": "水沟通向码头。你闻到了真正的海。" },
-      { "text": "捡点吃的", "effect": { "体力": 3 }, "result": "市场扔掉的东西，比水箱里喂的强多了。" }
+      { "text": "顺水冲出去", "effect": { "游速": 2, "海灵": 3, "follow": "f_drain_cat" }, "result": "水沟通向码头。你闻到了真正的海。" },
+      { "text": "捡点吃的", "effect": { "体力": 3, "follow": { "id": "f_drain_loach", "delay": 2 } }, "result": "市场扔掉的东西，比水箱里喂的强多了。" }
     ]
   },
   {
@@ -50,8 +50,8 @@
     "id": "l2_dock", "dir": "side", "layers": ["L2"], "weight": 12,
     "text": "码头底下的木桩上长满了牡蛎。头顶，有人在卸货。",
     "choices": [
-      { "text": "敲牡蛎", "effect": { "item": "oyster" }, "result": "你敲下一个生蚝，壳硬得震手。值了。" },
-      { "text": "听人说话", "effect": { "灵性": 2 }, "result": "他们说城里新开了个水族馆，在收稀奇的海货。" }
+      { "text": "敲牡蛎", "effect": { "item": "oyster", "follow": { "id": "f_dock_starfish", "delay": 2 } }, "result": "你敲下一个生蚝，壳硬得震手。值了。" },
+      { "text": "听人说话", "effect": { "灵性": 2, "follow": "f_dock_crate" }, "result": "他们说城里新开了个水族馆，在收稀奇的海货。" }
     ]
   },
   {

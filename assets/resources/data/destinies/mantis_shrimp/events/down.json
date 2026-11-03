@@ -10,9 +10,9 @@
     "text": "沙里埋着一个蛤蜊，壳闭得紧紧的。",
     "choices": [
       { "text": "一拳打开", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.1,
-        "effect": { "体力": 3, "拳力": 1, "skill": "punch" }, "result": "啪的一声，壳碎了。你这才知道自己的拳头有多快。",
+        "effect": { "体力": 3, "拳力": 1, "skill": "punch", "follow": "f_clam_crowd" }, "result": "啪的一声，壳碎了。你这才知道自己的拳头有多快。",
         "fail": { "effect": { "体力": -1 }, "result": "蛤蜊比你想的硬。你的钳子麻了半天。" } },
-      { "text": "带回洞里", "effect": { "item": "clam" }, "result": "你把它滚回了洞里。饿了再说。" }
+      { "text": "带回洞里", "effect": { "item": "clam", "follow": { "id": "f_clam_open", "delay": 2 } }, "result": "你把它滚回了洞里。饿了再说。" }
     ]
   },
   {
@@ -104,11 +104,11 @@
     "id": "d3_bleach", "dir": "down", "layers": ["D3"], "maps": ["reef"], "stage": [3, 99], "once": true, "weight": 18,
     "text": "珊瑚林一片一片地变白了。小鱼们说，海水太热了，珊瑚快不行了。",
     "choices": [
-      { "text": "挖沟引冷水", "require": "打洞>=10", "effect": { "打洞": 2, "海灵": 10, "flag": "reef_saved" },
+      { "text": "挖沟引冷水", "require": "打洞>=10", "effect": { "打洞": 2, "海灵": 10, "flag": "reef_saved", "follow": { "id": "f_reef_thanks", "delay": 2 } },
         "result": "你从深处挖了一条沟，冷水涌了上来。白了的珊瑚，慢慢又有了颜色。" },
-      { "text": "去找海龟", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "海灵": 6, "flag": "reef_saved" },
+      { "text": "去找海龟", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "海灵": 6, "flag": "reef_saved", "follow": { "id": "f_reef_thanks", "delay": 2 } },
         "result": "老海龟带来了一股冷流。它说：这片礁，我也住过。" },
-      { "text": "搬去别处", "effect": { "游速": 1 }, "result": "你离开了珊瑚林。走的时候回头看了一眼，很白。" }
+      { "text": "搬去别处", "effect": { "游速": 1, "follow": { "id": "f_bleach_last", "delay": 2, "ttl": 6 } }, "result": "你离开了珊瑚林。走的时候回头看了一眼，很白。" }
     ]
   },
   {
@@ -146,14 +146,14 @@
     "id": "d4_dragon", "dir": "down", "layers": ["D4"], "stage": [4, 99], "once": true, "weight": 20,
     "text": "一条比山还大的海蛇缠住了龙宫的大门，门里传出喊声。",
     "choices": [
-      { "text": "一拳打它七寸", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 3, "海灵": 15, "flag": "dragon_saved" },
+      { "text": "一拳打它七寸", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 3, "海灵": 15, "flag": "dragon_saved", "follow": { "id": "f_dragon_feast", "delay": 2 } },
         "result": "你憋了一辈子的劲，全打在了一个点上。海蛇松开门，逃进了深渊。" },
       { "text": "冲上去", "chance": 0.4, "chanceAttr": "拳力", "chanceStep": 0.04,
-        "effect": { "拳力": 2, "海灵": 10, "flag": "dragon_saved" }, "result": "你一拳接一拳，打到海蛇松了口。门开了，里面的人都看着你。",
+        "effect": { "拳力": 2, "海灵": 10, "flag": "dragon_saved", "follow": { "id": "f_dragon_feast", "delay": 2 } }, "result": "你一拳接一拳，打到海蛇松了口。门开了，里面的人都看着你。",
         "fail": { "effect": { "体力": -4 }, "result": "海蛇一甩尾巴，你被抽出了海沟。" } },
-      { "text": "搅浑水", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "灵性": 2, "海灵": 10, "flag": "dragon_saved" },
+      { "text": "搅浑水", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "灵性": 2, "海灵": 10, "flag": "dragon_saved", "follow": { "id": "f_dragon_feast", "delay": 2 } },
         "result": "沙子扬起来，海蛇什么都看不见。门里的龟丞相趁机把门关紧了。" },
-      { "text": "走开", "effect": { "体力": 1 }, "result": "龙宫的事，跟一只虾有什么关系。" }
+      { "text": "走开", "effect": { "体力": 1, "follow": "f_serpent_coil" }, "result": "龙宫的事，跟一只虾有什么关系。" }
     ]
   }
 ]

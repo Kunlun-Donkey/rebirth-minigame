@@ -19,16 +19,16 @@
     "id": "u1_light", "dir": "up", "layers": ["U1"], "weight": 10,
     "text": "阳光穿过水面，在沙子上晃成一片一片的网。",
     "choices": [
-      { "text": "晒一会儿", "effect": { "海灵": 2, "体力": -1 }, "result": "你的壳被晒得发烫。身体里有什么东西在长。" },
-      { "text": "盯着看", "effect": { "灵性": 2 }, "result": "你的眼睛把光拆成了十六种颜色。好看极了。" }
+      { "text": "晒一会儿", "effect": { "海灵": 2, "体力": -1, "follow": { "id": "f_sun_molt", "delay": 2 } }, "result": "你的壳被晒得发烫。身体里有什么东西在长。" },
+      { "text": "盯着看", "effect": { "灵性": 2, "follow": "f_light_colors" }, "result": "你的眼睛把光拆成了十六种颜色。好看极了。" }
     ]
   },
   {
     "id": "u1_tank_top", "dir": "up", "layers": ["U1", "U2"], "maps": ["market"], "weight": 14,
     "text": "水箱上层的水最干净，也离老板的网兜最近。",
     "choices": [
-      { "text": "抢块好位置", "effect": { "体力": 2, "游速": 1 }, "result": "增氧泵吹出的泡泡正好打在你身上。舒服。" },
-      { "text": "看清网兜规律", "effect": { "灵性": 2, "flag": "boss_seen" }, "result": "你发现老板每次都先捞左边。你搬到了右边。" }
+      { "text": "抢块好位置", "effect": { "体力": 2, "游速": 1, "follow": { "id": "f_tank_newcomer", "delay": 2 } }, "result": "增氧泵吹出的泡泡正好打在你身上。舒服。" },
+      { "text": "看清网兜规律", "effect": { "灵性": 2, "flag": "boss_seen", "follow": { "id": "f_tank_switch", "delay": 2 } }, "result": "你发现老板每次都先捞左边。你搬到了右边。" }
     ]
   },
 
@@ -49,10 +49,10 @@
     "text": "一只水母慢慢漂过来，透明的须子拖得老长。",
     "choices": [
       { "text": "绕开", "effect": { "游速": 1 }, "result": "你绕了一大圈。水母什么也没察觉，接着漂。" },
-      { "text": "一拳打穿", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 1, "海灵": 4 },
+      { "text": "一拳打穿", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 1, "海灵": 4, "follow": { "id": "f_jelly_twins", "delay": 2 } },
         "result": "啪的一声，水母变成了两半，还在漂。" },
       { "text": "跟着它漂", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "游速": 2, "海灵": 2 }, "result": "它带你搭了一段顺风车。须子没碰到你。",
+        "effect": { "游速": 2, "海灵": 2, "follow": { "id": "f_jelly_bloom", "delay": 2 } }, "result": "它带你搭了一段顺风车。须子没碰到你。",
         "fail": { "effect": { "体力": -2 }, "result": "须子扫了你一下。你麻了半天。" } }
     ]
   },
@@ -92,11 +92,11 @@
     "id": "u3_octopus_revenge", "dir": "up", "layers": ["U3", "U4"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:octopus_grudge",
     "text": "章鱼墨斗缠住了一条渔船的锚链在打盹。它老了，紫色变成了灰色。",
     "choices": [
-      { "text": "一拳打醒它", "showIf": "skill:punch", "useSkill": "punch", "effect": { "item": "ink_sac", "海灵": 10 },
+      { "text": "一拳打醒它", "showIf": "skill:punch", "useSkill": "punch", "effect": { "item": "ink_sac", "海灵": 10, "follow": { "id": "f_octopus_kids", "delay": 2 } },
         "result": "它吓得喷了一大口墨，墨囊都瘪了。你把墨囊捡走了。" },
       { "text": "搅浑水吓它", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "海灵": 8, "灵性": 2 },
         "result": "沙子扑了它一脸。它看不见，慌得八条腿缠成了一团。" },
-      { "text": "算了", "effect": { "灵性": 3 }, "result": "你从它头顶游过去。不是原谅，是它不配。" }
+      { "text": "算了", "effect": { "灵性": 3, "follow": { "id": "f_octopus_debt", "delay": 2 } }, "result": "你从它头顶游过去。不是原谅，是它不配。" }
     ]
   },
 

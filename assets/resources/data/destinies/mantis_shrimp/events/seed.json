@@ -34,17 +34,17 @@
     "text": "一只比你还大的浮游虫在你面前慢悠悠地飘。",
     "choices": [
       { "text": "一拳打晕", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.1,
-        "effect": { "体力": 2, "拳力": 1 }, "result": "第一拳就打中了。你吃得肚皮发亮。",
+        "effect": { "体力": 2, "拳力": 1, "follow": { "id": "f_plankton_swarm", "delay": 2 } }, "result": "第一拳就打中了。你吃得肚皮发亮。",
         "fail": { "effect": { "体力": -1 }, "result": "你挥空了。它慢悠悠地飘走了，像在嘲笑你。" } },
-      { "text": "跟着它游", "effect": { "游速": 1 }, "result": "你追了它一天，没追上，游得倒是快了。" }
+      { "text": "跟着它游", "effect": { "游速": 1, "follow": { "id": "f_plankton_current", "delay": 2 } }, "result": "你追了它一天，没追上，游得倒是快了。" }
     ]
   },
   {
     "id": "s0_sand", "dir": "down", "stage": [0, 0], "weight": 14,
     "text": "海底的沙又细又软，你忍不住想挖个洞。",
     "choices": [
-      { "text": "挖个深洞", "effect": { "打洞": 2 }, "result": "你挖出了一个 U 形洞，两头都有门。很专业。" },
-      { "text": "挖着玩", "effect": { "体力": 1, "灵性": 1 }, "result": "你挖出一个贝壳，又埋回去了。挺好玩。" }
+      { "text": "挖个深洞", "effect": { "打洞": 2, "follow": { "id": "f_sand_neighbor", "delay": 2 } }, "result": "你挖出了一个 U 形洞，两头都有门。很专业。" },
+      { "text": "挖着玩", "effect": { "体力": 1, "灵性": 1, "follow": { "id": "f_buried_shell", "delay": 2 } }, "result": "你挖出一个贝壳，又埋回去了。挺好玩。" }
     ]
   },
   {
