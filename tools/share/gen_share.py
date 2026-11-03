@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 OUT = os.path.join(ROOT, 'build-templates', 'wechatgame', 'share')
 FONT = '/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc'
-GAME = '我重生了，这一世我将拿回属于我的一切'
+GAME = '《这一世我重生了》'
 W, H = 500, 400
 
 def find(*cands):

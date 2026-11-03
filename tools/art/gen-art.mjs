@@ -531,14 +531,15 @@ job('common/icon/ad_video', 128, 128, `
 
 // ---------- 8. 标题字 / 分享图 / 小程序头像 ----------
 const TITLE_FONT = `font-family="Noto Serif CJK SC, Source Han Serif SC, serif" font-weight="900"`;
+// 游戏名《这一世我重生了》：上行小字「这一世」（y 为其基线），下行大字「我重生了」
 const titleBlock = (cx, y, big, small) => `
   <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a4f1c"/><stop offset="1" stop-color="#4a2a10"/></linearGradient>
-  <text x="${cx}" y="${y}" text-anchor="middle" ${TITLE_FONT} font-size="${big}" letter-spacing="${f(big * 0.12)}" fill="url(#tg)" stroke="#fff3d0" stroke-width="${f(big * 0.06)}" paint-order="stroke">我重生了</text>
-  <text x="${cx}" y="${f(y + small * 1.9)}" text-anchor="middle" ${TITLE_FONT} font-size="${small}" letter-spacing="${f(small * 0.18)}" fill="#6b4a2a" stroke="#fff3d0" stroke-width="${f(small * 0.12)}" paint-order="stroke">这一世，我将拿回属于我的一切</text>`;
+  <text x="${cx}" y="${y}" text-anchor="middle" ${TITLE_FONT} font-size="${small}" letter-spacing="${f(small * 0.6)}" fill="#6b4a2a" stroke="#fff3d0" stroke-width="${f(small * 0.12)}" paint-order="stroke">这一世</text>
+  <text x="${cx}" y="${f(y + big * 1.08)}" text-anchor="middle" ${TITLE_FONT} font-size="${big}" letter-spacing="${f(big * 0.12)}" fill="url(#tg)" stroke="#fff3d0" stroke-width="${f(big * 0.06)}" paint-order="stroke">我重生了</text>`;
 job('common/ui/logo_title', 1000, 360, `
   <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3c4" stop-opacity=".9"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient>
-  <ellipse cx="500" cy="170" rx="480" ry="170" fill="url(#gl)"/>
-  ${titleBlock(500, 190, 150, 44)}
+  <ellipse cx="500" cy="180" rx="480" ry="170" fill="url(#gl)"/>
+  ${titleBlock(500, 100, 150, 62)}
   <path d="${star(120, 70, 16, 4, 4)}" fill="#e2b04a"/><path d="${star(890, 230, 12, 3, 4)}" fill="#e2b04a"/>`);
 
 const coverBg = (W, H, r) => `
@@ -554,7 +555,7 @@ const sprout = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})">
   <path d="M1 -64 C26 -84 48 -80 58 -66 C38 -54 18 -56 1 -64Z" fill="#9bd36a"/>
   <ellipse cx="0" cy="4" rx="46" ry="9" fill="#a87444" opacity=".5"/></g>`;
 job('common/ui/share_cover', 500, 400, `${coverBg(500, 400, rng(8))}
-  ${titleBlock(250, 120, 76, 24)}${sprout(250, 350, 1.15)}
+  ${titleBlock(250, 70, 76, 32)}${sprout(250, 350, 1.15)}
   <rect width="500" height="400" fill="#fff" filter="url(#grain)" opacity=".4"/>`, { jpg: true });
 
 // 小程序头像（备案 / 后台上传用，不进游戏包；路径相对 textures/）
