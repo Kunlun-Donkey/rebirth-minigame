@@ -562,6 +562,10 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
             // 随缘投胎：免费次数用完后显示「明日再来」，点了不转
             g.save.profile.destinies.desert_grass.bestStage = 2;
             const { todayKey } = await import('../assets/scripts/game/game');
+            g.goDestinySelect('menu');
+            await flush();
+            expect(labels(g.screen)).toContain('随缘投胎');
+            expect(labels(g.screen).some(l => l.includes('免费'))).toBe(false);
             g.save.spinDay = todayKey();
             g.goDestinySelect('menu');
             await flush();

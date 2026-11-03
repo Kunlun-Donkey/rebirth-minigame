@@ -92,7 +92,7 @@ export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): vo
     // 广告未开通：每天只有一次免费，用完显示「明日再来」
     const none = !free && !CONFIG.adsEnabled;
     button(root, 60, g.H - 140, half, {
-        label: free ? '随缘投胎 · 免费' : none ? '随缘投胎 · 明日再来' : '随缘投胎 · 视频', style: free ? 'primary' : none ? 'locked' : 'ad', size: 26, align: 'center',
+        label: free ? (CONFIG.adsEnabled ? '随缘投胎 · 免费' : '随缘投胎') : none ? '随缘投胎 · 明日再来' : '随缘投胎 · 视频', style: free ? 'primary' : none ? 'locked' : 'ad', size: 26, align: 'center',
         onClick: none ? undefined : async () => {
             if (busy) return;
             busy = true;
