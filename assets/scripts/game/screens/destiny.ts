@@ -6,10 +6,12 @@ import { destinyStates } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { box, button, chip, COLOR, estimateWidth, fadeIn, image, onTap, rect, text } from '../ui/kit';
+import { box, button, chip, COLOR, estimateWidth, fadeIn, image, onTap, rect, text, textHeight } from '../ui/kit';
 
 const MAX_CARD_H = 240;
 const GAP = 20;
+/** 简介字号候选 [字号, 行高]：放不下就往小一档 */
+const DESC_FONTS: [number, number][] = [[21, 30], [20, 28], [18, 25], [17, 23]];
 
 export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): void {
     const back = () => (from === 'menu' ? g.goMenu() : g.goDraft());
@@ -45,10 +47,18 @@ export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): vo
 
         const tx = 22 + ART + 24;
         const tw = cardW - tx - 24;
-        text(card, entry.name, tx, 26, tw, { size: 36, bold: true, color: st.unlocked ? COLOR.ink : COLOR.ink2 });
-        text(card, entry.desc, tx, 76, tw, { size: 21, color: COLOR.ink2, wrap: true, lineHeight: 30 }, CARD_H - 76 - 56);
+        // 命格多、卡片矮时整体收紧：标题上移、状态行贴底，简介按剩余高度挑字号
+        const compact = CARD_H < 200;
+        const nameY = compact ? 16 : 26;
+        const descY = compact ? 62 : 76;
         const status = st.unlocked ? (st.lives ? `已轮回 ${st.lives} 世` : '尚未投胎') : `🔒 ${st.lockText ?? '未解锁'}`;
-        text(card, status, tx, CARD_H - 52, tw, { size: 22, color: st.unlocked ? COLOR.ochre : COLOR.bad, wrap: true });
+        const statusH = textHeight(status, tw, 20, 28);
+        const statusY = CARD_H - (compact ? 12 : 22) - statusH;
+        const room = statusY - descY - 4;
+        const fit = DESC_FONTS.find(([fs, lh]) => textHeight(entry.desc, tw, fs, lh) <= room) ?? DESC_FONTS[DESC_FONTS.length - 1];
+        text(card, entry.name, tx, nameY, tw, { size: compact ? 32 : 36, bold: true, color: st.unlocked ? COLOR.ink : COLOR.ink2 });
+        text(card, entry.desc, tx, descY, tw, { size: fit[0], color: COLOR.ink2, wrap: true, lineHeight: fit[1] });
+        text(card, status, tx, statusY, tw, { size: 20, color: st.unlocked ? COLOR.ochre : COLOR.bad, wrap: true, lineHeight: 28 });
         if (isCur) {
             const label = '当前';
             chip(card, label, cardW - 24 - (estimateWidth(label, 20) + 20), 24, COLOR.legacy, true);
