@@ -1,0 +1,34 @@
+[
+  {
+    "id": "z_last_stand",
+    "dir": "any",
+    "chainOnly": true,
+    "text": "你的壳越来越重，拳头也挥不动了。寿元将尽。潮水在退。",
+    "choices": [
+      {
+        "text": "对着大海打出最后一拳",
+        "chance": 0.35,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.015,
+        "effect": {
+          "stageUp": 1,
+          "海灵": 15
+        },
+        "result": "一拳打穿了潮水。你的壳裂开，长出了新的。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "拳头停在半空。潮水把你轻轻带走了。"
+        }
+      },
+      {
+        "text": "缩回洞里",
+        "effect": {
+          "death": "old_age"
+        },
+        "result": "你缩进洞里，听着潮声，睡着了。"
+      }
+    ]
+  }
+]

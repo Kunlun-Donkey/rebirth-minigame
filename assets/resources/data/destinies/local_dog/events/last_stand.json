@@ -1,0 +1,34 @@
+[
+  {
+    "id": "z_last_stand",
+    "dir": "any",
+    "chainOnly": true,
+    "text": "你的腿越来越沉，牙也松了。寿元将尽。月亮升起来了。",
+    "choices": [
+      {
+        "text": "对月最后一啸",
+        "chance": 0.35,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.015,
+        "effect": {
+          "stageUp": 1,
+          "妖气": 15
+        },
+        "result": "月华灌进你的身体。你从地上站了起来，比从前更高。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "你的叫声越来越轻，最后停在了半空。"
+        }
+      },
+      {
+        "text": "趴在村口",
+        "effect": {
+          "death": "old_age"
+        },
+        "result": "你趴在村口晒着太阳，再也没有起来。"
+      }
+    ]
+  }
+]

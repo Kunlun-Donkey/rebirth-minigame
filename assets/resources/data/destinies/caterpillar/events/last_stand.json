@@ -1,0 +1,34 @@
+[
+  {
+    "id": "z_last_stand",
+    "dir": "any",
+    "chainOnly": true,
+    "text": "你的身子越来越慢，丝也吐不出来了。寿元将尽。风在叶子间打转。",
+    "choices": [
+      {
+        "text": "拼命再蜕一次",
+        "chance": 0.35,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.015,
+        "effect": {
+          "stageUp": 1,
+          "蜕变": 15
+        },
+        "result": "旧皮裂开，新的你挤了出来。你还没完。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "你卡在了半张旧皮里，再也没动。"
+        }
+      },
+      {
+        "text": "挂在叶子上睡去",
+        "effect": {
+          "death": "old_age"
+        },
+        "result": "你挂在叶子背面，像一颗安静的露水。"
+      }
+    ]
+  }
+]

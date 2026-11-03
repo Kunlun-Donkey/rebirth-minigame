@@ -92,6 +92,10 @@ export function validateDestiny(raw: RawDestiny): Report {
         }
         if (!(R.regen?.per > 0) || !(R.yield?.per > 0)) errors.push('rules.regen.per / rules.yield.per 必须大于 0');
         if (!R.startLog) errors.push('rules.startLog 不能为空');
+        if (R.lastStand) {
+            referencedEvents.add(R.lastStand);
+            if (!d.events.has(R.lastStand)) errors.push(`rules.lastStand 指向不存在的事件 ${R.lastStand}`);
+        }
     }
     for (const death of d.deaths.values()) {
         if (death.legacy && !d.legacies.has(death.legacy)) errors.push(`死法 ${death.id}: 传承 ${death.legacy} 不存在`);

@@ -132,7 +132,7 @@
   "blessed": {"chance": 0.01, "name": "天命之草", "text": "你落地的那一刻，荒漠下了一场金色的雨。这一世，天道偏爱你。", "start": {"根系": 3, "茎叶": 3, "韧性": 3, "灵性": 3, "灵气": 10, "水分上限": 3}, "lifespanMul": 2, "chain": "g_tianhu_1"},
   "rules": {
     "life": "water", "lifeMax": "waterMax",
-    "lifeDeath": "thirst", "oldAgeDeath": "old_age",
+    "lifeDeath": "thirst", "oldAgeDeath": "old_age", "lastStand": "z_last_stand",
     "regen": { "from": "root", "per": 8 },
     "growth": "qi",
     "yield": { "from": "stem", "per": 3, "base": 1, "minStage": 1 },
@@ -145,6 +145,7 @@
   "settings": {
     "suddenChance": 0.2,
     "rarityWeights": { "common": 60, "rare": 28, "epic": 10, "legend": 2 },
-    "skillSlots": 3
+    "skillSlots": 3,
+    "newbieSeasons": 8
   }
 }

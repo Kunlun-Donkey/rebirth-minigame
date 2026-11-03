@@ -164,7 +164,7 @@
   "blessed": {"chance": 0.01, "name": "天选之虫", "text": "你破卵那天，整片菜园的露水都亮了一下。这一世，你注定要飞。", "start": {"胃口": 3, "攀爬": 3, "吐丝": 3, "灵性": 3, "蜕变": 10, "饱腹上限": 3}, "lifespanMul": 2, "chain": "g_tianhu_1"},
   "rules": {
     "life": "satiety", "lifeMax": "satietyMax",
-    "lifeDeath": "starve", "oldAgeDeath": "old_age",
+    "lifeDeath": "starve", "oldAgeDeath": "old_age", "lastStand": "z_last_stand",
     "regen": { "from": "appetite", "per": 6 },
     "growth": "change",
     "yield": { "from": "climb", "per": 3, "base": 1, "minStage": 1 },
@@ -177,6 +177,7 @@
   "settings": {
     "suddenChance": 0.2,
     "rarityWeights": { "common": 60, "rare": 28, "epic": 10, "legend": 2 },
-    "skillSlots": 3
+    "skillSlots": 3,
+    "newbieSeasons": 8
   }
 }

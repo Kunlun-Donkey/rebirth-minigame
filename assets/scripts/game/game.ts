@@ -251,6 +251,7 @@ export class Game {
         if (phase === 'dying') return 'death';
         if (s.messages.some(m => m.startsWith('【突破·'))) return 'breakthrough';
         if (s.revived) return 'revive';
+        if (s.crit) return 'breakthrough';
         if (s.skills.length) return 'skill';
         if (s.success === false) return 'fail';
         if (s.success === true) return 'success';

@@ -84,6 +84,16 @@ function hud(g: Game, root: Node): number {
     const menu = chip(root, '☰ 菜单', 0, ly, COLOR.ochreD, false, 24);
     menu.setPosition(g.W - 30 - sizeOf(menu).w, -ly, 0);
     onTap(menu, () => { g.persist(); g.goMenu(); });
+
+    // 距离下一境界（只列「属性 ≥ N」条件；已满足的项打勾）
+    const pg = e.stageProgress();
+    if (pg && pg.parts.length) {
+        const parts = pg.parts.map(p => (p.cur >= p.need ? `${p.label} ✓` : `${p.label} ${p.cur}/${p.need}`));
+        const done = pg.parts.every(p => p.cur >= p.need);
+        text(root, `距「${pg.name}」：${parts.join(' · ')}`, 30, ly + 50, g.W - 60,
+            { size: 22, color: done ? COLOR.good : COLOR.ochre, bold: done });
+        return ly + 92;
+    }
     return ly + 60;
 }
 

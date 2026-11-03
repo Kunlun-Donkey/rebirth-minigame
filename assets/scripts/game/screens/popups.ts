@@ -57,7 +57,7 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
         const n = text(panel, m, 40, y, innerW, { size: 26, wrap: true, color, lineHeight: 40, bold: m.startsWith('【') });
         y += sizeOf(n).h + 12;
     }
-    if (breakthrough) Platform.vibrate();
+    if (breakthrough || s.crit) Platform.vibrate();
     // 按钮始终在面板内（内容超出估算时宁可压住最后一行，也不能出屏）
     const ph = sizeOf(panel).h;
     button(panel, 40, Math.min(Math.max(y + 10, ph - 120), ph - 110), innerW, { label: '继  续', style: 'primary', onClick: close });

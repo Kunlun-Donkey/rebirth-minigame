@@ -167,7 +167,7 @@
   "blessed": {"chance": 0.01, "name": "海神眷顾", "text": "你孵出来那天，潮水退了又涨，海面上亮起一道金线。这一世，大海站在你这边。", "start": {"打洞": 3, "游速": 3, "拳力": 3, "灵性": 3, "海灵": 10, "体力上限": 3}, "lifespanMul": 2, "chain": "g_tianhu_1"},
   "rules": {
     "life": "vigor", "lifeMax": "vigorMax",
-    "lifeDeath": "exhaust", "oldAgeDeath": "old_age",
+    "lifeDeath": "exhaust", "oldAgeDeath": "old_age", "lastStand": "z_last_stand",
     "regen": { "from": "burrow", "per": 6 },
     "growth": "sea",
     "yield": { "from": "swim", "per": 3, "base": 1, "minStage": 1 },
@@ -180,6 +180,7 @@
   "settings": {
     "suddenChance": 0.2,
     "rarityWeights": { "common": 60, "rare": 28, "epic": 10, "legend": 2 },
-    "skillSlots": 3
+    "skillSlots": 3,
+    "newbieSeasons": 8
   }
 }

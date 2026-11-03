@@ -12,12 +12,12 @@
  *
  * 所有局内状态都在 run（可 JSON 序列化），存档只需保存 run + profile。
  */
-import { CondCtx, describeCond, DescribeNames, evalCond, HasKind, NumRef, walkCond } from './condition';
+import { CondCtx, CondNode, describeCond, DescribeNames, evalCond, HasKind, NumRef, walkCond } from './condition';
 import { addUnique, destinyProfile } from './profile';
 import { Rng } from './rng';
 import {
     Choice, ChoiceView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Mods, Outcome, Profile,
-    RARITIES, Rarity, RunState, SettleResult, SkillView, StepResult, UpgradeKind, UpgradeView,
+    RARITIES, Rarity, RunState, SettleResult, SkillView, StageProgress, StepResult, UpgradeKind, UpgradeView,
 } from './types';
 
 const ATTR_FLOOR = 0;
@@ -25,6 +25,8 @@ const MEMORY_TEXT_MAX = 18;
 /** 今日首世轮回点加成 */
 export const DAILY_FIRST_BONUS = 0.5;
 const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [] };
+/** 有成功率的选项成功后，再判定一次大成功（属性收益翻倍） */
+export const CRIT_CHANCE = 0.15;
 /** 同一世已遇到过的（非 once）事件再次抽中的权重系数 */
 const REPEAT_WEIGHT = 0.25;
 
@@ -165,6 +167,25 @@ export class Engine {
         this.startSeason();
     }
 
+    /** 距离下一境界还差什么：只列「属性/境界 >= N」类条件；「或」分支取完成度最高的一支 */
+    stageProgress(): StageProgress | undefined {
+        const next = this.data.stages.find(s => s.level === this.run.stage + 1);
+        if (!next?.cond) return undefined;
+        type Part = StageProgress['parts'][number];
+        const ratio = (ps: Part[]) => (ps.length ? ps.reduce((n, p) => n + Math.min(1, p.cur / Math.max(1, p.need)), 0) / ps.length : 1);
+        const walk = (n: CondNode): Part[] => {
+            switch (n.t) {
+                case 'and': return [...walk(n.a), ...walk(n.b)];
+                case 'or': { const a = walk(n.a), b = walk(n.b); return ratio(a) >= ratio(b) ? a : b; }
+                case 'cmp':
+                    if ((n.op !== '>=' && n.op !== '>') || n.left.kind !== 'attr') return [];
+                    return [{ label: this.data.attrNames[n.left.id!] ?? n.left.id!, cur: this.run.attrs[n.left.id!] ?? 0, need: n.right + (n.op === '>' ? 1 : 0) }];
+                default: return [];
+            }
+        };
+        return { name: next.name, parts: walk(next.cond.ast) };
+    }
+
     /** 本世开局成为天命之子的概率（天命/天赋倍率 × 基础 + 命盘加成） */
     blessedChance(): number {
         const B = this.data.meta.blessed;
@@ -287,6 +308,7 @@ export class Engine {
         if (c.chance !== undefined && c.fail) {
             step.success = this.rng.chance(this.chanceOf(c));
             if (!step.success) out = c.fail;
+            else if (Object.keys(c.success.effect.attrs).length && this.rng.chance(CRIT_CHANCE)) step.crit = true;
         }
         // 前世记忆：记录结果
         const deathId = out.effect.death;
@@ -299,6 +321,13 @@ export class Engine {
     /** 结算一个事件结果并推进：链式事件 → 方向层推进 → 待触发事件 → 季末 */
     private resolve(out: Outcome, step: StepResult): StepResult {
         this.applyEffect(out.effect, step);
+        if (step.crit) {
+            // 大成功：正向属性收益再结算一次
+            const bonus: Record<string, number> = {};
+            for (const [k, v] of Object.entries(out.effect.attrs)) if (v > 0) bonus[k] = v;
+            this.applyEffect({ ...EMPTY_EFFECT, attrs: bonus }, step);
+            step.messages.unshift('【大成功】收益翻倍！');
+        }
         step.text = out.result;
         this.run.revealAll = false;
         this.run.hint = undefined;
@@ -669,6 +698,11 @@ export class Engine {
     private startSeason(): void {
         this.run.season += 1;
         this.run.phase = 'direction';
+        if (this.run.lastStand === 'due') {
+            this.run.lastStand = 'used';
+            this.enterEvent(this.data.meta.rules.lastStand!);
+            return;
+        }
         const chance = this.data.meta.settings.suddenChance * (this.mods().suddenMul ?? 1);
         if (this.run.season > 1 && this.rng.chance(chance)) {
             const ev = this.drawEvent(e => e.sudden);
@@ -707,7 +741,14 @@ export class Engine {
         // 寿元（天命之子加倍）
         const stage = this.data.stages.find(s => s.level === r.stage);
         const lifespan = stage ? stage.lifespan * (r.blessed ? this.data.meta.blessed?.lifespanMul ?? 1 : 1) : Infinity;
-        if (r.season >= lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying') return; }
+        const lastStand = this.data.meta.rules.lastStand;
+        if (r.season >= lifespan && lastStand && !r.lastStand && this.data.events.has(lastStand)
+            && this.data.stages.some(s => s.level === r.stage + 1 && !s.endingConds?.length)) {
+            // 最后一搏不能直接冲进结局境界（结局要靠正常突破）
+            // 寿元将尽：给一次最后一搏（下季开头触发）
+            r.lastStand = 'due';
+            step.messages.push('寿元将尽……还有最后一次机会。');
+        } else if (r.season >= lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying') return; }
         this.startSeason();
     }
 
@@ -806,6 +847,12 @@ export class Engine {
         if (guard) {
             this.loseItem(guard, step);
             this.revive(step, `${this.itemName(guard)}碎了。它替你挡下了「${def?.name ?? deathId}」。`, false);
+            return;
+        }
+        // 新手保护：本命格第 1 世的前几季命不该绝
+        const newbie = this.data.meta.settings.newbieSeasons ?? 0;
+        if (r.life === 1 && r.season <= newbie && deathId !== this.data.meta.rules.oldAgeDeath) {
+            this.revive(step, `命不该绝：这是你的第一世，天道替你挡下了「${def?.name ?? deathId}」。（前 ${newbie} 季有效）`, false);
             return;
         }
         if (this.mods().reviveOnce && !r.reviveUsed.talent) {

@@ -141,7 +141,7 @@
   "blessed": {"chance": 0.01, "name": "天狗转世", "text": "你出生那夜，月亮缺了一角，村里的狗齐声叫了一夜。这一世，你不一般。", "start": {"忠义": 3, "脚力": 3, "牙口": 3, "灵性": 3, "妖气": 10, "体力上限": 3}, "lifespanMul": 2, "chain": "g_tianhu_1"},
   "rules": {
     "life": "stamina", "lifeMax": "staminaMax",
-    "lifeDeath": "starve", "oldAgeDeath": "old_age",
+    "lifeDeath": "starve", "oldAgeDeath": "old_age", "lastStand": "z_last_stand",
     "regen": { "from": "loyalty", "per": 6 },
     "growth": "yao",
     "yield": { "from": "agility", "per": 3, "base": 1, "minStage": 1 },
@@ -154,6 +154,7 @@
   "settings": {
     "suddenChance": 0.2,
     "rarityWeights": { "common": 60, "rare": 28, "epic": 10, "legend": 2 },
-    "skillSlots": 3
+    "skillSlots": 3,
+    "newbieSeasons": 8
   }
 }

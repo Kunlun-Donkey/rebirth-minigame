@@ -298,6 +298,8 @@ export interface DestinyMeta {
         rarityWeights: Record<Rarity, number>;
         /** 开局可携带技能数 */
         skillSlots: number;
+        /** 新手保护：本命格第 1 世的前 N 季不会死（缺省 0 = 关闭） */
+        newbieSeasons?: number;
     };
 }
 
@@ -321,6 +323,8 @@ export interface DestinyRules {
     loadingText?: string;
     /** 「死后复活一次」类天赋触发时的旁白 */
     reviveOnceText?: string;
+    /** 寿元将尽时的「最后一搏」事件（每世一次，成功则 stageUp 续命冲境界） */
+    lastStand?: string;
     /** 选方向时的提示，{stage} 替换为境界名；换行用 \n */
     dirPrompt?: string;
     /** 道具栏为空时的提示 */
@@ -528,6 +532,8 @@ export interface RunState {
     map?: string;
     /** 本世是天命之子 */
     blessed?: boolean;
+    /** 最后一搏：due = 下季开头触发，used = 本世已用过 */
+    lastStand?: 'due' | 'used';
 }
 
 export interface UpgradeView {
@@ -590,8 +596,16 @@ export interface StepResult {
     success?: boolean;
     /** 本步新领悟的技能 */
     skills: string[];
-    /** 本步发生了复活（护身道具 / 天赋 / 看视频） */
+    /** 本步发生了复活（护身道具 / 天赋 / 看视频 / 新手保护） */
     revived?: boolean;
+    /** 大成功：成功后额外判定，属性收益翻倍 */
+    crit?: boolean;
+}
+
+/** 距离下一境界：每一项「属性 >= N」的当前值与要求 */
+export interface StageProgress {
+    name: string;
+    parts: { label: string; cur: number; need: number }[];
 }
 
 export interface SkillView {

@@ -566,6 +566,74 @@ describe('天胡通道', () => {
     });
 });
 
+describe('爽感：新手保护 / 最后一搏 / 突破进度 / 大成功', () => {
+    const trap: RawEvent = { id: 'trap', dir: 'down', layers: ['D1'], weight: 1000, text: '坑', choices: [{ text: '跳', effect: { death: 'lava' }, result: '掉了' }] };
+
+    it('新手保护：第 1 世前 N 季的死亡被挡下；第 2 世不再保护', () => {
+        const raw = fixture([trap]);
+        raw.meta.settings.newbieSeasons = 8;
+        const e = new Engine(buildDestiny(raw), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('trap');
+        const st = e.choose(0);
+        expect(st.revived).toBe(true);
+        expect(st.messages.some(m => m.startsWith('命不该绝'))).toBe(true);
+        expect(e.run.phase).not.toBe('dying');
+        e.run.over = { kind: 'death', id: 'lava' }; e.run.phase = 'over'; e.settle();
+        e.startRun(pick, 2);
+        e.chooseDirection('down');
+        e.choose(0);
+        expect(e.run.phase).toBe('dying');
+    });
+
+    it('寿元将尽：先触发一次最后一搏，成功则直接突破续命', () => {
+        const raw = fixture([{ id: 'idle', dir: 'down', layers: ['D1'], weight: 5000, text: '闲', choices: [{ text: '闲', result: '闲' }] }, { id: 'last', dir: 'any', chainOnly: true, text: '将尽', choices: [
+            { text: '搏', chance: 1, effect: { stageUp: 1 }, result: '成', fail: { effect: { death: 'old_age' }, result: '败' } },
+        ] }]);
+        raw.meta.rules.lastStand = 'last';
+        const e = new Engine(buildDestiny(raw), createProfile());
+        e.startRun(pick, 1);
+        e.run.season = 50; // 第 0 境界寿元 50
+        e.chooseDirection('down');
+        const st = e.choose(0);
+        expect(st.messages.some(m => m.includes('最后一次机会'))).toBe(true);
+        expect(e.run.phase).toBe('event');
+        expect(e.eventView().id).toBe('last');
+        e.choose(0);
+        expect(e.run.stage).toBe(1);
+        expect(e.run.lastStand).toBe('used');
+    });
+
+    it('突破进度：列出下一境界的属性要求与当前值', () => {
+        const e = new Engine(buildDestiny(fixture()), createProfile());
+        e.startRun(pick, 1);
+        expect(e.stageProgress()).toEqual({ name: '芽', parts: [{ label: '灵气', cur: 0, need: 50 }] });
+    });
+
+    it('大成功：成功后约 15% 概率正向属性收益翻倍', () => {
+        const ev: RawEvent = { id: 'luck', dir: 'down', layers: ['D1'], weight: 1000, text: '运', choices: [
+            { text: '试', chance: 1, effect: { 灵气: 4 }, result: '好', fail: { result: '坏' } },
+        ] };
+        let crits = 0;
+        for (let seed = 1; seed <= 400; seed++) {
+            const e = new Engine(buildDestiny(fixture([ev])), createProfile());
+            e.startRun(pick, seed);
+            e.chooseDirection('down');
+            if (e.eventView().id !== 'luck') continue;
+            const st = e.choose(0);
+            if (!st.success) continue; // 成功率上限 95%
+            if (st.crit) {
+                crits++;
+                expect(st.deltas.qi).toBe(8);
+                expect(st.messages[0]).toContain('大成功');
+            } else expect(st.deltas.qi).toBe(4);
+        }
+        expect(crits / 400).toBeGreaterThan(0.08);
+        expect(crits / 400).toBeLessThan(0.22);
+    });
+});
+
 describe('出生地图', () => {
     function withMaps(): RawDestiny {
         const raw = fixture([

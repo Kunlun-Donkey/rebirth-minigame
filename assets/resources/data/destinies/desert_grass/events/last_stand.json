@@ -1,0 +1,34 @@
+[
+  {
+    "id": "z_last_stand",
+    "dir": "any",
+    "chainOnly": true,
+    "text": "你的叶子开始发黄，根也抓不住沙了。寿元将尽。荒漠的风在等你倒下。",
+    "choices": [
+      {
+        "text": "把所有灵气逼进根里",
+        "chance": 0.35,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.015,
+        "effect": {
+          "stageUp": 1,
+          "灵气": 15
+        },
+        "result": "灵气冲开了枯萎的叶脉。你没有倒下，你长高了一截。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "灵气散了。你轻轻弯下腰，伏在了沙上。"
+        }
+      },
+      {
+        "text": "在风里睡去",
+        "effect": {
+          "death": "old_age"
+        },
+        "result": "你在夕阳里慢慢合上了叶子。"
+      }
+    ]
+  }
+]
