@@ -22,8 +22,8 @@ export function showSettle(g: Game): void {
 
     const light = isEnd ? COLOR.ochreD : COLOR.cream;
     const head = s.tianhu ? '✦ 天 胡 ✦' : isEnd ? '这 一 世 圆 满 了' : '这 一 世 结 束 了';
-    text(root, head, 0, CONFIG.safeTop - 40, g.W, { size: s.tianhu ? 48 : 40, color: s.tianhu ? COLOR.legacy : light, align: 'center', bold: true });
-    text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + 14, g.W, { size: 24, color: light, alpha: 200, align: 'center' });
+    text(root, head, 0, CONFIG.safeTop - (s.tianhu ? 46 : 40), g.W, { size: s.tianhu ? 48 : 40, color: s.tianhu ? COLOR.legacy : light, align: 'center', bold: true });
+    text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + (s.tianhu ? 22 : 14), g.W, { size: 24, color: light, alpha: 200, align: 'center' });
 
     let y = stone(g, root, s, CONFIG.safeTop + 70);
     y = panel(g, root, s, y + 20);
