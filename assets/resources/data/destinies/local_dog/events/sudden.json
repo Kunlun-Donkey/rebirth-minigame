@@ -4,7 +4,7 @@
     "text": "大雪封了村子。夜里冷得骨头疼。",
     "choices": [
       { "text": "去挠门", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.06,
-        "effect": { "忠义": 1, "体力": 1 }, "result": "门开了。你在灶膛边睡了一夜。",
+        "effect": { "follow": "f_snow_door", "忠义": 1, "体力": 1 }, "result": "门开了。你在灶膛边睡了一夜。",
         "fail": { "effect": { "death": "cold" }, "result": "门没开。雪越下越大。" } },
       { "text": "钻进柴堆", "effect": { "体力": -2 }, "result": "你熬到了天亮。四条腿都冻麻了。" },
       { "text": "在雪里打滚", "require": "legacy:thick_fur>=1", "effect": { "妖气": 5 },
@@ -18,7 +18,7 @@
     "text": "河水漫进了村子。有个孩子在水里扑腾。",
     "choices": [
       { "text": "跳下去", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
-        "effect": { "忠义": 4 }, "result": "你叼着他的衣领游上了岸。他娘给你磕了个头。",
+        "effect": { "follow": "f_flood_mother", "忠义": 4 }, "result": "你叼着他的衣领游上了岸。他娘给你磕了个头。",
         "fail": { "effect": { "体力": -3 }, "result": "水太急。有人把孩子捞上来了，你喝了半肚子水。" } },
       { "text": "爬上房顶", "effect": { "体力": -1 }, "result": "你在房顶蹲了三天，水才退。" }
     ]
@@ -27,7 +27,7 @@
     "id": "x_mad_dog", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 6,
     "text": "村里传说出了疯狗。人人手里都拎着棍子。",
     "choices": [
-      { "text": "躲进山里", "effect": { "脚力": 1, "体力": -1 }, "result": "你在山里躲了一季。风声过去了。" },
+      { "text": "躲进山里", "effect": { "follow": "f_mad_dog_truth", "脚力": 1, "体力": -1 }, "result": "你在山里躲了一季。风声过去了。" },
       { "text": "照常在村口趴着", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.06,
         "effect": { "忠义": 1 }, "result": "大家看你乖乖的，说：疯狗不是它。",
         "fail": { "effect": { "death": "driven_out" }, "result": "有人指着你喊：就是它！" } }
@@ -49,7 +49,7 @@
     "id": "x_eclipse", "dir": "any", "sudden": true, "gold": true, "stage": [2, 99], "weight": 2,
     "text": "天狗食月。全村人敲锣打鼓，月亮一点点缺了一块。",
     "choices": [
-      { "text": "张嘴", "effect": { "妖气": 25, "灵性": 2 }, "result": "你总觉得，那一口是你咬的。" },
+      { "text": "张嘴", "effect": { "follow": "f_eclipse_after", "妖气": 25, "灵性": 2 }, "result": "你总觉得，那一口是你咬的。" },
       { "text": "趴着看", "effect": { "item": "moonstone" }, "result": "月亮回来时，掉了一小块在你脚边。" }
     ]
   },

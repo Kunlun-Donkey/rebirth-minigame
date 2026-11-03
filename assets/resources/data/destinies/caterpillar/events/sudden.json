@@ -16,7 +16,7 @@
     "text": "一只大公鸡跳上了篱笆，歪着脖子，一只眼睛死死盯着你。",
     "choices": [
       { "text": "往菜叶底下钻", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "灵性": 2, "skill": "spines" }, "result": "它的嘴啄在叶子上，叶子破了。你浑身的毛都竖了起来。",
+        "effect": { "follow": { "id": "f_rooster_back", "delay": 2 }, "灵性": 2, "skill": "spines" }, "result": "它的嘴啄在叶子上，叶子破了。你浑身的毛都竖了起来。",
         "fail": { "effect": { "death": "chicken" }, "result": "它一口就把你啄了起来。" } },
       { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 3 },
         "result": "它啄了一口，咳了半天，跳下篱笆走了。" },
@@ -42,7 +42,7 @@
     "choices": [
       { "text": "竖毛吓唬他们", "showIf": "skill:spines", "useSkill": "spines", "effect": { "灵性": 1 },
         "result": "一个孩子叫起来：有毒！他们一哄而散。" },
-      { "text": "装死", "effect": { "灵性": 1, "饱腹": -1 }, "result": "你一动不动。他们戳了两下，觉得没意思，走了。" },
+      { "text": "装死", "effect": { "follow": "f_kid_alone", "灵性": 1, "饱腹": -1 }, "result": "你一动不动。他们戳了两下，觉得没意思，走了。" },
       { "text": "往花丛爬", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
         "effect": { "攀爬": 2 }, "result": "你钻进了花丛。他们的树枝够不着。",
         "fail": { "effect": { "饱腹": -2 }, "result": "树枝把你挑了起来，又甩进了草里。" } }

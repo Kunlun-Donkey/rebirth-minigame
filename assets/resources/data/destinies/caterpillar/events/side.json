@@ -19,7 +19,7 @@
     "choices": [
       { "text": "等它们过完", "effect": { "灵性": 1, "饱腹": -1 }, "result": "你等了整整一天。最后一只蚂蚁冲你点了点头。" },
       { "text": "硬闯过去", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
-        "effect": { "攀爬": 2 }, "result": "你从蚂蚁头顶爬了过去。它们骂了你一路。",
+        "effect": { "follow": { "id": "f_ant_toll", "delay": 2 }, "攀爬": 2 }, "result": "你从蚂蚁头顶爬了过去。它们骂了你一路。",
         "fail": { "effect": { "death": "ants" }, "result": "它们放下手里的东西，一起把你扛了起来。" } },
       { "text": "前世有约", "require": "legacy:ant_truce>=1", "effect": { "灵性": 2, "饱腹": 2 },
         "result": "前世它们搬过你。这一世你报上暗号，它们抬着你过了马路。" },
@@ -40,7 +40,7 @@
     "id": "l2_flowers", "dir": "side", "layers": ["L2"], "weight": 12,
     "text": "花坛里开满了花。夜里，有一朵花的花心在发光。",
     "choices": [
-      { "text": "去舔一口", "effect": { "item": "moon_nectar" }, "result": "是月光花的蜜。你装了满满一肚子。" },
+      { "text": "去舔一口", "effect": { "follow": { "id": "f_moonflower", "delay": 2 }, "item": "moon_nectar" }, "result": "是月光花的蜜。你装了满满一肚子。" },
       { "text": "先啃花瓣", "effect": { "饱腹": 2, "胃口": 1 }, "result": "花瓣是甜的，还有点涩。你吃得满嘴花香。" }
     ]
   },
@@ -53,14 +53,16 @@
         "result": "它看了看你的毛，嗡嗡两声飞走了。" },
       { "text": "跟它讲理", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
         "effect": { "灵性": 2, "蜕变": 2 }, "result": "你说你只吃叶子不吃蜜。它想了想，同意了。",
-        "fail": { "effect": { "饱腹": -2 }, "result": "它不听，蛰了你一下。你肿了半边。" } }
+        "fail": { "effect": { "饱腹": -2 }, "result": "它不听，蛰了你一下。你肿了半边。" } },
+      { "text": "是我呀", "showIf": "flag:bee_friend", "effect": { "饱腹": 2, "灵性": 1, "蜕变": 4 },
+        "result": "是雨里那只蜜蜂。它把你领到了最甜的那朵花跟前。" }
     ]
   },
   {
     "id": "l2_mantis", "dir": "side", "layers": ["L2", "L3"], "stage": [2, 99], "weight": 10,
     "text": "一只螳螂挡在花茎上，两把刀慢慢举了起来。",
     "choices": [
-      { "text": "原路退回", "effect": { "back": "side", "灵性": 1 }, "result": "你一点一点往后退。它没动，你也没回头。" },
+      { "text": "原路退回", "effect": { "follow": "f_mantis_wait", "back": "side", "灵性": 1 }, "result": "你一点一点往后退。它没动，你也没回头。" },
       { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 4 },
         "result": "它的刀碰了一下你的毛，缩了回去。它说算了，扎手。" },
       { "text": "冲过去", "chance": 0.35, "chanceAttr": "攀爬", "chanceStep": 0.05,
@@ -91,10 +93,12 @@
     "id": "l3_valley", "dir": "side", "layers": ["L3"], "weight": 12,
     "text": "蝴蝶谷里，一只翅膀破了的老蝴蝶在教小蝴蝶怎么借风。",
     "choices": [
-      { "text": "在旁边听", "effect": { "灵性": 2, "攀爬": 2 }, "result": "它说：风不是用来推的，是用来骑的。" },
+      { "text": "在旁边听", "effect": { "follow": { "id": "f_old_butterfly", "delay": 2 }, "灵性": 2, "攀爬": 2 }, "result": "它说：风不是用来推的，是用来骑的。" },
       { "text": "跟着练", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.05,
         "effect": { "蜕变": 8 }, "result": "你借着风飘了一大段。老蝴蝶冲你点了点头。",
-        "fail": { "effect": { "饱腹": -2 }, "result": "你被风吹进了花丛，一身花粉。" } }
+        "fail": { "effect": { "饱腹": -2 }, "result": "你被风吹进了花丛，一身花粉。" } },
+      { "text": "找缺毛的兄弟", "showIf": "flag:sibling_pact", "effect": { "灵性": 3, "蜕变": 8 },
+        "result": "一只翅膀缺了个角的蝴蝶落在你身边：你可算来了。" }
     ]
   },
   {

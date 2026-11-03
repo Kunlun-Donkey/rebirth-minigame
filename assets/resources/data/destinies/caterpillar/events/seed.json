@@ -11,11 +11,11 @@
     "id": "s0_siblings", "dir": "up", "stage": [0, 0], "weight": 16, "once": true,
     "text": "你们一窝四十几条挤在叶子上。一只胸口有白斑的喜鹊落了下来。",
     "choices": [
-      { "text": "往叶缝里钻", "effect": { "灵性": 1, "flag": "magpie_grudge" }, "result": "它吃了一半兄弟姐妹才走。你记住了那块白斑。" },
+      { "text": "往叶缝里钻", "effect": { "follow": { "id": "f_sibling", "delay": 2 }, "灵性": 1, "flag": "magpie_grudge" }, "result": "它吃了一半兄弟姐妹才走。你记住了那块白斑。" },
       { "text": "装成叶脉", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "灵性": 2, "flag": "magpie_grudge" }, "result": "它的眼睛扫过你，没停。你活下来了，账也记下了。",
-        "fail": { "effect": { "饱腹": -2, "flag": "magpie_grudge" }, "result": "它啄掉了你半截毛。你从叶子边摔了下去。" } },
-      { "text": "前世见过它", "require": "legacy:camouflage>=1", "effect": { "灵性": 2, "蜕变": 2, "flag": "magpie_grudge" },
+        "effect": { "follow": { "id": "f_sibling", "delay": 2 }, "灵性": 2, "flag": "magpie_grudge" }, "result": "它的眼睛扫过你，没停。你活下来了，账也记下了。",
+        "fail": { "effect": { "follow": { "id": "f_sibling", "delay": 2 }, "饱腹": -2, "flag": "magpie_grudge" }, "result": "它啄掉了你半截毛。你从叶子边摔了下去。" } },
+      { "text": "前世见过它", "require": "legacy:camouflage>=1", "effect": { "follow": { "id": "f_sibling", "delay": 2 }, "灵性": 2, "蜕变": 2, "flag": "magpie_grudge" },
         "result": "前世它吃过你。这一世你提前躲进了叶背，连它的影子都没碰到。" }
     ]
   },
@@ -41,7 +41,7 @@
     "choices": [
       { "text": "一动不动", "effect": { "灵性": 1 }, "result": "它估完价，摇摇头走了。你太小，不值得搬。" },
       { "text": "把它顶开", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
-        "effect": { "吐丝": 1, "蜕变": 1 }, "result": "你用脑袋把它顶下了叶子。它在下面骂骂咧咧。",
+        "effect": { "follow": { "id": "f_ant_revenge", "delay": 2, "ttl": 6 }, "吐丝": 1, "蜕变": 1 }, "result": "你用脑袋把它顶下了叶子。它在下面骂骂咧咧。",
         "fail": { "effect": { "饱腹": -2 }, "result": "它咬了你一口就跑。你疼得把自己卷了起来。" } }
     ]
   },
@@ -49,9 +49,9 @@
     "id": "s0_granny", "dir": "any", "stage": [0, 1], "weight": 20, "once": true, "maps": ["veg"],
     "text": "一只满是皱纹的手翻开了白菜叶。老太太眯着眼，在找虫子。",
     "choices": [
-      { "text": "缩进菜帮缝", "effect": { "灵性": 1, "flag": "granny_seen" }, "result": "手指从你头顶擦过去。老太太嘟囔：今年虫子真多。" },
+      { "text": "缩进菜帮缝", "effect": { "follow": "f_granny_jar", "灵性": 1, "flag": "granny_seen" }, "result": "手指从你头顶擦过去。老太太嘟囔：今年虫子真多。" },
       { "text": "装成一粒菜籽", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "灵性": 2, "蜕变": 1, "flag": "granny_seen" }, "result": "她看了你两眼，放过了你。你吓得蜕了层皮。",
+        "effect": { "follow": "f_granny_jar", "灵性": 2, "蜕变": 1, "flag": "granny_seen" }, "result": "她看了你两眼，放过了你。你吓得蜕了层皮。",
         "fail": { "effect": { "death": "picked" }, "result": "她两根手指捏住了你。罐头盒里，挤满了你的兄弟。" } }
     ]
   },
@@ -59,8 +59,8 @@
     "id": "s0_xiaoyu", "dir": "any", "stage": [0, 1], "weight": 20, "once": true, "maps": ["park", "veg"],
     "text": "一个扎马尾的小姑娘蹲下来，鼻子快贴到叶子上了。她说：你好丑哦。",
     "choices": [
-      { "text": "抬头看她", "effect": { "灵性": 1, "flag": "xiaoyu" }, "result": "她吓了一跳，又笑了。她说她叫小雨，明天还来看你。" },
-      { "text": "背过身去", "effect": { "吐丝": 1 }, "result": "你用屁股对着她。丑怎么了，丑也是会变的。" }
+      { "text": "抬头看她", "effect": { "follow": "f_xiaoyu_leaf", "灵性": 1, "flag": "xiaoyu" }, "result": "她吓了一跳，又笑了。她说她叫小雨，明天还来看你。" },
+      { "text": "背过身去", "effect": { "follow": "f_xiaoyu_stick", "吐丝": 1 }, "result": "你用屁股对着她。丑怎么了，丑也是会变的。" }
     ]
   }
 ]

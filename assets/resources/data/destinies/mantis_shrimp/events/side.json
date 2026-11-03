@@ -24,7 +24,7 @@
       { "text": "堵住洞口", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
         "effect": { "打洞": 2, "灵性": 1 }, "result": "你把洞口用沙堵住了。铲子从旁边挖过去，没碰到你。",
         "fail": { "effect": { "death": "net" }, "result": "铲子一翻，你就进了桶里。" } },
-      { "text": "从后门跑", "effect": { "游速": 1 }, "result": "你从 U 形洞的另一头溜了。人还在前门挖。" },
+      { "text": "从后门跑", "effect": { "游速": 1, "follow": { "id": "f_catcher_wire", "delay": 2 } }, "result": "你从 U 形洞的另一头溜了。人还在前门挖。" },
       { "text": "一拳打铲子", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2 },
         "result": "当的一声，铲子磕出个口子。那人嘀咕：这下面有石头？" }
     ]
@@ -41,7 +41,7 @@
     "id": "l1_hermit", "dir": "side", "layers": ["L1"], "weight": 10,
     "text": "一只寄居蟹在搬家，背着个太大的螺壳，走两步歇一步。",
     "choices": [
-      { "text": "帮它推", "effect": { "灵性": 1, "拳力": 1 }, "result": "你一拳一拳把壳推到了新家。它送了你一个小海螺。" },
+      { "text": "帮它推", "effect": { "灵性": 1, "拳力": 1, "follow": { "id": "f_tidal_hermit", "delay": 2 } }, "result": "你一拳一拳把壳推到了新家。它送了你一个小海螺。" },
       { "text": "捡它扔的壳", "effect": { "item": "conch" }, "result": "它扔下的旧螺壳，贴在耳边能听见海的动静。" }
     ]
   },
@@ -58,8 +58,10 @@
     "id": "l2_ahai", "dir": "side", "layers": ["L2"], "once": true, "weight": 18, "require": "flag:ahai",
     "text": "阿海坐在码头边钓鱼。他认出了你：是你！你长这么大了！",
     "choices": [
-      { "text": "游到他脚边", "effect": { "灵性": 2, "flag": "ahai_friend" }, "result": "他把鱼饵分了你一半。他说以后天天来这儿。" },
-      { "text": "抢他的鱼饵", "effect": { "体力": 3 }, "result": "他哈哈大笑：还是那么凶！" }
+      { "text": "游到他脚边", "effect": { "灵性": 2, "flag": "ahai_friend", "follow": "f_ahai_swim" }, "result": "他把鱼饵分了你一半。他说以后天天来这儿。" },
+      { "text": "听他喊大拳", "showIf": "flag:ahai_named", "effect": { "灵性": 2, "拳力": 1, "flag": "ahai_friend", "follow": "f_ahai_swim" },
+        "result": "你一听就游了过去。他乐得差点掉下码头：它认得名字！" },
+      { "text": "抢他的鱼饵", "effect": { "体力": 3, "follow": "f_ahai_bait" }, "result": "他哈哈大笑：还是那么凶！" }
     ]
   },
   {
@@ -93,7 +95,7 @@
     "id": "l3_turtle", "dir": "side", "layers": ["L3"], "weight": 12,
     "text": "远海上漂着一只老海龟，壳上长满了藤壶，像一座小岛。",
     "choices": [
-      { "text": "爬上去歇会儿", "effect": { "体力": 3, "灵性": 1 }, "result": "你在龟壳上睡了一觉。醒来时，已经漂出了好远。" },
+      { "text": "爬上去歇会儿", "effect": { "体力": 3, "灵性": 1, "follow": { "id": "f_turtle_ride", "delay": 2 } }, "result": "你在龟壳上睡了一觉。醒来时，已经漂出了好远。" },
       { "text": "跟它说话", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "海灵": 5 },
         "result": "它说它游过半个地球，见过一只会发光的鲸。你听得入了迷。" }
     ]
@@ -113,7 +115,7 @@
     "text": "远海起了风暴，浪一个比一个高，你被卷来卷去。",
     "choices": [
       { "text": "潜到浪底", "chance": 0.6, "chanceAttr": "游速", "chanceStep": 0.05,
-        "effect": { "游速": 2 }, "result": "浪底是安静的。你在下面等了一夜。",
+        "effect": { "游速": 2, "follow": "f_storm_wreck" }, "result": "浪底是安静的。你在下面等了一夜。",
         "fail": { "effect": { "death": "wave" }, "result": "浪把你卷上去，又拍了下来。" } },
       { "text": "尾巴一弹", "showIf": "skill:dart", "useSkill": "dart", "effect": { "游速": 1 }, "result": "你弹出了浪头，落在了风暴边上。" },
       { "text": "稳住", "require": "legacy:steady>=2", "effect": { "游速": 2, "海灵": 4 },

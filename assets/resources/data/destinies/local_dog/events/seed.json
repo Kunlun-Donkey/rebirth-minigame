@@ -13,7 +13,7 @@
     "choices": [
       { "text": "冲上去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.1,
         "effect": { "牙口": 1, "妖气": 1 }, "result": "老母鸡扑棱着翅膀跑了。你叼下了一根鸡毛。",
-        "fail": { "effect": { "体力": -1 }, "result": "它啄了你的鼻子。你哼唧着跑回了柴堆。" } },
+        "fail": { "effect": { "follow": "f_hen_revenge", "体力": -1 }, "result": "它啄了你的鼻子。你哼唧着跑回了柴堆。" } },
       { "text": "绕着走", "effect": { "脚力": 1 }, "result": "你绕了好大一圈。腿倒是练出来了。" }
     ]
   },
@@ -30,7 +30,7 @@
     "text": "柴堆底下的土是松的，有一股骨头的味道。",
     "choices": [
       { "text": "刨", "chance": 0.6, "chanceAttr": "牙口", "chanceStep": 0.1,
-        "effect": { "item": "bone", "skill": "dig" }, "result": "你在村口刨出了一根骨头。原来土里埋着宝贝。",
+        "effect": { "follow": { "id": "f_bone_stash", "delay": 2, "ttl": 6 }, "item": "bone", "skill": "dig" }, "result": "你在村口刨出了一根骨头。原来土里埋着宝贝。",
         "fail": { "effect": { "体力": -1 }, "result": "刨了半天，只刨出一只鞋底。" } },
       { "text": "趴着守着", "effect": { "忠义": 1 }, "result": "你守着那块土睡了一觉。有人路过，夸你乖。" }
     ]
@@ -40,14 +40,14 @@
     "text": "夜里起风了。一窝小狗挤成一团，谁也不想待在外圈。",
     "choices": [
       { "text": "挤进中间", "effect": { "体力": 1 }, "result": "你睡得很暖。外圈的兄弟抖了一夜。" },
-      { "text": "让给最小的", "effect": { "忠义": 1, "灵性": 1 }, "result": "你在外圈抖了一夜。最小的那只，往你身上靠了靠。" }
+      { "text": "让给最小的", "effect": { "follow": "f_runt", "忠义": 1, "灵性": 1 }, "result": "你在外圈抖了一夜。最小的那只，往你身上靠了靠。" }
     ]
   },
   {
     "id": "s0_kicked", "dir": "any", "stage": [0, 0], "weight": 10,
     "text": "有人嫌你挡道，一脚把你踢进了沟里。",
     "choices": [
-      { "text": "哼唧两声", "effect": { "忠义": 1 }, "result": "你爬上来，又摇了摇尾巴。狗就是这样。" },
+      { "text": "哼唧两声", "effect": { "follow": { "id": "f_kicker_again", "delay": 2, "ttl": 4 }, "忠义": 1 }, "result": "你爬上来，又摇了摇尾巴。狗就是这样。" },
       { "text": "咬他裤腿", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.1,
         "effect": { "牙口": 1, "妖气": 1 }, "result": "他吓了一跳，骂了句小畜生，走了。",
         "fail": { "effect": { "体力": -2 }, "result": "他又踢了你一脚。这次更重。" } },

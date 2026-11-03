@@ -1,0 +1,341 @@
+[
+  {
+    "id": "f_sibling", "dir": "any", "chainOnly": true, "teaser": "那一窝里，还有一条活着",
+    "text": "一条背上缺了撮毛的毛毛虫爬过来，碰了碰你的触角。它是那一窝里的。",
+    "choices": [
+      { "text": "一起过日子", "effect": { "灵性": 1, "饱腹": 1, "follow": { "id": "f_sibling_part", "delay": 3, "ttl": 6 } }, "result": "你们挤在一片叶子上啃。它啃左边，你啃右边。" },
+      { "text": "各走各的", "effect": { "吐丝": 1 }, "result": "它看了你一会儿，往别的叶子爬走了。" }
+    ]
+  },
+  {
+    "id": "f_sibling_part", "dir": "any", "chainOnly": true, "teaser": "缺毛的兄弟有话跟你说",
+    "text": "缺毛的兄弟说它要去山那边，听说那儿有一片会飞的云。它问你去不去。",
+    "choices": [
+      { "text": "约好在那儿见", "effect": { "灵性": 2, "flag": "sibling_pact" }, "result": "它先走了。走之前，在叶子上啃了个记号给你。" },
+      { "text": "我先长大", "effect": { "蜕变": 3, "饱腹": 1 }, "result": "它说也好。它把自己那半片叶子留给了你。" }
+    ]
+  },
+  {
+    "id": "f_granny_jar", "dir": "any", "chainOnly": true, "teaser": "老太太的铁盒落在田埂上",
+    "text": "老太太的铁盒落在田埂上，盖子没盖严。里面挤着你的兄弟姐妹。",
+    "choices": [
+      { "text": "把盖子顶开", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "蜕变": 3 }, "result": "盖子开了条缝。兄弟姐妹一条接一条爬回了菜地。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "盖子太沉了。你顶得脖子都短了一截。" } },
+      { "text": "装没看见", "effect": { "灵性": 1 }, "result": "你爬过去了。有些事，一条虫管不了。" }
+    ]
+  },
+  {
+    "id": "f_xiaoyu_leaf", "dir": "any", "chainOnly": true, "teaser": "小雨说她明天还来",
+    "text": "小雨真来了。她带了一片洗干净的生菜叶，小心地放在你旁边。",
+    "choices": [
+      { "text": "吃给她看", "effect": { "饱腹": 3, "follow": { "id": "f_xiaoyu_name", "delay": 2 } }, "result": "你吃得很响。她蹲在旁边看了一下午，一直在笑。" },
+      { "text": "爬到她手指上", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "follow": { "id": "f_xiaoyu_name", "delay": 2 } }, "result": "她屏住气，一动不敢动。你在她指甲盖上转了一圈。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "她吓得一甩手。你掉回叶子上，她连说对不起。" } }
+    ]
+  },
+  {
+    "id": "f_xiaoyu_name", "dir": "any", "chainOnly": true, "teaser": "小雨要给你起个名字",
+    "text": "小雨说你得有个名字。她想了半天，说：就叫你丑丑吧。",
+    "choices": [
+      { "text": "点点头", "effect": { "灵性": 2, "蜕变": 2 }, "result": "她高兴得跳起来。她逢人就说，她有一条虫叫丑丑。" },
+      { "text": "摇摇头", "effect": { "吐丝": 1, "灵性": 1 }, "result": "她说那就叫漂漂。你觉得还不如丑丑。" }
+    ]
+  },
+  {
+    "id": "f_xiaoyu_stick", "dir": "any", "chainOnly": true, "teaser": "那个小姑娘还没走",
+    "text": "小姑娘捡了根小树枝，想把你翻过来，看看正脸。",
+    "choices": [
+      { "text": "转过来给她看", "effect": { "灵性": 1, "flag": "xiaoyu" }, "result": "她看了半天，说：其实也没那么丑。她说她叫小雨。" },
+      { "text": "抱住叶子不动", "effect": { "吐丝": 1, "攀爬": 1 }, "result": "她翻了三次没翻动，气呼呼地走了。" }
+    ]
+  },
+  {
+    "id": "f_ant_revenge", "dir": "any", "chainOnly": true, "teaser": "被你顶下去的蚂蚁回来了",
+    "text": "被你顶下叶子的那只蚂蚁回来了，身后跟着一队兵蚁。它在前面指着你。",
+    "choices": [
+      { "text": "再顶一次", "chance": 0.4, "chanceAttr": "吐丝", "chanceStep": 0.08,
+        "effect": { "吐丝": 2, "蜕变": 4 }, "result": "一队蚂蚁顶不过一条虫。领头那只的脸，丢在了叶子底下。",
+        "fail": { "effect": { "death": "ants" }, "result": "它们一起喊了声号子。" } },
+      { "text": "卷成团滚走", "effect": { "饱腹": -1, "灵性": 1 }, "result": "你滚下了叶子。它们在上面找了一下午。" },
+      { "text": "跟它们讲和", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 2, "饱腹": 2 },
+        "result": "你说你只吃叶子。兵蚁们商量了一下，还请你吃了粒糖渣。" }
+    ]
+  },
+  {
+    "id": "f_inchworm", "dir": "down", "chainOnly": true, "teaser": "有条尺蠖说叶子是它的",
+    "text": "一条尺蠖一拱一拱爬过来，量了量你啃掉的地方，说这片叶子是它的。",
+    "choices": [
+      { "text": "分它一半", "effect": { "饱腹": -1, "灵性": 1, "follow": { "id": "f_inchworm_teach", "delay": 2 } }, "result": "它一点没客气。吃完说：你这条虫，不错。" },
+      { "text": "叶子上没写名", "chance": 0.6, "chanceAttr": "吐丝", "chanceStep": 0.1,
+        "effect": { "胃口": 2 }, "result": "它量了量你的个头，量完自己走了。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "它一拱一拱挤到你前面，把嫩的那半啃了。" } }
+    ]
+  },
+  {
+    "id": "f_inchworm_teach", "dir": "any", "chainOnly": true, "teaser": "尺蠖说要教你走路",
+    "text": "那条尺蠖又来了。它说你爬得太费劲，要教你一拱一拱地走。",
+    "choices": [
+      { "text": "跟着学", "effect": { "攀爬": 2, "蜕变": 2 }, "result": "先拱背，再伸头。一季爬的路，比以前多了一倍。" },
+      { "text": "我有我的走法", "effect": { "吐丝": 1 }, "result": "它摇摇头：年轻虫，不听劝。" }
+    ]
+  },
+  {
+    "id": "f_glove", "dir": "down", "chainOnly": true, "teaser": "那只手还会回来",
+    "text": "那只手又来了。这回戴着手套，一片叶子一片叶子地翻。",
+    "choices": [
+      { "text": "早挪了窝", "require": "灵性>=4", "effect": { "灵性": 2, "蜕变": 3 }, "result": "手套翻遍了这一棵。你在隔壁那棵上看着。" },
+      { "text": "贴着叶脉不动", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2 }, "result": "手套从你身上摸了过去，没摸出来。",
+        "fail": { "effect": { "death": "picked" }, "result": "手套，比手指还灵。" } },
+      { "text": "卷成团滚走", "showIf": "skill:curl", "useSkill": "curl", "effect": { "吐丝": 1 }, "result": "你滚进了土缝。手套在上面摸了个空。" }
+    ]
+  },
+  {
+    "id": "f_ladybug_back", "dir": "down", "chainOnly": true, "teaser": "那只瓢虫说下回带吃的",
+    "text": "那只瓢虫又来了，嘴里叼着一只蚜虫，说是专门给你留的。",
+    "choices": [
+      { "text": "尝尝", "effect": { "饱腹": 2, "蜕变": 2 }, "result": "还是甜的。它说，朋友就是分蚜虫吃的。" },
+      { "text": "请它住隔壁", "effect": { "灵性": 2 }, "result": "它在隔壁叶子住下了。夜里，它的壳会反光。" }
+    ]
+  },
+  {
+    "id": "f_cabbage_basket", "dir": "any", "chainOnly": true, "teaser": "老太太盯上了这棵白菜",
+    "text": "老太太把这棵白菜砍下来，抱进了菜篮子。你还在菜心里。",
+    "choices": [
+      { "text": "从篮缝钻出去", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "攀爬": 2, "灵性": 1 }, "result": "你从篮子缝里掉回了菜地。白菜可惜了。",
+        "fail": { "effect": { "death": "picked" }, "result": "老太太掰开菜心，看见了你。" } },
+      { "text": "在菜心里吃到底", "effect": { "饱腹": 3, "胃口": 2 }, "result": "你吃了一路。天亮，你跟着烂菜叶被倒回了菜地。" }
+    ]
+  },
+  {
+    "id": "f_fruit_wine", "dir": "down", "chainOnly": true, "teaser": "你留的那一半，变味了",
+    "text": "你留下的那半个果子，闻起来有点酸，有点冲。",
+    "choices": [
+      { "text": "喝一口", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "蜕变": 4 }, "result": "你晕乎乎睡了一觉，梦见自己在天上。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "你晕了两天。醒来时，更饿了。" } },
+      { "text": "让给苍蝇", "effect": { "灵性": 1 }, "result": "一群苍蝇钻进去，嗡嗡唱了一夜。你决定不喝酒。" }
+    ]
+  },
+  {
+    "id": "f_neighbor_bye", "dir": "any", "chainOnly": true, "teaser": "果子里的邻居要结茧了",
+    "text": "果子里的邻居要去结茧了。它把啃剩的半个果核推到你跟前。",
+    "choices": [
+      { "text": "收下", "effect": { "item": "apple_core", "灵性": 1 }, "result": "它说：明年见，在天上。" },
+      { "text": "送它一程", "effect": { "灵性": 2, "吐丝": 1 }, "result": "你帮它在枝上吐了第一根丝。它织得比你快。" }
+    ]
+  },
+  {
+    "id": "f_neighbor_cousin", "dir": "down", "chainOnly": true, "teaser": "被顶出去的虫叫来了表哥",
+    "text": "被你顶出去的那条虫回来了，还带着它表哥。表哥比你胖一圈。",
+    "choices": [
+      { "text": "再顶一次", "chance": 0.4, "chanceAttr": "吐丝", "chanceStep": 0.08,
+        "effect": { "胃口": 2, "吐丝": 2, "蜕变": 3 }, "result": "表哥也被顶出去了。果子外面，躺着两条虫。",
+        "fail": { "effect": { "饱腹": -2, "back": "down" }, "result": "被顶出去的是你。果子成了它们哥俩的。" } },
+      { "text": "分它们一半", "effect": { "饱腹": 1, "灵性": 1 }, "result": "三条虫分一个果子。谁也没吃饱，谁也没打架。" }
+    ]
+  },
+  {
+    "id": "f_hedgehog", "dir": "any", "chainOnly": true, "teaser": "有个刺球在拱那半个苹果",
+    "text": "一只小刺猬拱着那半个苹果，鼻子一抽一抽，抽到了你身上。",
+    "choices": [
+      { "text": "竖起毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 3 },
+        "result": "两个刺球对望了半天。它说：你也是刺儿头？" },
+      { "text": "装成苹果籽", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2 }, "result": "它把苹果吃得干干净净，籽一颗没碰。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它嫌你扎嘴，一鼻子把你拱进了水沟。" } }
+    ]
+  },
+  {
+    "id": "f_basket_cat", "dir": "any", "chainOnly": true, "teaser": "菜篮子搁在了门槛上",
+    "text": "菜篮子搁在门槛上。一只猫在旁边打盹，尾巴一甩一甩。",
+    "choices": [
+      { "text": "趁猫睡爬出去", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "攀爬": 1, "灵性": 2 }, "result": "你从猫尾巴底下爬了过去。它梦里吧唧了一下嘴。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "猫醒了，用爪子拨了你两下，又睡了。" } },
+      { "text": "在番茄里等天黑", "effect": { "饱腹": 2 }, "result": "番茄被嫌有洞，扔回了菜地。你也跟着回去了。" }
+    ]
+  },
+  {
+    "id": "f_cicada_dig", "dir": "down", "chainOnly": true, "teaser": "那只蝉幼虫想问你件事",
+    "text": "给你让位置的那只蝉幼虫要往上挖了。它问你：上面是什么样？",
+    "choices": [
+      { "text": "讲夏天给它听", "effect": { "灵性": 2, "flag": "cicada_friend" }, "result": "你讲了树，讲了风和太阳。它说，上去以后唱给你听。" },
+      { "text": "带它认路", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "攀爬": 2, "蜕变": 4 }, "result": "你领它挖到了离地最近的地方。它说谢谢，说了三遍。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "你们挖到一块石头，又绕了回去。" } }
+    ]
+  },
+  {
+    "id": "f_ant_chase", "dir": "any", "chainOnly": true, "teaser": "兵蚁还在后面追",
+    "text": "兵蚁追出了树根，一路闻着你的味道，追到了叶子上。",
+    "choices": [
+      { "text": "接着跑", "chance": 0.65, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 2 }, "result": "你一口气爬到了枝头。兵蚁在树干半截骂完，回去了。",
+        "fail": { "effect": { "death": "ants" }, "result": "它们一路追到了叶尖上。" } },
+      { "text": "吐丝吊下去", "require": "吐丝>=4", "effect": { "吐丝": 1, "蜕变": 2 }, "result": "你吊着丝荡到了别的树上。蚂蚁不会荡。" },
+      { "text": "跟它们讲条件", "showIf": "skill:talk", "useSkill": "talk", "effect": { "蜕变": 4, "饱腹": 1 },
+        "result": "你说你认识蚁后。它们将信将疑，收队了。" }
+    ]
+  },
+  {
+    "id": "f_tip_wind", "dir": "up", "chainOnly": true, "teaser": "叶尖上起风了",
+    "text": "叶尖上来了一阵好风，吹来一朵蒲公英，挂在你旁边。",
+    "choices": [
+      { "text": "抱住它飞", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "攀爬": 2, "蜕变": 4 }, "result": "你抱着它飘到了隔壁的树上。原来飞是这样的。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "蒲公英散了。你掉在半路的叶子上。" } },
+      { "text": "啃一口", "effect": { "饱腹": 1 }, "result": "有点扎嘴，但能吃。你吐了一下午的毛。" }
+    ]
+  },
+  {
+    "id": "f_wet_bee", "dir": "up", "chainOnly": true, "teaser": "雨后有只蜜蜂在发抖",
+    "text": "雨停了。一只淋湿的蜜蜂趴在你旁边，翅膀黏在一起，飞不起来。",
+    "choices": [
+      { "text": "吐丝给它搭棚", "effect": { "吐丝": 1, "灵性": 1, "flag": "bee_friend" }, "result": "它晾干了翅膀，在你头顶转了三圈才走。" },
+      { "text": "离它远点", "effect": { "攀爬": 1 }, "result": "蜜蜂会蛰人。你换了片叶子。" }
+    ]
+  },
+  {
+    "id": "f_spider_grudge", "dir": "up", "chainOnly": true, "teaser": "那只蜘蛛在织新网",
+    "text": "那只蜘蛛在你常走的枝杈上织了张新网，比上回密三倍。",
+    "choices": [
+      { "text": "绕路走", "effect": { "攀爬": 1, "饱腹": -1 }, "result": "你多爬了半棵树。它在网中间等了一季。" },
+      { "text": "一根根咬断", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
+        "effect": { "吐丝": 2, "蜕变": 4 }, "result": "你咬一根，它补一根。最后，它先累了。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "你被粘了半天，最后是风把网吹开的。" } }
+    ]
+  },
+  {
+    "id": "f_bean_pick", "dir": "any", "chainOnly": true, "teaser": "老太太来摘豆角了",
+    "text": "老太太来摘豆角了。她的手掐住的，正是你钻进去的那一根。",
+    "choices": [
+      { "text": "从豆角尖钻出", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
+        "effect": { "攀爬": 1, "灵性": 1 }, "result": "豆角掐断的时候，你从尖上掉回了架子。",
+        "fail": { "effect": { "death": "picked" }, "result": "她掰开豆角，愣了一下：豆子里还长虫？" } },
+      { "text": "缩着不动", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "胃口": 2 }, "result": "她嫌这根老了，扔回了地里。你接着吃。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "豆角进了篮子。你爬了一夜才爬回菜地。" } }
+    ]
+  },
+  {
+    "id": "f_nestling", "dir": "any", "chainOnly": true, "teaser": "一只雏鸟掉下了窝",
+    "text": "一只雏鸟从窝里掉下来，卡在你那根树枝上，张着黄嘴叫。",
+    "choices": [
+      { "text": "吐丝把它拴住", "effect": { "吐丝": 2, "follow": "f_bird_debt" }, "result": "你拴了一夜。天亮时，大鸟把它叼了回去。" },
+      { "text": "躲远点", "effect": { "灵性": 1 }, "result": "它叫了一夜。你也一夜没睡。" }
+    ]
+  },
+  {
+    "id": "f_bird_debt", "dir": "up", "chainOnly": true, "teaser": "那只大鸟在找你",
+    "text": "那只大鸟落在你面前，歪着头，看了你很久。",
+    "choices": [
+      { "text": "不躲", "effect": { "灵性": 3, "蜕变": 5 }, "result": "它转身飞走了。从此这棵树上的鸟，都绕着你啄。" },
+      { "text": "缩进树缝", "effect": { "饱腹": 2, "灵性": 1 }, "result": "它在缝口放下一颗红果子，飞走了。" }
+    ]
+  },
+  {
+    "id": "f_magpie_wait", "dir": "up", "chainOnly": true, "teaser": "花胸学精了",
+    "text": "花胸学精了。它蹲在那道树皮缝口，一蹲就是一整天。",
+    "choices": [
+      { "text": "从另一头溜", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "蜕变": 3 }, "result": "你从树干背面钻了出来。它还盯着那个空缝。",
+        "fail": { "effect": { "death": "bird" }, "result": "另一头，它也想到了。" } },
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 5 },
+        "result": "它把喙伸进缝里，扎了一嘴毛。这回它蹲不住了。" },
+      { "text": "前世的保护色", "require": "legacy:camouflage>=2", "effect": { "灵性": 3, "蜕变": 4 },
+        "result": "前世它守到了你。这一世你就趴在它脚边，它没看见。" }
+    ]
+  },
+  {
+    "id": "f_magpie_laugh", "dir": "any", "chainOnly": true, "teaser": "麻雀们在说花胸的事",
+    "text": "一群麻雀在枝头叽叽喳喳。它们说花胸被一条虫扎了嘴，三天没吃下饭。",
+    "choices": [
+      { "text": "出来亮个相", "effect": { "灵性": 2, "蜕变": 3 }, "result": "麻雀们一下子安静了。然后笑得更大声了。" },
+      { "text": "不出声", "effect": { "灵性": 1, "吐丝": 1 }, "result": "虫子扎了喜鹊，这事传一传就够了。" }
+    ]
+  },
+  {
+    "id": "f_valley_wind", "dir": "side", "chainOnly": true, "teaser": "有阵风往山那边吹",
+    "text": "一阵风从这边往山那边吹，吹得叶子全朝着一个方向。",
+    "choices": [
+      { "text": "吐丝搭风", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
+        "effect": { "攀爬": 2, "蜕变": 5 }, "result": "你吊着一根丝飘了好远。山，近了一点。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "丝断了。你落进了一片陌生的草里。" } },
+      { "text": "记住方向", "effect": { "灵性": 2 }, "result": "风吹完了。你知道以后该往哪儿爬了。" }
+    ]
+  },
+  {
+    "id": "f_swallowtail", "dir": "up", "chainOnly": true, "teaser": "老凤蝶说还会来看你",
+    "text": "老凤蝶又落在了树顶。它说：飞一个给我看看。",
+    "choices": [
+      { "text": "什么都不想", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "蜕变": 10, "攀爬": 2 }, "result": "你什么都没想，就飞起来了。它点了点头。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "你一想就乱了。它说：明年再来。" } },
+      { "text": "请它先飞", "effect": { "灵性": 2 }, "result": "它飞了一圈。你看懂了一半。" }
+    ]
+  },
+  {
+    "id": "f_ant_toll", "dir": "side", "chainOnly": true, "teaser": "蚂蚁在路口设了卡",
+    "text": "蚂蚁在路口设了卡。十几只兵蚁排成一排，专等你。",
+    "choices": [
+      { "text": "绕道", "effect": { "back": "side", "饱腹": -1 }, "result": "你绕了一大圈。蚂蚁在后面喊：有种别走。" },
+      { "text": "再闯一回", "chance": 0.4, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 2, "蜕变": 4 }, "result": "你又从它们头顶爬了过去。这回连骂都没骂出来。",
+        "fail": { "effect": { "death": "ants" }, "result": "十几只兵蚁，一起抬手。" } },
+      { "text": "交过路费", "require": "item:tender_leaf", "effect": { "loseItem": "tender_leaf", "灵性": 2 },
+        "result": "兵蚁收下叶子，让开了一条道。它们讲规矩。" }
+    ]
+  },
+  {
+    "id": "f_moonflower", "dir": "side", "chainOnly": true, "teaser": "月光花今晚还会开",
+    "text": "月光花又开了。花心里睡着一只萤火虫，一闪一闪地打呼。",
+    "choices": [
+      { "text": "别吵醒它", "effect": { "灵性": 2, "蜕变": 2 }, "result": "你在旁边趴了一夜。那一夜，花是亮的。" },
+      { "text": "跟它抢蜜", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "item": "moon_nectar" }, "result": "你吸饱了蜜，它都没醒。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "它醒了，冲你闪了三下。你眼花了一夜。" } }
+    ]
+  },
+  {
+    "id": "f_mantis_wait", "dir": "any", "chainOnly": true, "teaser": "螳螂还在路上等你",
+    "text": "那只螳螂换了根花茎，还举着刀。这回挡的是你回去的路。",
+    "choices": [
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 4 },
+        "result": "它的刀抬了抬，又放下了：你还是扎手。" },
+      { "text": "装成枯叶", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2 }, "result": "你在风里抖了一下午。它没认出来。",
+        "fail": { "effect": { "death": "mantis" }, "result": "它认出来了。" } }
+    ]
+  },
+  {
+    "id": "f_old_butterfly", "dir": "side", "chainOnly": true, "teaser": "那只老蝴蝶飞不动了",
+    "text": "那只翅膀破了的老蝴蝶飞不动了，落在你身边的花上晒太阳。",
+    "choices": [
+      { "text": "陪它到天黑", "effect": { "灵性": 3, "蜕变": 3 }, "result": "它讲了一下午的风。第二天，花上只剩一点亮粉。" },
+      { "text": "请它再教一招", "effect": { "攀爬": 2, "蜕变": 4 }, "result": "它用最后的力气，借了一次风。你看清了。" }
+    ]
+  },
+  {
+    "id": "f_rooster_back", "dir": "any", "chainOnly": true, "teaser": "那只公鸡还惦记着你",
+    "text": "那只大公鸡又跳上了篱笆。这回，它身后跟着三只母鸡。",
+    "choices": [
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 4 },
+        "result": "公鸡啄了一口，咳得直跳。母鸡们看完，全散了。" },
+      { "text": "往菜叶底下钻", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2 }, "result": "四只鸡啄了一下午菜叶，一只虫也没啄到。",
+        "fail": { "effect": { "death": "chicken" }, "result": "四只鸡，四张嘴。" } }
+    ]
+  },
+  {
+    "id": "f_kid_alone", "dir": "any", "chainOnly": true, "teaser": "有个小孩又回来了",
+    "text": "一个扎马尾的小姑娘一个人回来了，蹲下小声说：刚才对不起哦。",
+    "choices": [
+      { "text": "抬头看她", "effect": { "灵性": 1, "flag": "xiaoyu" }, "result": "她说她叫小雨，她没拿树枝。她明天还来。" },
+      { "text": "接着装死", "effect": { "吐丝": 1 }, "result": "她把你轻轻放回叶子上，走了。" }
+    ]
+  }
+]

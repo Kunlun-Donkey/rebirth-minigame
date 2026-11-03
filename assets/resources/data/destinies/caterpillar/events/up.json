@@ -10,7 +10,7 @@
     "text": "叶尖翘得老高，你想爬上去看看外面。",
     "choices": [
       { "text": "爬上去", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.1,
-        "effect": { "攀爬": 2, "蜕变": 1 }, "result": "你挂在叶尖上晃了晃。外面的世界，绿得发亮。",
+        "effect": { "follow": "f_tip_wind", "攀爬": 2, "蜕变": 1 }, "result": "你挂在叶尖上晃了晃。外面的世界，绿得发亮。",
         "fail": { "effect": { "饱腹": -1 }, "result": "爬到一半滑了下来，摔回叶心，晕了一下午。" } },
       { "text": "先吃饱再说", "effect": { "饱腹": 2 }, "result": "你把叶尖啃掉了。这下不用爬了。" }
     ]
@@ -21,9 +21,9 @@
     "choices": [
       { "text": "躲回叶背", "effect": { "胃口": 1 }, "result": "你缩在叶背听了一夜雨。顺便把叶背也啃了。" },
       { "text": "迎着雨抓紧", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
-        "effect": { "攀爬": 2, "skill": "silk_rope" }, "result": "你吐了根丝把自己绑在叶柄上。雨停了，你还在。",
+        "effect": { "follow": "f_wet_bee", "攀爬": 2, "skill": "silk_rope" }, "result": "你吐了根丝把自己绑在叶柄上。雨停了，你还在。",
         "fail": { "effect": { "death": "rain" }, "result": "一颗大雨点把你从叶子上砸了下去。" } },
-      { "text": "前世被冲过", "require": "legacy:grip>=1", "effect": { "攀爬": 2, "吐丝": 1 },
+      { "text": "前世被冲过", "require": "legacy:grip>=1", "effect": { "follow": "f_wet_bee", "攀爬": 2, "吐丝": 1 },
         "result": "前世一场雨冲走了你。这一世你的脚抓得比树皮还紧。" }
     ]
   },
@@ -51,7 +51,7 @@
     "text": "你一头撞进了蜘蛛网。网那头，八只眼睛亮了。",
     "choices": [
       { "text": "拼命挣开", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.1,
-        "effect": { "吐丝": 2 }, "result": "你扯断了三根丝逃了出来。原来丝还能这么用。",
+        "effect": { "follow": { "id": "f_spider_grudge", "delay": 2 }, "吐丝": 2 }, "result": "你扯断了三根丝逃了出来。原来丝还能这么用。",
         "fail": { "effect": { "饱腹": -2, "吐丝": 1 }, "result": "你越挣越紧，最后是一阵风把网吹破的。" } },
       { "text": "跟它商量", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 1, "蜕变": 3 },
         "result": "蜘蛛听完你的话，笑了。它说你太扎嘴，放你走了。" },
@@ -62,7 +62,7 @@
     "id": "u2_beans", "dir": "up", "layers": ["U2"], "maps": ["veg"], "weight": 14,
     "text": "豆角架上挂满了嫩豆角，一根比你长十倍。",
     "choices": [
-      { "text": "钻进豆角", "effect": { "饱腹": 3, "胃口": 1 }, "result": "你在豆角里吃出了一条隧道。豆子比叶子香。" },
+      { "text": "钻进豆角", "effect": { "follow": "f_bean_pick", "饱腹": 3, "胃口": 1 }, "result": "你在豆角里吃出了一条隧道。豆子比叶子香。" },
       { "text": "爬到架子顶", "effect": { "攀爬": 2 }, "result": "你爬到了竹竿顶上，看见了整个菜园。" }
     ]
   },
@@ -84,7 +84,7 @@
       { "text": "快爬过去", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.08,
         "effect": { "攀爬": 2, "蜕变": 3 }, "result": "你从窝边溜了过去。雏鸟冲你叫，叫得很饿。",
         "fail": { "effect": { "death": "bird" }, "result": "大鸟回来了。它没让孩子饿着。" } },
-      { "text": "退回枝头", "effect": { "back": "up", "灵性": 1 }, "result": "你退了回去。今天不是好日子。" }
+      { "text": "退回枝头", "effect": { "follow": "f_nestling", "back": "up", "灵性": 1 }, "result": "你退了回去。今天不是好日子。" }
     ]
   },
   {
@@ -92,11 +92,11 @@
     "text": "胸口有白斑的那只喜鹊又来了。它歪头盯着你，像在认人。",
     "choices": [
       { "text": "钻进树皮缝", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
-        "effect": { "灵性": 2 }, "result": "它的喙在缝口敲了三下，走了。你又躲过一次。",
+        "effect": { "follow": { "id": "f_magpie_wait", "delay": 2 }, "灵性": 2 }, "result": "它的喙在缝口敲了三下，走了。你又躲过一次。",
         "fail": { "effect": { "death": "bird" }, "result": "缝太浅了。花胸叼起你，飞走了。" } },
-      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 4 },
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "follow": "f_magpie_laugh", "吐丝": 2, "蜕变": 4 },
         "result": "它一口啄下去，又一口吐出来，满嘴是毛。它恨恨地飞走了。" },
-      { "text": "前世的毒毛", "require": "legacy:bristle>=2", "effect": { "吐丝": 2, "蜕变": 3 },
+      { "text": "前世的毒毛", "require": "legacy:bristle>=2", "effect": { "follow": "f_magpie_laugh", "吐丝": 2, "蜕变": 3 },
         "result": "前世它啄过你。这一世你的毛扎得它直甩头。" },
       { "text": "往下掉", "effect": { "back": "up", "饱腹": -1 }, "result": "你松开脚，掉回了下面一层。它没追。" }
     ]
@@ -117,7 +117,7 @@
     "id": "u3_view", "dir": "up", "layers": ["U3"], "weight": 8, "gold": true,
     "text": "你在树冠上看见了远处的山。山坳里飞着一片彩色的云。",
     "choices": [
-      { "text": "盯着看", "effect": { "灵性": 3, "蜕变": 3 }, "result": "那不是云，是蝴蝶。你第一次知道自己想去哪儿。" },
+      { "text": "盯着看", "effect": { "follow": { "id": "f_valley_wind", "delay": 2 }, "灵性": 3, "蜕变": 3 }, "result": "那不是云，是蝴蝶。你第一次知道自己想去哪儿。" },
       { "text": "继续啃叶", "effect": { "饱腹": 2, "胃口": 1 }, "result": "远方再好，叶子也得先吃。" }
     ]
   },
@@ -146,7 +146,7 @@
     "id": "u4_sky", "dir": "up", "layers": ["U4"], "weight": 8, "gold": true,
     "text": "天特别蓝。一只老凤蝶落在树顶，打量着你。",
     "choices": [
-      { "text": "请它指点", "effect": { "灵性": 2, "攀爬": 2, "蜕变": 5 }, "result": "它说：飞的时候别想着怎么飞。说完就飞走了。" },
+      { "text": "请它指点", "effect": { "follow": { "id": "f_swallowtail", "delay": 3, "ttl": 6 }, "灵性": 2, "攀爬": 2, "蜕变": 5 }, "result": "它说：飞的时候别想着怎么飞。说完就飞走了。" },
       { "text": "跟它比高", "chance": 0.4, "chanceAttr": "攀爬", "chanceStep": 0.05,
         "effect": { "攀爬": 4, "蜕变": 8 }, "result": "你比它高了一片叶子。它笑了，留下一点花粉。",
         "fail": { "effect": { "饱腹": -2 }, "result": "你累得趴在树顶。它早飞没影了。" } }

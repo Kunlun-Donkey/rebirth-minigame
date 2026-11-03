@@ -11,7 +11,7 @@
     "choices": [
       { "text": "追", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
         "effect": { "体力": 3, "脚力": 1 }, "result": "你叼住了它。今天是你这辈子吃得最饱的一天。",
-        "fail": { "effect": { "体力": -1, "脚力": 1 }, "result": "兔子钻进了洞。你在洞口守到了天黑。" } },
+        "fail": { "effect": { "follow": "f_rabbit_hole", "体力": -1, "脚力": 1 }, "result": "兔子钻进了洞。你在洞口守到了天黑。" } },
       { "text": "不追", "effect": { "灵性": 1 }, "result": "兔子愣了一下，好像有点失望。" }
     ]
   },
@@ -33,7 +33,7 @@
     "id": "u1_hunter", "dir": "up", "layers": ["U1"],
     "text": "一个猎户扛着土枪，冲你吹了声口哨。",
     "choices": [
-      { "text": "跟他走", "effect": { "体力": 2, "脚力": 1 }, "result": "你帮他撵了一下午山鸡。他分了你一只鸡腿。" },
+      { "text": "跟他走", "effect": { "follow": { "id": "f_hunter_again", "delay": 2, "ttl": 4 }, "体力": 2, "脚力": 1 }, "result": "你帮他撵了一下午山鸡。他分了你一只鸡腿。" },
       { "text": "躲进林子", "effect": { "灵性": 1 }, "result": "枪口冲着你的时候，你闻到了火药味。" }
     ]
   },
@@ -42,7 +42,7 @@
     "text": "树根底下长着一圈红蘑菇，甜丝丝的。",
     "choices": [
       { "text": "吃一口", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "妖气": 4 }, "result": "你浑身发热。月亮好像变大了。",
+        "effect": { "follow": "f_mushroom_ring", "妖气": 4 }, "result": "你浑身发热。月亮好像变大了。",
         "fail": { "effect": { "体力": -2 }, "result": "你吐了一下午，看见满天都是星星。" } },
       { "text": "闻闻就走", "effect": { "灵性": 1 }, "result": "你记住了这个味道。好闻的，不一定能吃。" }
     ]
@@ -53,7 +53,7 @@
     "text": "竹林深处，亮起了三双绿眼睛。是狼。",
     "choices": [
       { "text": "跑", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.04,
-        "effect": { "脚力": 2 }, "result": "你一口气跑下了山。狼在后面嚎了一夜。",
+        "effect": { "follow": "f_wolf_scout", "脚力": 2 }, "result": "你一口气跑下了山。狼在后面嚎了一夜。",
         "fail": { "effect": { "death": "wolves" }, "result": "它们从三个方向扑了上来。" } },
       { "text": "背靠竹子龇牙", "require": "牙口>=5", "effect": { "牙口": 1, "妖气": 5 },
         "result": "你一步也没退。狼绕了三圈，走了。" },
@@ -78,8 +78,8 @@
     "id": "u2_weasel_ask", "dir": "up", "layers": ["U2"], "once": true,
     "text": "一只黄鼠狼拦住你，作了个揖：你看我，像人还是像黄鼠狼？",
     "choices": [
-      { "text": "说它像人", "effect": { "灵性": 2, "体力": 1 }, "result": "它高兴得打了个滚，塞给你一颗鸡蛋。" },
-      { "text": "说它像黄鼠狼", "effect": { "牙口": 1 }, "result": "它气得跳脚，骂骂咧咧地走了。" },
+      { "text": "说它像人", "effect": { "follow": { "id": "f_weasel_favor", "delay": 2, "ttl": 4 }, "灵性": 2, "体力": 1 }, "result": "它高兴得打了个滚，塞给你一颗鸡蛋。" },
+      { "text": "说它像黄鼠狼", "effect": { "follow": "f_weasel_curse", "牙口": 1 }, "result": "它气得跳脚，骂骂咧咧地走了。" },
       { "text": "跟它聊聊", "showIf": "skill:talk", "useSkill": "talk", "effect": { "妖气": 6, "灵性": 1 },
         "result": "你们聊了一下午。它教你怎么对着月亮吸气。" }
     ]
@@ -89,7 +89,7 @@
     "text": "风吹竹林。你听见有人在叫：小黄，小黄。",
     "choices": [
       { "text": "循着声音去", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.06,
-        "effect": { "灵性": 2, "妖气": 3 }, "result": "是竹子在叫你。它们说，你是这山里最好的狗。",
+        "effect": { "follow": "f_voice_bamboo", "灵性": 2, "妖气": 3 }, "result": "是竹子在叫你。它们说，你是这山里最好的狗。",
         "fail": { "effect": { "体力": -2 }, "result": "什么也没有。你在林子里迷了一夜路。" } },
       { "text": "不理它", "effect": { "脚力": 1 }, "result": "你头也不回地穿过了竹林。" }
     ]
@@ -102,7 +102,7 @@
       { "text": "偷吃", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "体力": 4 }, "result": "你吃得满嘴流油。泥像没说什么。",
         "fail": { "effect": { "妖气": -3, "体力": 1 }, "result": "吃到一半，泥像好像瞪了你一眼。你噎住了。" } },
-      { "text": "替山神守夜", "effect": { "忠义": 1, "灵性": 1, "妖气": 4, "flag": "temple_vigil" }, "result": "天亮时，烧鸡还在。供桌上多了一层月光。" }
+      { "text": "替山神守夜", "effect": { "follow": "f_god_notice", "忠义": 1, "灵性": 1, "妖气": 4, "flag": "temple_vigil" }, "result": "天亮时，烧鸡还在。供桌上多了一层月光。" }
     ]
   },
   {
@@ -142,7 +142,7 @@
     "text": "一个道士在庙里歇脚。他看见你，眼睛一亮：好重的妖气。",
     "choices": [
       { "text": "夹着尾巴装傻", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "灵性": 1, "skill": "play_tame" }, "result": "他看了你半天，摇摇头：是我眼花了。原来装乖这么管用。",
+        "effect": { "follow": "f_taoist_return", "灵性": 1, "skill": "play_tame" }, "result": "他看了你半天，摇摇头：是我眼花了。原来装乖这么管用。",
         "fail": { "effect": { "death": "taoist" }, "result": "他掏出一只葫芦，喊了一声你的名字。" } },
       { "text": "撒腿就跑", "chance": 0.6, "chanceAttr": "脚力", "chanceStep": 0.03,
         "effect": { "脚力": 1 }, "result": "你从后墙的狗洞钻了出去。他的拂尘扫空了。",
@@ -161,9 +161,9 @@
     "text": "雷云压到了头顶。它们是冲你来的。",
     "choices": [
       { "text": "硬扛", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.04,
-        "effect": { "妖气": 20, "牙口": 2 }, "result": "雷劈了九道。你还站着，毛全竖了。",
+        "effect": { "follow": "f_thunder_after", "妖气": 20, "牙口": 2 }, "result": "雷劈了九道。你还站着，毛全竖了。",
         "fail": { "effect": { "death": "lightning" }, "result": "第九道雷，正正落在你头顶。" } },
-      { "text": "躲进石缝", "effect": { "体力": -2, "妖气": 3 }, "result": "雷劈碎了半块山石。你在缝里抖了一夜。" },
+      { "text": "躲进石缝", "effect": { "follow": "f_thunder_after", "体力": -2, "妖气": 3 }, "result": "雷劈碎了半块山石。你在缝里抖了一夜。" },
       { "text": "雷纹护体", "require": "legacy:thunder_mark>=2", "effect": { "妖气": 25, "灵性": 2 },
         "result": "前世雷劈死了你。这一世，雷落在你身上，像回家。" },
       { "text": "引雷", "showIf": "skill:thunder", "useSkill": "thunder", "effect": { "妖气": 30 },

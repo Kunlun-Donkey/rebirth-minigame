@@ -1,0 +1,352 @@
+[
+  {
+    "id": "f_octopus_watch", "dir": "down", "chainOnly": true, "teaser": "那团紫色还在石缝外",
+    "text": "石缝外面，那团紫色又在晃。墨斗不急，它在等你出来。",
+    "choices": [
+      { "text": "就不出去", "effect": { "打洞": 1, "体力": 1 }, "result": "你在缝里又挖深了一截。它晃到天黑，走了。" },
+      { "text": "再打一拳", "chance": 0.4, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "拳力": 2, "海灵": 2 }, "result": "你冲出去打了一拳就缩回来。它的腿抽了一下。",
+        "fail": { "effect": { "体力": -2 }, "result": "它早等着呢。一条腿把你拍回了缝里。" } }
+    ]
+  },
+  {
+    "id": "f_octopus_bait", "dir": "down", "chainOnly": true, "teaser": "墨斗在你洞口放了东西",
+    "text": "你的洞口摆着一颗小珍珠，亮得扎眼。旁边的石头后面，露出一截紫色。",
+    "choices": [
+      { "text": "不上当", "effect": { "灵性": 2 }, "result": "你一动不动。那截紫色等到天黑，自己把珍珠收走了。" },
+      { "text": "抢了就跑", "chance": 0.5, "chanceAttr": "游速", "chanceStep": 0.08,
+        "effect": { "item": "pearl", "游速": 1 }, "result": "你一弹一缩，珍珠到手。墨斗的腿慢了半拍。",
+        "fail": { "effect": { "death": "octopus" }, "result": "八条腿，早就等在那儿了。" } }
+    ]
+  },
+  {
+    "id": "f_octopus_debt", "dir": "any", "chainOnly": true, "teaser": "墨斗游到了你洞口",
+    "text": "墨斗游到你洞口，放下一颗小珍珠。它的颜色，比上回更灰了。",
+    "choices": [
+      { "text": "收下", "effect": { "item": "pearl", "灵性": 2 }, "result": "它没说话就走了。你们之间，这就算两清了。" },
+      { "text": "推回去", "effect": { "灵性": 4 }, "result": "你把珍珠推了回去。它看了你很久，带着珍珠走了。" }
+    ]
+  },
+
+  {
+    "id": "f_boss_glove", "dir": "any", "chainOnly": true, "teaser": "老板去买手套了",
+    "text": "胖老板戴着一副厚胶皮手套回来了。他指着你：就你，今天收拾你。",
+    "choices": [
+      { "text": "打他手套", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "拳力": 2, "follow": "f_boss_sign" }, "result": "手套被你打出个洞。老板盯着那个洞，看了很久。",
+        "fail": { "effect": { "体力": -2 }, "result": "手套太厚了。你的钳子麻了一下午。" } },
+      { "text": "躲到泵后面", "effect": { "灵性": 1, "打洞": 1 }, "result": "他的手太粗，伸不进泵后面。他骂了一句，走了。" }
+    ]
+  },
+  {
+    "id": "f_boss_sign", "dir": "any", "chainOnly": true, "teaser": "老板在水箱上贴了张纸",
+    "text": "水箱上贴了张纸：此虾不卖。老板跟客人说，这只留着镇店。",
+    "choices": [
+      { "text": "冲他挥拳", "effect": { "拳力": 1, "海灵": 3, "flag": "boss_seen" }, "result": "老板也冲你挥了挥拳。你们俩，算是认识了。" },
+      { "text": "抓紧磨钳子", "effect": { "拳力": 2 }, "result": "不卖也是关着。你在玻璃上磨了一整季钳子。" }
+    ]
+  },
+  {
+    "id": "f_tank_crack", "dir": "down", "chainOnly": true, "teaser": "箱底那道裂缝在渗水",
+    "text": "箱底那道裂缝又宽了一点。凉水从下面渗上来，带着海的咸味。",
+    "choices": [
+      { "text": "接着往下挖", "chance": 0.5, "chanceAttr": "打洞", "chanceStep": 0.1,
+        "effect": { "打洞": 2, "海灵": 4 }, "result": "裂缝底下是排水管。你顺着管子往外一看：是海。",
+        "fail": { "effect": { "体力": -2 }, "result": "裂缝太硬，你挖秃了钳子。龙虾看了你一眼，没吭声。" } },
+      { "text": "叫龙虾一起", "effect": { "灵性": 2, "拳力": 1 }, "result": "龙虾摇了摇须：我老了，你去。它替你守着箱底。" }
+    ]
+  },
+  {
+    "id": "f_tank_night", "dir": "up", "chainOnly": true, "teaser": "等到夜里再说",
+    "text": "夜里市场关了灯，只剩增氧泵咕噜咕噜。箱沿上一个人影都没有。",
+    "choices": [
+      { "text": "翻出去", "effect": { "游速": 2, "海灵": 4 }, "result": "你落进水沟，没人喊。顺着水，你一路冲进了海。" },
+      { "text": "先叫醒别的虾", "effect": { "灵性": 2, "海灵": 2, "flag": "boss_seen" }, "result": "你挨个把它们拍醒。那天夜里，水箱少了一半虾。" }
+    ]
+  },
+  {
+    "id": "f_pipe_grate", "dir": "down", "chainOnly": true, "teaser": "管子尽头有道铁格栅",
+    "text": "管子到头了。前面一道铁格栅，格栅外的水是绿的，一直在晃。那是海。",
+    "choices": [
+      { "text": "一拳打穿", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "拳力": 2, "海灵": 5 }, "result": "格栅锈透了。你一拳下去，它掉进了海里，你也是。",
+        "fail": { "effect": { "体力": -2 }, "result": "格栅没锈透。你的钳子嗡嗡响了半天。" } },
+      { "text": "等涨潮挤过去", "effect": { "游速": 1, "海灵": 3 }, "result": "潮水一涨，格栅缝宽了一点。你侧着身子挤了出去。" }
+    ]
+  },
+
+  {
+    "id": "f_ahai_again", "dir": "any", "chainOnly": true, "teaser": "那个男孩说明天还来",
+    "text": "那个黑黑的男孩又来了。他往水里撒了一把馒头渣，小声说：出来嘛。",
+    "choices": [
+      { "text": "探出头", "effect": { "体力": 1, "flag": "ahai", "follow": { "id": "f_ahai_named", "delay": 2 } }, "result": "他眼睛一亮：你出来了！我叫阿海。" },
+      { "text": "接着躲", "effect": { "打洞": 1 }, "result": "馒头渣，你等他走了才吃。挺香。" }
+    ]
+  },
+  {
+    "id": "f_ahai_named", "dir": "any", "chainOnly": true, "teaser": "阿海说要给你起名字",
+    "text": "阿海又蹲在水边了。他说他想了一晚上，给你起名叫大拳。",
+    "choices": [
+      { "text": "冲他打套拳", "effect": { "拳力": 1, "灵性": 1, "flag": "ahai_named", "follow": { "id": "f_ahai_grandpa", "delay": 2 } },
+        "result": "他拍着手喊：大拳！大拳！你打得更来劲了。" },
+      { "text": "游开", "effect": { "游速": 1 }, "result": "他在后面喊大拳。你没回头，但你记住了。" }
+    ]
+  },
+  {
+    "id": "f_ahai_grandpa", "dir": "any", "chainOnly": true, "teaser": "阿海的爷爷要来了", "require": "flag:ahai",
+    "text": "一个老渔夫看见了你：这只个头好，带回去。阿海张开胳膊，挡在了前面。",
+    "choices": [
+      { "text": "冲阿海挥拳", "effect": { "灵性": 2, "flag": "ahai_friend" }, "result": "爷爷看看他，又看看你，笑了：行，你的虾你管。" },
+      { "text": "趁乱溜走", "effect": { "游速": 2 }, "result": "你一溜烟跑了。身后，阿海在跟爷爷吵。" }
+    ]
+  },
+  {
+    "id": "f_ahai_swim", "dir": "side", "chainOnly": true, "teaser": "阿海在码头学游泳",
+    "text": "阿海在码头底下学游泳，扑腾两下就呛水。爷爷在岸上骂他。",
+    "choices": [
+      { "text": "游在他前面", "effect": { "游速": 2, "灵性": 1, "follow": { "id": "f_ahai_promise", "delay": 2 } },
+        "result": "你游一下，停一下。他跟着你，第一次游到了第二根木桩。" },
+      { "text": "看他扑腾", "effect": { "灵性": 1, "海灵": 2 }, "result": "他呛了一下午水，爬上岸，说明天再来。" }
+    ]
+  },
+  {
+    "id": "f_ahai_bait", "dir": "side", "chainOnly": true, "teaser": "阿海说明天多带一份",
+    "text": "阿海又坐在码头边，这回带了两份鱼饵。一份挂钩上，一份撒给你。",
+    "choices": [
+      { "text": "吃他给的那份", "effect": { "体力": 3, "flag": "ahai_friend" }, "result": "他说：慢点吃，又没人跟你抢。说完自己先笑了。" },
+      { "text": "抢钩上那份", "chance": 0.5, "chanceAttr": "游速", "chanceStep": 0.1,
+        "effect": { "体力": 2, "拳力": 1 }, "result": "你连饵带钩扯了过去，钩子被你掰直了。他笑倒在码头上。",
+        "fail": { "effect": { "体力": -1 }, "result": "钩子挂住了你的须。他赶紧给你摘了下来。" } }
+    ]
+  },
+  {
+    "id": "f_ahai_promise", "dir": "any", "chainOnly": true, "teaser": "阿海有话想跟你说",
+    "text": "阿海撑着小船来找你。他说：等我长大了，我们一起游过海峡，去对岸看看。",
+    "choices": [
+      { "text": "冲他挥拳", "effect": { "灵性": 2, "海灵": 3, "flag": "ahai_promise" }, "result": "他也冲你挥了挥拳。这就算拉过钩了。" },
+      { "text": "转身游开", "effect": { "游速": 1 }, "result": "他说没事，他等你。他每次都这么说。" }
+    ]
+  },
+  {
+    "id": "f_ahai_shore", "dir": "any", "chainOnly": true, "teaser": "阿海在浅滩上找你",
+    "text": "阿海在浅滩上翻遍了每块石头。看见你，他一屁股坐下：上回是你吧？",
+    "choices": [
+      { "text": "冲他挥拳", "effect": { "灵性": 3, "海灵": 6, "flag": "ahai_promise" }, "result": "他说下回风暴，他不抱船板了，他抱你。" },
+      { "text": "缩回石头下", "effect": { "打洞": 1, "体力": 2 }, "result": "他在石头边坐到天黑，跟你讲了一晚上的话。" }
+    ]
+  },
+  {
+    "id": "f_storm_wreck", "dir": "any", "chainOnly": true, "teaser": "风暴过后，海面上漂着东西",
+    "text": "风暴过去，海面上漂着一条翻了的小船。船板边上，有人在一沉一浮。",
+    "choices": [
+      { "text": "是阿海", "showIf": "flag:ahai_friend", "require": "游速>=8 & stage>=3",
+        "effect": { "海灵": 10, "flag": "carry_ahai", "follow": { "id": "f_ahai_strait", "delay": 2, "ttl": 8 } },
+        "result": "你钻到他身下，把他顶出了水面。他抓住你的背壳，认出了你。" },
+      { "text": "把船板推上岸", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.05,
+        "effect": { "拳力": 2, "海灵": 6 }, "result": "你一拳一拳把船板推到浅滩。那人爬上岸，没看清是谁。",
+        "fail": { "effect": { "体力": -3 }, "result": "浪太大，你被冲开了。后来听说，他被别的船救了。" } }
+    ]
+  },
+  {
+    "id": "f_ahai_strait", "dir": "any", "chainOnly": true, "teaser": "阿海天天在码头喊你",
+    "text": "风暴过去了。阿海天天站在码头尽头，冲着海里喊：海峡那边，我们去不去？",
+    "choices": [
+      { "text": "驮他过海峡", "require": "flag:ahai_promise & 游速>=10", "effect": { "ending": "lets_go" },
+        "result": "他跨上你的背壳，喊了一声。你一甩尾巴，冲了出去。" },
+      { "text": "陪他游一圈", "effect": { "灵性": 2, "海灵": 8 }, "result": "你驮着他在港湾里转了一圈。海峡，下回再说。" }
+    ]
+  },
+
+  {
+    "id": "f_goby_alarm", "dir": "any", "chainOnly": true, "teaser": "放哨的虾虎鱼不对劲",
+    "text": "虾虎鱼一甩尾钻进洞，挤在你身边直哆嗦。洞口上头，有个影子在转。",
+    "choices": [
+      { "text": "跟它一起缩着", "effect": { "打洞": 1, "灵性": 1 }, "result": "影子转了三圈，走了。虾虎鱼这才敢喘气。" },
+      { "text": "出去看看", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "海灵": 2 }, "result": "是只海鸥。你看清了它，它没看见你。",
+        "fail": { "effect": { "体力": -2 }, "result": "是只海鸥。它的嘴擦着你的壳过去了。" } }
+    ]
+  },
+  {
+    "id": "f_gull_wait", "dir": "any", "chainOnly": true, "teaser": "那只海鸥在等你冒头",
+    "text": "那只海鸥还在。它蹲在浮标上一动不动，盯着你冒过头的那片水。",
+    "choices": [
+      { "text": "换个地方冒头", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.1,
+        "effect": { "灵性": 2, "游速": 1 }, "result": "你从老远的地方冒了头。海鸥还盯着原来那片水。",
+        "fail": { "effect": { "death": "seagull" }, "result": "它比你想的有耐心。" } },
+      { "text": "一拳打它的脚", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 4 },
+        "result": "你从水下一拳打在它脚上。它嘎的一声，浮标都不要了。" },
+      { "text": "这季不上去了", "effect": { "打洞": 1 }, "result": "你在底下待了一季。海鸥等饿了，飞走了。" }
+    ]
+  },
+
+  {
+    "id": "f_crab_revenge", "dir": "down", "chainOnly": true, "teaser": "那只螃蟹去叫它大哥了",
+    "text": "那只螃蟹回来了，身后跟着一只更大的。大的那只，钳子比你整个身子还宽。",
+    "choices": [
+      { "text": "打它关节", "chance": 0.45, "chanceAttr": "拳力", "chanceStep": 0.08,
+        "effect": { "拳力": 2, "海灵": 5 }, "result": "大螃蟹的钳子垂了下来。两只横着跑了，跑得一样快。",
+        "fail": { "effect": { "体力": -3, "back": "down" }, "result": "大钳子一挥，你被拍出了洞。洞归它们了。" } },
+      { "text": "一拳碎壳", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 3, "海灵": 6 },
+        "result": "你一拳打裂了大钳子。小螃蟹当场换了个大哥。" },
+      { "text": "从后门溜", "effect": { "打洞": 1, "体力": -1 }, "result": "你从 U 形洞的另一头走了。两只螃蟹在前门等到天黑。" }
+    ]
+  },
+  {
+    "id": "f_crab_house", "dir": "down", "chainOnly": true, "teaser": "你让出去的旧洞出事了",
+    "text": "那只螃蟹住进了你的旧洞。洞太窄，它卡在里面，两只钳子在外面乱挥。",
+    "choices": [
+      { "text": "把它挖出来", "effect": { "灵性": 2, "item": "clam" }, "result": "你刨了半天把它刨了出来。它塞给你一个蛤蜊，横着走了。" },
+      { "text": "看会儿热闹", "effect": { "打洞": 1, "海灵": 2 }, "result": "它卡了一整天。你看明白了：洞要按自己的身子挖。" }
+    ]
+  },
+  {
+    "id": "f_feast_crab", "dir": "any", "chainOnly": true, "teaser": "挨你一拳的螃蟹记仇了",
+    "text": "抢食那天挨你一拳的螃蟹找来了。它钳子上缠着海草，像绑了绷带。",
+    "choices": [
+      { "text": "再给它一拳", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.08,
+        "effect": { "拳力": 2, "海灵": 4 }, "result": "你打在另一只钳子上。这下两只都绑上海草了。",
+        "fail": { "effect": { "体力": -3 }, "result": "它这回有准备。你挨了一钳，跑了。" } },
+      { "text": "分它个蛤蜊", "require": "item:clam", "effect": { "loseItem": "clam", "灵性": 3 },
+        "result": "你把蛤蜊推过去。它愣了愣，夹着蛤蜊走了，没回头。" },
+      { "text": "躲进洞里", "effect": { "打洞": 1 }, "result": "它在洞口骂了半天。螃蟹骂人，你听不懂，挺好。" }
+    ]
+  },
+  {
+    "id": "f_tidal_hermit", "dir": "side", "chainOnly": true, "teaser": "寄居蟹又在搬家",
+    "text": "那只寄居蟹又搬家了，这回背的是个空罐头。它说：上回谢谢，再帮一把？",
+    "choices": [
+      { "text": "帮它推", "effect": { "拳力": 1, "item": "clam" }, "result": "罐头太滑，你推了一整天。它从罐头里掏出个蛤蜊给你。" },
+      { "text": "帮它挑个壳", "effect": { "灵性": 2 }, "result": "你带它找了个合身的螺壳。它钻进去转了一圈：正好。" }
+    ]
+  },
+  {
+    "id": "f_shell_borrow", "dir": "any", "chainOnly": true, "teaser": "有人盯上了你的旧壳",
+    "text": "一只寄居蟹盯着你洞口的旧壳，眼都直了。它说它现在的壳，太挤了。",
+    "choices": [
+      { "text": "送给它", "require": "item:old_shell", "effect": { "loseItem": "old_shell", "灵性": 2, "打洞": 1 },
+        "result": "它钻进你的旧壳，转了一圈。走之前，它帮你把洞口修了一遍。" },
+      { "text": "留着保命", "effect": { "体力": 1 }, "result": "它在洞口坐了一天，叹了口气走了。" }
+    ]
+  },
+
+  {
+    "id": "f_crack_cave", "dir": "down", "chainOnly": true, "teaser": "石缝后面好像是空的",
+    "text": "你挖穿了一层石头。后面是个空洞，洞壁上贴满了小海螺，嗡嗡地响。",
+    "choices": [
+      { "text": "挑一个带走", "effect": { "item": "conch" }, "result": "你挑了个最小的。贴在耳边，能听见三个方向的水声。" },
+      { "text": "住进去", "effect": { "打洞": 1, "体力": 2 }, "result": "空洞冬暖夏凉。你在海螺的嗡嗡声里睡着了。" }
+    ]
+  },
+  {
+    "id": "f_urchin_guard", "dir": "down", "chainOnly": true, "teaser": "那只坏脾气海胆有话说",
+    "text": "那只脾气很坏的海胆搬到了你洞口。它说：门口我守了，不收钱，别吵我。",
+    "choices": [
+      { "text": "让它守", "effect": { "体力": 2, "灵性": 1 }, "result": "从那天起，没有鱼敢往你洞里伸头。" },
+      { "text": "请它挪挪", "effect": { "打洞": 1, "拳力": 1 }, "result": "它骂了你半天，挪了半寸。你只好把门开在了另一边。" }
+    ]
+  },
+  {
+    "id": "f_grouper_hunt", "dir": "down", "chainOnly": true, "teaser": "石斑鱼记住了这片海草",
+    "text": "那条石斑鱼又来了。它不游了，停在海草根上面，一口一口地吸沙。",
+    "choices": [
+      { "text": "往更深处挖", "chance": 0.55, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 2, "灵性": 1 }, "result": "它吸了一肚子沙，吐出来，走了。你在下面又挖了一层。",
+        "fail": { "effect": { "death": "grouper" }, "result": "沙被吸开了。你和沙一起进去了。" } },
+      { "text": "连夜搬家", "effect": { "back": "down", "体力": -1 }, "result": "海草林那么大，它总不能每棵都吸一遍。" }
+    ]
+  },
+  {
+    "id": "f_grouper_fans", "dir": "any", "chainOnly": true, "teaser": "海草林里传开了",
+    "text": "海草林里都在传：有只虾打了石斑鱼的嘴。几条小鱼游过来，要跟你混。",
+    "choices": [
+      { "text": "收下小弟", "effect": { "海灵": 5, "灵性": 1 }, "result": "它们给你放哨、带路、报信。你第一次有了小弟。" },
+      { "text": "一只虾就够了", "effect": { "拳力": 1, "灵性": 2 }, "result": "你把它们打发走了。它们回去一说，更崇拜你了。" }
+    ]
+  },
+  {
+    "id": "f_kelp_owner", "dir": "down", "chainOnly": true, "teaser": "海带结的主人来了",
+    "text": "一只小海马找到了那个海带结。它数了数里面的东西，冲你点了点头。",
+    "choices": [
+      { "text": "冲它点头", "effect": { "灵性": 2, "item": "kelp_knot" }, "result": "它从别的结里摸出一块海带结塞给你：给不拿的。" },
+      { "text": "问它藏了啥", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "海灵": 5 },
+        "result": "它说是给它妈妈攒的。你帮它把结藏深了一点。" }
+    ]
+  },
+  {
+    "id": "f_trawl_refugees", "dir": "down", "chainOnly": true, "teaser": "拖网过后，有鱼来敲门",
+    "text": "拖网刮过的海底光秃秃的，只剩你的洞口。逃难的小鱼小虾全挤了过来。",
+    "choices": [
+      { "text": "都进来吧", "effect": { "灵性": 2, "海灵": 4, "体力": -1 }, "result": "洞挤得转不了身。可那一夜，谁都没被捞走。" },
+      { "text": "趁机占地盘", "effect": { "打洞": 2, "拳力": 1 }, "result": "周围的洞都没了。这片海底，现在归你。" }
+    ]
+  },
+  {
+    "id": "f_dragon_turtle", "dir": "down", "chainOnly": true, "teaser": "龙宫的门缝又亮了",
+    "text": "门缝里探出一个乌龟脑袋：上回敲门的是你？我是龟丞相，进来喝口水。",
+    "choices": [
+      { "text": "跟它进去", "effect": { "灵性": 3, "海灵": 10 }, "result": "里面很大，很旧，很安静。龟丞相说：最近门口不太平。" },
+      { "text": "在门口守着", "effect": { "打洞": 2, "拳力": 1 }, "result": "你没进去。龟丞相看你在门口挖洞，点了点头。" }
+    ]
+  },
+  {
+    "id": "f_thunder_coral", "dir": "down", "chainOnly": true, "teaser": "雷劈过的海底在冒火星",
+    "text": "雷停了。海底有截珊瑚被劈断了，断口还在噼啪冒小火星。",
+    "choices": [
+      { "text": "捡起来", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "item": "thunder_coral" }, "result": "火星在钳子上跳了两下，不疼，麻。你把它收好了。",
+        "fail": { "effect": { "体力": -2 }, "result": "钳子一碰，你整只虾抖了一下。珊瑚滚进了沟里。" } },
+      { "text": "守着它待一夜", "effect": { "灵性": 2, "海灵": 3 }, "result": "你在火星旁边待了一夜。钳子尖也开始发麻了。" }
+    ]
+  },
+
+  {
+    "id": "f_school_return", "dir": "up", "chainOnly": true, "teaser": "那群小虾又游回来了",
+    "text": "那群小虾又从你头顶游过。这回它们慢了下来，绕着你转圈，像在等你。",
+    "choices": [
+      { "text": "带它们游", "effect": { "游速": 2, "灵性": 1 }, "result": "你游在最前面，它们跟成一条亮线。原来你也能领头。" },
+      { "text": "抓几只吃", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.1,
+        "effect": { "体力": 3 }, "result": "它们又被你骗了一次。这回，它们真记住了。",
+        "fail": { "effect": { "体力": -1 }, "result": "它们早防着你，一哄而散。" } }
+    ]
+  },
+  {
+    "id": "f_net_again", "dir": "up", "chainOnly": true, "teaser": "那条渔船又来了",
+    "text": "那条渔船又来了，换了张网眼更细的网。渔夫嘀咕：上回跑了只大的。",
+    "choices": [
+      { "text": "贴到船底", "effect": { "灵性": 2, "游速": 1 }, "result": "网撒在船边，你贴在船底的藤壶堆里。灯下黑。" },
+      { "text": "再跑一次", "chance": 0.55, "chanceAttr": "游速", "chanceStep": 0.08,
+        "effect": { "游速": 2, "海灵": 4 }, "result": "你又从网边窜了出去。渔夫看着空网，挠了挠头。",
+        "fail": { "effect": { "death": "net" }, "result": "细网，就是细。" } }
+    ]
+  },
+  {
+    "id": "f_wave_again", "dir": "up", "chainOnly": true, "teaser": "更大的浪还在后面",
+    "text": "又一个浪推过来，比上回那个还高。这回，你认得它的脾气了。",
+    "choices": [
+      { "text": "再骑一次", "effect": { "游速": 2, "海灵": 8 }, "result": "你在浪尖上翻了个身。海鸥在旁边飞，没追上你。" },
+      { "text": "让它过去", "effect": { "体力": 2, "灵性": 1 }, "result": "骑过一次就够了。你在浪底下打了个盹。" }
+    ]
+  },
+
+  {
+    "id": "f_catcher_wire", "dir": "side", "chainOnly": true, "teaser": "赶海的人发现了后门",
+    "text": "那个赶海的又来了。他不挖前门了，拿根铁丝，专掏 U 形洞的后门。",
+    "choices": [
+      { "text": "两头都堵上", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
+        "effect": { "打洞": 2, "灵性": 1 }, "result": "铁丝捅了两下，捅不动。他嘀咕：这洞还会锁门？",
+        "fail": { "effect": { "death": "net" }, "result": "铁丝一勾，你就出来了。" } },
+      { "text": "一拳打铁丝", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 3 },
+        "result": "铁丝被你打弯了。他看着弯铁丝，换了片滩。" },
+      { "text": "连夜搬家", "effect": { "back": "side", "体力": -1 }, "result": "你搬到了更远的泥里。他掏了个空洞。" }
+    ]
+  },
+  {
+    "id": "f_turtle_ride", "dir": "side", "chainOnly": true, "teaser": "老海龟要往南去",
+    "text": "那只老海龟又漂过来了。它说它要往南去，那边水暖，问你搭不搭。",
+    "choices": [
+      { "text": "搭一段", "effect": { "游速": 3, "海灵": 4, "体力": -1 }, "result": "你趴在它壳上漂了一季。醒来时，海的颜色都变了。" },
+      { "text": "不搭了", "effect": { "灵性": 2 }, "result": "它说那也好。它慢慢漂走了，一直没回头。" }
+    ]
+  }
+]

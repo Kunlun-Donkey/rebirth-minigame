@@ -10,7 +10,7 @@
     "text": "肉摊前，屠户剁肉的声音咚咚响。",
     "choices": [
       { "text": "蹲着等", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
-        "effect": { "体力": 3 }, "result": "屠户看你蹲得规矩，扔了块碎肉给你。",
+        "effect": { "follow": "f_butcher_job", "体力": 3 }, "result": "屠户看你蹲得规矩，扔了块碎肉给你。",
         "fail": { "effect": { "体力": -1 }, "result": "屠户拿刀背敲了你的脑袋。" } },
       { "text": "去别处转转", "effect": { "脚力": 1 }, "result": "集市很大。香味，到处都是。" }
     ]
@@ -19,7 +19,7 @@
     "id": "l1_beggar", "dir": "side", "layers": ["L1"], "once": true,
     "text": "墙根下有个小乞丐，跟你一样瘦，一样脏。",
     "choices": [
-      { "text": "分他半个馒头", "effect": { "忠义": 2, "灵性": 1, "flag": "goushen" }, "result": "他抱着你哭了。他说他叫狗剩。" },
+      { "text": "分他半个馒头", "effect": { "follow": { "id": "f_beggar_grow", "delay": 2, "ttl": 4 }, "忠义": 2, "灵性": 1, "flag": "goushen" }, "result": "他抱着你哭了。他说他叫狗剩。" },
       { "text": "抢他的", "effect": { "体力": 2, "忠义": -1 }, "result": "他没追。他只是看着你。" }
     ]
   },
@@ -41,7 +41,7 @@
     "text": "集市上有人在斗狗。赢的那只，有肉吃。",
     "choices": [
       { "text": "下场", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.06,
-        "effect": { "牙口": 2, "体力": 3, "flag": "stray_respect" }, "result": "你赢了。那块肉，是你这辈子吃过最香的。",
+        "effect": { "follow": "f_fight_rematch", "牙口": 2, "体力": 3, "flag": "stray_respect" }, "result": "你赢了。那块肉，是你这辈子吃过最香的。",
         "fail": { "effect": { "体力": -3 }, "result": "你被咬得一瘸一拐。没人给你肉。" } },
       { "text": "看热闹", "effect": { "灵性": 1 }, "result": "你看明白了：咬人的狗，不叫。" }
     ]
@@ -64,7 +64,7 @@
     "id": "l2_yamen", "dir": "side", "layers": ["L2"],
     "text": "衙门在招巡街犬。管饭。",
     "choices": [
-      { "text": "去应征", "require": "牙口>=4", "effect": { "体力": 3, "忠义": 2, "牙口": 1 },
+      { "text": "去应征", "require": "牙口>=4", "effect": { "follow": "f_yamen_case", "体力": 3, "忠义": 2, "牙口": 1 },
         "result": "你吓跑了一个小偷。官差赏了你一根大骨头。" },
       { "text": "装乖应征", "showIf": "skill:play_tame", "useSkill": "play_tame", "effect": { "体力": 3, "忠义": 3 },
         "result": "你在官差面前乖得像只猫。他们当场收下了你。" },
@@ -90,14 +90,14 @@
     "text": "酒楼后门的泔水桶，是县城野狗的必争之地。",
     "choices": [
       { "text": "抢位置", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
-        "effect": { "体力": 4, "flag": "stray_respect" }, "result": "你抢到了一整块红烧肉。县城的狗，记住了你。",
+        "effect": { "follow": "f_swill_gang", "体力": 4, "flag": "stray_respect" }, "result": "你抢到了一整块红烧肉。县城的狗，记住了你。",
         "fail": { "effect": { "体力": -2 }, "result": "五条狗一起扑了上来。" } },
       { "text": "等它们吃完", "effect": { "忠义": 1, "灵性": 1, "体力": 1 }, "result": "剩下的不多。但没人咬你。" }
     ]
   },
 
   {
-    "id": "l2_goushen", "dir": "side", "layers": ["L2"], "stage": [2, 99], "once": true, "weight": 18, "require": "flag:goushen",
+    "id": "l2_goushen", "dir": "side", "layers": ["L2"], "stage": [2, 99], "once": true, "weight": 18, "require": "flag:goushen", "teaser": "狗剩在县城出事了",
     "text": "狗剩被几个混混堵在巷子里，怀里死死护着半个饼。",
     "choices": [
       { "text": "扑上去", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
@@ -145,7 +145,7 @@
     "id": "l3_monk", "dir": "side", "layers": ["L3"],
     "text": "京城大庙里，有个老和尚在给一群狗讲经。",
     "choices": [
-      { "text": "坐下听", "effect": { "灵性": 3, "妖气": 6 }, "result": "你一个字也没听懂。但你的心，静了。" },
+      { "text": "坐下听", "effect": { "follow": "f_monk_again", "灵性": 3, "妖气": 6 }, "result": "你一个字也没听懂。但你的心，静了。" },
       { "text": "吃供品", "effect": { "体力": 3 }, "result": "老和尚看见了，没说话，又放了一盘。" }
     ]
   },
