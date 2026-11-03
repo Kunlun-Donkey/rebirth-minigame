@@ -19,6 +19,7 @@
     "sim": "tsx tools/play.ts --sim 2000",
     "pretest": "node tools/ensure-cocos-temp.mjs",
     "test": "vitest run",
+    "ui:snap": "vitest run -c vitest.ui.config.ts && node tools/ui-snap/render.mjs",
     "pretypecheck": "node tools/ensure-cocos-temp.mjs",
     "typecheck": "tsc -p tsconfig.tools.json && tsc -p tsconfig.game.json",
     "prevalidate": "node tools/ensure-cocos-temp.mjs",

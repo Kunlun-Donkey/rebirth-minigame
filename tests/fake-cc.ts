@@ -138,7 +138,16 @@ export class Sprite extends Component {
 }
 export class Graphics extends Component {
     fillColor = new Color(); strokeColor = new Color(); lineWidth = 1;
-    rect() {} roundRect() {} circle() {} moveTo() {} lineTo() {} fill() {} stroke() {} clear() {}
+    /** 绘制记录（UI 快照用）：节点本地坐标，y 向上 */
+    ops: { kind: 'fill' | 'stroke'; shape: 'rect' | 'circle'; x: number; y: number; w: number; h: number; r: number; color: Color; lw: number }[] = [];
+    private path: { shape: 'rect' | 'circle'; x: number; y: number; w: number; h: number; r: number }[] = [];
+    rect(x = 0, y = 0, w = 0, h = 0) { this.path.push({ shape: 'rect', x, y, w, h, r: 0 }); }
+    roundRect(x = 0, y = 0, w = 0, h = 0, r = 0) { this.path.push({ shape: 'rect', x, y, w, h, r }); }
+    circle(cx = 0, cy = 0, r = 0) { this.path.push({ shape: 'circle', x: cx - r, y: cy - r, w: 2 * r, h: 2 * r, r }); }
+    moveTo() {} lineTo() {}
+    fill() { for (const p of this.path) this.ops.push({ ...p, kind: 'fill', color: { ...this.fillColor } as Color, lw: 0 }); this.path = []; }
+    stroke() { for (const p of this.path) this.ops.push({ ...p, kind: 'stroke', color: { ...this.strokeColor } as Color, lw: this.lineWidth }); this.path = []; }
+    clear() { this.ops = []; this.path = []; }
 }
 
 /** 贴图：存在对应图片文件则返回 SpriteFrame（带真实尺寸），否则报错（模拟缺图） */
