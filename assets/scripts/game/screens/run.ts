@@ -113,10 +113,12 @@ function hud(g: Game, root: Node): number {
 // ───────────── 事件 ─────────────
 
 /** 排版档位：选项太多放不下时，依次缩小正文字号与间距 */
-const COMPACT = [
+const COMPACT: { size: number; lh: number; minH: number; gap: number; compact?: boolean }[] = [
     { size: 34, lh: 60, minH: 260, gap: 18 },
     { size: 30, lh: 50, minH: 220, gap: 12 },
     { size: 26, lh: 42, minH: 190, gap: 8 },
+    // 选项 6~7 个时（如打工人选职业）：选项按钮也压矮
+    { size: 26, lh: 42, minH: 170, gap: 6, compact: true },
 ];
 
 function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0): void {
@@ -155,7 +157,7 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
     // 选项
     let cy = y + cardH + 28 - L.gap;
     for (const c of v.choices) {
-        const n = button(root, 30, cy + L.gap, cardW, choiceOpts(g, c));
+        const n = button(root, 30, cy + L.gap, cardW, { ...choiceOpts(g, c), compact: L.compact, size: L.compact ? 26 : undefined });
         cy += sizeOf(n).h + L.gap;
     }
     if (cy > bottom && level < COMPACT.length - 1) {

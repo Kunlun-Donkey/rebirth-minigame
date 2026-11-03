@@ -317,6 +317,8 @@ export interface ButtonOpts {
     sub?: string;
     subColor?: string;
     size?: number;
+    /** 紧凑：基础高度 92 → 68（选项很多、一屏放不下时用） */
+    compact?: boolean;
     align?: 'left' | 'center';
     /** 文字左侧的小图标（贴图候选列表）；ad 按钮默认带视频图标 */
     icon?: string[];
@@ -337,7 +339,7 @@ export function button(parent: Node, x: number, y: number, w: number, o: ButtonO
     // 第二行小字可换行（含 \n），高度按行数撑开
     const subLH = 30;
     const subH = o.sub ? textHeight(o.sub, w - pad * 2, 22, subLH) : 0;
-    let h = 92;
+    let h = o.compact ? 68 : 92;
     if (o.sub) h += subH;
     if (tagsOnNewLine) h += 40;
 
