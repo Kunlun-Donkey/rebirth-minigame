@@ -1,0 +1,122 @@
+[
+  {
+    "id": "g_tianhu_1",
+    "dir": "any",
+    "teaser": "那块石头在发光",
+    "sudden": true,
+    "gold": true,
+    "stage": [
+      1,
+      2
+    ],
+    "weight": 0.25,
+    "once": true,
+    "text": "夜里一颗流星拖着金光，落在你身边。沙子烫得发红。",
+    "choices": [
+      {
+        "text": "把根伸过去",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "灵气": 10,
+          "根系": 3,
+          "follow": {
+            "id": "g_tianhu_2",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
+        "result": "你摸到了一块还在跳的石头。",
+        "fail": {
+          "effect": {
+            "灵气": 5
+          },
+          "result": "它太烫了，你缩回了根。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  },
+  {
+    "id": "g_tianhu_2",
+    "dir": "any",
+    "teaser": "灵石里的光在等你",
+    "chainOnly": true,
+    "text": "那块石头裂开了，里面是一团会呼吸的光。它在等你。",
+    "choices": [
+      {
+        "text": "吞下这团光",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "灵气": 10,
+          "茎叶": 3,
+          "follow": {
+            "id": "g_tianhu_3",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
+        "result": "光顺着根往上爬，你整株草都亮了。",
+        "fail": {
+          "effect": {
+            "灵气": 5
+          },
+          "result": "光散了一半。你只吞下了一点。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  },
+  {
+    "id": "g_tianhu_3",
+    "dir": "any",
+    "teaser": "有人循着光来了",
+    "chainOnly": true,
+    "text": "一个白胡子仙人循着光找来，盯着你看了很久：竟是一株草。",
+    "choices": [
+      {
+        "text": "请他点化",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 2,
+          "灵气": 20,
+          "韧性": 3,
+          "flag": "tianhu"
+        },
+        "result": "他屈指一弹。你听见自己的叶子在长。",
+        "fail": {
+          "effect": {
+            "灵气": 5
+          },
+          "result": "他摇摇头，走了。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  }
+]

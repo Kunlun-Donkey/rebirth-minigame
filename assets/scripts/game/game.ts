@@ -214,7 +214,18 @@ export class Game {
         const map = this.engine.mapDef();
         Platform.report('start_life', { life: this.engine.run.life, talent: pick.talent, map: map?.id ?? '' });
         this.goRun();
-        if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc]);
+        const B = this.data.meta.blessed;
+        if (this.engine.run.blessed && B) {
+            // 天命之子：金色开局（天胡通道）
+            Platform.report('blessed', { life: this.engine.run.life });
+            this.audio.play('ending');
+            Platform.vibrate();
+            showInfo(this, `✦ ${B.name} ✦`, [
+                B.text,
+                `本世：全属性大幅提升${B.lifespanMul && B.lifespanMul > 1 ? `，寿元 ×${B.lifespanMul}` : ''}，奇遇将至。`,
+                ...(map ? [`出生地：${map.name}`] : []),
+            ]);
+        } else if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc]);
     }
 
     /** 执行一个会产生结果的动作（选项/道具/技能），弹出结果后推进 */

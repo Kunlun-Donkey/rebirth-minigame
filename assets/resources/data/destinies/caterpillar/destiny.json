@@ -141,6 +141,7 @@
     { "id": "garden_boss", "name": "菜园一霸", "epitaph": "老太太后来不捉虫了。她说那条虫子会冲她点头，怪吓人的。" }
   ],
   "upgrades": [
+    { "id": "heaven_favor", "name": "天眷", "desc": "成为「天选之虫」的概率 +0.5%。", "kind": "blessed", "value": 0.005, "costs": [600, 1800] },
     { "id": "vigor", "name": "壮身", "desc": "开局饱腹上限 +1。", "costs": [120, 360, 900], "start": { "饱腹上限": 1 } },
     { "id": "spirit_root", "name": "开窍", "desc": "开局蜕变 +4，更早破壳长大。", "costs": [150, 450, 1100], "start": { "蜕变": 4 } },
     { "id": "fortune", "name": "福缘", "desc": "轮回点 +10%。", "kind": "pointsBonus", "value": 0.1, "costs": [250, 750, 1800] },
@@ -150,6 +151,7 @@
     { "id": "vision", "name": "慧眼", "desc": "开局天赋、道具、伙伴改为 4 选 1。", "kind": "draftSize", "costs": [2000] }
   ],
   "fates": [
+    { "id": "heaven_sign", "name": "蝶影满天", "desc": "今天到处是蝴蝶。成为「天选之虫」的概率 ×3。", "mods": { "blessedMul": 3 } },
     { "id": "spring_rain", "name": "春雨", "desc": "叶子一夜间全冒出来了。每 2 季才饿一次。", "mods": { "waterCostEvery": 2 } },
     { "id": "sunny", "name": "大晴天", "desc": "太阳特别好。蜕变获取 ×1.5。", "mods": { "qiMul": 1.5 } },
     { "id": "turbulent", "name": "多事之秋", "desc": "突发事件更多，轮回点 ×1.3。", "mods": { "suddenMul": 1.8, "pointsMul": 1.3 } },
@@ -159,6 +161,7 @@
     { "id": "breeze", "name": "和风", "desc": "风把你往上托。开局攀爬 +2。", "start": { "攀爬": 2 } },
     { "id": "flower_fair", "name": "花开满城", "desc": "今天轮回点 ×1.2。", "mods": { "pointsMul": 1.2 } }
   ],
+  "blessed": {"chance": 0.01, "name": "天选之虫", "text": "你破卵那天，整片菜园的露水都亮了一下。这一世，你注定要飞。", "start": {"胃口": 3, "攀爬": 3, "吐丝": 3, "灵性": 3, "蜕变": 10, "饱腹上限": 3}, "lifespanMul": 2, "chain": "g_tianhu_1"},
   "rules": {
     "life": "satiety", "lifeMax": "satietyMax",
     "lifeDeath": "starve", "oldAgeDeath": "old_age",

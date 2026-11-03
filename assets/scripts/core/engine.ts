@@ -150,10 +150,28 @@ export class Engine {
         for (const id of dp.sealed) this.gainItem(id, sink);
         dp.sealed = [];
 
+        // 天命之子（天胡通道）：命格未配置时不消耗随机数
+        const B = d.meta.blessed;
+        if (B && this.rng.chance(this.blessedChance())) {
+            this.run.blessed = true;
+            if (d.blessedStart) this.applyEffect(d.blessedStart, sink, false);
+            if (B.chain) this.run.threads!.push({ id: B.chain, at: 2, until: 999 });
+            this.run.log.push(`第${this.run.life}世，天降异象：${B.name}。`);
+        }
+
         const R = d.meta.rules;
         this.run.attrs[R.life] = this.run.attrs[R.lifeMax];
         this.run.log.push(`第${this.run.life}世，${map?.startLog ?? R.startLog}`);
         this.startSeason();
+    }
+
+    /** 本世开局成为天命之子的概率（天命/天赋倍率 × 基础 + 命盘加成） */
+    blessedChance(): number {
+        const B = this.data.meta.blessed;
+        if (!B) return 0;
+        const add = [...this.data.upgrades.values()].filter(u => u.kind === 'blessed')
+            .reduce((n, u) => n + this.upgradeLevel(u.id) * (u.value ?? 0.005), 0);
+        return Math.min(1, B.chance * (this.mods().blessedMul ?? 1) + add);
     }
 
     /** 从中途存档恢复（run 来自 JSON.parse(JSON.stringify(engine.run))） */
@@ -459,6 +477,12 @@ export class Engine {
         ];
         if (firstTime) breakdown.push({ label: kind === 'ending' ? '首次达成结局' : '首次解锁死法', value: 10 });
         if (kind === 'ending') breakdown.push({ label: '达成结局', value: 50 });
+        const tianhu = kind === 'ending' && (!!this.run.blessed || this.run.flags.includes('tianhu'));
+        if (tianhu) {
+            breakdown.push({ label: '天胡', value: 100 });
+            dp.codex.tianhu = (dp.codex.tianhu ?? 0) + 1;
+            epitaph = `【天胡】${epitaph}`;
+        }
         let points = breakdown.reduce((n, b) => n + b.value, 0);
         const bonus = (label: string, mul: number) => {
             if (mul === 1) return;
@@ -485,6 +509,7 @@ export class Engine {
             stageName: this.stageName(this.run.stage),
             legacy,
             points,
+            tianhu,
             relicCandidates: [...new Set(this.run.found)],
             relicSlots: 1 + (mods.relicSlots ?? 0) + this.upgradeValue('relicSlot'),
             firstTime,
@@ -631,6 +656,7 @@ export class Engine {
             if (x.pointsMul) m.pointsMul = (m.pointsMul ?? 1) * x.pointsMul;
             if (x.suddenMul) m.suddenMul = (m.suddenMul ?? 1) * x.suddenMul;
             if (x.goldMul) m.goldMul = (m.goldMul ?? 1) * x.goldMul;
+            if (x.blessedMul) m.blessedMul = (m.blessedMul ?? 1) * x.blessedMul;
             if (x.hintChance) m.hintChance = Math.max(m.hintChance ?? 0, x.hintChance);
             if (x.relicSlots) m.relicSlots = (m.relicSlots ?? 0) + x.relicSlots;
             if (x.reviveOnce) m.reviveOnce = true;
@@ -677,22 +703,12 @@ export class Engine {
         for (;;) {
             const next = this.data.stages.find(s => s.level === r.stage + 1);
             if (!next || !this.check(next.cond)) break;
-            r.stage = next.level;
-            step.messages.push(`【突破·${next.name}】${next.narration}`);
-            r.log.push(`第${r.season}季，突破为${next.name}。`);
-            if (next.bonusEffect) this.applyEffect(next.bonusEffect, step);
-            if (next.skillPool?.length) {
-                // 突破领悟：优先从未解锁过的技能里抽，其次本局未携带的
-                const pool = next.skillPool.filter(id => !this.dp.skills.includes(id));
-                const pool2 = pool.length ? pool : next.skillPool.filter(id => !r.skills.includes(id));
-                if (pool2.length) this.grantSkill(pool2[this.rng.int(pool2.length)], step);
-            }
-            const ending = next.endingConds?.find(e => this.check(e.cond));
-            if (ending) { this.finish('ending', ending.id, step); return; }
+            if (this.breakthrough(step)) return;
         }
-        // 寿元
+        // 寿元（天命之子加倍）
         const stage = this.data.stages.find(s => s.level === r.stage);
-        if (stage && r.season >= stage.lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying') return; }
+        const lifespan = stage ? stage.lifespan * (r.blessed ? this.data.meta.blessed?.lifespanMul ?? 1 : 1) : Infinity;
+        if (r.season >= lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying') return; }
         this.startSeason();
     }
 
@@ -839,6 +855,26 @@ export class Engine {
         return { deltas: {}, gained: [], lost: [], messages: [], skills: [] };
     }
 
+    /** 突破到下一境界（不检查条件）；达成结局时返回 true */
+    private breakthrough(step: StepResult): boolean {
+        const r = this.run;
+        const next = this.data.stages.find(s => s.level === r.stage + 1);
+        if (!next) return false;
+        r.stage = next.level;
+        step.messages.push(`【突破·${next.name}】${next.narration}`);
+        r.log.push(`第${r.season}季，突破为${next.name}。`);
+        if (next.bonusEffect) this.applyEffect(next.bonusEffect, step);
+        if (next.skillPool?.length) {
+            // 突破领悟：优先从未解锁过的技能里抽，其次本局未携带的
+            const pool = next.skillPool.filter(id => !this.dp.skills.includes(id));
+            const pool2 = pool.length ? pool : next.skillPool.filter(id => !r.skills.includes(id));
+            if (pool2.length) this.grantSkill(pool2[this.rng.int(pool2.length)], step);
+        }
+        const ending = next.endingConds?.find(e => this.check(e.cond));
+        if (ending) { this.finish('ending', ending.id, step); return true; }
+        return false;
+    }
+
     private applyEffect(e: Effect, step: StepResult, mulQi = true): void {
         const r = this.run;
         for (const [id, v] of Object.entries(e.attrs)) {
@@ -854,6 +890,10 @@ export class Engine {
             const threads = (r.threads = r.threads ?? []).filter(t => t.id !== f.id);
             threads.push({ id: f.id, at: r.season + f.delay, until: r.season + f.delay + f.ttl - 1 });
             r.threads = threads;
+        }
+        for (let i = 0; i < (e.stageUp ?? 0) && r.phase !== 'over'; i++) {
+            if (!this.data.stages.some(s => s.level === r.stage + 1)) break;
+            if (this.breakthrough(step)) break;
         }
         if (e.back) {
             r.pos[e.back] = Math.max(0, r.pos[e.back] - 1);

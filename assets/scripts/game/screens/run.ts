@@ -31,7 +31,8 @@ function hud(g: Game, root: Node): number {
     const top = CONFIG.safeTop;
     text(root, `第 ${r.life} 世`, 30, top, 200, { size: 36, color: COLOR.ochreD, bold: true });
     const map = e.mapDef();
-    const where = text(root, map ? `${e.data.meta.name} · ${map.name}` : e.data.meta.name, 170, top + 6, g.W - 170 - 190, { size: 26, color: COLOR.ink2 });
+    const label = r.blessed ? `✦ ${e.data.meta.blessed?.name ?? e.data.meta.name}` : e.data.meta.name;
+    const where = text(root, map ? `${label} · ${map.name}` : label, 170, top + 6, g.W - 170 - 190, { size: 26, color: r.blessed ? COLOR.legacy : COLOR.ink2, bold: !!r.blessed });
     if (map) onTap(where, () => showInfo(g, `出生地 · ${map.name}`, [map.desc]), false);
     const stage = e.stageName(r.stage);
     const tag = box(root, g.W - 30 - 140, top, 140, 46, 'stage');
@@ -304,6 +305,7 @@ function codexPopup(g: Game): void {
         `死法 ${dp.codex.deaths.length}/${d.deaths.size}　结局 ${dp.codex.endings.length}/${d.endings.size}`,
         `技能 ${dp.skills.length}/${d.skills.size}　道具 ${dp.codex.items.length}/${d.items.size}`,
         `事件 ${dp.codex.events.length}/${d.events.size}　最高境界 ${e.stageName(dp.bestStage)}`,
+        ...(dp.codex.tianhu ? [`天胡 ${dp.codex.tianhu} 次`] : []),
         '',
         `传承：${legacies.length ? legacies.join('、') : '暂无'}`,
         `技能：${dp.skills.length ? dp.skills.map(id => e.skillName(id)).join('、') : '暂无'}`,

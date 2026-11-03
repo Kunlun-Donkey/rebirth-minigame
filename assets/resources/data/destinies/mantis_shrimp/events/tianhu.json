@@ -1,0 +1,122 @@
+[
+  {
+    "id": "g_tianhu_1",
+    "dir": "any",
+    "teaser": "洞口滚来一颗发光的珠子",
+    "sudden": true,
+    "gold": true,
+    "stage": [
+      1,
+      2
+    ],
+    "weight": 0.25,
+    "once": true,
+    "text": "潮水送来一颗发光的珠子，正好滚到你洞口。",
+    "choices": [
+      {
+        "text": "一拳收下",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "海灵": 10,
+          "打洞": 3,
+          "follow": {
+            "id": "g_tianhu_2",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
+        "result": "珠子嵌进了你的钳子里，拳头沉了一倍。",
+        "fail": {
+          "effect": {
+            "海灵": 5
+          },
+          "result": "你一拳把它打碎了。可惜。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  },
+  {
+    "id": "g_tianhu_2",
+    "dir": "any",
+    "teaser": "老海龟在找你",
+    "chainOnly": true,
+    "text": "一只老海龟游来，背上驮着一块龟甲：龙王请你走一趟。",
+    "choices": [
+      {
+        "text": "跟它去",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "海灵": 10,
+          "游速": 3,
+          "follow": {
+            "id": "g_tianhu_3",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
+        "result": "你在龙宫喝了一口海神酿，全身的壳都在发烫。",
+        "fail": {
+          "effect": {
+            "海灵": 5
+          },
+          "result": "你半路被一群小鱼冲散了，没找着龙宫。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  },
+  {
+    "id": "g_tianhu_3",
+    "dir": "any",
+    "teaser": "海神在礁石上等你",
+    "chainOnly": true,
+    "text": "海神坐在礁石上：听说有只虾很能打？打我一拳。",
+    "choices": [
+      {
+        "text": "全力出拳",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 2,
+          "海灵": 20,
+          "拳力": 3,
+          "flag": "tianhu"
+        },
+        "result": "你一拳打出去，海面炸开一圈白浪。海神大笑。",
+        "fail": {
+          "effect": {
+            "海灵": 5
+          },
+          "result": "你一拳打空，被浪拍回了洞里。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  }
+]

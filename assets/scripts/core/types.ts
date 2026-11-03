@@ -60,6 +60,21 @@ export interface RawEvent {
     choices: RawChoice[];
 }
 
+/**
+ * 天命之子（天胡通道）：每世开局以 chance 概率触发，开局加成 + 寿元加倍 + 必出奇遇连锁 chain。
+ * 概率受 Mods.blessedMul（天命/天赋）与命盘 kind:'blessed'（每级 +value）影响。
+ */
+export interface BlessedDef {
+    chance: number;
+    name: string;
+    /** 开局弹窗文字 */
+    text: string;
+    start?: RawEffect;
+    lifespanMul?: number;
+    /** 奇遇连锁的第一个事件（作为后续剧情在第 2 季触发） */
+    chain?: string;
+}
+
 export interface Mods {
     /** 每 N 季消耗一次水分（取最大） */
     waterCostEvery?: number;
@@ -69,6 +84,8 @@ export interface Mods {
     /** 每个事件有该概率预告一个选项结果 */
     hintChance?: number;
     suddenMul?: number;
+    /** 天命之子概率倍率 */
+    blessedMul?: number;
     goldMul?: number;
     relicSlots?: number;
     previewDirs?: boolean;
@@ -220,7 +237,7 @@ export interface CompanionDef extends PoolEntryBase {
  *   reviveBoost 看视频「逆天改命」时额外获得 start 效果，并回满水分
  * 设计约束：命盘不提供免费复活 / 免费窥探等能替代广告的效果，只放大广告的收益。
  */
-export type UpgradeKind = 'start' | 'reroll' | 'draftSize' | 'relicSlot' | 'pointsBonus' | 'reviveBoost';
+export type UpgradeKind = 'start' | 'reroll' | 'draftSize' | 'relicSlot' | 'pointsBonus' | 'reviveBoost' | 'blessed';
 
 export interface UpgradeDef {
     id: string;
@@ -273,6 +290,7 @@ export interface DestinyMeta {
     upgrades?: UpgradeDef[];
     fates?: FateDef[];
     maps?: MapDef[];
+    blessed?: BlessedDef;
     /** 命格规则：生命 / 回复 / 成长等由数据决定，引擎不写死任何属性名 */
     rules: DestinyRules;
     settings: {
@@ -362,6 +380,8 @@ export interface Effect {
     back?: Dir;
     /** 后续：之后的季节里接着发生的事件（剧情延伸） */
     follows: FollowDef[];
+    /** 直接突破 N 个境界（无视条件，奇遇连锁用） */
+    stageUp?: number;
 }
 
 /** 后续事件：在 delay 季之后（默认下一季）、玩家选择匹配方向时触发，ttl 季内没走到就作废 */
@@ -425,6 +445,7 @@ export interface Destiny {
     upgrades: Map<string, UpgradeDef & { kind: UpgradeKind; startEffect?: Effect }>;
     fates: Map<string, FateDef & { startEffect?: Effect }>;
     maps: Map<string, MapDef & { startEffect?: Effect }>;
+    blessedStart?: Effect;
 }
 
 // ───────────── 存档 ─────────────
@@ -436,7 +457,7 @@ export interface DestinyProfile {
     sealed: string[];
     /** key = 事件id#选项序号 */
     memory: Record<string, { life: number; text: string }>;
-    codex: { deaths: string[]; endings: string[]; items: string[]; events: string[] };
+    codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number };
     bestStage: number;
     /** 已解锁技能（技能图鉴） */
     skills: string[];
@@ -505,6 +526,8 @@ export interface RunState {
     firstOfDay?: boolean;
     /** 本世出生地图 */
     map?: string;
+    /** 本世是天命之子 */
+    blessed?: boolean;
 }
 
 export interface UpgradeView {
@@ -612,4 +635,6 @@ export interface SettleResult {
     goals: { text: string; lock: string; ready: boolean }[];
     /** 生平大事 */
     log: string[];
+    /** 天胡：天命之子或走完奇遇连锁后达成的结局 */
+    tianhu?: boolean;
 }

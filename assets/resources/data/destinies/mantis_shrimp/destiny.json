@@ -144,6 +144,7 @@
     { "id": "boss_tank", "name": "水箱之王", "epitaph": "海鲜市场的胖老板换了行。他说那只皮皮虾打碎了他三个水箱，他认了。" }
   ],
   "upgrades": [
+    { "id": "heaven_favor", "name": "天眷", "desc": "成为「海神眷顾」的概率 +0.5%。", "kind": "blessed", "value": 0.005, "costs": [600, 1800] },
     { "id": "vigor", "name": "壮壳", "desc": "开局体力上限 +1。", "costs": [120, 360, 900], "start": { "体力上限": 1 } },
     { "id": "spirit_root", "name": "开灵", "desc": "开局海灵 +4，更早长大。", "costs": [150, 450, 1100], "start": { "海灵": 4 } },
     { "id": "fortune", "name": "福缘", "desc": "轮回点 +10%。", "kind": "pointsBonus", "value": 0.1, "costs": [250, 750, 1800] },
@@ -153,6 +154,7 @@
     { "id": "vision", "name": "慧眼", "desc": "开局天赋、道具、伙伴改为 4 选 1。", "kind": "draftSize", "costs": [2000] }
   ],
   "fates": [
+    { "id": "heaven_sign", "name": "潮生金线", "desc": "海面亮起金线。今天成为「海神眷顾」的概率 ×3。", "mods": { "blessedMul": 3 } },
     { "id": "spring_tide", "name": "大潮", "desc": "潮水送来很多吃的。每 2 季才累一次。", "mods": { "waterCostEvery": 2 } },
     { "id": "moon_tide", "name": "月满潮生", "desc": "月光照进海里。海灵获取 ×1.5。", "mods": { "qiMul": 1.5 } },
     { "id": "turbulent", "name": "多事之秋", "desc": "突发事件更多，轮回点 ×1.3。", "mods": { "suddenMul": 1.8, "pointsMul": 1.3 } },
@@ -162,6 +164,7 @@
     { "id": "warm_current", "name": "暖流", "desc": "一股暖流推着你走。开局游速 +2。", "start": { "游速": 2 } },
     { "id": "fishing_ban", "name": "休渔期", "desc": "渔船都不出海。今天轮回点 ×1.2。", "mods": { "pointsMul": 1.2 } }
   ],
+  "blessed": {"chance": 0.01, "name": "海神眷顾", "text": "你孵出来那天，潮水退了又涨，海面上亮起一道金线。这一世，大海站在你这边。", "start": {"打洞": 3, "游速": 3, "拳力": 3, "灵性": 3, "海灵": 10, "体力上限": 3}, "lifespanMul": 2, "chain": "g_tianhu_1"},
   "rules": {
     "life": "vigor", "lifeMax": "vigorMax",
     "lifeDeath": "exhaust", "oldAgeDeath": "old_age",

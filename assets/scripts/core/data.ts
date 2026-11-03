@@ -5,7 +5,7 @@ import type {
 } from './types';
 
 /** 效果中的保留键，其余键视为属性增量 */
-export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow'] as const;
+export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp'] as const;
 
 export class DataError extends Error {}
 
@@ -51,6 +51,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
                 case 'death': e.death = String(v); break;
                 case 'ending': e.ending = String(v); break;
                 case 'back': e.back = String(v) as Dir; break;
+                case 'stageUp': e.stageUp = Number(v); break;
                 case 'follow': e.follows = toFollows(v, where); break;
                 default: {
                     const id = resolveAttr(k);
@@ -145,6 +146,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             return [u.id, { ...u, kind: u.kind ?? 'start', startEffect: u.start ? effect(u.start, `命盘 ${u.id}`) : undefined }];
         })),
         fates: new Map((meta.fates ?? []).map(f => [f.id, { ...f, startEffect: f.start ? effect(f.start, `天命 ${f.id}`) : undefined }])),
+        blessedStart: meta.blessed?.start ? effect(meta.blessed.start, '天命之子') : undefined,
         maps: new Map((meta.maps ?? []).map(m => [m.id, { ...m, startEffect: m.start ? effect(m.start, `地图 ${m.id}`) : undefined }])),
     };
 }

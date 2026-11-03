@@ -3,6 +3,9 @@ import { walkCond } from '../assets/scripts/core/condition';
 import { buildDestiny, DataError } from '../assets/scripts/core/data';
 import { Cond, Destiny, DestinyIndex, Effect, RARITIES, RawDestiny } from '../assets/scripts/core/types';
 
+/** 引擎自己读取的 flag（不需要剧本条件检查） */
+const ENGINE_FLAGS = ['tianhu'];
+
 export const TEXT_LIMITS = { text: 60, choice: 14, result: 40, teaser: 18 };
 
 export interface Report {
@@ -126,6 +129,17 @@ export function validateDestiny(raw: RawDestiny): Report {
     }
     for (const c of d.companions.values()) if (c.everyEffect) checkEffect(c.everyEffect, `伴生物 ${c.id}`);
 
+    // 天命之子（天胡通道）
+    const B = d.meta.blessed;
+    if (B) {
+        if (!(B.chance > 0 && B.chance <= 0.05)) warnings.push(`blessed.chance=${B.chance}，建议 0~5%（天胡要稀有）`);
+        if (d.blessedStart) checkEffect(d.blessedStart, '天命之子');
+        if (B.chain) {
+            referencedEvents.add(B.chain);
+            if (!d.events.has(B.chain)) errors.push(`blessed.chain 指向不存在的事件 ${B.chain}`);
+        }
+    }
+
     // 出生地图
     for (const m of d.maps.values()) {
         if (m.startEffect) checkEffect(m.startEffect, `地图 ${m.id}`);
@@ -190,7 +204,7 @@ export function validateDestiny(raw: RawDestiny): Report {
     // flag 一致性
     for (const id of d.endings.keys()) if (!endingsUsed.has(id)) errors.push(`结局 ${id} 没有任何触发途径（境界 endings / 事件效果 ending）`);
     for (const [f, where] of flagsChecked) if (!flagsSet.has(f)) errors.push(`${where}: 检查了 flag:${f}，但没有任何效果设置它`);
-    for (const f of flagsSet) if (!flagsChecked.has(f)) warnings.push(`flag:${f} 被设置了，但没有任何条件用到它`);
+    for (const f of flagsSet) if (!flagsChecked.has(f) && !ENGINE_FLAGS.includes(f)) warnings.push(`flag:${f} 被设置了，但没有任何条件用到它`);
 
     // 层覆盖：每层（不算兜底/any）至少 2 个专属事件
     for (const l of d.layers.values()) {

@@ -516,6 +516,57 @@ describe('后续剧情（follow）', () => {
     });
 });
 
+describe('天胡通道', () => {
+    const chain: RawEvent[] = [
+        { id: 'c1', dir: 'any', chainOnly: true, teaser: '有光', text: '光', choices: [{ text: '接', effect: { stageUp: 1, follow: 'c2' }, result: '亮' }] },
+        { id: 'c2', dir: 'any', chainOnly: true, teaser: '仙人', text: '仙', choices: [{ text: '拜', effect: { stageUp: 2, flag: 'tianhu' }, result: '成' }] },
+    ];
+    const blessedFixture = (chance: number) => {
+        const raw = fixture(chain);
+        raw.meta.blessed = { chance, name: '天命', text: '天降异象', start: { 灵气: 3 }, lifespanMul: 2, chain: 'c1' };
+        return raw;
+    };
+
+    it('天命之子：开局加成、第 2 季必出奇遇连锁，连锁直接突破到结局并标记天胡', () => {
+        const e = new Engine(buildDestiny(blessedFixture(1)), createProfile());
+        e.startRun(pick, 1);
+        expect(e.run.blessed).toBe(true);
+        expect(e.run.attrs.qi).toBe(3);
+        expect(e.run.threads).toEqual([{ id: 'c1', at: 2, until: 999 }]);
+        e.run.threads![0].at = 1; // 跳过第 1 季
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('c1');
+        const s1 = e.choose(0);
+        expect(s1.messages.some(m => m.startsWith('【突破·'))).toBe(true);
+        expect(e.run.stage).toBe(1);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('c2');
+        e.choose(0);
+        expect(e.run.phase).toBe('over');
+        const st = e.settle();
+        expect(st.kind).toBe('ending');
+        expect(st.tianhu).toBe(true);
+        expect(st.epitaph.startsWith('【天胡】')).toBe(true);
+        expect(st.breakdown.some(b => b.label === '天胡')).toBe(true);
+        expect(e.dp.codex.tianhu).toBe(1);
+    });
+
+    it('概率为 0 时不会触发；寿元按 lifespanMul 加倍', () => {
+        const e = new Engine(buildDestiny(blessedFixture(0)), createProfile());
+        e.startRun(pick, 1);
+        expect(e.run.blessed).toBeFalsy();
+        expect(e.blessedChance()).toBe(0);
+        const e2 = new Engine(buildDestiny(blessedFixture(1)), createProfile());
+        e2.startRun(pick, 1);
+        e2.run.threads = [];
+        // 第 0 境界寿元 50 → 天命之子 100 季才寿终
+        e2.run.season = 60;
+        e2.chooseDirection('down');
+        if (e2.run.phase === 'event') e2.choose(0);
+        expect(e2.run.phase).not.toBe('dying');
+    });
+});
+
 describe('出生地图', () => {
     function withMaps(): RawDestiny {
         const raw = fixture([

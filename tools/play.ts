@@ -304,6 +304,7 @@ function simulate(lives: number, seed: number) {
     const stat: B[] = buckets.map(() => ({ n: 0, seasons: 0, stages: [0, 0, 0, 0, 0, 0], deaths: {}, endings: 0 }));
     const eventHits: Record<string, number> = {};
     const endingHits: Record<string, number> = {};
+    let blessedN = 0, tianhuN = 0;
     const skillFirst: Record<string, number> = {};
     let skillUses = 0;
     let firstEnding = 0;
@@ -354,6 +355,8 @@ function simulate(lives: number, seed: number) {
         if (s.relicCandidates.length) e.sealRelics(s.relicCandidates.slice(rng.int(s.relicCandidates.length)).slice(0, s.relicSlots));
         const b = stat[buckets.findIndex(([lo, hi]) => life >= lo && life <= hi)];
         b.n++;
+        if (e.run.blessed) blessedN++;
+        if (s.tianhu) tianhuN++;
         b.seasons += s.seasons;
         b.stages[s.stage]++;
         if (s.kind === 'ending') { b.endings++; endingHits[s.id] = (endingHits[s.id] ?? 0) + 1; if (!firstEnding) firstEnding = life; }
@@ -376,6 +379,7 @@ function simulate(lives: number, seed: number) {
     console.log(`\n传承：${Object.entries(dp.legacy).map(([id, lv]) => `${data.legacies.get(id)!.name} ${lv}`).join('、')}`);
     const skillLine = [...data.skills.keys()].map(id => `${e.skillName(id)}${skillFirst[id] ? `@${skillFirst[id]}` : '✗'}`);
     console.log(`技能首次领悟（第几世）：${skillLine.join('、')}`);
+    console.log(`天命之子 ${blessedN} 次（${(blessedN / lives * 100).toFixed(1)}%）· 天胡结局 ${tianhuN} 次（${(tianhuN / lives * 100).toFixed(1)}%）`);
     console.log(`结局分布：${[...data.endings.values()].map(en => `${en.name} ${endingHits[en.id] ?? 0}`).join(' · ')}`);
     const never = [...data.events.keys()].filter(id => !eventHits[id]);
     if (never.length) console.log(`从未触发的事件（${never.length}）：${never.join(', ')}`);

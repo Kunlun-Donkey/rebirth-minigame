@@ -1,0 +1,122 @@
+[
+  {
+    "id": "g_tianhu_1",
+    "dir": "any",
+    "teaser": "柴堆旁有东西在发光",
+    "sudden": true,
+    "gold": true,
+    "stage": [
+      1,
+      2
+    ],
+    "weight": 0.25,
+    "once": true,
+    "text": "半夜，一块会发光的月亮碎片落在柴堆旁，冰凉，带着香味。",
+    "choices": [
+      {
+        "text": "叼起它",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "妖气": 10,
+          "忠义": 3,
+          "follow": {
+            "id": "g_tianhu_2",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
+        "result": "你把月亮碎片叼回了窝。一夜没合眼。",
+        "fail": {
+          "effect": {
+            "妖气": 5
+          },
+          "result": "碎片化成了水，从你牙缝里流走了。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  },
+  {
+    "id": "g_tianhu_2",
+    "dir": "any",
+    "teaser": "碎片里有个影子",
+    "chainOnly": true,
+    "text": "你舔了舔月亮碎片。里面映出一只很大的狗，冲你点头。",
+    "choices": [
+      {
+        "text": "跟它学吐纳",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "妖气": 10,
+          "脚力": 3,
+          "follow": {
+            "id": "g_tianhu_3",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
+        "result": "它张嘴，你也张嘴。月光一口一口进了你的肚子。",
+        "fail": {
+          "effect": {
+            "妖气": 5
+          },
+          "result": "你学岔了气，咳了一宿。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  },
+  {
+    "id": "g_tianhu_3",
+    "dir": "any",
+    "teaser": "天上有狗在叫",
+    "chainOnly": true,
+    "text": "满月那夜，天上有狗叫了一声。是在叫你。",
+    "choices": [
+      {
+        "text": "对月长啸回应",
+        "chance": 0.7,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 2,
+          "妖气": 20,
+          "牙口": 3,
+          "flag": "tianhu"
+        },
+        "result": "你一声长啸，天上的狗应了你三声。",
+        "fail": {
+          "effect": {
+            "妖气": 5
+          },
+          "result": "你叫哑了嗓子，天上没有回音。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
+    ]
+  }
+]

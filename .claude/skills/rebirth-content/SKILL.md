@@ -117,6 +117,12 @@ assets/resources/data/destinies/<命格id>/
 - 不引入前文没有的信息；揭示用一个选项结果完成，不用大段解释。
 - 反转要同时改变情绪判断（恨 → 同情，或信任 → 警惕）。
 
+### 天胡通道（每个命格都要有）
+- `destiny.json` 的 `blessed`：`chance` 约 0.01（天命之子），`start` 开局加成、`lifespanMul` 寿元倍率、`chain` 奇遇连锁第一个事件。
+- 奇遇连锁放 `events/tianhu.json`：3 步，第 1 步是 `gold + sudden`、`stage [1,2]`、`weight 0.25`（普通玩家早期也有极小概率遇到），后两步 `chainOnly`；每步成功 `stageUp` 直接突破，最后一步 `stageUp: 2` + `flag: "tianhu"`。
+- 命盘加一档 `kind: "blessed"`（每级 +0.5%），天命加一个 `mods.blessedMul: 3`。
+- 用 `npm run sim` 看「天命之子 / 天胡结局」占比，控制在 1%～2%，且整体结局率不明显上升。
+
 ### 结局设计
 - 每个命格 4~6 个结局，覆盖不同情绪：**爽**（登顶）、**温情**（为某人放弃登顶）、**守护**（救下别人）、**黑化/另类**（走歪了也是一种圆满）。
 - 两种触发：
