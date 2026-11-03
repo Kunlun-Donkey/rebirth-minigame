@@ -145,7 +145,7 @@
     { "id": "vigor", "name": "壮身", "desc": "开局饱腹上限 +1。", "costs": [120, 360, 900], "start": { "饱腹上限": 1 } },
     { "id": "spirit_root", "name": "开窍", "desc": "开局蜕变 +4，更早破壳长大。", "costs": [150, 450, 1100], "start": { "蜕变": 4 } },
     { "id": "fortune", "name": "福缘", "desc": "轮回点 +10%。", "kind": "pointsBonus", "value": 0.1, "costs": [250, 750, 1800] },
-    { "id": "insight", "name": "天机", "desc": "每次开局可免费「天机重演」1 次（看视频那次另算）。", "kind": "reroll", "costs": [300, 1200] },
+    { "id": "insight", "name": "天机", "desc": "每次开局可免费「天机重演」1 次。", "kind": "reroll", "costs": [300, 1200] },
     { "id": "second_wind", "name": "续命", "desc": "看视频逆天改命时，饱腹回满，吐丝 +2。", "kind": "reviveBoost", "costs": [500], "start": { "吐丝": 2 } },
     { "id": "treasure", "name": "藏宝", "desc": "死后可多封存 1 件遗物。", "kind": "relicSlot", "costs": [1500] },
     { "id": "vision", "name": "慧眼", "desc": "开局天赋、道具、伙伴改为 4 选 1。", "kind": "draftSize", "costs": [2000] }
