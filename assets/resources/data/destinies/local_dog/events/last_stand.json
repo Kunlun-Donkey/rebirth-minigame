@@ -20,7 +20,24 @@
             "death": "old_age"
           },
           "result": "你的叫声越来越轻，最后停在了半空。"
-        }
+        },
+        "showIf": "stage<=3"
+      },
+      {
+        "text": "逆天，冲最后一关",
+        "chance": 0.12,
+        "effect": {
+          "stageUp": 1,
+          "妖气": 15
+        },
+        "result": "月华灌进你的身体。你从地上站了起来，比从前更高。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "你的叫声越来越轻，最后停在了半空。"
+        },
+        "showIf": "stage>=4"
       },
       {
         "text": "趴在村口",

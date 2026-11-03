@@ -123,6 +123,10 @@ assets/resources/data/destinies/<命格id>/
 - 命盘加一档 `kind: "blessed"`（每级 +0.5%），天命加一个 `mods.blessedMul: 3`。
 - 用 `npm run sim` 看「天命之子 / 天胡结局」占比，控制在 1%～2%，且整体结局率不明显上升。
 
+### 最后一搏与新手保护（每个命格都要有）
+- `rules.lastStand` 指向 `events/last_stand.json` 的 `z_last_stand`：寿元将尽时触发一次。三个选项：普通境界冲关（`showIf: stage<=3`，成功率 35% + 灵性加成）、终境前冲关（`showIf: stage>=4`，12%），以及安然离去；成功 `stageUp: 1`，失败寿终。
+- `settings.newbieSeasons: 8`：该命格第 1 世前 8 季的死亡会被挡下。
+
 ### 结局设计
 - 每个命格 4~6 个结局，覆盖不同情绪：**爽**（登顶）、**温情**（为某人放弃登顶）、**守护**（救下别人）、**黑化/另类**（走歪了也是一种圆满）。
 - 两种触发：

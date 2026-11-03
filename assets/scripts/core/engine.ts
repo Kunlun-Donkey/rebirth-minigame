@@ -743,8 +743,7 @@ export class Engine {
         const lifespan = stage ? stage.lifespan * (r.blessed ? this.data.meta.blessed?.lifespanMul ?? 1 : 1) : Infinity;
         const lastStand = this.data.meta.rules.lastStand;
         if (r.season >= lifespan && lastStand && !r.lastStand && this.data.events.has(lastStand)
-            && this.data.stages.some(s => s.level === r.stage + 1 && !s.endingConds?.length)) {
-            // 最后一搏不能直接冲进结局境界（结局要靠正常突破）
+            && this.data.stages.some(s => s.level === r.stage + 1)) {
             // 寿元将尽：给一次最后一搏（下季开头触发）
             r.lastStand = 'due';
             step.messages.push('寿元将尽……还有最后一次机会。');

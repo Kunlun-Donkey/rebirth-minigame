@@ -20,7 +20,24 @@
             "death": "old_age"
           },
           "result": "拳头停在半空。潮水把你轻轻带走了。"
-        }
+        },
+        "showIf": "stage<=3"
+      },
+      {
+        "text": "逆天，冲最后一关",
+        "chance": 0.12,
+        "effect": {
+          "stageUp": 1,
+          "海灵": 15
+        },
+        "result": "一拳打穿了潮水。你的壳裂开，长出了新的。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "拳头停在半空。潮水把你轻轻带走了。"
+        },
+        "showIf": "stage>=4"
       },
       {
         "text": "缩回洞里",
