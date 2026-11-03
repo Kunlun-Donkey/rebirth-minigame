@@ -58,7 +58,7 @@ export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): vo
         // 估算留 1.5 个字的余量：破折号、标点在真机上的宽度和估算有出入
         const fit = DESC_FONTS.find(([fs, lh]) => textHeight(entry.desc, tw - fs * 1.5, fs, lh) <= room) ?? DESC_FONTS[DESC_FONTS.length - 1];
         text(card, entry.name, tx, nameY, tw, { size: compact ? 32 : 36, bold: true, color: st.unlocked ? COLOR.ink : COLOR.ink2 });
-        text(card, entry.desc, tx, descY, tw, { size: fit[0], color: COLOR.ink2, wrap: true, lineHeight: fit[1] });
+        text(card, entry.desc, tx, descY, tw, { size: fit[0], color: COLOR.ink2, wrap: true, lineHeight: fit[1] }, room);
         text(card, status, tx, statusY, tw, { size: 20, color: st.unlocked ? COLOR.ochre : COLOR.bad, wrap: true, lineHeight: 28 });
         if (isCur) {
             const label = '当前';
