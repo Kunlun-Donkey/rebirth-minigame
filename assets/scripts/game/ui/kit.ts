@@ -150,7 +150,11 @@ export function image(parent: Node, paths: string | string[], x: number, y: numb
     const sc = o.sliceScale ?? 1;
     const n = box(parent, x, y, w / sc, h / sc, 'img');
     if (sc !== 1) n.setScale(sc, sc, 1);
-    n.setSiblingIndex(Math.min(1, parent.children.length - 1));
+    // 铺满父节点的贴图是「皮肤」：插到画出来的底色之上、其余内容之下；
+    // 局部贴图（图标、logo、境界形象等）是前景：保持追加顺序，避免被皮肤 / 背景盖住
+    const pt = parent.getComponent(UITransform);
+    const isSkin = !pt || (x <= 0 && y <= 0 && x + w >= pt.width * 0.95 && y + h >= pt.height * 0.95);
+    if (isSkin) n.setSiblingIndex(Math.min(1, parent.children.length - 1));
     const sp = n.addComponent(Sprite);
     sp.sizeMode = Sprite.SizeMode.CUSTOM;
     const list = typeof paths === 'string' ? [paths] : paths;

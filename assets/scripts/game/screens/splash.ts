@@ -40,11 +40,11 @@ export function titleBase(g: Game, name: string): { root: Node; top: number; bot
     rect(root, { fill: COLOR.bg });
     image(root, TEX.mainBg, 0, 0, g.W, g.H, { cover: true });
 
-    // 游戏名称：logo 图 + 文字（logo 缺失时文字依然可见）
+    // 游戏名称：logo 图（含完整游戏名）；logo 缺失时显示文字
     const lw = g.W - 80;
     const ly = g.H * 0.16;
-    image(root, TEX.logo, 40, ly, lw, lw * 0.36);
-    text(root, GAME_NAME, 30, ly + lw * 0.36 + 16, g.W - 60, { size: 30, color: COLOR.ochreD, align: 'center', bold: true });
+    const nameText = text(root, GAME_NAME, 30, ly + lw * 0.36 + 16, g.W - 60, { size: 30, color: COLOR.ochreD, align: 'center', bold: true });
+    image(root, TEX.logo, 40, ly, lw, lw * 0.36, { onLoaded: () => { nameText.active = false; } });
 
     // 适龄提示：左上角、胶囊按钮下方；边长 ≥ 屏幕短边 1/10（设计宽 750 → ≥75）
     ageBadge(g, root, CONFIG.ageRating, 30, CONFIG.safeTop + 10);
@@ -52,6 +52,9 @@ export function titleBase(g: Game, name: string): { root: Node; top: number; bot
     // 健康游戏忠告：底部居中
     const lh = 40;
     const y0 = g.H - 60 - lh * (HEALTH_ADVICE.length / 2 + 1);
+    // 底部插画较花（叶子、花、沙丘），衬一层半透明纸色保证文字可读
+    const back = box(root, 20, y0 - 14, g.W - 40, lh * (HEALTH_ADVICE.length / 2 + 1) + 28, 'healthBack');
+    rect(back, { fill: COLOR.paper, fillAlpha: 200, radius: 16 });
     text(root, '健康游戏忠告', 0, y0, g.W, { size: 26, color: COLOR.ink, align: 'center', bold: true });
     for (let i = 0; i < HEALTH_ADVICE.length; i += 2) {
         text(root, HEALTH_ADVICE[i] + HEALTH_ADVICE[i + 1], 0, y0 + lh * (i / 2 + 1), g.W, { size: 24, color: COLOR.ink, align: 'center' });

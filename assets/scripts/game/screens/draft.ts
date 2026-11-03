@@ -204,7 +204,7 @@ function card(g: Game, parent: Node, type: 'talent' | 'item' | 'companion', id: 
     const label = RARITY_TEXT[def.rarity];
     chip(n, label, (w - estimateWidth(label, 20) - 20) / 2, 200, color, true);
     // 描述放不下时依次缩小字号，保证不压出卡框底边
-    const room = h - 244 - 18;
+    const room = h - 244 - 30;
     const fit = [[22, 32], [20, 28], [18, 25], [16, 22]].find(([fs, lh]) => textHeight(def.desc, w - 32, fs, lh) <= room) ?? [16, 22];
     text(n, def.desc, 16, 244, w - 32, { size: fit[0], color: COLOR.ink2, wrap: true, lineHeight: fit[1] });
     return n;
