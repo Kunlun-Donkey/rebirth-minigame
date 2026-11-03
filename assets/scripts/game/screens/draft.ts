@@ -8,7 +8,7 @@ import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
 import {
-    box, button, chip, clear, COLOR, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text,
+    box, button, chip, clear, COLOR, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
 import { ListEntry, showInfo, showList } from './popups';
 
@@ -203,7 +203,10 @@ function card(g: Game, parent: Node, type: 'talent' | 'item' | 'companion', id: 
     text(n, def.name, 10, 156, w - 20, { size: 30, align: 'center', bold: true });
     const label = RARITY_TEXT[def.rarity];
     chip(n, label, (w - estimateWidth(label, 20) - 20) / 2, 200, color, true);
-    text(n, def.desc, 16, 244, w - 32, { size: 22, color: COLOR.ink2, wrap: true, lineHeight: 32 });
+    // 描述放不下时依次缩小字号，保证不压出卡框底边
+    const room = h - 244 - 18;
+    const fit = [[22, 32], [20, 28], [18, 25], [16, 22]].find(([fs, lh]) => textHeight(def.desc, w - 32, fs, lh) <= room) ?? [16, 22];
+    text(n, def.desc, 16, 244, w - 32, { size: fit[0], color: COLOR.ink2, wrap: true, lineHeight: fit[1] });
     return n;
 }
 

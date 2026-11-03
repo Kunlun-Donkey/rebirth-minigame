@@ -32,7 +32,9 @@ export function showSettle(g: Game): void {
 /** 墓志铭石板（分享卡主体） */
 function stone(g: Game, root: Node, s: SettleResult, y: number): number {
     const w = g.W - 60;
-    const h = 300;
+    const ix = 214, iw = w - ix - 28;
+    // 墓志铭较长（结局文案常 3 行）时石板加高，避免压到底部足迹行
+    const h = Math.max(300, 132 + textHeight(s.epitaph, iw, 28, 44) + 84);
     const n = box(root, 30, y, w, h, 'stone');
     rect(n, { fill: '#e6d3ad', stroke: '#b89a6a', lineWidth: 2, radius: 22, shadow: '#00000055', shadowOffset: 10 });
     // 命格版优先、回落通用版；比例不合（如竖版图）会自动跳过，改用画出来的石板
@@ -46,7 +48,6 @@ function stone(g: Game, root: Node, s: SettleResult, y: number): number {
         if (icon) image(pic, TEX.icon('death', icon), 10, 10, 140, 140);
     }
 
-    const ix = 214, iw = w - ix - 28;
     text(n, `第 ${s.life} 世 · ${s.stageName}`, ix, 30, iw, { size: 24, color: COLOR.ink2 });
     text(n, s.title, ix, 66, iw, { size: 40, color: COLOR.ochreD, bold: true }, 56);
     if (s.firstTime) chip(n, '首次', w - 28 - 70, 76, COLOR.bad, true, 20);

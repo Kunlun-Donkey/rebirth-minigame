@@ -223,13 +223,24 @@ export function text(parent: Node, str: string, x: number, y: number, w: number,
     return n;
 }
 
-/** 估算换行后的行数（中文按 1 个字号宽，ASCII 按半个字号宽） */
+const NO_LINE_START = '，。、！？；：）》」』”’…—,.!?;:)';
+
+/** 估算换行后的行数（中文按 1 个字号宽，ASCII 按半个字号宽；按字逐个排，放不下整字才换行） */
 export function estimateLines(str: string, width: number, size: number): number {
     let lines = 0;
     for (const para of str.split('\n')) {
-        let w = 0;
-        for (const ch of para) w += ch.charCodeAt(0) < 0x2e80 ? size * 0.55 : size;
-        lines += Math.max(1, Math.ceil(w / width));
+        let n = 1, w = 0, prev = 0;
+        for (const ch of para) {
+            const cw = ch.charCodeAt(0) < 0x2e80 ? size * 0.55 : size;
+            if (w + cw > width && w > 0) {
+                n++;
+                // 避头标点（，。等不能出现在行首）：上一个字会被一起挤到下一行
+                w = NO_LINE_START.includes(ch) ? prev : 0;
+            }
+            w += cw;
+            prev = cw;
+        }
+        lines += n;
     }
     return lines;
 }
@@ -310,8 +321,11 @@ export function button(parent: Node, x: number, y: number, w: number, o: ButtonO
     const tagsW = (o.tags ?? []).reduce((n, t) => n + estimateWidth(t.text, 20) + 30, 0);
     const labelW = estimateWidth(o.label, size);
     const tagsOnNewLine = tagsW > 0 && labelW + tagsW > w - pad * 2;
+    // 第二行小字可换行（含 \n），高度按行数撑开
+    const subLH = 30;
+    const subH = o.sub ? textHeight(o.sub, w - pad * 2, 22, subLH) : 0;
     let h = 92;
-    if (o.sub) h += 30;
+    if (o.sub) h += subH;
     if (tagsOnNewLine) h += 40;
 
     const n = box(parent, x, y, w, h, 'button');
@@ -340,14 +354,15 @@ export function button(parent: Node, x: number, y: number, w: number, o: ButtonO
     let ty = top + Math.round(size * 1.4) + 6;
     if (o.tags?.length) {
         let tx = tagsOnNewLine ? pad : w - pad - tagsW + 10;
-        const tagY = tagsOnNewLine ? ty : (h - 34) / 2;
+        // 有第二行小字时标签与标题同行（垂直居中会压到小字）
+        const tagY = tagsOnNewLine ? ty : o.sub ? top + (Math.round(size * 1.4) - 34) / 2 : (h - 34) / 2;
         for (const t of o.tags) {
             const c = chip(n, t.text, tx, tagY, t.color, t.filled);
             tx += sizeOf(c).w + 10;
         }
         if (tagsOnNewLine) ty += 40;
     }
-    if (o.sub) text(n, o.sub, pad, ty, w - pad * 2, { size: 22, color: o.subColor ?? COLOR.ink2 });
+    if (o.sub) text(n, o.sub, pad, ty, w - pad * 2, { size: 22, color: o.subColor ?? COLOR.ink2, wrap: true, lineHeight: subLH });
 
     if (o.onClick && style !== 'locked') onTap(n, o.onClick);
     else if (o.onClick) onTap(n, o.onClick, false);

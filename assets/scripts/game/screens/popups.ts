@@ -2,7 +2,7 @@
 import { StepResult } from '../../core';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { button, chip, COLOR, image, modal, pop, sizeOf, text, textHeight } from '../ui/kit';
+import { box, button, ButtonOpts, chip, COLOR, image, modal, onTap, pop, sizeOf, text, textHeight } from '../ui/kit';
 import { TEX } from '../config';
 
 /** 结果弹窗：文本 + 属性变化 + 消息（突破/领悟/层推进）；点「继续」回调 */
@@ -91,25 +91,56 @@ export interface ListEntry {
 
 /** 通用列表弹窗（道具 / 技能 / 伙伴 / 图鉴 / 封存遗物） */
 export function showList(g: Game, title: string, entries: ListEntry[], opts: { emptyText?: string; closeText?: string; onClose?: () => void } = {}): () => void {
-    const rowH = 118;
-    const h = Math.min(g.H - 200, 170 + Math.max(1, entries.length) * rowH + 110);
-    const { panel, close, panelW } = modal(g.overlay, g.W, g.H, h, { onClose: opts.onClose });
+    // 行高随描述换行变化：先量出每行高度，据此定面板高度；仍放不下就分页（关闭按钮上方出现翻页条）
+    const panelW = g.W - 60;
+    const rowW = panelW - 60;
+    const opt = (en: ListEntry, close?: () => void): ButtonOpts => ({
+        label: en.title, sub: en.desc, tags: en.tag ? [{ text: en.tag.text, color: en.tag.color }] : [], size: 28,
+        style: en.disabled ? 'locked' : 'normal',
+        onClick: close && en.onPick && !en.disabled ? () => { en.onPick!(); close(); } : undefined,
+    });
+    const probe = box(null, 0, 0, rowW, 0, 'probe');
+    const heights = entries.map(en => sizeOf(button(probe, 0, 0, rowW, opt(en))).h);
+    probe.destroy();
+    const contentH = entries.length ? heights.reduce((a, b) => a + b + 14, -14) : 120;
+    const h = Math.min(g.H - 200, 110 + contentH + 150);
+    const { panel, close } = modal(g.overlay, g.W, g.H, h, { onClose: opts.onClose });
     pop(panel);
     text(panel, title, 0, 36, panelW, { size: 36, color: COLOR.ochreD, align: 'center', bold: true });
-    let y = 110;
     if (!entries.length) {
-        text(panel, opts.emptyText ?? '空空如也', 0, y + 20, panelW, { size: 28, color: COLOR.ink2, align: 'center' });
+        text(panel, opts.emptyText ?? '空空如也', 40, 130, panelW - 80, { size: 28, color: COLOR.ink2, align: 'center', wrap: true, lineHeight: 42 });
     }
-    const maxRows = Math.floor((h - 230) / rowH);
-    for (const en of entries.slice(0, maxRows)) {
-        const tags = en.tag ? [{ text: en.tag.text, color: en.tag.color }] : [];
-        const n = button(panel, 30, y, panelW - 60, {
-            label: en.title, sub: en.desc, tags, size: 28,
-            style: en.disabled ? 'locked' : 'normal',
-            onClick: en.onPick && !en.disabled ? () => { en.onPick!(); close(); } : undefined,
+    const paginate = (limit: number) => {
+        const pages: number[][] = [[]];
+        let y = 110;
+        heights.forEach((rh, i) => {
+            if (y + rh > limit && pages[pages.length - 1].length) { pages.push([]); y = 110; }
+            pages[pages.length - 1].push(i);
+            y += rh + 14;
         });
-        y += sizeOf(n).h + 14;
-    }
+        return pages;
+    };
+    let pages = paginate(h - 140);
+    if (pages.length > 1) pages = paginate(h - 140 - 66);
+    const rowsBox = box(panel, 0, 0, panelW, h, 'rows');
+    const render = (page: number) => {
+        rowsBox.destroyAllChildren();
+        let y = 110;
+        for (const i of pages[page]) {
+            button(rowsBox, 30, y, rowW, opt(entries[i], close));
+            y += heights[i] + 14;
+        }
+        if (pages.length < 2) return;
+        const py = h - 196;
+        text(rowsBox, `${page + 1} / ${pages.length}`, 0, py + 12, panelW, { size: 24, color: COLOR.ink2, align: 'center' }, 36);
+        if (page > 0) onTap(chip(rowsBox, '‹ 上一页', 40, py + 8, COLOR.ochreD, false, 24), () => render(page - 1));
+        if (page + 1 < pages.length) {
+            const nx = chip(rowsBox, '下一页 ›', 0, py + 8, COLOR.ochreD, false, 24);
+            nx.setPosition(panelW - 40 - sizeOf(nx).w, -(py + 8), 0);
+            onTap(nx, () => render(page + 1));
+        }
+    };
+    render(0);
     button(panel, 30, h - 120, panelW - 60, { label: opts.closeText ?? '关  闭', style: 'ghost', align: 'left', size: 28, onClick: close });
     return close;
 }

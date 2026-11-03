@@ -131,8 +131,17 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         };
         tap('命盘');
         await flush();
-        expect(labels(g.overlay).filter(l => /Lv\d\/\d/.test(l)).length).toBe(g.engine.data.upgrades.size);
-        inScreen(g.overlay);
+        // 列表放不下时分页：逐页翻完，每页都在屏幕内，合计等于命盘条目数
+        const seenLv = new Set<string>();
+        for (let p = 0; p < 10; p++) {
+            labels(g.overlay).filter(l => /Lv\d\/\d/.test(l)).forEach(l => seenLv.add(l));
+            inScreen(g.overlay);
+            const next = tappables(g.overlay).find(x => labels(x).some(l => l.startsWith('下一页')));
+            if (!next) break;
+            next.emit(Node.EventType.TOUCH_START); next.emit(Node.EventType.TOUCH_END);
+            await flush();
+        }
+        expect(seenLv.size).toBe(g.engine.data.upgrades.size);
         g.goDraft();
         await flush();
         tap('今日天命');
