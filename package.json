@@ -7,7 +7,7 @@
     "version": "3.8.0"
   },
   "private": true,
-  "description": "我重生了，这一世我将拿回属于我的一切 - 微信小游戏",
+  "description": "这一世我重生了 - 微信小游戏",
   "scripts": {
     "art": "node tools/art/gen-art.mjs",
     "art:check": "python3 tools/art/check_art.py",

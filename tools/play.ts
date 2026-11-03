@@ -84,7 +84,7 @@ async function play() {
         return ask('> ', list.length);
     };
 
-    console.log(`${C.bold}《我重生了，这一世我将拿回属于我的一切》· ${data.meta.name}${C.off}  （输入 q 保存退出）`);
+    console.log(`${C.bold}《这一世我重生了》· ${data.meta.name}${C.off}  （输入 q 保存退出）`);
     for (;;) {
         const dp = e.dp;
         console.log(`\n${C.cyan}════ 轮回殿 ════${C.off}  第 ${dp.lives + 1} 世 · 轮回点 ${profile.points}`);

@@ -11,7 +11,7 @@ import type { Game } from '../game';
 import { box, COLOR, image, onTap, rect, text } from '../ui/kit';
 import { showInfo } from './popups';
 
-export const GAME_NAME = '我重生了，这一世我将拿回属于我的一切';
+export const GAME_NAME = '这一世我重生了';
 
 /** 健康游戏忠告（全文、语序、标点须与官方一致，勿改） */
 export const HEALTH_ADVICE = [

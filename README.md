@@ -1,4 +1,4 @@
-# 我重生了，这一世我将拿回属于我的一切
+# 这一世我重生了
 
 微信小游戏 · 文字交互 + 轮回 Roguelite · Cocos Creator 3.8 · TypeScript · 竖屏 2D
 

@@ -72,7 +72,7 @@ export class Game {
         this.audio.preload(['click', 'choose', 'success', 'fail', 'item']);
         setTapFeedback(() => this.audio.play('click'));
         Platform.setupPassiveShare(() => ({
-            title: `我重生了，这一世我是${this.data.meta.name}，我将拿回属于我的一切`,
+            title: `这一世我重生了，成了${this.data.meta.name}`,
             imageUrl: TEX.share(this.data.meta.id),
         }));
 
