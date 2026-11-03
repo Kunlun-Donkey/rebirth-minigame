@@ -238,10 +238,12 @@ async function play() {
                 a.id === data.meta.rules.life ? `${a.icon}${r.attrs[a.id]}/${r.attrs[data.meta.rules.lifeMax]}` : `${a.icon}${r.attrs[a.id]}`).join(' ');
             console.log(`\n${C.bold}第${r.season}季 · ${e.stageName(r.stage)}${C.off}  ${status}`);
             if (skillLine) console.log(skillLine);
+            for (const t of e.threadTeasers().filter(t => t.dir === 'any')) console.log(`  ${C.gold}未完的事：${t.text}${C.off}`);
             const opts = e.directionOptions();
             const items = e.usableItems();
             const menu: { text: string; run: () => void }[] = opts.map(o => {
-                const next = o.nextLayer ? `${C.dim}→ 下一层：${o.nextLayer.name}${o.nextLayer.lockText ? `（需${o.nextLayer.lockText}）` : ''}${C.off}` : '';
+                const next = o.thread ? `${C.gold}→ 后续：${o.thread}${C.off}`
+                    : o.nextLayer ? `${C.dim}→ 下一层：${o.nextLayer.name}${o.nextLayer.lockText ? `（需${o.nextLayer.lockText}）` : ''}${C.off}` : '';
                 return {
                     text: o.enabled ? `${o.name}  ${C.dim}[${o.layerName}]${C.off} ${next}` : `${C.dim}${o.name}（需要：${o.lockText}）${C.off}`,
                     run: () => (o.enabled ? e.chooseDirection(o.dir) : console.log('  这个方向还去不了。')),

@@ -11,7 +11,7 @@
     "choices": [
       { "text": "喝掉", "effect": { "水分": 2 }, "result": "甜的。荒漠里居然有甜的东西。" },
       { "text": "让它滚到根上", "effect": { "水分": 1, "根系": 1 }, "result": "露珠顺着茎滑下去，根尖抖了一下。" },
-      { "text": "留着晒太阳", "effect": { "茎叶": 1, "灵气": 2 }, "result": "阳光穿过露珠，在你叶子上烧了个小光斑。很舒服。" }
+      { "text": "留着晒太阳", "effect": { "follow": "f_dew_bee", "茎叶": 1, "灵气": 2 }, "result": "阳光穿过露珠，在你叶子上烧了个小光斑。很舒服。" }
     ]
   },
   {
@@ -79,7 +79,7 @@
     "text": "一只蜥蜴趴在你旁边晒太阳，挡住了你一半的光。",
     "choices": [
       { "text": "绕开它长", "effect": { "茎叶": 1 }, "result": "你往旁边歪了歪。歪着长，也是长。" },
-      { "text": "跟它搭话", "require": "talent:chatter | stage>=3 | skill:beast_talk", "effect": { "灵性": 2, "flag": "friend_lizard", "skill": "beast_talk" },
+      { "text": "跟它搭话", "require": "talent:chatter | stage>=3 | skill:beast_talk", "effect": { "follow": "f_lizard_shade", "灵性": 2, "flag": "friend_lizard", "skill": "beast_talk" },
         "result": "蜥蜴说它叫阿呆。它答应以后晒太阳往边上挪挪。" },
       { "text": "用叶子挠它", "chance": 0.5, "effect": { "茎叶": 2 }, "result": "蜥蜴痒得受不了，跑了。阳光都是你的了。",
         "fail": { "effect": { "茎叶": -1 }, "result": "蜥蜴回头咬掉了你半片叶子。" } }
@@ -98,7 +98,7 @@
     "text": "一群羚羊路过。领头的那只停下来，嗅了嗅你。",
     "choices": [
       { "text": "一动不动", "chance": 0.55, "chanceAttr": "韧性", "chanceStep": 0.07,
-        "effect": { "灵性": 1 }, "result": "羚羊嗅了半天，走了。你屏住的那口气，终于吐了出来。",
+        "effect": { "follow": "f_gazelle_fawn", "灵性": 1 }, "result": "羚羊嗅了半天，走了。你屏住的那口气，终于吐了出来。",
         "fail": { "effect": { "death": "eaten_beast" }, "result": "羚羊夸了一句：嫩。" } },
       { "text": "发出苦味", "require": "legacy:bitter_sap>=1 | talent:bitter", "effect": { "灵气": 2 },
         "result": "羚羊皱起鼻子，带着整个羊群绕开了你。" },
@@ -123,7 +123,7 @@
     "id": "u2_wind_seed", "dir": "up", "layers": ["U2"],
     "text": "风里卷着一粒别的种子，撞在你身上。",
     "choices": [
-      { "text": "抓住它", "require": "根系>=3", "effect": { "item": "ancient_seed" }, "result": "是一颗很老很老的种子。你把它收好了。" },
+      { "text": "抓住它", "require": "根系>=3", "effect": { "follow": "f_seedling", "item": "ancient_seed" }, "result": "是一颗很老很老的种子。你把它收好了。" },
       { "text": "让它飞走", "effect": { "灵性": 1 }, "result": "它飞走时，好像说了声谢谢。" }
     ]
   },
@@ -153,8 +153,8 @@
     "text": "一只秃鹫落在你头顶，把你当成了观景台。",
     "choices": [
       { "text": "抖落它", "require": "茎叶>=6", "effect": { "茎叶": 1, "灵气": 3 }, "result": "秃鹫摔了个跟头，尴尬地飞走了。" },
-      { "text": "忍着", "effect": { "韧性": 1, "茎叶": -1 }, "result": "它待了一下午，压弯了你一根枝。" },
-      { "text": "跟它谈谈", "require": "talent:chatter | stage>=3 | skill:beast_talk", "effect": { "灵性": 2, "item": "dung" },
+      { "text": "忍着", "effect": { "follow": "f_vulture_news", "韧性": 1, "茎叶": -1 }, "result": "它待了一下午，压弯了你一根枝。" },
+      { "text": "跟它谈谈", "require": "talent:chatter | stage>=3 | skill:beast_talk", "effect": { "follow": "f_vulture_news", "灵性": 2, "item": "dung" },
         "result": "秃鹫说它见过远处的绿洲。临走它留了点东西，你不想说是什么。" }
     ]
   },
@@ -163,7 +163,7 @@
     "id": "u3_nest", "dir": "up", "layers": ["U3"], "once": true,
     "text": "一对沙百灵在你枝头筑了巢。",
     "choices": [
-      { "text": "让它们住", "effect": { "灵性": 3, "flag": "bird_friend" }, "result": "从此每天早上，有人给你唱歌。" },
+      { "text": "让它们住", "effect": { "follow": { "id": "f_nest_eggs", "delay": 2 }, "灵性": 3, "flag": "bird_friend" }, "result": "从此每天早上，有人给你唱歌。" },
       { "text": "摇走它们", "effect": { "茎叶": 2 }, "result": "百灵飞走了。枝头空了，你长得更快了。" }
     ]
   },

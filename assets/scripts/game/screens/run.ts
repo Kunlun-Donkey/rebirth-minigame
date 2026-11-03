@@ -175,11 +175,18 @@ function directionArea(g: Game, root: Node, y: number, _bottom: number): void {
     const r = e.run;
     const cardW = g.W - 60;
     const prompt = (e.data.meta.rules.dirPrompt ?? '你是{stage}。\n这一季，往哪儿去？').replace('{stage}', e.stageName(r.stage));
+    // 不限方向的待续剧情：预告写在提示卡里（限方向的写在对应方向按钮上）
+    const anyTeaser = e.threadTeasers().find(t => t.dir === 'any');
     const card = box(root, 30, y, cardW, 230, 'prompt');
     rect(card, { fill: COLOR.paper, stroke: COLOR.paperEdge, strokeAlpha: 180, lineWidth: 3, radius: 20, shadow: COLOR.btnShadow, shadowOffset: 8 });
     image(card, TEX.eventCard, 0, 0, cardW, 230, { maxAspectDiff: 1.2 });
     text(card, `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`, 40, 30, 300, { size: 24, color: COLOR.ink2 });
-    text(card, prompt, 40, 80, cardW - 80, { size: 34, wrap: true, lineHeight: 60 });
+    if (anyTeaser) {
+        text(card, prompt.split('\n')[0], 40, 80, cardW - 80, { size: 34, wrap: true, lineHeight: 60 });
+        text(card, `未完的事：${anyTeaser.text}`, 40, 146, cardW - 80, { size: 28, color: COLOR.legacy, wrap: true, lineHeight: 40 });
+    } else {
+        text(card, prompt, 40, 80, cardW - 80, { size: 34, wrap: true, lineHeight: 60 });
+    }
 
     let cy = y + 230 + 28;
     for (const o of e.directionOptions()) {
@@ -201,8 +208,11 @@ function dirOpts(g: Game, o: DirOption): ButtonOpts {
     return {
         label: o.name,
         icon: TEX.dir(o.dir),
-        tags: [{ text: o.layerName, color: COLOR.ochreD }],
-        sub: next,
+        tags: o.thread
+            ? [{ text: '后续', color: COLOR.legacy, filled: true }, { text: o.layerName, color: COLOR.ochreD }]
+            : [{ text: o.layerName, color: COLOR.ochreD }],
+        sub: o.thread ? `后续：${o.thread}` : next,
+        subColor: o.thread ? COLOR.legacy : undefined,
         onClick: () => {
             g.engine.chooseDirection(o.dir);
             g.persist();

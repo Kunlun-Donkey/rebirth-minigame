@@ -5,7 +5,7 @@ import type {
 } from './types';
 
 /** 效果中的保留键，其余键视为属性增量 */
-export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back'] as const;
+export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow'] as const;
 
 export class DataError extends Error {}
 
@@ -29,10 +29,17 @@ export function buildDestiny(raw: RawDestiny): Destiny {
         }
     };
 
+    /** follow: "id" | ["id", …] | { id, delay?, ttl? } | [{…}] */
+    const toFollows = (v: unknown, where: string) => (Array.isArray(v) ? v : [v]).map(x => {
+        if (typeof x === 'string') return { id: x, delay: 1, ttl: 4 };
+        const o = x as { id?: string; delay?: number; ttl?: number };
+        if (!o || typeof o.id !== 'string') throw new DataError(`${where}: follow 格式应为 "事件id" 或 { "id": "...", "delay": 1, "ttl": 4 }`);
+        return { id: o.id, delay: o.delay ?? 1, ttl: o.ttl ?? 4 };
+    });
     const toList = (v: unknown): string[] => (v === undefined ? [] : Array.isArray(v) ? v.map(String) : [String(v)]);
 
     const effect = (r: RawEffect | undefined, where: string): Effect => {
-        const e: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [] };
+        const e: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [] };
         if (!r) return e;
         for (const [k, v] of Object.entries(r)) {
             switch (k) {
@@ -44,6 +51,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
                 case 'death': e.death = String(v); break;
                 case 'ending': e.ending = String(v); break;
                 case 'back': e.back = String(v) as Dir; break;
+                case 'follow': e.follows = toFollows(v, where); break;
                 default: {
                     const id = resolveAttr(k);
                     if (!id) throw new DataError(`${where}: 效果中未知属性「${k}」`);
@@ -94,6 +102,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             gold: ev.gold ?? false,
             chainOnly: ev.chainOnly ?? false,
             maps: ev.maps,
+            teaser: ev.teaser,
             require: cond(ev.require, `${where}.require`),
             text: ev.text,
             choices: ev.choices.map((c, i) => choice(c, `${where}.choices[${i}]`)),

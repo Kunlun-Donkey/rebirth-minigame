@@ -4,8 +4,10 @@
     "text": "沙暴来了。天地一片黄。",
     "choices": [
       { "text": "死死抓住", "chance": 0.55, "chanceAttr": "根系", "chanceStep": 0.05,
-        "effect": { "根系": 1, "韧性": 1 }, "result": "沙暴过去了。你还在。",
+        "effect": { "follow": "f_after_storm", "根系": 1, "韧性": 1 }, "result": "沙暴过去了。你还在。",
         "fail": { "effect": { "death": "sandstorm" }, "result": "你被连根拔起，飞上了天。" } },
+      { "text": "和小苗缠在一起", "showIf": "flag:little_sprout", "effect": { "根系": 1, "韧性": 1, "灵性": 1 },
+        "result": "两株草的根在沙下缠成一团。沙暴拔了一夜，一株也没拔动。" },
       { "text": "顺风弯腰", "require": "韧性>=3", "effect": { "韧性": 1 }, "result": "你弯成一张弓。沙暴从你背上滑了过去。" },
       { "text": "借沙暴之力", "showIf": "talent:desert_self", "effect": { "灵气": 15, "根系": 1 },
         "result": "沙暴绕着你转了三圈，把沙里的养分都留给了你。" },
@@ -18,7 +20,7 @@
     "text": "连续三个月，没有一滴露水。",
     "choices": [
       { "text": "休眠", "effect": { "灵气": -2 }, "result": "你关上所有气孔，睡了一季。" },
-      { "text": "硬撑着长", "effect": { "水分": -2, "灵气": 5, "韧性": 1 }, "result": "你瘦了，但没停。" }
+      { "text": "硬撑着长", "effect": { "follow": "f_after_drought", "水分": -2, "灵气": 5, "韧性": 1 }, "result": "你瘦了，但没停。" }
     ]
   },
   {

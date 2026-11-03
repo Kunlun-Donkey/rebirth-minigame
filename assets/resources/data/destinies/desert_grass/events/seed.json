@@ -41,7 +41,7 @@
     "choices": [
       { "text": "装成一颗石子", "effect": { "灵性": 1, "灵气": 1 }, "result": "蚂蚁摸了摸你，失望地走了。" },
       { "text": "拼命挣扎", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.12,
-        "effect": { "韧性": 1 }, "result": "蚂蚁放弃了。它会回去吹牛，说遇到一颗很凶的种子。",
+        "effect": { "follow": "f_ant_return", "韧性": 1 }, "result": "蚂蚁放弃了。它会回去吹牛，说遇到一颗很凶的种子。",
         "fail": { "effect": { "death": "ant" }, "result": "你被拖进了黑暗里。" } },
       { "text": "用硬壳硬扛", "require": "legacy:hard_shell>=1", "effect": { "韧性": 1, "灵气": 2 },
         "result": "前世你被搬走过。这一世，蚂蚁咬崩了一颗牙。" },

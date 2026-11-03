@@ -446,6 +446,61 @@ describe('命盘与每日天命', () => {
     });
 });
 
+describe('后续剧情（follow）', () => {
+    const extra: RawEvent[] = [
+        { id: 'meet', dir: 'down', layers: ['D1'], weight: 1000, once: true, text: '遇见', choices: [
+            { text: '交朋友', effect: { follow: 'visit' }, result: '好' },
+            { text: '走开', result: '走' },
+        ] },
+        { id: 'visit', dir: 'down', chainOnly: true, teaser: '它说还会来', text: '它来了', choices: [{ text: '欢迎', effect: { 灵气: 1 }, result: '来了' }] },
+        { id: 'late', dir: 'up', chainOnly: true, teaser: '晚点再说', text: '晚', choices: [{ text: '嗯', result: '嗯' }] },
+        { id: 'ask', dir: 'down', layers: ['D1'], weight: 1, text: '问', choices: [{ text: '约', effect: { follow: { id: 'late', delay: 2, ttl: 1 } }, result: '约了' }] },
+    ];
+
+    it('选了带 follow 的选项：下一季同方向显示预告并优先触发后续事件', () => {
+        const e = new Engine(buildDestiny(fixture(extra)), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('meet');
+        e.choose(0);
+        expect(e.run.phase).toBe('direction');
+        expect(e.directionOptions().find(o => o.dir === 'down')!.thread).toBe('它说还会来');
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('visit');
+        e.choose(0);
+        expect(e.run.threads).toEqual([]);
+        expect(e.directionOptions().find(o => o.dir === 'down')!.thread).toBeUndefined();
+    });
+
+    it('delay 未到不触发；过了 ttl 作废；方向不匹配时等待', () => {
+        const e = new Engine(buildDestiny(fixture([...extra.filter(x => x.id !== 'meet').map(x => (x.id === 'ask' ? { ...x, weight: 1000, once: true } : x)), { id: 'idle', dir: 'down', layers: ['D1'], weight: 500, text: '闲', choices: [{ text: '闲', result: '闲' }] }])), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('ask');
+        e.choose(0); // 第 1 季约：第 3 季 up 方向可触发，仅第 3 季有效
+        expect(e.threadTeasers()).toEqual([]);
+        e.chooseDirection('down');
+        if (e.run.phase === 'event') e.choose(0);
+        expect(e.run.season).toBe(3);
+        expect(e.threadTeasers()).toEqual([{ dir: 'up', text: '晚点再说' }]);
+        e.chooseDirection('down'); // 方向不匹配，不触发
+        expect(e.eventView().id).not.toBe('late');
+        e.run.season = 4; // 过了 ttl
+        expect(e.threadTeasers()).toEqual([]);
+    });
+
+    it('局内状态带 threads 可序列化恢复', () => {
+        const e = new Engine(buildDestiny(fixture(extra)), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        e.choose(0);
+        const e2 = new Engine(buildDestiny(fixture(extra)), createProfile());
+        e2.resume(JSON.parse(JSON.stringify(e.run)));
+        e2.chooseDirection('down');
+        expect(e2.eventView().id).toBe('visit');
+    });
+});
+
 describe('出生地图', () => {
     function withMaps(): RawDestiny {
         const raw = fixture([

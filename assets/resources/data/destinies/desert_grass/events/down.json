@@ -9,7 +9,7 @@
     "id": "d1_camel_bone", "dir": "down", "layers": ["D1"], "stage": [1, 99],
     "text": "你的根缠住了一截骆驼骨头。",
     "choices": [
-      { "text": "吸收骨髓", "effect": { "灵气": 3, "水分": 1 }, "result": "骆驼前辈，谢谢款待。" },
+      { "text": "吸收骨髓", "effect": { "follow": "f_bone_dream", "灵气": 3, "水分": 1 }, "result": "骆驼前辈，谢谢款待。" },
       { "text": "绕开", "effect": { "根系": 1 }, "result": "你不想和骆驼扯上任何关系。哪怕是死的。" }
     ]
   },
@@ -17,9 +17,9 @@
     "id": "d1_beetle", "dir": "down", "layers": ["D1", "D2"],
     "text": "一只甲虫在你根边打洞，弄得沙子哗哗响。",
     "choices": [
-      { "text": "让它挖", "effect": { "根系": 1 }, "result": "它挖出的洞，正好给你的根让路。" },
+      { "text": "让它挖", "effect": { "follow": "f_beetle_tunnel", "根系": 1 }, "result": "它挖出的洞，正好给你的根让路。" },
       { "text": "缠住它", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05,
-        "effect": { "item": "beetle_shell" }, "result": "甲虫挣脱了，留下半块壳。你收下了。",
+        "effect": { "follow": "f_beetle_revenge", "item": "beetle_shell" }, "result": "甲虫挣脱了，留下半块壳。你收下了。",
         "fail": { "effect": { "水分": -1 }, "result": "甲虫一脚踹开你，跑了。" } }
     ]
   },
@@ -38,16 +38,16 @@
     "text": "根尖一凉。是水。是真的水。",
     "choices": [
       { "text": "大口喝", "effect": { "水分": 4 }, "result": "你从来不知道，活着可以这么舒服。" },
-      { "text": "绕着它安家", "effect": { "水分上限": 1, "根系": 1, "水分": 2 }, "result": "你决定在这里扎下去。这是你的第一口井。" }
+      { "text": "绕着它安家", "effect": { "follow": "f_well_guest", "水分上限": 1, "根系": 1, "水分": 2 }, "result": "你决定在这里扎下去。这是你的第一口井。" }
     ]
   },
   {
     "id": "d2_scorpion", "dir": "down", "layers": ["D2", "D3"],
     "text": "一只蝎子把你的根当成了磨牙棒。",
     "choices": [
-      { "text": "忍着", "effect": { "水分": -1, "韧性": 1 }, "result": "它磨够了牙，走了。你的根上全是牙印。" },
+      { "text": "忍着", "effect": { "follow": "f_scorpion_back", "水分": -1, "韧性": 1 }, "result": "它磨够了牙，走了。你的根上全是牙印。" },
       { "text": "缠住它", "chance": 0.4, "chanceAttr": "根系", "chanceStep": 0.05,
-        "effect": { "灵气": 6, "根系": 1 }, "result": "蝎子被你勒得动弹不得。这是你第一次赢。",
+        "effect": { "follow": { "id": "f_scorpion_king", "delay": 2, "ttl": 6 }, "灵气": 6, "根系": 1 }, "result": "蝎子被你勒得动弹不得。这是你第一次赢。",
         "fail": { "effect": { "death": "scorpion" }, "result": "蝎子钳子一合。咔嚓。" } },
       { "text": "让它扎一嘴刺", "require": "legacy:thorn>=1", "effect": { "灵气": 5, "韧性": 1, "skill": "thorn_burst" },
         "result": "前世它剪断了你的根。这一世，它的钳子卡在了你的刺里。" },
@@ -62,9 +62,9 @@
     "text": "一只沙鼹撞上了你的根。它很瞎，也很饿。",
     "choices": [
       { "text": "装成石头", "effect": { "韧性": 1 }, "result": "沙鼹舔了舔你，嫌硬，走了。" },
-      { "text": "让它咬一口", "effect": { "水分": -2, "灵性": 1 }, "result": "它咬了一口，说了声谢谢。至少它有礼貌。" },
+      { "text": "让它咬一口", "effect": { "follow": "f_mole_friend", "水分": -2, "灵性": 1 }, "result": "它咬了一口，说了声谢谢。至少它有礼貌。" },
       { "text": "小狐狸，上！", "showIf": "companion:fox_cub", "effect": { "灵气": 3 }, "result": "小狐狸一爪子把沙鼹按了出来。今晚加餐。" },
-      { "text": "跟它商量", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "根系": 2 },
+      { "text": "跟它商量", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "follow": "f_mole_friend", "根系": 2 },
         "result": "沙鼹答应以后帮你松土。它说它叫土豆。" }
     ]
   },
@@ -73,7 +73,7 @@
     "text": "沙层里有一小汪积水，周围长满了白色的菌丝。",
     "choices": [
       { "text": "喝掉", "effect": { "水分": 3 }, "result": "凉的。带一点蘑菇味。" },
-      { "text": "和菌丝打招呼", "effect": { "灵性": 2 }, "result": "菌丝缠了缠你的根。好像是在握手。" }
+      { "text": "和菌丝打招呼", "effect": { "follow": "f_fungus_net", "灵性": 2 }, "result": "菌丝缠了缠你的根。好像是在握手。" }
     ]
   },
 
@@ -115,7 +115,7 @@
     "text": "地下有一条暗河，流得很慢，很凉。",
     "choices": [
       { "text": "扎进去", "effect": { "水分": 6, "水分上限": 2 }, "result": "你把根泡进了河里。这一世，你不会渴死了。" },
-      { "text": "顺着河摸索", "effect": { "灵气": 3, "灵性": 1, "根系": 1 }, "result": "河水在黑暗里拐了个弯，通向你不知道的地方。" }
+      { "text": "顺着河摸索", "effect": { "follow": "f_river_glow", "灵气": 3, "灵性": 1, "根系": 1 }, "result": "河水在黑暗里拐了个弯，通向你不知道的地方。" }
     ]
   },
 
@@ -128,7 +128,7 @@
       { "text": "缠碎它", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "灵气": 10 }, "result": "石碑碎了。里面封着的灵气全涌进了你的根。",
         "fail": { "effect": { "death": "curse" }, "result": "碑上的字亮了。你听见三千年前有人在笑。" } },
-      { "text": "离开", "effect": { "灵性": 1 }, "result": "有些东西，现在还碰不得。" },
+      { "text": "离开", "effect": { "follow": { "id": "f_stele_dream", "delay": 1, "ttl": 6 }, "灵性": 1 }, "result": "有些东西，现在还碰不得。" },
       { "text": "以天眼观之", "showIf": "skill:sky_eye", "useSkill": "sky_eye", "effect": { "灵性": 3, "灵气": 10, "flag": "read_stele" },
         "result": "字在你眼里活了。碑上写着：此地之下，有建木残根。" }
     ]

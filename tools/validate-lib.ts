@@ -3,7 +3,7 @@ import { walkCond } from '../assets/scripts/core/condition';
 import { buildDestiny, DataError } from '../assets/scripts/core/data';
 import { Cond, Destiny, DestinyIndex, Effect, RARITIES, RawDestiny } from '../assets/scripts/core/types';
 
-export const TEXT_LIMITS = { text: 60, choice: 14, result: 40 };
+export const TEXT_LIMITS = { text: 60, choice: 14, result: 40, teaser: 18 };
 
 export interface Report {
     errors: string[];
@@ -55,6 +55,7 @@ export function validateDestiny(raw: RawDestiny): Report {
     };
 
     const endingsUsed = new Set<string>();
+    const followed = new Set<string>();
     const checkEffect = (e: Effect, where: string) => {
         e.flags.forEach(f => flagsSet.add(f));
         for (const it of [...e.items, ...e.loseItems]) if (!d.items.has(it)) errors.push(`${where}: 效果引用了不存在的道具 ${it}`);
@@ -65,6 +66,12 @@ export function validateDestiny(raw: RawDestiny): Report {
         }
         if (e.back && !['up', 'down', 'side'].includes(e.back)) errors.push(`${where}: back 只能是 up/down/side`);
         for (const sk of e.skills) addSource(sk, where);
+        for (const f of e.follows) {
+            referencedEvents.add(f.id);
+            followed.add(f.id);
+            if (!d.events.has(f.id)) errors.push(`${where}: follow 指向不存在的事件 ${f.id}`);
+            if (f.delay < 0 || f.ttl < 1) errors.push(`${where}: follow ${f.id} 的 delay 需 ≥0、ttl 需 ≥1`);
+        }
     };
 
     const len = (s: string | undefined) => (s ? [...s].length : 0);
@@ -166,7 +173,9 @@ export function validateDestiny(raw: RawDestiny): Report {
         }
     }
     for (const ev of d.events.values()) {
-        if (ev.chainOnly && !referencedEvents.has(ev.id)) errors.push(`事件 ${ev.id}: chainOnly 但没有任何 next/enterEvent 指向它`);
+        if (ev.chainOnly && !referencedEvents.has(ev.id)) errors.push(`事件 ${ev.id}: chainOnly 但没有任何 next/enterEvent/follow 指向它`);
+        if (followed.has(ev.id) && !ev.teaser) warnings.push(`事件 ${ev.id}: 作为后续事件，建议写 teaser 预告`);
+        if (len(ev.teaser) > TEXT_LIMITS.teaser) warnings.push(`事件 ${ev.id}: teaser ${len(ev.teaser)} 字，超过 ${TEXT_LIMITS.teaser}`);
     }
 
     // 技能：每个技能都要有获得途径；交互型技能必须有事件用到

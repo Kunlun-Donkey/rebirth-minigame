@@ -1,0 +1,304 @@
+[
+  {
+    "id": "f_ant_return", "dir": "any", "chainOnly": true, "teaser": "那只蚂蚁说要带兄弟回来",
+    "text": "那只蚂蚁真的回来了，身后跟着一队兄弟，排得整整齐齐。",
+    "choices": [
+      { "text": "装成一颗石子", "effect": { "灵性": 1 }, "result": "蚂蚁们围着你转了三圈，决定这是一颗石子。" },
+      { "text": "再挣扎一次", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.12,
+        "effect": { "韧性": 2, "灵气": 3 }, "result": "一队蚂蚁拖不动一颗种子。它们的队长哭着回家了。",
+        "fail": { "effect": { "death": "ant" }, "result": "这一次，它们人多。" } }
+    ]
+  },
+
+  {
+    "id": "f_beetle_tunnel", "dir": "down", "chainOnly": true, "teaser": "甲虫挖的洞，通向下面",
+    "text": "甲虫挖的洞一直通到下面。洞底是个空腔，潮气扑在你根上。",
+    "choices": [
+      { "text": "顺着洞扎下去", "effect": { "根系": 2, "水分": 1, "follow": "f_beetle_nest" }, "result": "你的根顺着洞滑了下去，比自己挖快多了。" },
+      { "text": "堵上洞口", "effect": { "韧性": 1 }, "result": "你不喜欢别人在你家底下打洞。" }
+    ]
+  },
+  {
+    "id": "f_beetle_nest", "dir": "down", "chainOnly": true, "teaser": "空腔深处，有一窝甲虫",
+    "text": "空腔深处，甲虫一家正挤在一起过冬。老甲虫冲你点了点触角。",
+    "choices": [
+      { "text": "跟它们做邻居", "effect": { "水分上限": 1, "item": "beetle_shell" }, "result": "老甲虫送你半块旧壳。从此你家楼下住着一窝甲虫。" },
+      { "text": "吸走空腔的潮气", "effect": { "水分": 3 }, "result": "空腔干了。甲虫一家骂骂咧咧地搬走了。" }
+    ]
+  },
+  {
+    "id": "f_beetle_revenge", "dir": "any", "chainOnly": true, "teaser": "甲虫说会带兄弟回来",
+    "text": "那只被你缠过的甲虫回来了，带着三个兄弟，围着你的根咔嚓咔嚓。",
+    "choices": [
+      { "text": "硬扛", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.08,
+        "effect": { "韧性": 2, "灵气": 4 }, "result": "四只甲虫啃了一夜，没啃动。它们服了。",
+        "fail": { "effect": { "水分": -2, "根系": -1 }, "result": "它们啃断了你一截根，扬长而去。" } },
+      { "text": "把壳还给它", "require": "item:beetle_shell", "effect": { "loseItem": "beetle_shell", "灵性": 2 },
+        "result": "它接过自己的壳，愣了一下，带着兄弟们走了。" }
+    ]
+  },
+
+  {
+    "id": "f_bone_dream", "dir": "any", "chainOnly": true, "teaser": "骆驼骨髓的味道还在",
+    "text": "夜里你做了个梦：你是一头骆驼，在荒漠里走了一辈子，记得每一口井。",
+    "choices": [
+      { "text": "记住那些井", "effect": { "灵性": 2, "flag": "saw_oasis" }, "result": "醒来时，你知道了荒漠西边有一口枯井。" },
+      { "text": "醒过来", "effect": { "水分": 1 }, "result": "你只是一株草。草不用走路。" }
+    ]
+  },
+
+  {
+    "id": "f_well_guest", "dir": "down", "chainOnly": true, "teaser": "你的水洼引来了客人",
+    "text": "一只沙鼠找到了你的水洼。它探头探脑，胡子上沾着沙。",
+    "choices": [
+      { "text": "让它喝", "effect": { "水分": -1, "灵性": 1, "follow": { "id": "f_well_gift", "delay": 2 } }, "result": "它喝完，冲你作了个揖，跑了。" },
+      { "text": "把根缩紧", "effect": { "韧性": 1 }, "result": "沙鼠舔了舔干沙，失望地走了。" }
+    ]
+  },
+  {
+    "id": "f_well_gift", "dir": "any", "chainOnly": true, "teaser": "那只沙鼠说会报答你",
+    "text": "那只沙鼠回来了，嘴里叼着一个亮晶晶的铁疙瘩，放在你根边。",
+    "choices": [
+      { "text": "收下", "effect": { "item": "compass" }, "result": "是一枚生锈的指南针。不知道它从哪个商队偷的。" },
+      { "text": "让它留着", "effect": { "灵性": 2 }, "result": "沙鼠想了想，把它埋进了你的根旁边。" }
+    ]
+  },
+
+  {
+    "id": "f_scorpion_back", "dir": "down", "chainOnly": true, "teaser": "蝎子说下次还来磨牙",
+    "text": "那只蝎子又来了，还带上了它老婆。两张钳子，一左一右。",
+    "choices": [
+      { "text": "再忍一次", "effect": { "水分": -2, "韧性": 2 }, "result": "它们磨了一夜，觉得你太硬，换地方了。" },
+      { "text": "缠住它们", "chance": 0.35, "chanceAttr": "根系", "chanceStep": 0.04,
+        "effect": { "灵气": 10, "根系": 1 }, "result": "两只蝎子被捆成了一团。你第一次觉得自己是个狠角色。",
+        "fail": { "effect": { "水分": -3 }, "result": "你缠住了一只，另一只剪断了你三根须。" } },
+      { "text": "毒刺反击", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "灵气": 10, "韧性": 1 },
+        "result": "两只蝎子先后咬在你的刺上。它们的婚姻到此结束。" }
+    ]
+  },
+  {
+    "id": "f_scorpion_king", "dir": "any", "chainOnly": true, "stage": [2, 99], "teaser": "蝎子窝里有了动静",
+    "text": "蝎王来了。它比你见过的任何蝎子都大，尾针亮得发蓝。它是来替手下出气的。",
+    "choices": [
+      { "text": "缩回深处", "effect": { "根系": -1, "水分": -1 }, "result": "你把根缩回了石缝。蝎王守了三天，走了。" },
+      { "text": "硬碰硬", "require": "韧性>=6", "effect": { "灵气": 15, "韧性": 2 }, "result": "蝎王的尾针扎进你的根里，折了。它从此绕着你走。" },
+      { "text": "装死", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2 }, "result": "蝎王戳了戳你，觉得你已经是草干了。",
+        "fail": { "effect": { "death": "scorpion" }, "result": "蝎王不信。" } },
+      { "text": "藤缚", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "灵气": 18, "item": "beetle_shell" },
+        "result": "你把蝎王吊在半空晾了一整天。它的手下都看见了。" }
+    ]
+  },
+
+  {
+    "id": "f_mole_friend", "dir": "down", "chainOnly": true, "teaser": "沙鼹说它记住你了",
+    "text": "那只沙鼹带着两只小的回来了。它们在你根边，刨了一圈松松的土。",
+    "choices": [
+      { "text": "谢谢它们", "effect": { "根系": 2 }, "result": "松过的土，扎起来像在水里游。" },
+      { "text": "分它们一口水", "effect": { "水分": -1, "灵性": 2 }, "result": "小沙鼹喝饱了，在你根边睡着了。" }
+    ]
+  },
+
+  {
+    "id": "f_fungus_net", "dir": "down", "chainOnly": true, "teaser": "菌丝顺着你的根在长",
+    "text": "那些白色菌丝顺着你的根长了一圈，在黑暗里发出很淡的光。",
+    "choices": [
+      { "text": "和它共生", "effect": { "水分上限": 1, "灵性": 1, "follow": "f_fungus_message" }, "result": "菌丝替你喝水，你替它挡光。很公平。" },
+      { "text": "甩开它", "effect": { "根系": 1 }, "result": "菌丝缩了回去。黑暗里，又只剩你自己。" }
+    ]
+  },
+  {
+    "id": "f_fungus_message", "dir": "any", "chainOnly": true, "teaser": "菌丝在给你传话",
+    "text": "菌丝一阵阵发亮，传来很远的地方另一株草的话：西边，枯井底下还有水。",
+    "choices": [
+      { "text": "往西伸根", "effect": { "水分": 2, "flag": "saw_oasis" }, "result": "你记住了方向。荒漠里，原来不止你一个在找水。" },
+      { "text": "回它一句话", "effect": { "灵性": 2 }, "result": "你说：我在这里。菌丝把这句话传了一整夜。" }
+    ]
+  },
+
+  {
+    "id": "f_river_glow", "dir": "down", "chainOnly": true, "teaser": "暗河拐弯处在发光",
+    "text": "暗河拐了个弯。岸边的石头上，长着一片发光的苔，照亮了水底。",
+    "choices": [
+      { "text": "吸收苔光", "effect": { "灵气": 8 }, "result": "苔光一点点暗下去，你的叶脉一点点亮起来。" },
+      { "text": "看水底有什么", "effect": { "item": "pearl", "灵性": 1 }, "result": "水底躺着一颗珍珠。暗河养了它一千年。" }
+    ]
+  },
+
+  {
+    "id": "f_stele_dream", "dir": "any", "chainOnly": true, "teaser": "石碑上的字在你梦里打转",
+    "text": "那块碑上的字又出现在你梦里。这一次，你认出了其中一个：木。",
+    "choices": [
+      { "text": "继续认", "effect": { "灵性": 3, "follow": { "id": "f_stele_return", "delay": 1, "ttl": 6 } }, "result": "你认出了第二个字：建。剩下的，要去碑前才看得清。" },
+      { "text": "不想了", "effect": { "水分": 1 }, "result": "你翻了个身。字慢慢淡了。" }
+    ]
+  },
+  {
+    "id": "f_stele_return", "dir": "down", "chainOnly": true, "teaser": "你想再去看看那块碑",
+    "text": "你的根又摸到了那块碑。梦里认出的两个字，在石头上发烫。",
+    "choices": [
+      { "text": "读完它", "effect": { "flag": "read_stele", "灵性": 2, "灵气": 12 }, "result": "碑上写：此地之下，有建木残根。你终于读懂了。" },
+      { "text": "先记下来", "effect": { "灵性": 1 }, "result": "你把那些字，一笔一笔刻进了根里。" }
+    ]
+  },
+
+  {
+    "id": "f_dew_bee", "dir": "up", "chainOnly": true, "teaser": "露珠的光引来了什么",
+    "text": "你留着的那颗露珠在太阳下裂成了一道小彩虹。一只蜜蜂循着光飞了过来。",
+    "choices": [
+      { "text": "让它停下", "effect": { "灵性": 2, "follow": { "id": "f_bee_swarm", "delay": 2 } }, "result": "蜜蜂在你叶子上歇了一会儿，绕三圈飞走了。" },
+      { "text": "收起叶子", "effect": { "水分": 1 }, "result": "彩虹碎了。露珠滚进了你的根里。" }
+    ]
+  },
+  {
+    "id": "f_bee_swarm", "dir": "up", "chainOnly": true, "teaser": "蜜蜂说要带朋友来",
+    "text": "那只蜜蜂带来了一整群伙伴，围着你嗡嗡地转，像在等什么。",
+    "choices": [
+      { "text": "开一朵花", "require": "stage>=2", "effect": { "灵气": 12, "茎叶": 1 }, "result": "你开出了这辈子第一朵花。荒漠里多了一片嗡嗡声。" },
+      { "text": "让它们歇歇脚", "effect": { "灵性": 1, "灵气": 3 }, "result": "蜂群在你身上歇了一下午，走时留下一点花粉。" }
+    ]
+  },
+
+  {
+    "id": "f_lizard_shade", "dir": "up", "chainOnly": true, "teaser": "阿呆说明天还来",
+    "text": "阿呆又来了。这次它趴在你另一边，正好挡住了正午的太阳。",
+    "choices": [
+      { "text": "谢谢阿呆", "effect": { "水分": 2, "灵性": 1 }, "result": "阿呆眨了眨眼。它说这叫互相照应。" }
+    ]
+  },
+
+  {
+    "id": "f_gazelle_fawn", "dir": "any", "chainOnly": true, "teaser": "羊群里有只小羊落单了",
+    "text": "一只小羚羊落了单，在你身边打转，叫得很急。",
+    "choices": [
+      { "text": "用叶子指方向", "require": "灵性>=2", "effect": { "灵性": 2, "灵气": 5 }, "result": "它朝你指的方向跑了。远处，母羊叫了一声。" },
+      { "text": "让它躲在你影子里", "effect": { "水分": -1, "灵性": 1, "follow": { "id": "f_gazelle_return", "delay": 3, "ttl": 6 } },
+        "result": "它在你的影子里睡了一夜。天亮时，羊群来接它了。" }
+    ]
+  },
+  {
+    "id": "f_gazelle_return", "dir": "any", "chainOnly": true, "teaser": "羊群又要经过这里了",
+    "text": "羊群回来了。那只小羚羊已经长大，走到你面前，低头蹭了蹭你。",
+    "choices": [
+      { "text": "蹭回去", "effect": { "灵气": 10, "韧性": 1 }, "result": "从此羊群路过这里，都绕开你走。" }
+    ]
+  },
+
+  {
+    "id": "f_seedling", "dir": "any", "chainOnly": true, "teaser": "那粒种子在你脚边发芽了",
+    "text": "你抓住的那粒种子在你脚边发了芽，细得像一根线。",
+    "choices": [
+      { "text": "分它点水", "effect": { "水分": -2, "灵性": 2, "follow": { "id": "f_seedling_grow", "delay": 3, "ttl": 6 } }, "result": "它喝了水，叶子往你这边歪了歪。" },
+      { "text": "吸走它的养分", "effect": { "灵气": 6 }, "result": "荒漠很小，容不下两株草。" }
+    ]
+  },
+  {
+    "id": "f_seedling_grow", "dir": "any", "chainOnly": true, "teaser": "小苗长高了",
+    "text": "那株小苗长到了你的半腰。它第一次开口，叫你：哥。",
+    "choices": [
+      { "text": "教它扎根", "effect": { "根系": 1, "灵性": 2, "flag": "little_sprout" }, "result": "你们的根在沙下缠在了一起。" },
+      { "text": "教它长高", "effect": { "茎叶": 1, "灵性": 2, "flag": "little_sprout" }, "result": "它学得很快，个子快赶上你了。" }
+    ]
+  },
+
+  {
+    "id": "f_vulture_news", "dir": "any", "chainOnly": true, "teaser": "秃鹫说它见过很远的地方",
+    "text": "秃鹫又落在你头顶。它说，西边有支商队翻了车，丢了一袋种子。",
+    "choices": [
+      { "text": "请它带一颗来", "effect": { "item": "seed_husk", "follow": { "id": "f_vulture_fee", "delay": 2 } }, "result": "第二天，秃鹫丢下一枚古怪的种壳。它说：记账。" },
+      { "text": "不感兴趣", "effect": { "茎叶": 1 }, "result": "秃鹫叹了口气：草就是草。" }
+    ]
+  },
+  {
+    "id": "f_vulture_fee", "dir": "any", "chainOnly": true, "teaser": "秃鹫要来收账了",
+    "text": "秃鹫来收账了。它要你最高的那片叶子，说要拿回去铺窝。",
+    "choices": [
+      { "text": "给它", "effect": { "茎叶": -1, "灵性": 2 }, "result": "它叼着叶子飞走了。说话算话的鸟，荒漠里不多。" },
+      { "text": "赖账", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.06,
+        "effect": { "韧性": 1 }, "result": "秃鹫啄了两下，啄不动，骂骂咧咧地飞了。",
+        "fail": { "effect": { "茎叶": -3 }, "result": "它啄走了你三片叶子。利息。" } }
+    ]
+  },
+
+  {
+    "id": "f_nest_eggs", "dir": "up", "chainOnly": true, "teaser": "鸟窝里有动静",
+    "text": "枝头的鸟窝里孵出了三只小鸟，张着嫩黄的嘴，叫个不停。",
+    "choices": [
+      { "text": "给它们遮阴", "effect": { "水分": -1, "灵性": 2 }, "result": "你把叶子张得很大。三只小鸟在影子里睡着了。" },
+      { "text": "吵死了", "effect": { "茎叶": 1 }, "result": "你往上长了一截，离它们远一点。" }
+    ]
+  },
+
+  {
+    "id": "f_cactus_lesson", "dir": "side", "chainOnly": true, "teaser": "老仙人掌说还有第二课",
+    "text": "老仙人掌说：第二课，学会长刺。没刺的东西，在荒漠里活不过三年。",
+    "choices": [
+      { "text": "认真学", "effect": { "韧性": 2 }, "result": "你的叶边长出了一圈软刺。老仙人掌说：凑合。" },
+      { "text": "我不想变丑", "effect": { "灵性": 1 }, "result": "老仙人掌气得掉了一根刺。" }
+    ]
+  },
+
+  {
+    "id": "f_caravan_kid", "dir": "side", "chainOnly": true, "teaser": "那个孩子说还会回来",
+    "text": "商队又路过了。那个孩子偷偷跑过来，往你根上浇了半碗水。",
+    "choices": [
+      { "text": "摇叶子谢他", "effect": { "水分": 3, "灵性": 1, "follow": { "id": "f_caravan_youth", "delay": 4, "ttl": 8 } }, "result": "他笑得很开心。他说他叫阿木。" },
+      { "text": "装作没看见", "effect": { "水分": 3 }, "result": "他有点失望。水还是浇了。" }
+    ]
+  },
+  {
+    "id": "f_caravan_youth", "dir": "side", "chainOnly": true, "teaser": "阿木长大了，要来看你",
+    "text": "阿木长成了少年。他蹲在你面前说：商队要在这里挖井，你会被挖掉的。",
+    "choices": [
+      { "text": "让他看见你的灵气", "require": "灵性>=5", "effect": { "灵气": 15, "flag": "oasis_root" },
+        "result": "他愣了很久，在你身边插了一块木牌：此草勿动。井挖到了枯井那边。" },
+      { "text": "往旁边挪根", "effect": { "根系": 1, "水分": -1 }, "result": "你把根挪了三尺。阿木替你挡了一天的铁锹。" }
+    ]
+  },
+
+  {
+    "id": "f_traveler_return", "dir": "side", "chainOnly": true, "teaser": "那个旅人说一定会回来",
+    "text": "当年那个渴倒的旅人回来了。他背着一桶水，跪在你面前。",
+    "choices": [
+      { "text": "收下", "effect": { "水分": 5, "水分上限": 1, "灵性": 1 }, "result": "他把整桶水倒进了你脚下的沙里。沙子喝了很久。" }
+    ]
+  },
+
+  {
+    "id": "f_herbalist_back", "dir": "any", "chainOnly": true, "teaser": "采药人在你旁边做了记号",
+    "text": "采药人回来了。他手里多了一把铲子，在你旁边的石头上找记号。",
+    "choices": [
+      { "text": "装成普通杂草", "chance": 0.55, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2 }, "result": "他挖走了旁边一株真杂草，满意地走了。",
+        "fail": { "effect": { "death": "plucked" }, "result": "他认出了你。铲子落下来了。" } },
+      { "text": "把根缩到最深", "require": "根系>=6", "effect": { "韧性": 1, "根系": 1 }, "result": "他挖了半天，只挖到一截断根。你在三尺下偷笑。" },
+      { "text": "拟态", "showIf": "skill:disguise", "useSkill": "disguise", "effect": { "灵性": 2, "灵气": 5 }, "result": "你变成了一块石头的样子。他坐在你身上歇了脚。" }
+    ]
+  },
+
+  {
+    "id": "f_after_drought", "dir": "any", "chainOnly": true, "teaser": "旱季快过去了",
+    "text": "旱季终于过去了。第一场雨落下来，满荒漠都是草籽醒来的声音。",
+    "choices": [
+      { "text": "抢先扎根", "effect": { "根系": 2, "水分": 3 }, "result": "你比谁都先喝到雨水。熬过来的，就是赢家。" },
+      { "text": "看它们醒来", "effect": { "灵性": 2, "水分": 2 }, "result": "那么多小芽，都和当年的你一样。" }
+    ]
+  },
+  {
+    "id": "f_after_storm", "dir": "any", "chainOnly": true, "teaser": "沙暴吹出了什么东西",
+    "text": "沙暴过后，地上露出一具被风吹出来的骆驼骨架，就在你旁边。",
+    "choices": [
+      { "text": "吸收它", "effect": { "灵气": 6, "水分": 1 }, "result": "沙暴拿走了你很多，又还了你一点。" },
+      { "text": "在骨架下安家", "effect": { "韧性": 1, "水分上限": 1 }, "result": "骨架替你挡住了风。下一场沙暴，你不怕了。" }
+    ]
+  },
+
+  {
+    "id": "f_oasis_bird", "dir": "any", "chainOnly": true, "teaser": "绿洲的消息传开了",
+    "text": "枯井涌水的消息传开了。鸟、沙鼠、蜥蜴，一批批往这边搬。",
+    "choices": [
+      { "text": "给它们让地方", "effect": { "灵性": 3, "灵气": 10 }, "result": "绿洲热闹起来了。每一只来的，都向你点头。" },
+      { "text": "立规矩", "effect": { "韧性": 2, "灵气": 8 }, "result": "你说：喝水可以，不许啃草。它们都记住了。" }
+    ]
+  }
+]

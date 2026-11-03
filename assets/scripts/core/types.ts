@@ -13,7 +13,8 @@ export const RARITIES: Rarity[] = ['common', 'rare', 'epic', 'legend'];
 // ───────────── 剧本原始数据（JSON 格式，给写手用） ─────────────
 
 /** 效果：属性键（id 或中文名）→ 增量；保留键见 RESERVED_EFFECT_KEYS */
-export type RawEffect = Record<string, number | string | string[]>;
+export type RawEffect = Record<string, number | string | string[] | RawFollow | RawFollow[]>;
+export type RawFollow = string | { id: string; delay?: number; ttl?: number };
 
 export interface RawOutcome {
     effect?: RawEffect;
@@ -52,6 +53,8 @@ export interface RawEvent {
     chainOnly?: boolean;
     /** 只在这些出生地图里出现（省略 = 所有地图） */
     maps?: string[];
+    /** 作为后续（follow）待触发时，在选方向界面显示的预告，如「那只蝎子说它还会回来」 */
+    teaser?: string;
     require?: string;
     text: string;
     choices: RawChoice[];
@@ -357,6 +360,15 @@ export interface Effect {
     ending?: string;
     /** 退回该方向的上一层 */
     back?: Dir;
+    /** 后续：之后的季节里接着发生的事件（剧情延伸） */
+    follows: FollowDef[];
+}
+
+/** 后续事件：在 delay 季之后（默认下一季）、玩家选择匹配方向时触发，ttl 季内没走到就作废 */
+export interface FollowDef {
+    id: string;
+    delay: number;
+    ttl: number;
 }
 
 export interface Outcome {
@@ -388,6 +400,7 @@ export interface GameEvent {
     gold: boolean;
     chainOnly: boolean;
     maps?: string[];
+    teaser?: string;
     require?: Cond;
     text: string;
     choices: Choice[];
@@ -468,6 +481,8 @@ export interface RunState {
     event?: string;
     dir?: Dir;
     pending: string[];
+    /** 待触发的后续剧情（旧存档可能没有） */
+    threads?: { id: string; at: number; until: number }[];
     hint?: number;
     revealAll: boolean;
     dying?: string;
@@ -518,6 +533,8 @@ export interface DirOption {
     lockText?: string;
     layerName: string;
     nextLayer?: { name: string; lockText?: string };
+    /** 这个方向上有待续的剧情（显示预告） */
+    thread?: string;
 }
 
 export interface ChoiceView {

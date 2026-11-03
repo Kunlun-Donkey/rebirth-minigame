@@ -24,7 +24,9 @@ const ATTR_FLOOR = 0;
 const MEMORY_TEXT_MAX = 18;
 /** 今日首世轮回点加成 */
 export const DAILY_FIRST_BONUS = 0.5;
-const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [] };
+const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [] };
+/** 同一世已遇到过的（非 once）事件再次抽中的权重系数 */
+const REPEAT_WEIGHT = 0.25;
 
 export class Engine {
     run!: RunState;
@@ -93,6 +95,7 @@ export class Engine {
             seen: [],
             phase: 'direction',
             pending: [],
+            threads: [],
             revealAll: false,
             reviveUsed: { talent: false, ad: false },
             log: [],
@@ -176,6 +179,7 @@ export class Engine {
                 lockText: enabled ? undefined : this.describe(dd.cond),
                 layerName: cur ? this.layerText(cur).name : '',
                 nextLayer: next ? { name: this.layerText(next).name, lockText: this.check(next.cond) ? undefined : this.describe(next.cond) } : undefined,
+                thread: this.dueThread(dd.id)?.teaser,
             };
         });
     }
@@ -185,6 +189,13 @@ export class Engine {
         const opt = this.directionOptions().find(o => o.dir === dir);
         if (!opt?.enabled) throw new Error(`方向不可选：${dir}`);
         this.run.dir = dir;
+        // 上一件事还没完：优先接着发生（剧情延伸）
+        const thread = this.dueThread(dir);
+        if (thread) {
+            this.run.threads = (this.run.threads ?? []).filter(t => t.id !== thread.id);
+            this.enterEvent(thread.id);
+            return;
+        }
         const layer = this.data.layersByDir[dir][this.run.pos[dir]];
         const ev = this.drawEvent(e => (e.dir === dir || e.dir === 'any') && !e.sudden && (!e.layers || e.layers.includes(layer.id)));
         if (!ev) throw new Error(`没有可抽取的事件：方向 ${dir} 层 ${layer.id}（请补充兜底事件）`);
@@ -705,6 +716,27 @@ export class Engine {
         }
     }
 
+    /** 本季在该方向上可以触发的后续剧情（方向匹配或 any、条件满足、已到期未过期） */
+    private dueThread(dir: Dir): GameEvent | undefined {
+        const r = this.run;
+        for (const t of r.threads ?? []) {
+            if (t.at > r.season || t.until < r.season) continue;
+            const ev = this.data.events.get(t.id);
+            if (ev && (ev.dir === dir || ev.dir === 'any') && this.check(ev.require)) return ev;
+        }
+        return undefined;
+    }
+
+    /** 待续剧情的预告（选方向界面展示；只列已到期的） */
+    threadTeasers(): { dir: Dir | 'any'; text: string }[] {
+        const r = this.run;
+        return (r.threads ?? [])
+            .filter(t => t.at <= r.season && t.until >= r.season)
+            .map(t => this.data.events.get(t.id))
+            .filter((ev): ev is GameEvent => !!ev && !!ev.teaser && this.check(ev.require))
+            .map(ev => ({ dir: ev.dir, text: ev.teaser! }));
+    }
+
     private drawEvent(filter: (e: GameEvent) => boolean): GameEvent | undefined {
         const r = this.run;
         const goldMul = this.mods().goldMul ?? 1;
@@ -716,7 +748,8 @@ export class Engine {
             e.id !== r.lastEvent &&
             this.check(e.require),
         );
-        return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1));
+        // 同一世已经遇到过的事件降权，减少重复
+        return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1) * (r.seen.includes(e.id) ? REPEAT_WEIGHT : 1));
     }
 
     private enterEvent(id: string): void {
@@ -813,6 +846,11 @@ export class Engine {
         for (const it of e.items) this.gainItem(it, step);
         for (const it of e.loseItems) this.loseItem(it, step);
         for (const sk of e.skills) this.grantSkill(sk, step);
+        for (const f of e.follows) {
+            const threads = (r.threads = r.threads ?? []).filter(t => t.id !== f.id);
+            threads.push({ id: f.id, at: r.season + f.delay, until: r.season + f.delay + f.ttl - 1 });
+            r.threads = threads;
+        }
         if (e.back) {
             r.pos[e.back] = Math.max(0, r.pos[e.back] - 1);
             r.push[e.back] = 0;

@@ -83,6 +83,13 @@ assets/resources/data/destinies/<命格id>/
 
 > 提炼自 [oh-story-claudecode](https://github.com/zenstory-ai/oh-story-claudecode)（MIT）story-short-write 的 emotional-methods / short-reversal / villain-and-reveal，按「正文 60 字、一世几十季、跨世轮回」的体量改写。
 
+### 后续剧情 follow（让每一季接着上一季发展，避免重复）
+- 选项效果写 `"follow": "事件id"` 或 `{ "id": "...", "delay": 2, "ttl": 6 }`：delay 季后（默认 1）、玩家选到**该事件的方向**时优先触发（`dir: "any"` 则任意方向），ttl 季内（默认 4）没走到就作废。
+- 后续事件一般 `chainOnly: true`，必须写 `teaser`（≤18 字），显示在对应方向按钮上「后续：……」（any 的显示在提示卡「未完的事」）。
+- 同一世已遇到的事件抽中权重 ×0.25；所以**大部分普通事件至少一个选项要带 follow**，不同选项接不同后续（善待 → 报恩，结仇 → 报复升级）。
+- 后续事件可以再 follow，形成 2~3 步的小剧情（例：甲虫打洞 → 地下空腔 → 甲虫一家）；地下的事用 `dir: "down"`，会走动的生物用 `any`。
+- 荒漠一株草的后续剧情集中在 `events/threads.json`，可作范例。
+
 ### 剧情线 = 跨事件的弧线，用 flag / item / seen / dead 串起来
 一条线至少 3 个节点，分散在不同层或境界，后一个节点 `require` 前一个节点设的 flag：
 

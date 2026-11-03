@@ -29,7 +29,7 @@
     "id": "l1_cactus", "dir": "side", "layers": ["L1", "L2"],
     "text": "一棵老仙人掌。它活了两百年，脾气很差。",
     "choices": [
-      { "text": "请教", "effect": { "灵性": 1, "水分上限": 1 }, "result": "它说：少说话，多存水。你记住了。" },
+      { "text": "请教", "effect": { "follow": "f_cactus_lesson", "灵性": 1, "水分上限": 1 }, "result": "它说：少说话，多存水。你记住了。" },
       { "text": "挑衅", "chance": 0.3, "chanceAttr": "韧性", "chanceStep": 0.06,
         "effect": { "韧性": 3, "灵气": 5 }, "result": "老仙人掌第一次被一株草顶嘴，愣住了。",
         "fail": { "effect": { "水分": -2 }, "result": "它扎了你一下。很疼。" } },
@@ -50,7 +50,7 @@
     "id": "l2_caravan", "dir": "side", "layers": ["L2"],
     "text": "一支商队经过。有个孩子指着你喊：快看，沙漠里有草！",
     "choices": [
-      { "text": "摇摇叶子", "effect": { "灵性": 2, "灵气": 3 }, "result": "孩子笑了。这是你第一次被人类看见。" },
+      { "text": "摇摇叶子", "effect": { "follow": { "id": "f_caravan_kid", "delay": 2, "ttl": 6 }, "灵性": 2, "灵气": 3 }, "result": "孩子笑了。这是你第一次被人类看见。" },
       { "text": "缩起来", "effect": { "韧性": 1 }, "result": "大人把孩子拉走了：草有什么好看的。" }
     ]
   },
@@ -59,7 +59,7 @@
     "text": "一个采药人蹲下来，盯着你看了很久。",
     "choices": [
       { "text": "一动不动", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "灵性": 1 }, "result": "他摇摇头：普通杂草。走了。",
+        "effect": { "follow": "f_herbalist_back", "灵性": 1 }, "result": "他摇摇头：普通杂草。走了。",
         "fail": { "effect": { "death": "plucked" }, "result": "他眼睛一亮，掏出了小铲子。" } },
       { "text": "装成普通杂草", "require": "legacy:wariness>=1", "effect": { "灵性": 2, "灵气": 4 },
         "result": "前世他把你熬成了药。这一世，他只看见了一棵杂草。" },
@@ -81,7 +81,7 @@
     "id": "l2_lost_traveler", "dir": "side", "layers": ["L2"],
     "text": "一个迷路的旅人倒在你身边，嘴唇干裂。",
     "choices": [
-      { "text": "把露水给他", "effect": { "水分": -2, "灵性": 3, "灵气": 4 }, "result": "他活了下来。走之前，他给你搭了一圈石头挡风。" },
+      { "text": "把露水给他", "effect": { "follow": { "id": "f_traveler_return", "delay": 3, "ttl": 8 }, "水分": -2, "灵性": 3, "灵气": 4 }, "result": "他活了下来。走之前，他给你搭了一圈石头挡风。" },
       { "text": "什么也不做", "effect": { "韧性": 1 }, "result": "傍晚，商队找到了他。你松了口气。" }
     ]
   },
@@ -100,7 +100,7 @@
     "require": "flag:oasis_root & !flag:oasis_alive",
     "text": "枯井里那一丝水，在等一个够倔的东西。",
     "choices": [
-      { "text": "灌入所有灵气", "require": "灵性>=8", "effect": { "flag": "oasis_alive", "水分": 10, "水分上限": 5, "灵气": 30 },
+      { "text": "灌入所有灵气", "require": "灵性>=8", "effect": { "follow": "f_oasis_bird", "flag": "oasis_alive", "水分": 10, "水分上限": 5, "灵气": 30 },
         "result": "枯井涌出了水。三天后，第一只鸟飞了回来。" },
       { "text": "再等等", "effect": { "灵性": 1 }, "result": "你的根在井底多绕了一圈。" }
     ]
