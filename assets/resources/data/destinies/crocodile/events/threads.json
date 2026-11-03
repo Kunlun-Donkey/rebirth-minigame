@@ -216,9 +216,9 @@
     "choices": [
       { "text": "远远躲开", "effect": { "灵性": 2 }, "result": "你游到了下游。那盏灯，在你心里亮了好几天。" },
       { "text": "夜里去掀翻", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
-        "effect": { "咬合": 2, "龙气": 6 }, "result": "你一尾巴扫翻了笼子。第二天，帐篷不见了。",
+        "effect": { "feud": "偷猎的帐篷被掀翻", "咬合": 2, "龙气": 6 }, "result": "你一尾巴扫翻了笼子。第二天，帐篷不见了。",
         "fail": { "effect": { "death": "poacher" }, "result": "灯一下照在了你脸上。" } },
-      { "text": "趴在外面哭", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 3, "龙气": 4 },
+      { "text": "趴在外面哭", "showIf": "skill:tears", "useSkill": "tears", "effect": { "feud": "偷猎的人被你哭走了", "灵性": 3, "龙气": 4 },
         "result": "你在帐篷外哭了一夜。里面的人第二天就收拾东西走了，说这地方闹鬼。" }
     ]
   },

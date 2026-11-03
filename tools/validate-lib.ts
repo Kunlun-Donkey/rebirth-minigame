@@ -6,7 +6,7 @@ import { Cond, Destiny, DestinyIndex, Effect, RARITIES, RawDestiny } from '../as
 /** 引擎自己读取的 flag（不需要剧本条件检查） */
 const ENGINE_FLAGS = ['tianhu'];
 
-export const TEXT_LIMITS = { text: 60, choice: 14, result: 40, teaser: 18 };
+export const TEXT_LIMITS = { text: 60, choice: 14, result: 40, teaser: 18, feud: 16 };
 
 export interface Report {
     errors: string[];
@@ -14,7 +14,10 @@ export interface Report {
     stats: Record<string, number>;
 }
 
-export function validateDestiny(raw: RawDestiny): Report {
+/** 所有命格的结局 id（跨命格条件 xend / xstage / xlives 校验用） */
+export type World = Record<string, { endings: string[] }>;
+
+export function validateDestiny(raw: RawDestiny, world?: World): Report {
     const errors: string[] = [];
     const warnings: string[] = [];
     let d: Destiny;
@@ -36,6 +39,17 @@ export function validateDestiny(raw: RawDestiny): Report {
         skillSources.set(id, [...(skillSources.get(id) ?? []), src]);
     };
 
+    /** xend 的 id：命格id 或 命格id/结局id；未提供 world 时只检查格式 */
+    const checkWorld = (id: string): boolean => {
+        const [did, eid] = id.split('/');
+        if (!world) return !!did;
+        const w = world[did];
+        return !!w && (!eid || w.endings.includes(eid));
+    };
+    /** 文本占位 {died:x} 必须是本命格的死法 */
+    const checkText = (s: string | undefined, where: string) => {
+        for (const m of (s ?? '').matchAll(/\{died:(\w+)\}/g)) if (!d.deaths.has(m[1])) errors.push(`${where}: 文本占位 {died:${m[1]}} 不是本命格的死法`);
+    };
     const checkCond = (c: Cond | undefined, where: string) => {
         if (!c) return;
         walkCond(c.ast, leaf => {
@@ -49,10 +63,17 @@ export function validateDestiny(raw: RawDestiny): Report {
                     leaf.kind === 'skill' ? (skillsReferenced.add(id), d.skills.has(id)) :
                     leaf.kind === 'seen' ? d.events.has(id) :
                     leaf.kind === 'dead' ? d.deaths.has(id) :
+                    leaf.kind === 'xend' ? checkWorld(id) :
                     d.endings.has(id);
                 if (!ok) errors.push(`${where}: 条件引用了不存在的 ${leaf.kind}:${id}`);
             } else if (leaf.left.kind === 'legacy' && !d.legacies.has(leaf.left.id!)) {
                 errors.push(`${where}: 条件引用了不存在的传承 legacy:${leaf.left.id}`);
+            } else if (leaf.left.kind === 'died' && !d.deaths.has(leaf.left.id!)) {
+                errors.push(`${where}: 条件引用了不存在的死法 died:${leaf.left.id}`);
+            } else if ((leaf.left.kind === 'xstage' || leaf.left.kind === 'xlives') && !checkWorld(leaf.left.id!)) {
+                errors.push(`${where}: 条件引用了不存在的命格 ${leaf.left.kind}:${leaf.left.id}`);
+            } else if ((leaf.left.kind === 'xstage' || leaf.left.kind === 'xlives') && leaf.left.id === d.meta.id) {
+                errors.push(`${where}: ${leaf.left.kind} 用于跨命格，本命格请用 stage / life`);
             }
         });
     };
@@ -77,7 +98,8 @@ export function validateDestiny(raw: RawDestiny): Report {
         }
     };
 
-    const len = (s: string | undefined) => (s ? [...s].length : 0);
+    // {died:x} 占位渲染后只有一两位数字
+    const len = (s: string | undefined) => (s ? [...s.replace(/\{died:\w+\}/g, '9')].length : 0);
 
     // 命格元数据
     // 命格规则：引用的属性 / 死法必须存在
@@ -161,6 +183,13 @@ export function validateDestiny(raw: RawDestiny): Report {
             else if (ev.dir !== 'any' && layer.dir !== ev.dir) errors.push(`${w}: 层 ${l} 不属于方向 ${ev.dir}`);
         }
         if (len(ev.text) > TEXT_LIMITS.text) warnings.push(`${w}: 正文 ${len(ev.text)} 字，超过 ${TEXT_LIMITS.text}`);
+        checkText(ev.text, w);
+        checkText(ev.teaser, `${w}.teaser`);
+        if (ev.cameo) {
+            let cross = false;
+            if (ev.require) walkCond(ev.require.ast, l => { if ((l.t === 'has' && l.kind === 'xend') || (l.t === 'cmp' && (l.left.kind === 'xstage' || l.left.kind === 'xlives'))) cross = true; });
+            if (!cross) warnings.push(`${w}: cameo 彩蛋事件的 require 里没有跨命格条件（xend / xstage / xlives）`);
+        }
         const selectable = ev.choices.some(c => !c.require && !c.showIf);
         if (!selectable) errors.push(`${w}: 没有无条件可选的选项，玩家可能卡死`);
         ev.choices.forEach((c, i) => {
@@ -168,10 +197,16 @@ export function validateDestiny(raw: RawDestiny): Report {
             checkCond(c.require, `${cw}.require`);
             checkCond(c.showIf, `${cw}.showIf`);
             if (len(c.text) > TEXT_LIMITS.choice) warnings.push(`${cw}: 选项「${c.text}」${len(c.text)} 字，超过 ${TEXT_LIMITS.choice}`);
+            checkText(c.text, cw);
+            if (c.absurd && c.chance === undefined) warnings.push(`${cw}: 离谱选项建议带成功率（chance + fail）`);
+            if (c.easy && (c.chance === undefined || !c.chanceAttr)) warnings.push(`${cw}: easy 碾压文案只在成功率可溢出（chanceAttr）时生效`);
+            if (len(c.easy) > TEXT_LIMITS.result) warnings.push(`${cw}: 碾压文案 ${len(c.easy)} 字，超过 ${TEXT_LIMITS.result}`);
             for (const o of [c.success, c.fail]) {
                 if (!o) continue;
                 checkEffect(o.effect, cw);
                 if (len(o.result) > TEXT_LIMITS.result) warnings.push(`${cw}: 结果 ${len(o.result)} 字，超过 ${TEXT_LIMITS.result}`);
+                checkText(o.result, cw);
+                for (const f of o.effect.feuds) if (len(f) > TEXT_LIMITS.feud) warnings.push(`${cw}: 恩怨「${f}」${len(f)} 字，超过 ${TEXT_LIMITS.feud}`);
                 if (o.next) {
                     referencedEvents.add(o.next);
                     if (!d.events.has(o.next)) errors.push(`${cw}: next 指向不存在的事件 ${o.next}`);
@@ -238,6 +273,8 @@ export function validateDestiny(raw: RawDestiny): Report {
             传承: d.legacies.size,
             结局: d.endings.size,
             地图: d.maps.size,
+            彩蛋: evs.filter(e => e.cameo).length,
+            离谱: evs.reduce((n, e) => n + e.choices.filter(c => c.absurd).length, 0),
         },
     };
 }

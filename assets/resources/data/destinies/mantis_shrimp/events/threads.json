@@ -33,7 +33,7 @@
     "text": "胖老板戴着一副厚胶皮手套回来了。他指着你：就你，今天收拾你。",
     "choices": [
       { "text": "打他手套", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.1,
-        "effect": { "拳力": 2, "follow": "f_boss_sign" }, "result": "手套被你打出个洞。老板盯着那个洞，看了很久。",
+        "effect": { "feud": "老板的手套被打穿", "拳力": 2, "follow": "f_boss_sign" }, "result": "手套被你打出个洞。老板盯着那个洞，看了很久。",
         "fail": { "effect": { "体力": -2 }, "result": "手套太厚了。你的钳子麻了一下午。" } },
       { "text": "躲到泵后面", "effect": { "灵性": 1, "打洞": 1 }, "result": "他的手太粗，伸不进泵后面。他骂了一句，走了。" }
     ]

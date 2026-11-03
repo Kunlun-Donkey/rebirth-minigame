@@ -28,14 +28,14 @@
     "text": "你游回了河湾。独眼还趴在那块石头上。它比你记得的，要小一些。",
     "choices": [
       { "text": "正面挑战", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.04,
-        "effect": { "咬合": 3, "龙气": 12, "flag": "oneeye_beaten", "follow": { "id": "f_oneeye_old", "delay": 3, "ttl": 8 } },
+        "effect": { "feud": "独眼滑下了晒背石", "咬合": 3, "龙气": 12, "flag": "oneeye_beaten", "follow": { "id": "f_oneeye_old", "delay": 3, "ttl": 8 } },
         "result": "你一头顶上去。它退了一步，又退了一步，最后自己滑进了水里。",
         "fail": { "effect": { "体温": -4 }, "result": "它还是比你重。你被顶回了水里，岸上一片看热闹的眼睛。" } },
       { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll",
-        "effect": { "咬合": 3, "龙气": 15, "flag": "oneeye_beaten", "follow": { "id": "f_oneeye_old", "delay": 3, "ttl": 8 } },
+        "effect": { "feud": "独眼从晒背石上滚了下来", "咬合": 3, "龙气": 15, "flag": "oneeye_beaten", "follow": { "id": "f_oneeye_old", "delay": 3, "ttl": 8 } },
         "result": "你咬住它前腿一个翻身。独眼第一次从那块石头上，滚了下来。" },
       { "text": "亮出它的断牙", "require": "item:one_eye_tooth",
-        "effect": { "灵性": 3, "龙气": 12, "flag": "oneeye_beaten" }, "result": "你把那颗断牙放在石头上。独眼看了很久，自己爬了下去。" },
+        "effect": { "feud": "独眼自己爬下了晒背石", "灵性": 3, "龙气": 12, "flag": "oneeye_beaten" }, "result": "你把那颗断牙放在石头上。独眼看了很久，自己爬了下去。" },
       { "text": "算了", "effect": { "灵性": 2 }, "result": "你游走了。那块石头，下回再说。" }
     ]
   },

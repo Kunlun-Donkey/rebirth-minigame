@@ -5,7 +5,7 @@ import type {
 } from './types';
 
 /** 效果中的保留键，其余键视为属性增量 */
-export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp'] as const;
+export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp', 'feud'] as const;
 
 export class DataError extends Error {}
 
@@ -39,7 +39,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
     const toList = (v: unknown): string[] => (v === undefined ? [] : Array.isArray(v) ? v.map(String) : [String(v)]);
 
     const effect = (r: RawEffect | undefined, where: string): Effect => {
-        const e: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [] };
+        const e: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [] };
         if (!r) return e;
         for (const [k, v] of Object.entries(r)) {
             switch (k) {
@@ -53,6 +53,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
                 case 'back': e.back = String(v) as Dir; break;
                 case 'stageUp': e.stageUp = Number(v); break;
                 case 'follow': e.follows = toFollows(v, where); break;
+                case 'feud': e.feuds = toList(v); break;
                 default: {
                     const id = resolveAttr(k);
                     if (!id) throw new DataError(`${where}: 效果中未知属性「${k}」`);
@@ -80,6 +81,8 @@ export function buildDestiny(raw: RawDestiny): Destiny {
         chanceStep: c.chanceStep,
         fail: c.fail ? outcome(c.fail, `${where}.fail`) : undefined,
         useSkill: c.useSkill,
+        easy: c.easy,
+        absurd: c.absurd,
     });
 
     function fail(msg: string): never { throw new DataError(msg); }
@@ -104,6 +107,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             chainOnly: ev.chainOnly ?? false,
             maps: ev.maps,
             teaser: ev.teaser,
+            cameo: ev.cameo ?? false,
             require: cond(ev.require, `${where}.require`),
             text: ev.text,
             choices: ev.choices.map((c, i) => choice(c, `${where}.choices[${i}]`)),

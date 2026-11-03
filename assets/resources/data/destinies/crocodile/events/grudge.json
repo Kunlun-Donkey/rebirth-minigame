@@ -1,0 +1,84 @@
+[
+  {
+    "id": "r_eagle_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 12, "maps": ["river", "swamp"], "require": "died:eagle>=2",
+    "text": "天上那个黑影又来了。这只鹰叼走过你{died:eagle}回，今天它没急着扎，在上面绕圈。",
+    "choices": [
+      { "text": "等它扎下来张嘴", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 2, "龙气": 12, "feud": "鹰被你咬秃了尾巴" },
+        "result": "它扎下来那一下，你猛地张嘴。鹰扑腾着飞走了，尾巴秃了一块。",
+        "easy": "你连头都没抬，嘴一张。鹰在半空急刹车，掉头就飞。",
+        "fail": { "effect": { "体温": -2 }, "result": "你张嘴张早了。它绕了一圈，走了。" } },
+      { "text": "沉进水里", "effect": { "潜水": 1 }, "result": "你沉下去，只留两只眼睛在水面上，看它转圈。" },
+      { "text": "翻肚皮装死", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵性": 2, "龙气": 10 }, "result": "你翻过肚皮一动不动。鹰看了半天：这么大的，叼不动。",
+        "fail": { "effect": { "体温": -2 }, "result": "你翻得太用力，翻进了深水，呛了一肚子。" } }
+    ]
+  },
+  {
+    "id": "r_oneeye_again", "dir": "side", "stage": [2, 99], "once": true, "weight": 12, "require": "died:one_eye>=2",
+    "text": "独眼又横在河湾正中间。它撞翻过你{died:one_eye}回，今天连眼都没睁。",
+    "choices": [
+      { "text": "一头撞回去", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.05,
+        "effect": { "咬合": 3, "龙气": 12, "feud": "独眼被你撞进了水里" },
+        "result": "你一头撞上去。独眼晃了晃，扑通一声，自己滑进了水里。",
+        "easy": "你游过去，它自己让开了。",
+        "fail": { "effect": { "体温": -3 }, "result": "它还是比你重。你被弹回了浅水。" } },
+      { "text": "从旁边游过去", "effect": { "潜水": 1 }, "result": "你贴着岸游了过去。它睁开那只好眼，又闭上了。" },
+      { "text": "趴它背上晒太阳", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "晒背": 3, "龙气": 12, "feud": "在独眼背上晒了一下午" },
+        "result": "你爬上它的背，晒了一下午。独眼以为是谁家的石头，一直没动。",
+        "fail": { "effect": { "death": "one_eye" }, "result": "它动了。" } }
+    ]
+  },
+  {
+    "id": "r_poacher_again", "dir": "any", "sudden": true, "stage": [1, 99], "once": true, "weight": 12, "require": "died:poacher>=2",
+    "text": "那条小船又来了。船上的人带走过你{died:poacher}回，这次换了张更大的网。",
+    "choices": [
+      { "text": "一尾巴掀翻小船", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.05,
+        "effect": { "咬合": 2, "龙气": 14, "feud": "偷猎的小船被掀翻" },
+        "result": "你一尾巴扫过去，船翻了。两个人抱着船底，喊了一夜救命。",
+        "easy": "你一尾巴扫过去，船转了三圈。他们连网都没来得及撒。",
+        "fail": { "effect": { "体温": -3 }, "result": "船晃了晃，没翻。你赶紧潜走了。" } },
+      { "text": "沉到河底", "effect": { "潜水": 1 }, "result": "你沉到河底。手电在水面上扫了半夜。" },
+      { "text": "上船帮他们掌舵", "absurd": true, "chance": 0.12, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵性": 3, "龙气": 14, "feud": "偷猎的人被送到了派出所" },
+        "result": "你爬上船，咬住舵，一路开到了岸边的派出所门口。",
+        "fail": { "effect": { "death": "poacher" }, "result": "他们愣了一下，然后很高兴。" } }
+    ]
+  },
+  {
+    "id": "r_hook_again", "dir": "down", "stage": [1, 99], "once": true, "weight": 12, "require": "died:hook>=2",
+    "text": "水里又垂下一根鱼线，钩上挂着一大块肉。这钩子钩住过你{died:hook}回。",
+    "choices": [
+      { "text": "咬住线往下拽", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.06,
+        "effect": { "咬合": 2, "龙气": 8, "feud": "钓竿被你拽进了河里" },
+        "result": "你咬住线一拽，岸上的人晃了晃。最后只有钓竿下来了。",
+        "easy": "你一拽，钓竿就下来了。岸上的人看着空手，很久没说话。",
+        "fail": { "effect": { "体温": -2 }, "result": "线断了。你吞了一口浑水。" } },
+      { "text": "看着就好", "effect": { "灵性": 1 }, "result": "那块肉晃了一下午。你一口没动。" },
+      { "text": "往钩上挂只拖鞋", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵性": 2, "龙气": 8 }, "result": "你从河底捞了只拖鞋挂上去。岸上的人收线一看，沉默了很久。",
+        "fail": { "effect": { "灵性": 1 }, "result": "你找不到拖鞋，只找到一只袜子。也挂上了。" } }
+    ]
+  },
+  {
+    "id": "fun_frog", "dir": "up", "weight": 6, "once": true,
+    "text": "一只青蛙蹲在你鼻子上，以为你是块石头。",
+    "choices": [
+      { "text": "就当一块石头", "absurd": true, "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "灵性": 3, "龙气": 6 }, "result": "你当了一整季石头。青蛙在你鼻子上安了家，还生了一窝蝌蚪。",
+        "fail": { "effect": { "体温": -1, "灵性": 1 }, "result": "你忍到第三天，打了个喷嚏。青蛙飞出去好远。" } },
+      { "text": "张嘴", "effect": { "咬合": 1 }, "result": "青蛙跳走了。它到现在都想不通，石头怎么会张嘴。" }
+    ]
+  },
+  {
+    "id": "fun_tooth", "dir": "side", "weight": 6, "once": true,
+    "text": "你的一颗牙松了，晃来晃去，吃什么都不得劲。",
+    "choices": [
+      { "text": "找块石头磕掉", "absurd": true, "chance": 0.35, "chanceAttr": "咬合", "chanceStep": 0.04,
+        "effect": { "咬合": 2, "龙气": 5 }, "result": "咔一声，牙掉了。第二天，新牙就长出来了，比原来的还尖。",
+        "fail": { "effect": { "体温": -1 }, "result": "你磕了一下午，石头掉了一块，牙还在。" } },
+      { "text": "不管它", "effect": { "灵性": 1 }, "result": "它晃了一季，自己掉了。鳄鱼的牙，掉多少都能长。" }
+    ]
+  }
+]

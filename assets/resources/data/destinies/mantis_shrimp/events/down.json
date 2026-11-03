@@ -51,7 +51,7 @@
       { "text": "缩到最里面", "chance": 0.5, "chanceAttr": "打洞", "chanceStep": 0.08,
         "effect": { "打洞": 1, "灵性": 1 }, "result": "腿在洞口摸了半天，摸不到你，缩回去了。",
         "fail": { "effect": { "death": "octopus" }, "result": "你的洞不够深。" } },
-      { "text": "一拳打出去", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 5, "follow": { "id": "f_octopus_bait", "delay": 2 } },
+      { "text": "一拳打出去", "showIf": "skill:punch", "useSkill": "punch", "effect": { "feud": "一拳打在墨斗吸盘上", "拳力": 2, "海灵": 5, "follow": { "id": "f_octopus_bait", "delay": 2 } },
         "result": "你一拳打在吸盘上。腿嗖地缩了回去，外面喷出一团墨。" },
       { "text": "滑出去", "require": "legacy:slippery>=2", "effect": { "游速": 2, "海灵": 3 },
         "result": "前世它缠死过你。这一世你像抹了油，从它腿缝里溜走了。" },
@@ -84,9 +84,9 @@
       { "text": "藏进海草根", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
         "effect": { "灵性": 1, "打洞": 1, "follow": { "id": "f_grouper_hunt", "delay": 2 } }, "result": "它从你头顶游过去了。海草根底下，它看不见你。",
         "fail": { "effect": { "death": "grouper" }, "result": "它张嘴一吸，你就进去了。" } },
-      { "text": "一拳打它嘴唇", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "海灵": 6, "follow": { "id": "f_grouper_fans", "delay": 2 } },
+      { "text": "一拳打它嘴唇", "showIf": "skill:punch", "useSkill": "punch", "effect": { "feud": "石斑鱼被打麻了嘴", "拳力": 2, "海灵": 6, "follow": { "id": "f_grouper_fans", "delay": 2 } },
         "result": "它嘴唇一麻，掉头就跑。它这辈子没见过会打人的虾。" },
-      { "text": "前世硬壳", "require": "legacy:hard_shell>=2", "effect": { "拳力": 2, "海灵": 5 },
+      { "text": "前世硬壳", "require": "legacy:hard_shell>=2", "effect": { "feud": "石斑鱼把你吐了出来", "拳力": 2, "海灵": 5 },
         "result": "前世它吞过你。这一世它刚吸进嘴，就被硌得吐了出来。" }
     ]
   },

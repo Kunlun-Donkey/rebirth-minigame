@@ -19,9 +19,9 @@
     "require": "seen:l1_other_grass & !flag:grass_ally",
     "text": "那株笑过你的草，叶子黄了。它小声问你，能不能分点水。",
     "choices": [
-      { "text": "分它一点", "effect": { "follow": { "id": "f_grass_follower", "delay": 2 }, "水分": -1, "灵性": 2, "灵气": 5 }, "result": "它哭了。说以后叫你老大。" },
-      { "text": "把它的水也喝了", "effect": { "水分": 3, "灵气": 5, "韧性": 1 }, "result": "你想起它笑你的样子。这一口，很甜。" },
-      { "text": "把那年的水还它", "require": "flag:grass_beaten", "effect": { "follow": { "id": "f_grass_follower", "delay": 2 }, "水分": -2, "灵性": 3, "灵气": 8 },
+      { "text": "分它一点", "effect": { "feud": "笑过你的草叫你老大", "follow": { "id": "f_grass_follower", "delay": 2 }, "水分": -1, "灵性": 2, "灵气": 5 }, "result": "它哭了。说以后叫你老大。" },
+      { "text": "把它的水也喝了", "effect": { "feud": "笑过你的草来讨水", "水分": 3, "灵气": 5, "韧性": 1 }, "result": "你想起它笑你的样子。这一口，很甜。" },
+      { "text": "把那年的水还它", "require": "flag:grass_beaten", "effect": { "feud": "把那年的水还了回去", "follow": { "id": "f_grass_follower", "delay": 2 }, "水分": -2, "灵性": 3, "灵气": 8 },
         "result": "你想起当年抢它的那口水。这次，你多给了一口。" }
     ]
   },

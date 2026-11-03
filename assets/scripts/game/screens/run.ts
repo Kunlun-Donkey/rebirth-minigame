@@ -11,6 +11,8 @@ import { ListEntry, showInfo, showList } from './popups';
 const DIR_ICON: Record<string, string> = { up: '▲', down: '▼', side: '◆' };
 const SEASONS = ['春', '夏', '秋', '冬'];
 const TOOLBAR_H = 120;
+/** 特殊标签配色（其余：技能紫、传承/天赋/道具金） */
+const TAG_COLOR: Record<string, string> = { 前世今生: COLOR.skill, 宿怨: COLOR.bad };
 
 export function showRun(g: Game): void {
     const root = box(g.screen, 0, 0, g.W, g.H, 'run');
@@ -126,8 +128,8 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
     });
     image(card, tex, 0, 0, cardW, cardH, { maxAspectDiff: 1.2 });
     const r = e.run;
-    const head = v.gold ? '✦ 奇遇' : v.sudden ? '⚡ 突发' : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
-    text(card, head, 40, 30, 300, { size: 24, color: v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2 });
+    const head = v.cameo ? '◈ 似曾相识' : v.gold ? '✦ 奇遇' : v.sudden ? '⚡ 突发' : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
+    text(card, head, 40, 30, 300, { size: 24, color: v.cameo ? COLOR.skill : v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2, bold: v.cameo });
     text(card, `${e.stageName(r.stage)}`, cardW - 240, 30, 200, { size: 24, color: COLOR.ink2, align: 'right' });
     text(card, v.text, 40, 80, textW, { size: L.size, wrap: true, lineHeight: L.lh });
 
@@ -165,7 +167,9 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
 
 function choiceOpts(g: Game, c: ChoiceView): ButtonOpts {
     const tags: ButtonOpts['tags'] = [];
-    if (c.tag) tags.push({ text: c.tag, color: c.tag.startsWith('技能') ? COLOR.skill : COLOR.legacy, filled: true });
+    if (c.sure) tags.push({ text: '稳', color: COLOR.good, filled: true });
+    if (c.absurd) tags.push({ text: '离谱', color: COLOR.ink2, filled: true });
+    if (c.tag) tags.push({ text: c.tag, color: TAG_COLOR[c.tag] ?? (c.tag.startsWith('技能') ? COLOR.skill : COLOR.legacy), filled: true });
     if (c.memory) tags.push({ text: c.memory, color: COLOR.memory });
     let sub: string | undefined;
     let subColor: string | undefined;

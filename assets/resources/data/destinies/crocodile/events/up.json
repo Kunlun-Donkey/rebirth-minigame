@@ -70,7 +70,7 @@
       { "text": "叼了就跑", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06,
         "effect": { "体温": 3, "咬合": 1, "flag": "poacher_seen" }, "result": "你叼走了肉，绳套啪地在你尾巴后面合上了。",
         "fail": { "effect": { "death": "poacher" }, "result": "绳子一收。" } },
-      { "text": "前世的识人", "require": "legacy:wary>=1", "effect": { "咬合": 2, "龙气": 4, "flag": "poacher_seen" },
+      { "text": "前世的识人", "require": "legacy:wary>=1", "effect": { "feud": "一口咬断了偷猎的绳套", "咬合": 2, "龙气": 4, "flag": "poacher_seen" },
         "result": "前世你被这样带走过。这一世，你一口咬断了绳套。" }
     ]
   },

@@ -92,9 +92,9 @@
     "id": "u3_octopus_revenge", "dir": "up", "layers": ["U3", "U4"], "stage": [4, 99], "once": true, "weight": 20, "require": "flag:octopus_grudge",
     "text": "章鱼墨斗缠住了一条渔船的锚链在打盹。它老了，紫色变成了灰色。",
     "choices": [
-      { "text": "一拳打醒它", "showIf": "skill:punch", "useSkill": "punch", "effect": { "item": "ink_sac", "海灵": 10, "follow": { "id": "f_octopus_kids", "delay": 2 } },
+      { "text": "一拳打醒它", "showIf": "skill:punch", "useSkill": "punch", "effect": { "feud": "墨斗吓瘪了墨囊", "item": "ink_sac", "海灵": 10, "follow": { "id": "f_octopus_kids", "delay": 2 } },
         "result": "它吓得喷了一大口墨，墨囊都瘪了。你把墨囊捡走了。" },
-      { "text": "搅浑水吓它", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "海灵": 8, "灵性": 2 },
+      { "text": "搅浑水吓它", "showIf": "skill:muddy", "useSkill": "muddy", "effect": { "feud": "墨斗八条腿缠成一团", "海灵": 8, "灵性": 2 },
         "result": "沙子扑了它一脸。它看不见，慌得八条腿缠成了一团。" },
       { "text": "算了", "effect": { "灵性": 3, "follow": { "id": "f_octopus_debt", "delay": 2 } }, "result": "你从它头顶游过去。不是原谅，是它不配。" }
     ]

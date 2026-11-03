@@ -1,0 +1,114 @@
+[
+  {
+    "id": "xo_grass_rock", "dir": "up", "layers": ["U1"], "cameo": true, "once": true, "weight": 10, "maps": ["river", "swamp"], "require": "xlives:desert_grass>=1",
+    "text": "你晒背的石头缝里长着一株草，又瘦又倔。",
+    "choices": [
+      { "text": "给它挡太阳", "effect": { "灵性": 3, "龙气": 6 }, "result": "你挪了挪身子，替它挡住正午的太阳。前世，你也盼过有谁这样挡一下。" },
+      { "text": "压着它晒", "effect": { "晒背": 2 }, "result": "草被你压弯了。你一走，它又直了起来。" }
+    ]
+  },
+  {
+    "id": "xo_grass_devourer", "dir": "down", "layers": ["D4"], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:desert_grass/devourer",
+    "text": "龙渊底下伸上来一条黑色的树根，在你身边绕了一圈。",
+    "choices": [
+      { "text": "咬住它", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.05,
+        "effect": { "咬合": 3, "龙气": 20 }, "result": "你咬下一截，里面全是灵气。远处传来一声闷哼：这牙口，真好。",
+        "easy": "你一口咬下去，像咬一根甘蔗。树根缩回去时，还在发抖。",
+        "fail": { "effect": { "体温": -3 }, "result": "树根一甩，把你甩到了龙渊对岸。" } },
+      { "text": "让它过去", "effect": { "灵性": 3, "龙气": 8 }, "result": "树根在你头上拍了拍，像在认亲。" }
+    ]
+  },
+  {
+    "id": "xo_grass_tree", "dir": "side", "layers": ["L1"], "cameo": true, "once": true, "weight": 8, "maps": ["river", "swamp"], "require": "xend:desert_grass/tree_demon | xend:desert_grass/jianmu",
+    "text": "河湾边多了一棵大树，树根一直伸进水里，正好搭成一个窝。",
+    "choices": [
+      { "text": "住进去", "effect": { "体温": 3, "潜水": 2, "龙气": 8 }, "result": "树根又凉又稳。你在里面睡得很香，梦见自己在荒漠里晒太阳。" }
+    ]
+  },
+  {
+    "id": "xo_dog_village", "dir": "up", "layers": ["U3"], "cameo": true, "once": true, "weight": 10, "require": "xlives:local_dog>=1",
+    "text": "晒谷场上一条土狗冲你狂叫，叫着叫着，退了三步，又叫。",
+    "choices": [
+      { "text": "冲它张嘴", "effect": { "咬合": 1, "龙气": 5 }, "result": "狗跑了。跑到一半，回头看了你一眼。前世你也是这么叫的吧？" },
+      { "text": "趴着不动", "effect": { "晒背": 2, "灵性": 1 }, "result": "狗叫累了，趴在你旁边一起晒。晒谷场的人都看呆了。" }
+    ]
+  },
+  {
+    "id": "xo_dog_mountain", "dir": "up", "layers": ["U4"], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:local_dog/mountain_god",
+    "text": "江心石上蹲着一只大黄狗，脖子上挂着山神的铃铛。它冲你点头：河归你，山归我。",
+    "choices": [
+      { "text": "点头", "effect": { "龙气": 15, "灵性": 3 }, "result": "铃铛响了一声。从此山上下来的水，都绕着你的窝流。" }
+    ]
+  },
+  {
+    "id": "xo_dog_guardian", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 8, "require": "xend:local_dog/guardian & flag:poacher_seen",
+    "text": "半夜，偷猎的小船刚靠岸，村里的狗全叫了起来，领头的是一条老黄狗。",
+    "choices": [
+      { "text": "一起冲上去", "effect": { "咬合": 2, "龙气": 12, "feud": "偷猎的人被狗和鳄鱼撵跑" },
+        "result": "狗在岸上叫，你在水里拍。偷猎的人连船都没要，跑了。" },
+      { "text": "看着它们", "effect": { "灵性": 3 }, "result": "老黄狗回头看了你一眼：前世，我也护过一个村。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_nose", "dir": "side", "layers": ["L1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
+    "text": "一只蝴蝶落在你的鼻尖上。你憋了三分钟，没打喷嚏。",
+    "choices": [
+      { "text": "继续憋", "effect": { "灵性": 3, "龙气": 5 }, "result": "蝴蝶歇够了才飞。你憋得眼泪直流，大家以为你在渡劫。" },
+      { "text": "打喷嚏", "effect": { "体温": 1 }, "result": "蝴蝶被喷出三米远。它飞回来，在你头上转了一圈，表示不满。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_valley", "dir": "any", "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:caterpillar/valley_queen",
+    "text": "一大群蝴蝶从上游飞来，在河面上排成一行字：谢谢你那一世。",
+    "choices": [
+      { "text": "看完", "effect": { "灵性": 3, "龙气": 12 }, "result": "字散了。你不知道是哪一世，只觉得心里热乎乎的。" },
+      { "text": "张嘴接一只", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "龙气": 15 }, "result": "你接住一只，又轻轻吐了出来。蝴蝶们排成了一个笑脸。",
+        "fail": { "effect": { "灵性": 1 }, "result": "蝴蝶们排成了一个生气的脸。" } }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_cicada", "dir": "down", "layers": ["D2"], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar/cicada_king",
+    "text": "河底淤泥里传来一阵歌声，闷闷的，很好听。",
+    "choices": [
+      { "text": "跟着哼", "effect": { "灵性": 3, "潜水": 2 }, "result": "你哼得很难听。歌声停了一下，然后唱得更大声了，像在带你。" },
+      { "text": "睡一觉", "effect": { "体温": 3 }, "result": "你枕着歌声睡了一季。醒来时，河岸上落了一地蝉蜕。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_return", "dir": "side", "layers": ["L3"], "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1 & seen:l3_shrimp",
+    "text": "入海口那只皮皮虾又来了，冲你挥拳：上回你说我前途无量，我现在是虾霸了！",
+    "choices": [
+      { "text": "恭喜", "effect": { "灵性": 3, "龙气": 8 }, "result": "它很满意，打了一套拳给你看。拳风把水面打出了一圈圈涟漪。" },
+      { "text": "比划比划", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.05,
+        "effect": { "咬合": 2, "龙气": 12 }, "result": "你们打了一下午。谁也没赢，都很开心。",
+        "fail": { "effect": { "体温": -2 }, "result": "它一拳打在你鼻尖上。你鼻子酸了一下午。" } }
+    ]
+  },
+  {
+    "id": "xo_shrimp_general", "dir": "down", "layers": ["D4"], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:mantis_shrimp/dragon_general",
+    "text": "龙渊深处游来一只穿铠甲的虾，举着令牌：龙宫虾帅，奉命来看看未来的龙。",
+    "choices": [
+      { "text": "让它看", "effect": { "龙气": 18, "灵性": 2 }, "result": "虾帅绕你游了三圈：丑是丑了点，是条好龙。" },
+      { "text": "张嘴吓它", "effect": { "咬合": 2, "龙气": 10 }, "result": "虾帅一拳打在你牙上：放肆！你牙酸了，它也很满意。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_aquarium", "dir": "side", "layers": ["L2"], "cameo": true, "once": true, "weight": 8, "require": "xend:mantis_shrimp/aquarium_star",
+    "text": "城边新开了个水族馆。门口的大屏上，一只皮皮虾正在打碎玻璃。",
+    "choices": [
+      { "text": "冲大屏张嘴", "effect": { "灵性": 2, "龙气": 8 }, "result": "路过的人说：快看，这条鳄鱼也想当明星。" },
+      { "text": "去应聘", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "体温": 4, "龙气": 12 }, "result": "馆长看了你很久：包吃包住，暖气管够。你被录取了，当了一季保安。",
+        "fail": { "effect": { "体温": -2 }, "result": "保安把你轰了出来：我们不招爬行动物。" } }
+    ]
+  },
+  {
+    "id": "xo_all_shadow", "dir": "up", "layers": ["U4"], "gold": true, "cameo": true, "once": true, "weight": 8,
+    "require": "xlives:desert_grass>=1 & xlives:local_dog>=1 & xlives:caterpillar>=1 & xlives:mantis_shrimp>=1",
+    "text": "你趴在江心石上，影子落进水里，像草、像狗、像虫、像虾，最后像一条龙。",
+    "choices": [
+      { "text": "张嘴", "effect": { "龙气": 25, "灵性": 3 }, "result": "天道合上小本子：行吧，你们都是一个人。" }
+    ]
+  }
+]

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { buildDestiny, createProfile, destinyProfile, destinyStates, Engine, pickDestiny, Rng } from '../assets/scripts/core';
 import { listDestinies, loadIndex, loadRawDestiny } from '../tools/load';
-import { validateDestiny, validateIndex } from '../tools/validate-lib';
+import { validateDestiny, validateIndex, World } from '../tools/validate-lib';
+
+const world: World = Object.fromEntries(listDestinies().map(id => [id, { endings: loadRawDestiny(id).raw.meta.endings.map(e => e.id) }]));
 
 describe('命格索引与解锁', () => {
     const index = loadIndex();
@@ -34,7 +36,7 @@ describe.each(listDestinies())('命格剧本 %s', id => {
     const { raw } = loadRawDestiny(id);
 
     it('校验无错误', () => {
-        expect(validateDestiny(raw).errors).toEqual([]);
+        expect(validateDestiny(raw, world).errors).toEqual([]);
     });
 
     it('随机 AI 连续轮回 300 世不报错、不卡死', () => {
@@ -59,5 +61,38 @@ describe.each(listDestinies())('命格剧本 %s', id => {
             e.sealRelics(s.relicCandidates.slice(0, 1));
         }
         expect(e.dp.lives).toBe(300);
+    });
+
+    it('老玩家存档（其他命格都已通关）：跨命格彩蛋能出现，连续轮回不报错', () => {
+        const p = createProfile();
+        for (const [did, w] of Object.entries(world)) {
+            if (did === id) continue;
+            const dp = destinyProfile(p, did);
+            dp.lives = 50;
+            dp.bestStage = 5;
+            dp.codex.endings = [...w.endings];
+        }
+        const e = new Engine(buildDestiny(raw), p);
+        const rng = new Rng({ rng: 7 });
+        let cameo = 0;
+        for (let life = 0; life < 300; life++) {
+            const d = e.rollDraft(rng.int(1e9));
+            e.startRun({ talent: d.talents[rng.int(3)], item: d.items[rng.int(3)], companion: d.companions[rng.int(3)] }, rng.int(1e9));
+            let steps = 0;
+            while (e.run.phase === 'direction' || e.run.phase === 'event') {
+                expect(++steps).toBeLessThan(2000);
+                if (e.run.phase === 'direction') {
+                    const opts = e.directionOptions().filter(o => o.enabled);
+                    e.chooseDirection(opts[rng.int(opts.length)].dir);
+                } else {
+                    const v = e.eventView();
+                    if (v.cameo) cameo++;
+                    const ok = v.choices.filter(c => c.enabled);
+                    e.choose(ok[rng.int(ok.length)].index);
+                }
+            }
+            e.sealRelics(e.settle().relicCandidates.slice(0, 1));
+        }
+        expect(cameo).toBeGreaterThan(0);
     });
 });

@@ -1,0 +1,108 @@
+[
+  {
+    "id": "xo_grass_pee", "dir": "down", "cameo": true, "once": true, "weight": 10, "require": "xlives:desert_grass>=1",
+    "text": "村口有一株小草，长得歪歪扭扭，倔得很。你习惯性地抬起了腿。",
+    "choices": [
+      { "text": "放下腿", "effect": { "灵性": 3, "妖气": 6 }, "result": "你想起来了。前世，你就是一株被狗浇过的草。" },
+      { "text": "浇", "effect": { "体力": 1 }, "result": "小草抖了抖叶子。你总觉得它在骂你。" }
+    ]
+  },
+  {
+    "id": "xo_grass_tree", "dir": "up", "stage": [2, 99], "gold": true, "cameo": true, "once": true, "weight": 8,
+    "require": "xend:desert_grass/tree_demon | xend:desert_grass/jianmu",
+    "text": "山神庙后面长着一棵怪树，树皮上像刻着一张笑脸。你一靠近，树叶哗哗响。",
+    "choices": [
+      { "text": "在树下趴一会", "effect": { "体力": 4, "妖气": 15 }, "result": "树荫很凉。你迷迷糊糊听见树说：那年那泡尿，我记着呢。" },
+      { "text": "冲树摇尾巴", "effect": { "灵性": 3, "忠义": 1 }, "result": "树掉下一颗果子，正好砸在你头上。" }
+    ]
+  },
+  {
+    "id": "xo_grass_oasis", "dir": "side", "layers": ["L3"], "cameo": true, "once": true, "weight": 8, "require": "xend:desert_grass/oasis_lord",
+    "text": "京城的西市上，有个胡商在卖绿洲的水，说是一株草神赐的。",
+    "choices": [
+      { "text": "凑过去闻闻", "effect": { "体力": 4, "灵性": 2 }, "result": "胡商愣了一下，给你倒了一碗：这水，本来就是给你留的吧。" },
+      { "text": "叫穿他", "effect": { "牙口": 1, "妖气": 6 }, "result": "你冲他叫了三声。他心虚，收摊了。那水，确实兑过。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_road", "dir": "side", "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
+    "text": "一条毛毛虫横在路中间，慢吞吞地爬。后面的牛车已经到了。",
+    "choices": [
+      { "text": "叼起它挪到路边", "effect": { "忠义": 2, "灵性": 2, "妖气": 5 }, "result": "你轻轻叼起它，放在路边的菜叶上。前世，你也在路中间爬过。" },
+      { "text": "跳过去", "effect": { "脚力": 1 }, "result": "牛车过去了。你回头看，它刚好爬到路边。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_xiaoyu", "dir": "down", "layers": ["D2"], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar/xiaoyu_butterfly",
+    "text": "院子里有个叫小雨的小姑娘在追蝴蝶。蝴蝶一拐，落在了你的鼻尖上。",
+    "choices": [
+      { "text": "一动不动", "effect": { "灵性": 3, "忠义": 2 }, "result": "小姑娘蹲下来：你们是朋友吗？蝴蝶扇了扇翅膀，你摇了摇尾巴。" },
+      { "text": "打个喷嚏", "effect": { "体力": 2 }, "result": "蝴蝶飞了，小姑娘追着蝴蝶也跑了。院子里只剩你，和一点鳞粉。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_guardian", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 6, "require": "xend:caterpillar/valley_queen | xend:caterpillar/fairy",
+    "text": "冬夜，一群蝴蝶从山那边飞来，绕着你的窝转圈，翅膀上的光暖烘烘的。",
+    "choices": [
+      { "text": "蜷着睡", "effect": { "体力": 5, "妖气": 10 }, "result": "那一夜你没冻着。天亮时，蝴蝶都不见了，窝边多了一圈花。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_market", "dir": "side", "layers": ["L1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1",
+    "text": "集市上一盆皮皮虾在卖。最大的那只隔着盆，冲你挥了一拳。",
+    "choices": [
+      { "text": "冲它点头", "effect": { "灵性": 2, "妖气": 5 }, "result": "你懂它的意思：这一世，别被端上桌。" },
+      { "text": "撞翻盆子", "chance": 0.4, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 1, "妖气": 10 }, "result": "盆翻了，虾满地爬。卖虾的追着你骂了半条街，虾都跑进了河沟。",
+        "easy": "你一阵风撞过去，盆翻了。等卖虾的回过神，你已经没影了。",
+        "fail": { "effect": { "体力": -2 }, "result": "你被虾钳夹住了鼻子，叫了一路。" } }
+    ]
+  },
+  {
+    "id": "xo_shrimp_lets_go", "dir": "side", "layers": ["L2", "L3"], "cameo": true, "once": true, "weight": 8, "require": "xend:mantis_shrimp/lets_go",
+    "text": "县城饭馆门口，有人举着一只皮皮虾大喊：皮皮虾，我们走！",
+    "choices": [
+      { "text": "跟着跑", "absurd": true, "chance": 0.3, "chanceAttr": "脚力", "chanceStep": 0.04,
+        "effect": { "脚力": 2, "妖气": 12 }, "result": "你跟着跑了三条街。那人回头一看：这狗也要走？",
+        "fail": { "effect": { "体力": -2 }, "result": "你跑岔了路，跑到了一家火锅店门口。" } },
+      { "text": "冲虾叫一声", "effect": { "灵性": 3, "妖气": 8 }, "result": "皮皮虾冲你挥了挥钳子。你突然很想跟它走。" }
+    ]
+  },
+  {
+    "id": "xo_croc_cage", "dir": "side", "layers": ["L1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:crocodile>=1",
+    "text": "镇上来了个耍把戏的，笼子里关着一条小鳄鱼。它冲你流了两滴眼泪。",
+    "choices": [
+      { "text": "咬开笼子", "chance": 0.45, "chanceAttr": "牙口", "chanceStep": 0.06,
+        "effect": { "牙口": 2, "妖气": 12, "忠义": 2 }, "result": "你咬开了插销。小鳄鱼滑进了河里，回头又冲你流了两滴泪。",
+        "easy": "插销在你嘴里像根面条。小鳄鱼走的时候，冲你点了点头。",
+        "fail": { "effect": { "体力": -2 }, "result": "耍把戏的拿鞭子把你赶开了。" } },
+      { "text": "也流两滴泪", "effect": { "灵性": 2 }, "result": "围观的人说：快看，狗也哭了。耍把戏的那天没收到钱。" }
+    ]
+  },
+  {
+    "id": "xo_croc_sewer", "dir": "side", "layers": ["L2", "L3"], "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/sewer_king",
+    "text": "县城的阴沟口冒出一个绿油油的脑袋，冲你眨了眨眼。",
+    "choices": [
+      { "text": "冲它摇尾巴", "effect": { "灵性": 3, "妖气": 10 }, "result": "脑袋缩回去了。第二天，阴沟口多了一条鱼。给你的。" },
+      { "text": "叫人来看", "effect": { "忠义": 1 }, "result": "等人来了，阴沟口什么都没有。大家都说你眼花。" }
+    ]
+  },
+  {
+    "id": "xo_croc_star", "dir": "side", "layers": ["L3"], "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/internet_star",
+    "text": "京城的茶馆里，说书先生在讲一条会冲人张嘴的鳄鱼。满堂的人都在笑。",
+    "choices": [
+      { "text": "冲大家张嘴", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "妖气": 12, "体力": 3 }, "result": "满堂哄笑。说书先生一拍醒木：今日加讲一段，鳄鱼他兄弟！",
+        "fail": { "effect": { "灵性": 1 }, "result": "没人看见。你张了半天嘴，打了个哈欠。" } },
+      { "text": "蹲着听完", "effect": { "灵性": 3 }, "result": "你听得很入神。那条鳄鱼的故事，你总觉得在哪儿听过。" }
+    ]
+  },
+  {
+    "id": "xo_all_moon", "dir": "up", "gold": true, "cameo": true, "stage": [2, 99], "once": true, "weight": 8,
+    "require": "xend:desert_grass & xend:caterpillar & xend:mantis_shrimp & xend:crocodile",
+    "text": "月亮很圆。你对着它嚎，山那边有草在晃、虫在飞、虾在拍水、鳄鱼在叫。",
+    "choices": [
+      { "text": "一起嚎", "effect": { "妖气": 25, "灵性": 3 }, "result": "整座山都在回声。天道翻着小本子：怎么哪儿都有你？" }
+    ]
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "r_camel_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 12, "require": "died:eaten_camel>=2",
+    "text": "老刀又晃过来了。它吃过你{died:eaten_camel}回，这回嚼得格外慢，像在回味。",
+    "choices": [
+      { "text": "这回轮到我", "chance": 0.45, "chanceAttr": "韧性", "chanceStep": 0.06,
+        "effect": { "韧性": 2, "灵气": 12, "feud": "老刀吃了一嘴刺" },
+        "result": "它一口下去，满嘴是刺。吃了你{died:eaten_camel}回，这一口最难忘。",
+        "easy": "它刚张嘴，你的刺已经竖好了。老刀愣在原地，不敢下口。",
+        "fail": { "effect": { "茎叶": -2 }, "result": "它咬掉了你半片叶子，嚼得很香。" } },
+      { "text": "缩进沙里", "effect": { "灵性": 1 }, "result": "老刀嗅了半天，嘀咕：明明闻到了。" },
+      { "text": "跟它讲道理", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵性": 3, "灵气": 15, "feud": "老刀被一株草说服了" },
+        "result": "你讲了一下午。老刀听完，默默走开，从此改吃仙人掌。",
+        "fail": { "effect": { "茎叶": -1 }, "result": "老刀边听边点头，边点头边嚼。" } }
+    ]
+  },
+  {
+    "id": "r_scorpion_again", "dir": "down", "once": true, "weight": 12, "require": "died:scorpion>=2",
+    "text": "又是那只蝎子。它剪断过你{died:scorpion}回根，钳子都磨亮了。",
+    "choices": [
+      { "text": "用根缠住钳子", "chance": 0.45, "chanceAttr": "根系", "chanceStep": 0.06,
+        "effect": { "根系": 2, "灵气": 12, "feud": "蝎子的钳子被根缠死" },
+        "result": "你的根绕了它三圈。它的钳子，第一次合不上。",
+        "easy": "你的根早就等在那儿了。蝎子一伸钳，自己把自己捆上了。",
+        "fail": { "effect": { "根系": -2 }, "result": "它剪断了你一截根。熟练得让人心疼。" } },
+      { "text": "往深处躲", "effect": { "根系": 1 }, "result": "你往下扎了一截。它剪了半天空气。" },
+      { "text": "请它修剪枝叶", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "茎叶": 2, "灵气": 10 }, "result": "它被你说动了，给你修了个发型。齐整，透气，灵气都顺了。",
+        "fail": { "effect": { "茎叶": -2 }, "result": "它修得太认真，把你修秃了一半。" } }
+    ]
+  },
+  {
+    "id": "r_sandstorm_again", "dir": "any", "sudden": true, "stage": [1, 99], "once": true, "weight": 10, "require": "died:sandstorm>=2",
+    "text": "天边又黄了。这阵沙暴，拔走过你{died:sandstorm}回。",
+    "choices": [
+      { "text": "根往下扎", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.06,
+        "effect": { "根系": 2, "灵气": 10, "feud": "沙暴没能拔走你" },
+        "result": "沙暴刮了一夜。天亮了，你还在原地，就是有点秃。",
+        "easy": "沙暴刮了一夜。你在底下，睡得很香。",
+        "fail": { "effect": { "水分": -2, "茎叶": -1 }, "result": "你被刮歪了，但没被刮走。" } },
+      { "text": "趴低", "effect": { "韧性": 1, "水分": -1 }, "result": "你贴着沙面熬了一夜，满嘴是沙。" },
+      { "text": "张开叶子跟着飞", "absurd": true, "chance": 0.12, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵气": 20, "灵性": 3 }, "result": "你飞了三里地，落在一片湿沙上。沙暴：我是来送你的？",
+        "fail": { "effect": { "death": "sandstorm" }, "result": "你飞得很开心。落地就不开心了。" } }
+    ]
+  },
+  {
+    "id": "r_ant_again", "dir": "any", "stage": [0, 1], "once": true, "weight": 12, "require": "died:ant>=2",
+    "text": "一队蚂蚁路过，领头的抬头看了看你。它们搬过你{died:ant}回，路熟。",
+    "choices": [
+      { "text": "装成石子", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 2, "灵气": 6, "feud": "蚂蚁没认出你" },
+        "result": "蚂蚁们绕开你走了。领头的回头看了一眼，嘀咕：记错了？",
+        "fail": { "effect": { "水分": -1 }, "result": "它们把你抬起来走了两步，嫌重，又放下了。" } },
+      { "text": "一动不动", "effect": { "根系": 1 }, "result": "它们今天不收货。你松了口气。" },
+      { "text": "跟它们谈运费", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "水分": 3, "灵气": 8 }, "result": "你答应长大给它们遮阴。它们把你搬到湿沙边上，没收钱。",
+        "fail": { "effect": { "death": "ant" }, "result": "谈崩了。它们按老价钱，把你搬走了。" } }
+    ]
+  },
+  {
+    "id": "fun_cloud", "dir": "up", "weight": 6, "once": true,
+    "text": "天上飘过一朵云，形状特别像一滴水。",
+    "choices": [
+      { "text": "对着它许愿", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "水分": 5, "灵气": 8 }, "result": "云停了一下，掉下来三滴雨。居然真的有用。",
+        "fail": { "effect": { "灵性": 1 }, "result": "云飘走了。许愿这种事，看缘分。" } },
+      { "text": "接着长", "effect": { "茎叶": 1 }, "result": "云是云，你是你。你接着长。" }
+    ]
+  },
+  {
+    "id": "fun_dung_beetle", "dir": "side", "weight": 6, "once": true,
+    "text": "一只屎壳郎推着粪球路过，粪球比它大三倍。",
+    "choices": [
+      { "text": "搭个顺风车", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵气": 10, "水分": 2 }, "result": "你在粪球上坐了半里地。风景一般，肥料管够。",
+        "fail": { "effect": { "茎叶": -1, "灵性": 1 }, "result": "你刚爬上去，它一个急转弯，把你甩了下来。" } },
+      { "text": "给它让路", "effect": { "灵性": 1 }, "result": "它冲你点点头，推得更起劲了。" }
+    ]
+  }
+]

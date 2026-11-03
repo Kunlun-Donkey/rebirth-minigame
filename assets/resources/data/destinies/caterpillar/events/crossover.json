@@ -1,0 +1,99 @@
+[
+  {
+    "id": "xo_grass_leaf", "dir": "down", "cameo": true, "once": true, "weight": 10, "require": "xlives:desert_grass>=1",
+    "text": "你正要啃一片嫩叶，叶子抖了抖：等一下，我前世也是一株草。",
+    "choices": [
+      { "text": "那我轻点啃", "effect": { "饱腹": 3, "灵性": 2 }, "result": "你只啃了半片。叶子说谢谢，你说不客气。" },
+      { "text": "巧了，我也是", "effect": { "灵性": 3, "蜕变": 6 }, "result": "你们对视了很久，最后决定，这一世就这样吧。" }
+    ]
+  },
+  {
+    "id": "xo_grass_oasis", "dir": "side", "cameo": true, "once": true, "weight": 8, "require": "xend:desert_grass/oasis_lord",
+    "text": "风里有一股沙漠的味道，混着一点甜。风给你捎来了一颗露珠。",
+    "choices": [
+      { "text": "喝了", "effect": { "饱腹": 5, "蜕变": 12 }, "result": "露珠很甜。你觉得自己好像在哪片荒漠里活过。" }
+    ]
+  },
+  {
+    "id": "xo_grass_devourer", "dir": "down", "layers": ["D4"], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:desert_grass/devourer",
+    "text": "树根底下有一截黑色的老根，正在一口一口地吸地气。它看见你：小东西，饿吗？",
+    "choices": [
+      { "text": "饿", "effect": { "饱腹": 6, "蜕变": 15 }, "result": "它分了你一口。你吃完，觉得自己能啃下一整棵树。" },
+      { "text": "你先吃", "effect": { "灵性": 4 }, "result": "老根笑了：懂事。前世的我，可没这么懂事。" }
+    ]
+  },
+  {
+    "id": "xo_dog_bark", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 8, "require": "xlives:local_dog>=1",
+    "text": "一条土狗路过，冲你汪了一声。你吓得一缩——然后发现它在摇尾巴。",
+    "choices": [
+      { "text": "冲它挥挥小脚", "effect": { "灵性": 2, "蜕变": 5 }, "result": "土狗歪着头看了你半天，趴下来，替你挡住了一只鸡。" },
+      { "text": "装死", "effect": { "灵性": 1 }, "result": "它嗅了嗅你，打了个喷嚏，走了。" }
+    ]
+  },
+  {
+    "id": "xo_dog_guardian", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 8, "maps": ["veg", "orchard"], "require": "xend:local_dog/guardian",
+    "text": "芦花鸡正要啄你，一条大黄狗扑了过来，把鸡撵上了墙头。",
+    "choices": [
+      { "text": "谢谢", "effect": { "灵性": 3, "蜕变": 10 }, "result": "黄狗哼了一声：前世我护过一个村，这一世顺手护条虫。" },
+      { "text": "趁乱溜", "effect": { "攀爬": 2 }, "result": "你爬上了菜心。回头看，鸡还蹲在墙头不敢下来。" }
+    ]
+  },
+  {
+    "id": "xo_dog_eclipse", "dir": "up", "stage": [2, 99], "cameo": true, "once": true, "weight": 8, "require": "xend:local_dog/eclipse",
+    "text": "大白天，太阳缺了一块。鸟都不叫了，树上一片黑。",
+    "choices": [
+      { "text": "趁黑爬上树顶", "effect": { "攀爬": 3, "蜕变": 10 }, "result": "天黑那一会儿，没有一只鸟敢动。你一口气爬到了最高的枝头。" },
+      { "text": "抬头看", "effect": { "灵性": 3 }, "result": "你好像看见一条狗，叼着太阳，又吐了出来。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_punch", "dir": "up", "stage": [1, 99], "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1",
+    "text": "一只螳螂挡在枝头，挥着两把大刀。你突然觉得，自己好像会打拳。",
+    "choices": [
+      { "text": "出拳", "absurd": true, "chance": 0.35, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "蜕变": 15, "吐丝": 1, "feud": "一拳打退了螳螂" }, "result": "你一拳打在它刀上。螳螂愣住了：虫子也会打拳？",
+        "fail": { "effect": { "饱腹": -3 }, "result": "你没有拳头。你只有很多只小脚。" } },
+      { "text": "绕开", "effect": { "攀爬": 1 }, "result": "你从叶子背面绕了过去。拳，下辈子再打。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_poster", "dir": "side", "cameo": true, "once": true, "weight": 8, "maps": ["park"], "require": "xend:mantis_shrimp/aquarium_star",
+    "text": "公园门口贴着水族馆的海报，一只皮皮虾冲着镜头挥拳。",
+    "choices": [
+      { "text": "也挥一挥脚", "effect": { "灵性": 3, "蜕变": 8 }, "result": "一个孩子指着你喊：这条虫在学虾！大家都笑了，你也觉得挺好笑。" },
+      { "text": "爬上海报", "effect": { "攀爬": 2, "饱腹": 1 }, "result": "你在虾的拳头上趴了一下午。海报背面的胶水，有点甜。" }
+    ]
+  },
+  {
+    "id": "xo_croc_pond", "dir": "side", "cameo": true, "once": true, "weight": 10, "require": "xlives:crocodile>=1",
+    "text": "叶子掉进了池塘，你趴在叶子上漂。水下有一双眼睛，跟着你漂了很久。",
+    "choices": [
+      { "text": "冲它挥手", "effect": { "灵性": 2, "蜕变": 6 }, "result": "那双眼睛眨了眨。一个鼻孔冒出来，轻轻把你的叶子推到了岸边。" },
+      { "text": "缩成一团", "effect": { "灵性": 1 }, "result": "你缩了一路。上岸才发现，它一直在下面托着叶子。" }
+    ]
+  },
+  {
+    "id": "xo_croc_plover", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/plover_friend",
+    "text": "一只牙签鸟落在旁边，嘴里叼着一颗亮晶晶的东西：有条老鳄鱼托我带给你的。",
+    "choices": [
+      { "text": "收下", "effect": { "item": "dewdrop", "灵性": 2, "蜕变": 8 }, "result": "是一颗露珠。牙签鸟说：它说你们前世认识。" },
+      { "text": "请它也吃点", "effect": { "灵性": 4 }, "result": "牙签鸟啄了一口叶子，皱眉：还是鳄鱼牙缝里的好吃。" }
+    ]
+  },
+  {
+    "id": "xo_croc_dragon", "dir": "up", "layers": ["U4"], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:crocodile/dragon",
+    "text": "雷雨夜，一条龙从树顶游过。它的鳞片擦过树梢，掉下一片，落在你身边。",
+    "choices": [
+      { "text": "抱着龙鳞睡", "effect": { "蜕变": 20, "灵性": 2 }, "result": "龙鳞是温的。你梦见自己在河里游，醒来时，背上有点痒。" }
+    ]
+  },
+  {
+    "id": "xo_all_dream", "dir": "any", "gold": true, "cameo": true, "stage": [3, 99], "once": true, "weight": 8,
+    "require": "xlives:desert_grass>=1 & xlives:local_dog>=1 & xlives:mantis_shrimp>=1 & xlives:crocodile>=1",
+    "text": "你做了一个很长的梦：梦里你是草，是狗，是虾，是鳄鱼。",
+    "choices": [
+      { "text": "醒过来", "effect": { "蜕变": 25, "灵性": 3 }, "result": "天道翻开小本子，叹了口气：又是你。" },
+      { "text": "接着睡", "effect": { "灵性": 2, "饱腹": 2 }, "result": "梦里的你们，凑了一桌麻将。" }
+    ]
+  }
+]

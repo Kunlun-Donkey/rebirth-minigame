@@ -5,3 +5,4 @@ export * from './engine';
 export * from './profile';
 export * from './rng';
 export * from './destinies';
+export * from './flavor';

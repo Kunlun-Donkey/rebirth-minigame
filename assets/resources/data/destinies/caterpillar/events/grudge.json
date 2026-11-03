@@ -1,0 +1,88 @@
+[
+  {
+    "id": "r_bird_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 12, "require": "died:bird>=2",
+    "text": "树梢上一只鸟歪着头看你。鸟叼走过你{died:bird}回，你认得这个角度。",
+    "choices": [
+      { "text": "装成树枝", "chance": 0.45, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 2, "蜕变": 10, "feud": "鸟把你当成了树枝" },
+        "result": "它在你身上蹭了蹭嘴，飞走了。你当了一回树枝，很成功。",
+        "easy": "你往枝上一趴，比树枝还像树枝。它看都没看。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它啄了你一下，嫌苦，吐了。你也挺疼的。" } },
+      { "text": "往叶背爬", "effect": { "攀爬": 1 }, "result": "你爬到叶子背面，数着它的心跳等它走。" },
+      { "text": "跳进它嘴里", "absurd": true, "chance": 0.12, "chanceAttr": "吐丝", "chanceStep": 0.02,
+        "effect": { "蜕变": 18, "吐丝": 2, "feud": "鸟被一条虫扎了一嘴毛" },
+        "result": "你一头扎进它嘴里，炸开浑身的毛。它咳了半天，把你原样吐了出来。",
+        "fail": { "effect": { "death": "bird" }, "result": "它吃得很开心。" } }
+    ]
+  },
+  {
+    "id": "r_hand_again", "dir": "down", "once": true, "weight": 12, "require": "died:picked>=2",
+    "text": "那只手又伸过来了。它捏走过你{died:picked}回，指甲还是那么长。",
+    "choices": [
+      { "text": "吐丝荡开", "chance": 0.45, "chanceAttr": "吐丝", "chanceStep": 0.06,
+        "effect": { "吐丝": 2, "蜕变": 10, "feud": "那只手捏了个空" },
+        "result": "你吊着丝一荡，手捏了个空。主人对着空气骂了一句。",
+        "easy": "手还没到，你已经荡到了隔壁那棵菜上。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它捏住了你一撮毛。你掉了几根毛，跑了。" } },
+      { "text": "缩成一团", "effect": { "灵性": 1 }, "result": "你缩成一个小绿球。手在你旁边翻了半天。" },
+      { "text": "反咬一口", "absurd": true, "chance": 0.15, "chanceAttr": "胃口", "chanceStep": 0.03,
+        "effect": { "胃口": 2, "蜕变": 12, "feud": "那只手被一条虫咬了" },
+        "result": "手的主人尖叫一声，菜篮子都扔了。原来手也怕虫。",
+        "fail": { "effect": { "death": "picked" }, "result": "手不怕。" } }
+    ]
+  },
+  {
+    "id": "r_ants_again", "dir": "side", "once": true, "weight": 12, "require": "died:ants>=2",
+    "text": "一队蚂蚁排着队过来了。它们搬过你{died:ants}回，队形都没变。",
+    "choices": [
+      { "text": "爬上高枝", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.06,
+        "effect": { "攀爬": 2, "蜕变": 8, "feud": "蚂蚁搬了个空" },
+        "result": "你爬上枝头。蚂蚁在底下转了三圈，排着队回去了。",
+        "easy": "你慢悠悠爬上枝头，还回头冲它们挥了挥小脚。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "你爬得太慢，被咬了好几口才甩掉它们。" } },
+      { "text": "吐丝拦路", "effect": { "吐丝": 1, "灵性": 1 }, "result": "你在路上拉了一道丝。它们绕了半天，换了条路。" },
+      { "text": "混进它们的队伍", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "饱腹": 4, "蜕变": 8 }, "result": "蚂蚁们以为你是一只很胖的蚂蚁，还分了你一口糖。",
+        "fail": { "effect": { "饱腹": -2, "灵性": 1 }, "result": "走到半路，领头的回头数了数：多了一只。" } }
+    ]
+  },
+  {
+    "id": "r_chicken_again", "dir": "any", "sudden": true, "once": true, "weight": 10, "require": "died:chicken>=2",
+    "text": "那只芦花鸡又踱过来了。它啄过你{died:chicken}回，看你像看一盘菜。",
+    "choices": [
+      { "text": "装死", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 2, "蜕变": 8, "feud": "芦花鸡没认出你" },
+        "result": "你翻过身一动不动。鸡啄了啄旁边的土，走了。",
+        "easy": "你装得太像了。鸡看了半天，还替你刨了个坑。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "它啄了你一下，你没忍住，动了。" } },
+      { "text": "钻进土缝", "effect": { "攀爬": 1 }, "result": "你钻进土缝。鸡在外面刨了半天，刨出一条蚯蚓，满意地走了。" },
+      { "text": "说你有剧毒", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "蜕变": 12, "灵性": 2, "feud": "芦花鸡被一条虫吓跑" },
+        "result": "你说吃一口能拉三天。鸡看了你很久，转身走了。",
+        "fail": { "effect": { "饱腹": -3 }, "result": "鸡说它不信。啄了一口，确认没毒。" } }
+    ]
+  },
+  {
+    "id": "fun_snail", "dir": "side", "weight": 6, "once": true,
+    "text": "一只蜗牛慢慢爬过来，说要跟你赛跑。",
+    "choices": [
+      { "text": "接受挑战", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.05,
+        "effect": { "攀爬": 2, "蜕变": 6 }, "result": "你赢了。你赢了一只蜗牛。你很骄傲。",
+        "fail": { "effect": { "灵性": 2 }, "result": "你半路睡着了。蜗牛赢了，它也很骄傲。" } },
+      { "text": "请它驮你", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "饱腹": 2, "灵性": 3 }, "result": "它驮了你一整天，走了半米。你看了一整天的风景。",
+        "fail": { "effect": { "灵性": 1 }, "result": "你太胖，它驮不动。" } },
+      { "text": "不比", "effect": { "灵性": 1 }, "result": "蜗牛说你怂。你说你忙。" }
+    ]
+  },
+  {
+    "id": "fun_raindrop", "dir": "up", "weight": 6, "once": true,
+    "text": "一滴雨挂在叶尖上，晃啊晃，里面映着一条胖虫子。",
+    "choices": [
+      { "text": "跟它打招呼", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵性": 3, "蜕变": 6 }, "result": "你冲它点头，它也冲你点头。你觉得自己长得还行。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "你凑太近，雨滴啪地砸在你脸上。" } },
+      { "text": "喝了它", "effect": { "饱腹": 2 }, "result": "你一口喝掉了那条胖虫子。挺甜。" }
+    ]
+  }
+]

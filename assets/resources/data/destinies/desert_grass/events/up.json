@@ -40,7 +40,7 @@
       { "text": "记住它的脸", "effect": { "follow": { "id": "f_daodao_tooth", "delay": 2 }, "flag": "daodao_seen", "灵性": 1 },
         "result": "你给它起了个名字，叫老刀。账，慢慢算。" },
       { "text": "让它尝尝苦头", "require": "legacy:bitter_sap>=1 | talent:bitter",
-        "effect": { "flag": ["daodao_seen", "daodao_hurt"], "灵气": 5 },
+        "effect": { "feud": "老刀苦得原地转圈", "flag": ["daodao_seen", "daodao_hurt"], "灵气": 5 },
         "result": "老刀一口下去，苦得原地转了三圈。它跑了，跑出三里地还在吐。" },
       { "text": "藏进沙里", "effect": { "follow": { "id": "f_daodao_tooth", "delay": 2 }, "水分": -1, "flag": "daodao_seen" }, "result": "老刀在你头顶嗅了很久。这一世，还不是时候。" }
     ]
@@ -50,16 +50,16 @@
     "require": "flag:daodao_seen & !flag:daodao_hurt", "weight": 25,
     "text": "老刀又来了。它记得你，你也记得它。",
     "choices": [
-      { "text": "竖起尖刺", "require": "韧性>=4 | legacy:thorn>=1", "effect": { "follow": "f_daodao_rumor", "flag": "daodao_hurt", "灵气": 6, "韧性": 1 },
+      { "text": "竖起尖刺", "require": "韧性>=4 | legacy:thorn>=1", "effect": { "feud": "老刀扎了满嘴刺", "follow": "f_daodao_rumor", "flag": "daodao_hurt", "灵气": 6, "韧性": 1 },
         "result": "老刀扎了满嘴刺，嗷的一声跑了。荒漠里第一次有骆驼怕草。" },
-      { "text": "用牙吓它", "require": "item:camel_tooth", "effect": { "flag": "daodao_hurt", "灵气": 8 },
+      { "text": "用牙吓它", "require": "item:camel_tooth", "effect": { "feud": "老刀认出了自己的牙", "flag": "daodao_hurt", "灵气": 8 },
         "result": "你亮出那颗牙。老刀认出了自己的牙，吓得腿都软了。" },
       { "text": "继续忍", "chance": 0.6, "chanceAttr": "韧性", "chanceStep": 0.05,
         "effect": { "韧性": 1 }, "result": "老刀啃了一口你旁边的草，走了。下次。",
         "fail": { "effect": { "death": "eaten_camel" }, "result": "历史重演了。" } },
-      { "text": "藤缚老刀", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "flag": "daodao_hurt", "灵气": 10 },
+      { "text": "藤缚老刀", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "feud": "老刀被捆了一夜", "flag": "daodao_hurt", "灵气": 10 },
         "result": "你把老刀捆了一夜。天亮放它走时，它不敢看你。" },
-      { "text": "毒刺伺候", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "follow": "f_daodao_rumor", "flag": "daodao_hurt", "灵气": 8 },
+      { "text": "毒刺伺候", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "feud": "老刀扎了满嘴刺", "follow": "f_daodao_rumor", "flag": "daodao_hurt", "灵气": 8 },
         "result": "前世它一口吃了你。这一世，它扎了满嘴刺，边跑边吐。" }
     ]
   },
@@ -68,9 +68,9 @@
     "require": "flag:daodao_hurt",
     "text": "大旱。老刀瘦得只剩骨架，跪在你身边，盯着你叶子上的露水。",
     "choices": [
-      { "text": "赏它一滴", "effect": { "follow": { "id": "f_daodao_job", "delay": 2 }, "水分": -1, "灵性": 3, "灵气": 10, "flag": "daodao_tamed" },
+      { "text": "赏它一滴", "effect": { "feud": "老刀跪下给你打工", "follow": { "id": "f_daodao_job", "delay": 2 }, "水分": -1, "灵性": 3, "灵气": 10, "flag": "daodao_tamed" },
         "result": "老刀喝完，把头贴在沙上。从此它只给一株草打工。" },
-      { "text": "当着它的面喝掉", "effect": { "水分": 2, "韧性": 2, "灵气": 6 },
+      { "text": "当着它的面喝掉", "effect": { "feud": "当着老刀喝完了露水", "水分": 2, "韧性": 2, "灵气": 6 },
         "result": "你慢慢把露水喝完。前世的账，算清了。" }
     ]
   },

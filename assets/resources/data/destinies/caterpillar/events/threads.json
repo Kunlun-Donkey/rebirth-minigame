@@ -244,7 +244,7 @@
       { "text": "从另一头溜", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
         "effect": { "灵性": 2, "蜕变": 3 }, "result": "你从树干背面钻了出来。它还盯着那个空缝。",
         "fail": { "effect": { "death": "bird" }, "result": "另一头，它也想到了。" } },
-      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "吐丝": 2, "蜕变": 5 },
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "feud": "花胸扎了一嘴毛", "吐丝": 2, "蜕变": 5 },
         "result": "它把喙伸进缝里，扎了一嘴毛。这回它蹲不住了。" },
       { "text": "前世的保护色", "require": "legacy:camouflage>=2", "effect": { "灵性": 3, "蜕变": 4 },
         "result": "前世它守到了你。这一世你就趴在它脚边，它没看见。" }
@@ -525,7 +525,7 @@
     "id": "f_magpie_again", "dir": "up", "layers": ["U3", "U4"], "chainOnly": true, "teaser": "老喜鹊在鸟窝边打盹",
     "text": "那只老喜鹊又蹲在鸟窝边，打着盹，头一点一点的。",
     "choices": [
-      { "text": "撒它一脸鳞粉", "showIf": "skill:dust", "useSkill": "dust", "effect": { "item": "magpie_feather", "蜕变": 8 },
+      { "text": "撒它一脸鳞粉", "showIf": "skill:dust", "useSkill": "dust", "effect": { "feud": "花胸掉了一根尾羽", "item": "magpie_feather", "蜕变": 8 },
         "result": "它惊醒乱扑，掉了一根尾羽。这回你捡到了。" },
       { "text": "落在它头上", "chance": 0.6, "chanceAttr": "攀爬", "chanceStep": 0.05,
         "effect": { "蜕变": 6, "灵性": 2 }, "result": "你在它头顶站稳了。它没醒，你也没多待。",

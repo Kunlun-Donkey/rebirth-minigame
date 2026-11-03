@@ -1,0 +1,86 @@
+[
+  {
+    "id": "r_net_again", "dir": "side", "stage": [1, 99], "once": true, "weight": 12, "require": "died:net>=2",
+    "text": "海面上又撒下一张网。它捞过你{died:net}回，网眼你都背得出来。",
+    "choices": [
+      { "text": "一拳打穿", "chance": 0.45, "chanceAttr": "拳力", "chanceStep": 0.06,
+        "effect": { "拳力": 2, "海灵": 12, "feud": "渔网被你打了个窟窿" },
+        "result": "你一拳打出个窟窿，一网的鱼都跟着你跑了。渔夫盯着窟窿，点了根烟。",
+        "easy": "网还没收，你已经打出了三个窟窿。",
+        "fail": { "effect": { "体力": -2 }, "result": "网太密，你的拳头卡在了网眼里，挣了半天。" } },
+      { "text": "钻进沙里", "effect": { "打洞": 1 }, "result": "网从你头顶扫了过去。你在沙里数到一百，才出来。" },
+      { "text": "帮渔夫补网", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵性": 3, "海灵": 12, "feud": "渔夫把一网鱼倒回了海里" },
+        "result": "你用钳子把网补好了。渔夫看看网，看看你，把这一网全倒回了海里。",
+        "fail": { "effect": { "death": "net" }, "result": "补得很好。好到连你也捞上去了。" } }
+    ]
+  },
+  {
+    "id": "r_seagull_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 12, "require": "died:seagull>=2",
+    "text": "天上那只海鸥又在盘旋。它叼走过你{died:seagull}回，算准了你什么时候浮上来。",
+    "choices": [
+      { "text": "等它扎下来出拳", "chance": 0.4, "chanceAttr": "拳力", "chanceStep": 0.06,
+        "effect": { "拳力": 2, "海灵": 12, "feud": "海鸥挨了一记直拳" },
+        "result": "它扎下来的时候，你出拳了。海鸥在空中翻了三个跟头，叫声都变了。",
+        "easy": "它扎下来，你出拳。干净利落，像练过一万遍。",
+        "fail": { "effect": { "体力": -2 }, "result": "你打空了。它也扑空了。平局。" } },
+      { "text": "沉下去", "effect": { "游速": 1 }, "result": "你沉到它看不见的地方，等它饿着肚子飞走。" },
+      { "text": "跳起来抢它的鱼", "absurd": true, "chance": 0.15, "chanceAttr": "游速", "chanceStep": 0.02,
+        "effect": { "海灵": 12, "体力": 3 }, "result": "你一跃出水，从它嘴里抢走了鱼。海鸥愣在半空：现在的虾都这样？",
+        "fail": { "effect": { "death": "seagull" }, "result": "你跳得很高。正好跳进它嘴里。" } }
+    ]
+  },
+  {
+    "id": "r_cooked_again", "dir": "any", "sudden": true, "once": true, "weight": 12, "maps": ["market"], "require": "died:cooked>=2",
+    "text": "后厨飘来一股蒜蓉味。你被端上桌过{died:cooked}回，这个味道，闭着眼都认得。",
+    "choices": [
+      { "text": "打翻蒜蓉碗", "chance": 0.45, "chanceAttr": "拳力", "chanceStep": 0.06,
+        "effect": { "拳力": 2, "海灵": 10, "feud": "后厨的蒜蓉碗被打翻" },
+        "result": "你一拳打翻了蒜蓉碗。厨师看着满地蒜蓉，改煮了一锅白粥。",
+        "easy": "碗还没端稳，就被你一拳送到了地上。",
+        "fail": { "effect": { "体力": -2 }, "result": "碗太远，你的拳头只打到了空气。" } },
+      { "text": "缩在箱角", "effect": { "打洞": 1 }, "result": "你缩在箱角，假装是一块石头。" },
+      { "text": "教厨师做菜", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵性": 3, "海灵": 12, "feud": "厨师改卖凉拌黄瓜了" },
+        "result": "你冲着菜单比划了半天。厨师恍然大悟，今天改卖凉拌黄瓜。",
+        "fail": { "effect": { "death": "cooked" }, "result": "厨师看懂了：椒盐的。" } }
+    ]
+  },
+  {
+    "id": "r_octopus_again", "dir": "down", "once": true, "weight": 12, "require": "died:octopus>=2",
+    "text": "一条紫色的腿从石缝里探出来。它缠死过你{died:octopus}回，打招呼都像在量尺寸。",
+    "choices": [
+      { "text": "一拳打在吸盘上", "chance": 0.45, "chanceAttr": "拳力", "chanceStep": 0.06,
+        "effect": { "拳力": 2, "海灵": 12, "feud": "墨斗的腿被打成了蝴蝶结" },
+        "result": "你一拳接一拳，把那条腿打成了蝴蝶结。墨斗解了一整天。",
+        "easy": "腿刚伸进来，你就把它打了个结。",
+        "fail": { "effect": { "体力": -2 }, "result": "吸盘太滑，你的拳头打偏了。" } },
+      { "text": "缩进洞底", "effect": { "打洞": 1 }, "result": "你缩到洞底。那条腿摸了半天，摸到一块石头，走了。" },
+      { "text": "跟它握手", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵性": 3, "海灵": 10 }, "result": "你伸出钳子，它也伸出一条腿。你们握了很久，谁都没先松开。",
+        "fail": { "effect": { "death": "octopus" }, "result": "它握得很紧。" } }
+    ]
+  },
+  {
+    "id": "fun_clam", "dir": "down", "weight": 6, "once": true,
+    "text": "一只蛤蜊张着嘴晒太阳，里面好像有颗亮晶晶的东西。",
+    "choices": [
+      { "text": "给它讲个笑话", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "item": "pearl", "灵性": 2 }, "result": "蛤蜊笑得合不拢嘴，珍珠掉了出来。",
+        "fail": { "effect": { "灵性": 1 }, "result": "蛤蜊没笑。它啪地合上嘴，以示不屑。" } },
+      { "text": "一拳敲开", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.05,
+        "effect": { "海灵": 6, "体力": 2 }, "result": "里面是颗石子。蛤蜊肉倒是挺鲜。",
+        "fail": { "effect": { "体力": -1 }, "result": "壳太硬，你的拳头疼了一天。" } }
+    ]
+  },
+  {
+    "id": "fun_bottle", "dir": "side", "weight": 6, "once": true,
+    "text": "海上漂来一个玻璃瓶，里面卷着一张纸条。",
+    "choices": [
+      { "text": "一拳打开看看", "absurd": true, "chance": 0.35, "chanceAttr": "拳力", "chanceStep": 0.04,
+        "effect": { "灵性": 3, "海灵": 6 }, "result": "纸条上写着：捡到这个瓶子的人，祝你好运。你决定这是写给虾的。",
+        "fail": { "effect": { "体力": -1 }, "result": "瓶子没碎，你的钳子麻了。纸条在里面，冲你晃。" } },
+      { "text": "让它漂走", "effect": { "游速": 1 }, "result": "有些信，不是写给你的。" }
+    ]
+  }
+]

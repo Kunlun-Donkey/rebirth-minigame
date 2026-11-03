@@ -43,7 +43,7 @@
       { "text": "沉底", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.06,
         "effect": { "潜水": 1, "灵性": 1 }, "result": "网落下来时，你已经在河底了。手电在水面上找了半夜。",
         "fail": { "effect": { "death": "poacher" }, "result": "网收得很快。" } },
-      { "text": "冲手电流泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "灵性": 2, "龙气": 5 },
+      { "text": "冲手电流泪", "showIf": "skill:tears", "useSkill": "tears", "effect": { "feud": "偷猎的人被你哭走了", "灵性": 2, "龙气": 5 },
         "result": "你冲手电流下两行泪。船上的年轻人手一抖：哥，它哭了……咱走吧。" },
       { "text": "前世的识人", "require": "legacy:wary>=1", "effect": { "灵性": 2, "龙气": 3 },
         "result": "前世你被这条船带走过。这一世手电一亮，你已经在河对岸了。" }

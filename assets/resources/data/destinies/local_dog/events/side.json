@@ -79,7 +79,7 @@
         "effect": { "follow": { "id": "f_weasel_hen", "delay": 2 }, "体力": 4 }, "result": "真有个鸡窝。它吃鸡，你吃蛋。",
         "fail": { "effect": { "death": "betrayed" }, "result": "那是猎户下的套。黄鼠狼在树上笑。" } },
       { "text": "不信", "effect": { "灵性": 1 }, "result": "它撇撇嘴，去找别的狗了。" },
-      { "text": "盯着它的眼睛", "require": "legacy:judge>=1", "effect": { "follow": "f_weasel_confess", "灵性": 2, "妖气": 5 },
+      { "text": "盯着它的眼睛", "require": "legacy:judge>=1", "effect": { "feud": "黄鼠狼吐出了真话", "follow": "f_weasel_confess", "灵性": 2, "妖气": 5 },
         "result": "前世它骗过你。你咬住它的尾巴，它吐出了真话。" },
       { "text": "跟它对质", "showIf": "skill:talk", "useSkill": "talk", "effect": { "妖气": 6 },
         "result": "你一句一句问。它说不圆，哭着跑了。" }
@@ -113,8 +113,8 @@
     "id": "l2_trader_end", "dir": "side", "layers": ["L2"], "stage": [3, 99], "once": true, "weight": 20, "require": "flag:trader_foiled",
     "text": "县衙门口，刘拐子被押着游街。他偷狗，偷到了县太爷家。",
     "choices": [
-      { "text": "冲他叫一声", "effect": { "妖气": 5, "牙口": 1 }, "result": "他认出了你。这一回，低头的是他。" },
-      { "text": "走开", "effect": { "灵性": 2 }, "result": "你没回头。笼子里那些狗，你替它们看过了。" }
+      { "text": "冲他叫一声", "effect": { "feud": "刘拐子被押着游街", "妖气": 5, "牙口": 1 }, "result": "他认出了你。这一回，低头的是他。" },
+      { "text": "走开", "effect": { "feud": "刘拐子被押着游街", "灵性": 2 }, "result": "你没回头。笼子里那些狗，你替它们看过了。" }
     ]
   },
   {

@@ -41,7 +41,7 @@
     "choices": [
       { "text": "转身走开", "effect": { "忠义": 1, "牙口": 1 }, "result": "你咬着牙走过去。村里的狗都看着你。" },
       { "text": "扑上去", "chance": 0.25, "chanceAttr": "牙口", "chanceStep": 0.05,
-        "effect": { "牙口": 2, "妖气": 5 }, "result": "你咬住了它的耳朵。黑虎第一次叫出了声。",
+        "effect": { "feud": "咬住了黑虎的耳朵", "牙口": 2, "妖气": 5 }, "result": "你咬住了它的耳朵。黑虎第一次叫出了声。",
         "fail": { "effect": { "体力": -3 }, "result": "它把你按在地上，按到你不动为止。" } },
       { "text": "亮出黑虎的牙", "require": "item:tiger_tooth", "effect": { "妖气": 8 }, "result": "它看见自己的牙，骨头掉在了地上。" }
     ]
@@ -95,7 +95,7 @@
     "choices": [
       { "text": "躲几天", "effect": { "体力": -1, "灵性": 1 }, "result": "你在山里躲了几天。他找不着，骂骂咧咧走了。" },
       { "text": "让他看见你", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
-        "effect": { "脚力": 2, "妖气": 4 }, "result": "你引着他满村跑，最后他掉进了粪坑。",
+        "effect": { "feud": "刘拐子掉进了粪坑", "脚力": 2, "妖气": 4 }, "result": "你引着他满村跑，最后他掉进了粪坑。",
         "fail": { "effect": { "death": "dogcatcher" }, "result": "他的拐棍比你想的快。" } },
       { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2, "妖气": 5 }, "result": "他追了你三里地，拐棍都跑丢了。" }
     ]
@@ -503,8 +503,8 @@
     "id": "f_tiger_punished", "dir": "down", "chainOnly": true, "layers": ["D2", "D3"], "teaser": "黑虎被拴起来了",
     "text": "黑虎被拴在地主家门口，拴了一整个月。它看见你，没出声。",
     "choices": [
-      { "text": "慢慢走过去", "effect": { "忠义": 1, "妖气": 3 }, "result": "你从它面前走过。它把头扭了过去。" },
-      { "text": "冲它叫一声", "effect": { "牙口": 1 }, "result": "它挣了一下绳子。绳子很结实。" }
+      { "text": "慢慢走过去", "effect": { "feud": "黑虎被拴了一个月", "忠义": 1, "妖气": 3 }, "result": "你从它面前走过。它把头扭了过去。" },
+      { "text": "冲它叫一声", "effect": { "feud": "黑虎被拴了一个月", "牙口": 1 }, "result": "它挣了一下绳子。绳子很结实。" }
     ]
   },
   {

@@ -1,0 +1,81 @@
+[
+  {
+    "id": "r_dogcatcher_again", "dir": "any", "sudden": true, "stage": [1, 99], "once": true, "weight": 12, "require": "died:dogcatcher>=2",
+    "text": "村口又停了一辆板车。刘拐子拄着拐冲你笑：又见面了。他带走过你{died:dogcatcher}回。",
+    "choices": [
+      { "text": "咬他的拐棍", "chance": 0.45, "chanceAttr": "牙口", "chanceStep": 0.06,
+        "effect": { "牙口": 2, "妖气": 12, "feud": "刘拐子的拐棍被咬断" },
+        "result": "咔嚓一声。刘拐子拄着半截拐，一路蹦回了镇上。",
+        "easy": "你还没张嘴，他已经把拐棍扔了。",
+        "fail": { "effect": { "体力": -2 }, "result": "拐棍太硬，你的牙酸了三天。" } },
+      { "text": "撒腿跑", "effect": { "脚力": 1 }, "result": "他追不上。他从来追不上，他只会等。" },
+      { "text": "钻进笼子帮他关门", "absurd": true, "chance": 0.12, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "妖气": 15, "忠义": 2, "feud": "刘拐子把自己锁进了笼子" },
+        "result": "他弯腰来抓，你一闪，门咔哒一声锁上了——他在里面。",
+        "fail": { "effect": { "death": "dogcatcher" }, "result": "门咔哒一声锁上了。你在里面。" } }
+    ]
+  },
+  {
+    "id": "r_wolves_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 12, "require": "died:wolves>=2",
+    "text": "山里又响起了狼嚎。这群狼围过你{died:wolves}回，嚎得都不用排练。",
+    "choices": [
+      { "text": "冲头狼叫回去", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "牙口": 2, "妖气": 12, "feud": "头狼夹着尾巴走了" },
+        "result": "你一声叫出去，头狼愣了。后面的狼，先跑了。",
+        "easy": "你往坡上一站。狼群看了你一眼，掉头回山了。",
+        "fail": { "effect": { "体力": -3 }, "result": "它们没跑。你跑了。" } },
+      { "text": "绕道下山", "effect": { "脚力": 1, "体力": -1 }, "result": "你绕了一大圈，天亮才到家。" },
+      { "text": "跟着一起嚎", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "妖气": 10, "灵性": 2 }, "result": "你嚎得比它们还难听。狼群面面相觑，以为来了个大的。",
+        "fail": { "effect": { "体力": -2 }, "result": "你嚎破了音。狼群笑了一晚上。" } }
+    ]
+  },
+  {
+    "id": "r_poison_again", "dir": "down", "once": true, "weight": 12, "require": "died:poison>=2",
+    "text": "村口又扔着一块肉，香得很可疑。你在这儿吃坏过{died:poison}回。",
+    "choices": [
+      { "text": "叼去给村长看", "effect": { "忠义": 3, "妖气": 6, "feud": "下毒饵的人被揪了出来" },
+        "result": "村长闻了闻，脸一沉。下毒的人，当天就被揪了出来。" },
+      { "text": "绕开", "effect": { "灵性": 1 }, "result": "你绕了三圈，口水流了一路。" },
+      { "text": "埋起来留着过年", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "体力": 2, "灵性": 2 }, "result": "过年那天刨出来一看，肉早被老鼠偷了。那几只老鼠，再没出来过。",
+        "fail": { "effect": { "体力": -1 }, "result": "你埋了半天，忘了埋在哪。" } }
+    ]
+  },
+  {
+    "id": "r_taoist_again", "dir": "side", "stage": [2, 99], "once": true, "weight": 12, "require": "died:taoist>=2",
+    "text": "那个道士又来了，葫芦擦得锃亮。他收过你{died:taoist}回，熟门熟路。",
+    "choices": [
+      { "text": "抢他的葫芦", "chance": 0.4, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 2, "妖气": 15, "feud": "道士的葫芦被你叼走了" },
+        "result": "你叼起葫芦就跑。道士在后面追：还我葫芦！",
+        "easy": "葫芦还没举起来，就到了你嘴里。道士看着空手，愣了半天。",
+        "fail": { "effect": { "体力": -3 }, "result": "葫芦口冲你一亮，你吓得掉头就跑。" } },
+      { "text": "装成看门狗", "effect": { "忠义": 2 }, "result": "你蹲在门口摇尾巴。道士看了半天：嗯，是条好狗。走了。" },
+      { "text": "反问他何为道", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.02,
+        "effect": { "灵性": 3, "妖气": 12, "feud": "道士被一条狗问住了" },
+        "result": "道士被问住了，坐下想了一天一夜，第二天还俗了。",
+        "fail": { "effect": { "death": "taoist" }, "result": "他想了想：贫道的道，就是收你。" } }
+    ]
+  },
+  {
+    "id": "fun_cat", "dir": "down", "weight": 6, "once": true,
+    "text": "一只橘猫蹲在墙头，冲你翻了个白眼。",
+    "choices": [
+      { "text": "跟它比谁能睡", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "体力": 3, "灵性": 2 }, "result": "你睡了一天一夜。猫醒来时，你还在睡。它认输了。",
+        "fail": { "effect": { "体力": -1 }, "result": "你睡到一半饿醒了。猫还在睡。" } },
+      { "text": "冲它叫", "effect": { "牙口": 1 }, "result": "它又翻了个白眼，跳走了。" }
+    ]
+  },
+  {
+    "id": "fun_mirror", "dir": "side", "weight": 6, "once": true,
+    "text": "集市上有面镜子。镜子里有条狗，长得跟你一模一样，还瞪你。",
+    "choices": [
+      { "text": "跟它打一架", "absurd": true, "chance": 0.25, "chanceAttr": "牙口", "chanceStep": 0.03,
+        "effect": { "牙口": 2, "妖气": 8 }, "result": "你扑上去，镜子翻了。镜子里的狗不见了。你赢了。",
+        "fail": { "effect": { "体力": -2 }, "result": "你一头撞在镜子上。它也撞了，看起来比你还疼。" } },
+      { "text": "冲它摇尾巴", "effect": { "灵性": 2 }, "result": "它也冲你摇。你们俩，处得挺好。" }
+    ]
+  }
+]

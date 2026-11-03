@@ -13,10 +13,13 @@
  * 所有局内状态都在 run（可 JSON 序列化），存档只需保存 run + profile。
  */
 import { CondCtx, CondNode, describeCond, DescribeNames, evalCond, HasKind, NumRef, walkCond } from './condition';
+import {
+    DANMAKU, fill, memorySnark, STREAK_BREAK, TIANDAO_BREAK, TIANDAO_REVIVE, TIANDAO_SETTLE, TIANDAO_START, TIANDAO_TIANHU, tiandao, tiandaoTier,
+} from './flavor';
 import { addUnique, destinyProfile } from './profile';
 import { Rng } from './rng';
 import {
-    Choice, ChoiceView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Mods, Outcome, Profile,
+    Choice, ChoiceView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Hype, HYPE_ORDER, Mods, Outcome, Profile,
     RARITIES, Rarity, RunState, SettleResult, SkillView, StageProgress, StepResult, UpgradeKind, UpgradeView,
 } from './types';
 
@@ -26,7 +29,14 @@ const MEMORY_TEXT_MAX = 18;
 export const DAILY_FIRST_BONUS = 0.5;
 /** 随缘投胎（转盘选命格）结算轮回点加成 */
 export const SPIN_BONUS = 0.3;
-const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [] };
+const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [] };
+/** 连胜几次起「势如破竹」，以及单次奖励上限 */
+const STREAK_MIN = 3;
+const STREAK_BONUS_MAX = 6;
+/** 成功率低于此值硬选并因此送命 → 墓志铭「死于过度自信」 */
+const RECKLESS_CHANCE = 0.25;
+/** 突破时天道插话的概率 */
+const TIANDAO_BREAK_CHANCE = 0.5;
 /** 有成功率的选项成功后，再判定一次大成功（属性收益翻倍） */
 export const CRIT_CHANCE = 0.15;
 /** 同一世已遇到过的（非 once）事件再次抽中的权重系数 */
@@ -221,7 +231,7 @@ export class Engine {
                 lockText: enabled ? undefined : this.describe(dd.cond),
                 layerName: cur ? this.layerText(cur).name : '',
                 nextLayer: next ? { name: this.layerText(next).name, lockText: this.check(next.cond) ? undefined : this.describe(next.cond) } : undefined,
-                thread: this.dueThread(dd.id)?.teaser,
+                thread: ((t?: string) => t && this.fmt(t))(this.dueThread(dd.id)?.teaser),
             };
         });
     }
@@ -280,11 +290,17 @@ export class Engine {
             } else if (c.require) view.tag = this.specialTag(c.require) ?? this.specialTag(c.showIf);
             else if (c.showIf) view.tag = this.specialTag(c.showIf);
             const mem = this.dp.memory[`${ev.id}#${index}`];
-            if (mem && mem.life < this.run.life) view.memory = `前世：${mem.text}`;
+            if (mem && mem.life < this.run.life) {
+                // 同一个坑死过 2 次起，标注越来越嫌弃
+                view.memory = (mem.dead ?? 0) >= 2 ? `前世：死过${mem.dead}次·${memorySnark(mem.dead!)}` : `前世：${mem.text}`;
+            }
+            if (enabled && this.isSure(c)) view.sure = true;
+            if (c.absurd) view.absurd = true;
             if (this.run.revealAll || this.run.hint === index) view.preview = this.previewChoice(c);
+            view.text = this.fmt(view.text);
             choices.push(view);
         });
-        return { id: ev.id, text: ev.text, gold: ev.gold, sudden: ev.sudden, choices };
+        return { id: ev.id, text: this.fmt(ev.text), gold: ev.gold, sudden: ev.sudden, cameo: ev.cameo, choices };
     }
 
     /** 广告「窥探天命」：预览当前事件所有选项 */
@@ -305,20 +321,84 @@ export class Engine {
         }
 
         this.recordMissed(ev, index);
+        const r = this.run;
         const step = this.newStep();
         if (c.useSkill) this.startCooldown(c.useSkill);
+        const key = `${ev.id}#${index}`;
+        const prev = this.dp.memory[key];
         let out: Outcome = c.success;
+        let easy: string | undefined;
+        r.reckless = false;
         if (c.chance !== undefined && c.fail) {
-            step.success = this.rng.chance(this.chanceOf(c));
-            if (!step.success) out = c.fail;
-            else if (Object.keys(c.success.effect.attrs).length && this.rng.chance(CRIT_CHANCE)) step.crit = true;
+            // 成功率溢出到 100%：必成（碾压），不再掷骰
+            const sure = this.isSure(c);
+            step.success = sure || this.rng.chance(this.chanceOf(c));
+            if (!step.success) {
+                out = c.fail;
+                r.reckless = this.chanceOf(c) < RECKLESS_CHANCE;
+                if ((r.streak ?? 0) >= STREAK_MIN) step.messages.push(fill(STREAK_BREAK, { n: r.streak! }));
+                r.streak = 0;
+            } else {
+                if (Object.keys(c.success.effect.attrs).length && this.rng.chance(CRIT_CHANCE)) step.crit = true;
+                if (sure) {
+                    easy = c.easy;
+                    const dead = prev && prev.life < r.life ? prev.dead ?? 0 : 0;
+                    if (dead) {
+                        step.messages.push(`【碾压】前世你在这里死过 ${dead} 次。这一世，连眼皮都没抬。`);
+                        this.hype(step, 'crush');
+                    }
+                }
+                this.addStreak(step);
+            }
         }
-        // 前世记忆：记录结果
+        if (ev.cameo) this.hype(step, 'cameo');
+        // 前世记忆：记录结果（害死过你的次数累加）
         const deathId = out.effect.death;
         const memText = deathId ? `你在这里${this.data.deaths.get(deathId)?.name ?? '死了'}` : out.result ?? c.text;
-        this.dp.memory[`${ev.id}#${index}`] = { life: this.run.life, text: clip(memText, MEMORY_TEXT_MAX) };
+        const dead = (prev?.dead ?? 0) + (deathId ? 1 : 0);
+        this.dp.memory[key] = { life: r.life, text: clip(this.fmt(memText), MEMORY_TEXT_MAX), ...(dead ? { dead } : {}) };
 
-        return this.resolve(out, step);
+        return this.resolve(easy ? { ...out, result: easy } : out, step);
+    }
+
+    /** 成功率（未封顶）溢出到 100% 的有风险选项 */
+    private isSure(c: Choice): boolean {
+        return c.chance !== undefined && !!c.fail && this.rawChance(c) >= 1;
+    }
+
+    /** 连胜：达到 STREAK_MIN 起每次额外给成长值 */
+    private addStreak(step: StepResult): void {
+        const r = this.run;
+        r.streak = (r.streak ?? 0) + 1;
+        if (r.streak < STREAK_MIN) return;
+        const bonus = Math.min(r.streak, STREAK_BONUS_MAX);
+        const g = this.data.meta.rules.growth;
+        this.addAttr(g, bonus, step);
+        step.messages.push(`【势如破竹·${r.streak}连】${this.attrName(g)} +${bonus}`);
+        if (r.streak === STREAK_MIN || r.streak % 5 === 0) this.hype(step, 'streak');
+    }
+
+    /** 标记高光时刻（只保留优先级最高的一个） */
+    private hype(step: StepResult, h: Hype): void {
+        if (!step.hype || HYPE_ORDER.indexOf(h) < HYPE_ORDER.indexOf(step.hype)) step.hype = h;
+    }
+
+    /** 文本占位：{died:死法id} = 累计死于该死法的次数，{life} = 第几世 */
+    fmt(s: string): string {
+        if (!s.includes('{')) return s;
+        return s.replace(/\{died:(\w+)\}/g, (_m, id: string) => String(this.dp.deathCount?.[id] ?? 0))
+            .replace(/\{life\}/g, String(this.run?.life ?? this.dp.lives + 1));
+    }
+
+    /** 开局天道（只在特定世数说话） */
+    startRemark(): string | undefined {
+        const t = TIANDAO_START[this.run.life];
+        return t ? fill(t, { name: this.data.meta.name }) : undefined;
+    }
+
+    /** 弹幕池（{name} 已替换） */
+    danmaku(h: Hype): string[] {
+        return DANMAKU[h].map(s => fill(s, { name: this.data.meta.name }));
     }
 
     /** 结算一个事件结果并推进：链式事件 → 方向层推进 → 待触发事件 → 季末 */
@@ -330,8 +410,9 @@ export class Engine {
             for (const [k, v] of Object.entries(out.effect.attrs)) if (v > 0) bonus[k] = v;
             this.applyEffect({ ...EMPTY_EFFECT, attrs: bonus }, step);
             step.messages.unshift('【大成功】收益翻倍！');
+            this.hype(step, 'crit');
         }
-        step.text = out.result;
+        step.text = out.result && this.fmt(out.result);
         this.run.revealAll = false;
         this.run.hint = undefined;
         this.run.boost = 0;
@@ -445,7 +526,9 @@ export class Engine {
         if (this.run.reviveUsed.ad) throw new Error('本局已使用过逆天改命');
         this.run.reviveUsed.ad = true;
         const step = this.newStep();
-        this.revive(step, '逆天改命！天道打了个盹，你又活了过来。');
+        const lines = TIANDAO_REVIVE[tiandaoTier(this.run.life)];
+        this.revive(step, lines[this.rng.int(lines.length)]);
+        this.hype(step, 'revive');
         // 命盘·续命：放大广告复活的收益
         for (const u of this.data.upgrades.values()) {
             if (u.kind !== 'reviveBoost' || !this.upgradeLevel(u.id)) continue;
@@ -472,7 +555,11 @@ export class Engine {
         if (kind === 'death') {
             const def = d.deaths.get(id)!;
             title = def.name;
-            epitaph = `享年${this.run.season}季，${def.epitaph}`;
+            const count = dp.deathCount ?? (dp.deathCount = {});
+            count[id] = (count[id] ?? 0) + 1;
+            dp.deathRun = dp.deathRun?.id === id ? { id, n: dp.deathRun.n + 1 } : { id, n: 1 };
+            const quip = this.epitaphQuip(id);
+            epitaph = `享年${this.run.season}季，${def.epitaph}${quip ? `——${quip}` : ''}`;
             firstTime = addUnique(dp.codex.deaths, id);
             if (def.legacy) {
                 const ld = d.legacies.get(def.legacy)!;
@@ -495,6 +582,7 @@ export class Engine {
             title = def.name;
             epitaph = def.epitaph;
             firstTime = addUnique(dp.codex.endings, id);
+            dp.deathRun = undefined;
         }
         for (const it of this.run.found) addUnique(dp.codex.items, it);
         for (const ev of this.run.seen) addUnique(dp.codex.events, ev);
@@ -563,8 +651,31 @@ export class Engine {
             },
             goals: this.buildGoals(),
             log: [...r.log],
+            feuds: [...(r.feuds ?? [])],
+            remark: tianhu ? TIANDAO_TIANHU : this.pickLine(TIANDAO_SETTLE[kind][tiandaoTier(r.life)]),
         };
         return this.settled;
+    }
+
+    private pickLine(list: string[]): string {
+        return list[this.rng.int(list.length)];
+    }
+
+    /** 墓志铭后缀：按死的方式吐槽一句（结算时 deathCount / deathRun 已计入本次） */
+    private epitaphQuip(id: string): string | undefined {
+        const r = this.run;
+        const dp = this.dp;
+        const run = dp.deathRun?.id === id ? dp.deathRun.n : 0;
+        if (run >= 3) return `连续第${run}世了，下次一定行`;
+        if (r.reckless) return '死于过度自信';
+        if (r.season <= 2 && id !== this.data.meta.rules.oldAgeDeath) return '主打一个速通';
+        const pg = this.stageProgress();
+        if (pg && pg.parts.length && pg.parts.reduce((n, p) => n + Math.min(1, p.cur / Math.max(1, p.need)), 0) / pg.parts.length >= 0.8) {
+            return `离「${pg.name}」只差一口气`;
+        }
+        const n = dp.deathCount?.[id] ?? 0;
+        if (n >= 5) return `老熟人了，第${n}回`;
+        return undefined;
     }
 
     /** 广告「双倍轮回点」 */
@@ -797,7 +908,7 @@ export class Engine {
             .map(t => this.data.events.get(t.id))
             .filter((ev): ev is GameEvent => !!ev && !!ev.teaser && this.check(ev.require) &&
                 (!ev.layers || (['up', 'down', 'side'] as Dir[]).some(d => ev.layers!.includes(this.data.layersByDir[d][r.pos[d]]?.id))))
-            .map(ev => ({ dir: ev.dir, text: ev.teaser! }));
+            .map(ev => ({ dir: ev.dir, text: this.fmt(ev.teaser!) }));
     }
 
     private drawEvent(filter: (e: GameEvent) => boolean): GameEvent | undefined {
@@ -894,6 +1005,7 @@ export class Engine {
         if (kind === 'ending') {
             const def = this.data.endings.get(id);
             step.messages.push(`【结局·${def?.name ?? id}】`);
+            this.hype(step, r.blessed || r.flags.includes('tianhu') ? 'tianhu' : 'ending');
             r.log.push(`结局：${def?.name ?? id}。`);
         }
     }
@@ -911,6 +1023,8 @@ export class Engine {
         if (!next) return false;
         r.stage = next.level;
         step.messages.push(`【突破·${next.name}】${next.narration}`);
+        if (this.rng.chance(TIANDAO_BREAK_CHANCE)) step.messages.push(tiandao(this.pickLine(TIANDAO_BREAK[tiandaoTier(r.life)])));
+        this.hype(step, 'breakthrough');
         r.log.push(`第${r.season}季，突破为${next.name}。`);
         if (next.bonusEffect) this.applyEffect(next.bonusEffect, step);
         if (next.skillPool?.length) {
@@ -935,6 +1049,12 @@ export class Engine {
         for (const it of e.items) this.gainItem(it, step);
         for (const it of e.loseItems) this.loseItem(it, step);
         for (const sk of e.skills) this.grantSkill(sk, step);
+        for (const f of e.feuds) {
+            r.feuds = r.feuds ?? [];
+            if (!addUnique(r.feuds, f)) continue;
+            step.messages.push(`【恩怨了结】${f}`);
+            this.hype(step, 'feud');
+        }
         for (const f of e.follows) {
             const threads = (r.threads = r.threads ?? []).filter(t => t.id !== f.id);
             threads.push({ id: f.id, at: r.season + f.delay, until: r.season + f.delay + f.ttl - 1 });
@@ -989,6 +1109,9 @@ export class Engine {
                 case 'life': return r.life;
                 case 'legacy': return this.dp.legacy[ref.id!] ?? 0;
                 case 'pos': return r.pos[ref.id as Dir];
+                case 'died': return this.dp.deathCount?.[ref.id!] ?? 0;
+                case 'xstage': return this.profile.destinies[ref.id!]?.bestStage ?? 0;
+                case 'xlives': return this.profile.destinies[ref.id!]?.lives ?? 0;
             }
         },
         has: (kind: HasKind, id: string) => {
@@ -1002,6 +1125,12 @@ export class Engine {
                 case 'seen': return this.dp.codex.events.includes(id) || r.seen.includes(id);
                 case 'dead': return this.dp.codex.deaths.includes(id);
                 case 'ending': return this.dp.codex.endings.includes(id);
+                case 'xend': {
+                    // xend:命格id 或 xend:命格id/结局id
+                    const [did, eid] = id.split('/');
+                    const ends = this.profile.destinies[did]?.codex?.endings ?? [];
+                    return eid ? ends.includes(eid) : ends.length > 0;
+                }
             }
         },
     };
@@ -1034,14 +1163,22 @@ export class Engine {
             else if (leaf.t === 'has' && leaf.kind === 'item') tag = `道具·${this.names.item(leaf.id)}`;
             else if (leaf.t === 'has' && leaf.kind === 'companion') tag = `伴生·${this.names.companion(leaf.id)}`;
             else if (leaf.t === 'has' && leaf.kind === 'skill') tag = `技能·${this.names.skill(leaf.id)}`;
+            else if ((leaf.t === 'has' && leaf.kind === 'xend') || (leaf.t === 'cmp' && (leaf.left.kind === 'xstage' || leaf.left.kind === 'xlives'))) tag = '前世今生';
+            else if (leaf.t === 'cmp' && leaf.left.kind === 'died') tag = '宿怨';
         });
         return tag;
     }
 
     chanceOf(c: Choice): number {
         if (c.chance === undefined) return 1;
+        return Math.min(0.95, Math.max(0.05, this.rawChance(c)));
+    }
+
+    /** 未封顶的成功率（≥1 即「稳」） */
+    private rawChance(c: Choice): number {
+        if (c.chance === undefined) return 1;
         const bonus = (c.chanceAttr ? (this.run.attrs[c.chanceAttr] ?? 0) * (c.chanceStep ?? 0) : 0) + (this.run.boost ?? 0);
-        return Math.min(0.95, Math.max(0.05, c.chance + bonus));
+        return c.chance + bonus;
     }
 
     private previewChoice(c: Choice): string {
@@ -1052,6 +1189,7 @@ export class Engine {
             return parts.join(' ') || '无事发生';
         };
         if (c.chance !== undefined && c.fail) {
+            if (this.isSure(c)) return `稳了｜${fmt(c.success)}`;
             return `成功率${Math.round(this.chanceOf(c) * 100)}%｜成功：${fmt(c.success)}｜失败：${fmt(c.fail)}`;
         }
         return fmt(c.success);

@@ -21,7 +21,7 @@
         "fail": { "effect": { "death": "cooked" }, "result": "网兜一抄，你上秤了。" } },
       { "text": "给网兜一拳", "showIf": "skill:punch", "useSkill": "punch", "effect": { "拳力": 2, "flag": "boss_seen" },
         "result": "你一拳打穿了网兜。老板骂骂咧咧去换了个新的。" },
-      { "text": "前世的倒刺", "require": "legacy:thorny_tail>=1", "effect": { "拳力": 1, "flag": "boss_seen" },
+      { "text": "前世的倒刺", "require": "legacy:thorny_tail>=1", "effect": { "feud": "老板被尾刺扎了手", "拳力": 1, "flag": "boss_seen" },
         "result": "前世你上过一次桌。这一世老板一抓，被你的尾刺扎得直甩手。" }
     ]
   },
@@ -71,7 +71,7 @@
     "id": "x_octopus_old", "dir": "any", "sudden": true, "weight": 14, "stage": [3, 99], "once": true, "require": "flag:octopus_grudge",
     "text": "墨斗被一条海鳗堵在了石缝里，八条腿缩成一团，冲你喷了一口淡淡的墨。",
     "choices": [
-      { "text": "亮出它的墨囊", "require": "item:ink_sac", "effect": { "海灵": 10, "灵性": 2 },
+      { "text": "亮出它的墨囊", "require": "item:ink_sac", "effect": { "feud": "墨斗认出了自己的墨", "海灵": 10, "灵性": 2 },
         "result": "它认出了自己的墨，缩得更紧了。你游走了，海鳗也没敢动。" },
       { "text": "帮它赶走海鳗", "showIf": "skill:punch", "useSkill": "punch", "effect": { "灵性": 4, "海灵": 5, "follow": { "id": "f_octopus_debt", "delay": 2 } },
         "result": "你一拳打跑了海鳗。墨斗愣在那儿，不知道该说什么。你也没打算听。" },

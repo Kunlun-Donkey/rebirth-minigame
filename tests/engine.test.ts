@@ -678,3 +678,117 @@ describe('出生地图', () => {
         expect(e.mapDef()).toBeUndefined();
     });
 });
+
+describe('爽感 2：宿敌记仇 / 嫌弃式前世 / 稳 / 连胜 / 恩怨 / 墓志铭 / 跨命格', () => {
+    const settleDeath = (e: Engine, id: string) => { e.run.over = { kind: 'death', id }; e.run.phase = 'over'; return e.settle(); };
+
+    it('宿敌记仇：died:x 计数跨世累计，文本 {died:x} 渲染为次数', () => {
+        const ev: RawEvent = { id: 'grudge', dir: 'down', layers: ['D1'], weight: 1000, require: 'died:lava>=2', text: '它烤过你{died:lava}回', choices: [{ text: '报仇', effect: { feud: '烤回去了' }, result: '第{died:lava}回，轮到你了' }] };
+        const e = new Engine(buildDestiny(fixture([ev])), createProfile());
+        for (let i = 0; i < 2; i++) { e.startRun(pick, i + 1); settleDeath(e, 'lava'); }
+        expect(e.dp.deathCount?.lava).toBe(2);
+        e.startRun(pick, 9);
+        e.chooseDirection('down');
+        const v = e.eventView();
+        expect(v.id).toBe('grudge');
+        expect(v.text).toBe('它烤过你2回');
+        const st = e.choose(0);
+        expect(st.text).toBe('第2回，轮到你了');
+        expect(st.messages).toContain('【恩怨了结】烤回去了');
+        expect(st.hype).toBe('feud');
+        e.run.over = { kind: 'death', id: 'thirst' }; e.run.phase = 'over';
+        expect(e.settle().feuds).toEqual(['烤回去了']);
+    });
+
+    it('嫌弃式前世：同一个选项害死你 2 次起，标注带次数与吐槽', () => {
+        const trap: RawEvent = { id: 'trap', dir: 'down', layers: ['D1'], weight: 1000, text: '坑', choices: [{ text: '跳', effect: { death: 'lava' } }, { text: '绕', result: '绕开' }] };
+        const e = new Engine(buildDestiny(fixture([trap])), createProfile());
+        for (let i = 0; i < 3; i++) {
+            e.startRun(pick, i + 1);
+            e.chooseDirection('down');
+            const mem = e.eventView().choices[0].memory;
+            if (i === 0) expect(mem).toBeUndefined();
+            if (i === 1) expect(mem).toBe('前世：你在这里烤熟');
+            if (i === 2) expect(mem).toBe('前世：死过2次·又来？');
+            e.choose(0);
+            e.settle();
+        }
+    });
+
+    it('稳：成功率溢出到 100% 必成，用 easy 文案；前世在这儿死过时提示碾压', () => {
+        const ev: RawEvent = { id: 'risk', dir: 'down', layers: ['D1'], weight: 1000, text: '险', choices: [
+            { text: '冲', chance: 0.5, chanceAttr: '根系', chanceStep: 0.1, effect: { 灵气: 1 }, result: '险胜', easy: '轻松', fail: { effect: { death: 'lava' } } },
+        ] };
+        const e = new Engine(buildDestiny(fixture([ev])), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        expect(e.eventView().choices[0].sure).toBeUndefined();
+        e.dp.memory['risk#0'] = { life: 0, text: '你在这里烤熟', dead: 2 };
+        e.run.attrs.root = 5;
+        const v = e.eventView().choices[0];
+        expect(v.sure).toBe(true);
+        expect(v.memory).toBe('前世：死过2次·又来？');
+        const st = e.choose(0);
+        expect(st.success).toBe(true);
+        expect(st.text).toBe('轻松');
+        expect(st.messages.some(m => m.startsWith('【碾压】前世你在这里死过 2 次'))).toBe(true);
+        expect(['crush', 'crit', 'streak']).toContain(st.hype === 'crit' ? 'crit' : st.hype);
+    });
+
+    it('连胜：3 连起额外给成长值，断了提示', () => {
+        const ev: RawEvent = { id: 'roll', dir: 'down', layers: ['D1'], weight: 1000, text: '掷', choices: [
+            { text: '掷', chance: 0.5, effect: { 根系: 0 }, result: '中', fail: { result: '空' } },
+        ] };
+        const e = new Engine(buildDestiny(fixture([ev])), createProfile());
+        e.startRun(pick, 3);
+        let max = 0, broke = false;
+        for (let i = 0; i < 60; i++) {
+            // 直接反复进入同一事件（水分补满，避免渴死）
+            Object.assign(e.run, { phase: 'event', event: 'roll', dir: undefined, pending: [] });
+            e.run.attrs.water = 3;
+            const before = e.run.streak ?? 0;
+            const st = e.choose(0);
+            if (st.success && before + 1 >= 3) {
+                expect(st.messages.some(m => m.startsWith(`【势如破竹·${before + 1}连】`))).toBe(true);
+                expect(st.deltas.qi).toBeGreaterThanOrEqual(3);
+            }
+            if (!st.success && before >= 3) { broke = true; expect(st.messages.some(m => m.startsWith('【连胜断了】'))).toBe(true); }
+            max = Math.max(max, e.run.streak ?? 0);
+        }
+        expect(max).toBeGreaterThanOrEqual(3);
+        expect(broke).toBe(true);
+    });
+
+    it('墓志铭后缀：速通 / 连续同一死法 / 天道评语', () => {
+        const e = new Engine(buildDestiny(fixture()), createProfile());
+        e.startRun(pick, 1);
+        const s1 = settleDeath(e, 'lava');
+        expect(s1.epitaph).toContain('——主打一个速通');
+        expect(s1.remark).toBeTruthy();
+        e.startRun(pick, 2); settleDeath(e, 'lava');
+        e.startRun(pick, 3);
+        expect(settleDeath(e, 'lava').epitaph).toContain('连续第3世了');
+        expect(e.dp.deathRun).toEqual({ id: 'lava', n: 3 });
+    });
+
+    it('跨命格：xend / xlives / xstage 读取其他命格的存档；条件对玩家隐藏', () => {
+        const ev: RawEvent = { id: 'cameo', dir: 'down', layers: ['D1'], weight: 1000, cameo: true, require: 'xend:dog/celestial & xlives:dog>=2 & xstage:dog>=3', text: '似曾相识', choices: [
+            { text: '认出来', result: '是你' },
+            { text: '锁', require: 'xend:dog', result: '.' },
+        ] };
+        const p = createProfile();
+        const e = new Engine(buildDestiny(fixture([ev])), p);
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        expect(e.eventView().id).not.toBe('cameo');
+        p.destinies.dog = { ...p.destinies.dog, lives: 2, bestStage: 3, legacy: {}, sealed: [], memory: {}, skills: [], upgrades: {}, codex: { deaths: [], endings: ['celestial'], items: [], events: [] } };
+        e.startRun(pick, 2);
+        e.chooseDirection('down');
+        const v = e.eventView();
+        expect(v.id).toBe('cameo');
+        expect(v.cameo).toBe(true);
+        expect(v.choices[1].enabled).toBe(true);
+        expect(v.choices[1].tag).toBe('前世今生');
+        expect(e.choose(0).hype).toBe('cameo');
+    });
+});

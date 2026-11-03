@@ -10,6 +10,7 @@ import { Game } from '../../assets/scripts/game/game';
 import { CONFIG } from '../../assets/scripts/game/config';
 import { showSplash } from '../../assets/scripts/game/screens/splash';
 import { showUnlockReveal } from '../../assets/scripts/game/screens/destiny';
+import { showRun } from '../../assets/scripts/game/screens/run';
 import { destinyProfile, Rng } from '../../assets/scripts/core';
 import { toHtml } from './serialize';
 
@@ -89,9 +90,25 @@ it('UI 巡检快照', async () => {
                 if (!list.length) break;
                 tap(list[rng.int(list.length)]); await flush();
             }
-            // 结局结算页（强制）
+            // 跨命格彩蛋 + 嫌弃式前世 + 稳 / 离谱标签（强制进入一个彩蛋事件）
+            for (const d of DESTINIES) {
+                const dp = destinyProfile(g.save.profile, d);
+                dp.lives = Math.max(dp.lives, 30);
+                if (d !== did) dp.codex.endings = [...new Set([...dp.codex.endings, ...['celestial', 'guardian', 'eclipse', 'xiaocui_dog', 'mountain_god', 'tree_demon', 'oasis_lord', 'jianmu', 'devourer', 'wind_seed', 'fairy', 'valley_queen', 'butterfly_effect', 'xiaoyu_butterfly', 'cicada_king', 'sea_god', 'dragon_general', 'lets_go', 'aquarium_star', 'dragon', 'river_god', 'sewer_king', 'internet_star', 'mars_ancestor', 'plover_friend']])];
+            }
+            const cameo = [...g.engine.data.events.values()].find(e => e.cameo && e.choices.some(c => c.absurd || c.chance !== undefined));
+            if (cameo && g.engine.run && g.engine.run.phase !== 'over') {
+                g.overlay.destroyAllChildren();
+                Object.assign(g.engine.run, { phase: 'event', event: cameo.id, dir: undefined, revealAll: false });
+                g.engine.dp.memory[`${cameo.id}#0`] = { life: 0, text: '你在这里没了', dead: 3 };
+                for (const k of Object.keys(g.engine.run.attrs)) g.engine.run.attrs[k] = Math.max(g.engine.run.attrs[k], 30);
+                g.reset(); showRun(g); await flush(4); snap('跨命格彩蛋');
+                g.act(() => g.engine.choose(g.engine.eventView().choices.find(c => c.enabled)!.index)); await flush(4); snap('彩蛋结果');
+            }
+            // 结局结算页（强制，带本世恩怨与天道评语）
             const ending = [...g.engine.data.endings.keys()][0];
             if (ending && g.engine.run) {
+                g.engine.run.feuds = ['老刀扎了满嘴刺', '偷猎的人被送到了派出所', '海鸥挨了一记直拳'];
                 g.overlay.destroyAllChildren();
                 (g.engine.run as { over?: unknown; phase: string }).over = { kind: 'ending', id: ending };
                 g.engine.run.phase = 'over';

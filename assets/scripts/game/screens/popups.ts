@@ -4,6 +4,7 @@ import type { Game } from '../game';
 import { Platform } from '../platform';
 import { box, button, ButtonOpts, chip, COLOR, image, modal, onTap, pop, sizeOf, text, textHeight } from '../ui/kit';
 import { CONFIG, TEX } from '../config';
+import { danmaku } from '../ui/danmaku';
 
 /** 结果弹窗：文本 + 属性变化 + 消息（突破/领悟/层推进）；点「继续」回调 */
 export function showStep(g: Game, s: StepResult, then: () => void): void {
@@ -53,11 +54,15 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
         y += 60;
     }
     for (const m of s.messages) {
-        const color = m.startsWith('【领悟') || m.startsWith('【想起') ? COLOR.skill : m.startsWith('【') ? COLOR.legacy : COLOR.ink2;
+        const color = m.startsWith('【领悟') || m.startsWith('【想起') ? COLOR.skill
+            : m.startsWith('【天道') || m.startsWith('【连胜断了') ? COLOR.ochreD
+            : m.startsWith('【恩怨') || m.startsWith('【碾压') ? COLOR.bad
+            : m.startsWith('【') ? COLOR.legacy : COLOR.ink2;
         const n = text(panel, m, 40, y, innerW, { size: 26, wrap: true, color, lineHeight: 40, bold: m.startsWith('【') });
         y += sizeOf(n).h + 12;
     }
-    if (breakthrough || s.crit) Platform.vibrate();
+    if (breakthrough || s.crit || s.hype === 'feud' || s.hype === 'crush') Platform.vibrate();
+    if (s.hype) danmaku(g, e.danmaku(s.hype));
     // 按钮始终在面板内（内容超出估算时宁可压住最后一行，也不能出屏）
     const ph = sizeOf(panel).h;
     button(panel, 40, Math.min(Math.max(y + 10, ph - 120), ph - 110), innerW, { label: '继  续', style: 'primary', onClick: close });

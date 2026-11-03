@@ -41,7 +41,7 @@
         "effect": { "follow": "f_trader_sack", "忠义": 2, "flag": "trader_foiled" }, "result": "灯一盏盏亮了。刘拐子扔下麻袋就跑。",
         "fail": { "effect": { "death": "dogcatcher" }, "result": "麻袋套住了你的头。" } },
       { "text": "躲进柴堆", "effect": { "follow": "f_trader_missing", "灵性": 1, "体力": -1 }, "result": "你屏着气，听他的脚步走远了。" },
-      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 1, "忠义": 1, "flag": "trader_foiled" },
+      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "feud": "刘拐子掉进了河里", "脚力": 1, "忠义": 1, "flag": "trader_foiled" },
         "result": "你把他引到了河边。他一脚踩空，掉了进去。" }
     ]
   },
@@ -66,7 +66,7 @@
     "require": "flag:tiger_grudge",
     "text": "黑虎老了，牙掉了一半。它看见你，还是龇了龇牙。",
     "choices": [
-      { "text": "咬回去", "effect": { "skill": "fang", "item": "tiger_tooth", "牙口": 2 },
+      { "text": "咬回去", "effect": { "feud": "咬回了黑虎那一口", "skill": "fang", "item": "tiger_tooth", "牙口": 2 },
         "result": "你咬回了当年那一口。它的牙，掉在你脚边。" },
       { "text": "从它身边走过", "effect": { "follow": { "id": "f_tiger_last", "delay": 2 }, "忠义": 2, "灵性": 2 }, "result": "你没回头。你早就不是那只小狗了。" }
     ]
@@ -80,7 +80,7 @@
         "effect": { "体力": 3 }, "result": "真有只鸡。二皮说：这次，没骗你。",
         "fail": { "effect": { "death": "betrayed" }, "result": "鸡没有。只有一个张开的套索。" } },
       { "text": "不去", "effect": { "follow": { "id": "f_weasel_gone", "delay": 2 }, "灵性": 1 }, "result": "二皮讪讪地走了。从此没再回来。" },
-      { "text": "我闻得出你在撒谎", "require": "legacy:judge>=1", "effect": { "灵性": 2, "妖气": 6 },
+      { "text": "我闻得出你在撒谎", "require": "legacy:judge>=1", "effect": { "feud": "二皮跪下认了错", "灵性": 2, "妖气": 6 },
         "result": "前世它骗死了你。这一世，它跪下认了错。" },
       { "text": "问它为什么", "showIf": "skill:talk", "useSkill": "talk", "effect": { "follow": { "id": "u2_weasel_thanks", "delay": 2, "ttl": 8 }, "灵性": 3, "flag": "weasel_saved" },
         "result": "它说猎户抓了它的崽。你们一起，把崽救了回来。" }

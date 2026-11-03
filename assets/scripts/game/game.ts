@@ -3,7 +3,7 @@
  * 界面函数（screens/*）只读取 Game 的状态并回调这里的方法，不直接改存档。
  */
 import { Label, Node, view } from 'cc';
-import { Destiny, DestinyIndex, destinyStates, Engine, pickDestiny, randomSeed, StepResult } from '../core';
+import { Destiny, DestinyIndex, destinyStates, Engine, pickDestiny, randomSeed, StepResult, tiandao } from '../core';
 import { Audio, SfxName } from './audio';
 import { CONFIG, setTexDestiny, TEX } from './config';
 import { loadDestiny, loadDestinyIndex } from './loader';
@@ -35,6 +35,8 @@ export class Game {
     screen!: Node;
     /** 弹窗层，始终在界面之上 */
     overlay!: Node;
+    /** 特效层（弹幕），在弹窗之上；切换界面时不清空 */
+    fx!: Node;
     audio!: Audio;
     W = CONFIG.designWidth;
     H = CONFIG.designHeight;
@@ -50,6 +52,7 @@ export class Game {
         root.setScale(vs.width / this.W, vs.width / this.W, 1);
         this.screen = box(root, 0, 0, this.W, this.H, 'screen');
         this.overlay = box(root, 0, 0, this.W, this.H, 'overlay');
+        this.fx = box(root, 0, 0, this.W, this.H, 'fx');
 
         this.save = loadSave();
         const run = this.save.run;
@@ -238,6 +241,7 @@ export class Game {
         Platform.report('start_life', { life: this.engine.run.life, talent: pick.talent, map: map?.id ?? '' });
         this.goRun();
         const B = this.data.meta.blessed;
+        const remark = this.engine.startRemark();
         if (this.engine.run.blessed && B) {
             // 天命之子：金色开局（天胡通道）
             Platform.report('blessed', { life: this.engine.run.life });
@@ -248,7 +252,8 @@ export class Game {
                 `本世：全属性大幅提升${B.lifespanMul && B.lifespanMul > 1 ? `，寿元 ×${B.lifespanMul}` : ''}，奇遇将至。`,
                 ...(map ? [`出生地：${map.name}`] : []),
             ]);
-        } else if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc]);
+        } else if (map) showInfo(this, `这一世，你出生在「${map.name}」`, [map.desc, ...(remark ? ['', tiandao(remark)] : [])]);
+        else if (remark) showInfo(this, `第 ${this.engine.run.life} 世`, [tiandao(remark)]);
     }
 
     /** 执行一个会产生结果的动作（选项/道具/技能），弹出结果后推进 */

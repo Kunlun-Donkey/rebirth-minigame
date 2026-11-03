@@ -1,0 +1,104 @@
+[
+  {
+    "id": "xo_grass_kelp", "dir": "down", "layers": ["D3"], "cameo": true, "once": true, "weight": 10, "maps": ["tidal", "reef"], "require": "xlives:desert_grass>=1",
+    "text": "海草林里有一根海草特别倔，浪怎么冲，它都不倒。",
+    "choices": [
+      { "text": "跟它学", "effect": { "打洞": 2, "海灵": 6 }, "result": "你也把脚扎进了沙里。海草说：前世我在荒漠里，也是这么扎的。" },
+      { "text": "给它一拳", "effect": { "拳力": 1 }, "result": "海草晃了晃，又站直了。你的拳头，第一次没打倒东西。" }
+    ]
+  },
+  {
+    "id": "xo_grass_jianmu", "dir": "any", "sudden": true, "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:desert_grass/jianmu",
+    "text": "远海漂来一截木头，上面的年轮多得数不清。一碰，灵气就往身上冲。",
+    "choices": [
+      { "text": "抱住它", "effect": { "海灵": 20, "体力": 3 }, "result": "木头上刻着两个字：建木。不知为什么，你觉得这是你自己的东西。" }
+    ]
+  },
+  {
+    "id": "xo_grass_wind_seed", "dir": "up", "cameo": true, "once": true, "weight": 8, "require": "xend:desert_grass/wind_seed",
+    "text": "一颗带绒毛的草籽被风吹到海面上，落在你的眼柄旁边。",
+    "choices": [
+      { "text": "送它上岸", "effect": { "游速": 2, "灵性": 3 }, "result": "你游了一下午，把它放在沙滩上。它冲你晃了晃绒毛，好像在说：我认路。" },
+      { "text": "吹口气", "effect": { "灵性": 2 }, "result": "草籽又飞起来了。它飞得很远，比你游过的都远。" }
+    ]
+  },
+  {
+    "id": "xo_dog_beach", "dir": "side", "layers": ["L1"], "cameo": true, "once": true, "weight": 10, "maps": ["tidal"], "require": "xlives:local_dog>=1",
+    "text": "一条土狗在滩涂上追浪，追着追着，一爪子按住了你。",
+    "choices": [
+      { "text": "一拳打它鼻子", "effect": { "拳力": 2, "海灵": 6 }, "result": "土狗嗷一声跳开，又摇尾巴又叫。前世的你，大概也这么欠揍。" },
+      { "text": "装死", "effect": { "灵性": 2 }, "result": "它闻了闻，嫌腥，跑了。" }
+    ]
+  },
+  {
+    "id": "xo_dog_eclipse", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 8, "require": "xend:local_dog/eclipse",
+    "text": "大白天，太阳突然缺了一块。海里所有的鱼都慌了，只有你知道是谁干的。",
+    "choices": [
+      { "text": "趁黑出击", "effect": { "拳力": 2, "海灵": 15 }, "result": "天黑那一会儿，你把礁石缝里的好东西扫了个遍。" },
+      { "text": "冲天上挥拳", "effect": { "灵性": 3, "海灵": 6 }, "result": "太阳又吐了出来。你觉得是你那一拳起了作用。" }
+    ]
+  },
+  {
+    "id": "xo_dog_xiaocui", "dir": "side", "layers": ["L2"], "cameo": true, "once": true, "weight": 8, "require": "xend:local_dog/xiaocui_dog",
+    "text": "码头上，一个扎红头绳的女人在挑海鲜。她脚边的老黄狗，冲着你的盆一直叫。",
+    "choices": [
+      { "text": "冲狗挥拳", "effect": { "灵性": 3, "海灵": 8 }, "result": "她笑了：它从不乱叫。她没买你，还把你倒回了海里。" },
+      { "text": "缩进盆底", "effect": { "打洞": 1 }, "result": "狗叫累了。女人摸摸它的头：走吧，回家。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_rest", "dir": "up", "layers": ["U2"], "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
+    "text": "一只蝴蝶飞过海面，累得落在了你的背上。",
+    "choices": [
+      { "text": "驮它一程", "effect": { "游速": 2, "灵性": 2, "海灵": 6 }, "result": "你把它驮到了岸边。它飞走前，在你壳上留下一点鳞粉，亮晶晶的。" },
+      { "text": "沉下去", "effect": { "打洞": 1 }, "result": "蝴蝶惊飞了。它在你头顶绕了三圈，不太高兴。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_fairy", "dir": "any", "sudden": true, "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:caterpillar/fairy",
+    "text": "海上飘来一只发光的大蝴蝶，翅膀一扇，浪就平了。",
+    "choices": [
+      { "text": "挥拳致意", "effect": { "海灵": 18, "灵性": 3 }, "result": "蝶仙笑了：一拳就是一声你好？你们虾，真有意思。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_effect", "dir": "side", "layers": ["L3"], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar/butterfly_effect",
+    "text": "远海起了一阵怪风。浪头把一整船的渔网，掀进了海沟里。",
+    "choices": [
+      { "text": "去渔网里捡漏", "effect": { "海灵": 12, "体力": 3 }, "result": "网里的鱼全跑了，就剩你在里面挑挑拣拣。听说风是一只蝴蝶扇起来的。" },
+      { "text": "看着就好", "effect": { "灵性": 2 }, "result": "你想起谁说过：一只蝴蝶扇扇翅膀，大海那边就起风。" }
+    ]
+  },
+  {
+    "id": "xo_croc_estuary", "dir": "side", "layers": ["L3"], "cameo": true, "once": true, "weight": 10, "require": "xlives:crocodile>=1",
+    "text": "江水入海的地方游来一条小鳄鱼，盯着你看：你就是那只前途无量的虾？",
+    "choices": [
+      { "text": "是我", "effect": { "拳力": 2, "海灵": 10 }, "result": "它说前世在河口见过你打拳。你说不记得了。它说没关系，它记得。" },
+      { "text": "一拳", "absurd": true, "chance": 0.3, "chanceAttr": "拳力", "chanceStep": 0.04,
+        "effect": { "拳力": 3, "海灵": 12, "feud": "一拳打蒙了一条鳄鱼" }, "result": "你一拳打在它鼻子上。鳄鱼愣了半天：果然前途无量。",
+        "fail": { "effect": { "体力": -3 }, "result": "它的鼻子比礁石还硬。" } }
+    ]
+  },
+  {
+    "id": "xo_croc_river_god", "dir": "any", "sudden": true, "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:crocodile/river_god",
+    "text": "入海口站着一位河神，冲你招手：海里的事我管不着，这个给你。",
+    "choices": [
+      { "text": "接住", "effect": { "item": "pearl", "海灵": 15, "体力": 3 }, "result": "是一颗河珠。河神说，他前世是条鳄鱼，跟你一样，被人嫌弃过。" }
+    ]
+  },
+  {
+    "id": "xo_croc_mars", "dir": "up", "layers": ["U4"], "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/mars_ancestor",
+    "text": "浪尖上，你看见天边一颗红星。它亮了一下，又亮了一下。",
+    "choices": [
+      { "text": "冲它挥拳", "effect": { "灵性": 3, "海灵": 10 }, "result": "红星也闪了闪。你觉得那上面有谁，在冲你挥爪子。" }
+    ]
+  },
+  {
+    "id": "xo_all_reef", "dir": "down", "gold": true, "cameo": true, "stage": [2, 99], "once": true, "weight": 8,
+    "require": "xlives:desert_grass>=1 & xlives:local_dog>=1 & xlives:caterpillar>=1 & xlives:crocodile>=1",
+    "text": "你一拳打裂礁石。里面有一株草、一根狗毛、一片蝶翼，和一片鳄鱼鳞。",
+    "choices": [
+      { "text": "收好", "effect": { "海灵": 25, "灵性": 3 }, "result": "天道远远看着：东西倒是挺全。" }
+    ]
+  }
+]

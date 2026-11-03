@@ -94,9 +94,9 @@
       { "text": "钻进树皮缝", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.1,
         "effect": { "follow": { "id": "f_magpie_wait", "delay": 2 }, "灵性": 2 }, "result": "它的喙在缝口敲了三下，走了。你又躲过一次。",
         "fail": { "effect": { "death": "bird" }, "result": "缝太浅了。花胸叼起你，飞走了。" } },
-      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "follow": "f_magpie_laugh", "吐丝": 2, "蜕变": 4 },
+      { "text": "竖起毒毛", "showIf": "skill:spines", "useSkill": "spines", "effect": { "feud": "花胸扎了一嘴毛", "follow": "f_magpie_laugh", "吐丝": 2, "蜕变": 4 },
         "result": "它一口啄下去，又一口吐出来，满嘴是毛。它恨恨地飞走了。" },
-      { "text": "前世的毒毛", "require": "legacy:bristle>=2", "effect": { "follow": "f_magpie_laugh", "吐丝": 2, "蜕变": 3 },
+      { "text": "前世的毒毛", "require": "legacy:bristle>=2", "effect": { "feud": "花胸扎了一嘴毛", "follow": "f_magpie_laugh", "吐丝": 2, "蜕变": 3 },
         "result": "前世它啄过你。这一世你的毛扎得它直甩头。" },
       { "text": "往下掉", "effect": { "back": "up", "饱腹": -1 }, "result": "你松开脚，掉回了下面一层。它没追。" }
     ]
@@ -105,10 +105,10 @@
     "id": "u3_revenge", "dir": "up", "layers": ["U3", "U4"], "stage": [4, 99], "once": true, "weight": 25, "require": "flag:magpie_grudge",
     "text": "你有了翅膀。那只花胸喜鹊落在旁边，没认出你。它老了，白斑灰了。",
     "choices": [
-      { "text": "撒它一脸鳞粉", "showIf": "skill:dust", "useSkill": "dust", "effect": { "item": "magpie_feather", "蜕变": 10 },
+      { "text": "撒它一脸鳞粉", "showIf": "skill:dust", "useSkill": "dust", "effect": { "feud": "花胸被撒了一脸鳞粉", "item": "magpie_feather", "蜕变": 10 },
         "result": "它眯着眼乱扑，一根尾羽落下来。你捡走了它。" },
       { "text": "落在它头上", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.05,
-        "effect": { "蜕变": 8, "灵性": 2 }, "result": "你在它头顶站了一会儿。它到死都不知道是谁。",
+        "effect": { "feud": "站在了花胸的头上", "蜕变": 8, "灵性": 2 }, "result": "你在它头顶站了一会儿。它到死都不知道是谁。",
         "fail": { "effect": { "follow": { "id": "f_magpie_again", "delay": 2 }, "饱腹": -2 }, "result": "它扑了一下，你吓得飞走了。旧账还在。" } },
       { "text": "算了", "effect": { "灵性": 3 }, "result": "你飞走了。不是原谅，是它不配。" }
     ]

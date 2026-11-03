@@ -1,11 +1,12 @@
 /** 轮回结算页（布局对照 docs/filing/mock/5-settle.html） */
 import { Node } from 'cc';
-import { SettleResult } from '../../core';
+import { SettleResult, tiandao } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
 import { box, button, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
 import { showList } from './popups';
+import { danmaku } from '../ui/danmaku';
 
 /** settle_panel.png 的九宫格（贴图像素：上 右 下 左）与显示缩放 */
 const PANEL_SLICE: [number, number, number, number] = [350, 280, 360, 280];
@@ -31,6 +32,7 @@ export function showSettle(g: Game): void {
     let y = stone(g, root, s, CONFIG.safeTop + 70);
     y = panel(g, root, s, y + 20);
     actions(g, root, s, Math.max(y + 24, g.H - 330));
+    if (isEnd) danmaku(g, e.danmaku(s.tianhu ? 'tianhu' : 'ending'));
 }
 
 /** 墓志铭石板（分享卡主体） */
@@ -71,6 +73,12 @@ function panel(g: Game, root: Node, s: SettleResult, y: number): number {
     const w = g.W - 40;
     const innerX = 70, innerW = w - innerX * 2;
     const rows: { kind: 'sec' | 'line' | 'goal'; l: string; r?: string; color?: string; rColor?: string }[] = [];
+    // 天道评语、本世恩怨放最前（面板放不下时从末尾截断）
+    if (s.remark) rows.push({ kind: 'goal', l: tiandao(s.remark), color: COLOR.ochreD });
+    if (s.feuds.length) {
+        rows.push({ kind: 'sec', l: '本世恩怨' });
+        for (const f of s.feuds) rows.push({ kind: 'goal', l: `✓ ${f}`, color: COLOR.bad });
+    }
     rows.push({ kind: 'sec', l: '轮回收获' });
     if (s.legacy) {
         const desc = g.engine.data.legacies.get(s.legacy.id)?.desc ?? '';

@@ -74,7 +74,7 @@
     "id": "x_magpie_old", "dir": "any", "sudden": true, "weight": 14, "stage": [3, 99], "once": true, "require": "flag:magpie_grudge",
     "text": "花胸喜鹊落在你旁边的树枝上。它在找吃的，啄了半天没啄到一只虫。",
     "choices": [
-      { "text": "亮出它的尾羽", "require": "item:magpie_feather", "effect": { "蜕变": 10, "灵性": 2 },
+      { "text": "亮出它的尾羽", "require": "item:magpie_feather", "effect": { "feud": "花胸认出了自己的尾羽", "蜕变": 10, "灵性": 2 },
         "result": "它看见自己的羽毛，愣住了。然后它低着头飞走了。" },
       { "text": "躲着它", "effect": { "灵性": 1 }, "result": "它没看见你。你也没让它看见。" },
       { "text": "扔片叶子给它", "effect": { "follow": { "id": "f_magpie_fruit", "delay": 2 }, "灵性": 3, "蜕变": 3 }, "result": "它看看叶子，又看看你，不明白。你也不需要它明白。" }

@@ -59,9 +59,9 @@
       { "text": "钻进窝里", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.08,
         "effect": { "潜水": 1, "灵性": 1 }, "result": "你一头钻进窝最深处。它的大嘴在洞口拱了半天，拱不进来。",
         "fail": { "effect": { "death": "one_eye" }, "result": "你的窝不够深。" } },
-      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll", "effect": { "咬合": 2, "龙气": 5, "follow": { "id": "f_oneeye_bait", "delay": 2 } },
+      { "text": "咬住了翻滚", "showIf": "skill:roll", "useSkill": "roll", "effect": { "feud": "咬着独眼翻了个身", "咬合": 2, "龙气": 5, "follow": { "id": "f_oneeye_bait", "delay": 2 } },
         "result": "你咬住它尾巴尖一个翻身。它疼得一抖，松开了你，游进了浑水里。" },
-      { "text": "铁头顶回去", "require": "legacy:iron_head>=2", "effect": { "咬合": 2, "龙气": 3 },
+      { "text": "铁头顶回去", "require": "legacy:iron_head>=2", "effect": { "feud": "铁头顶退了独眼", "咬合": 2, "龙气": 3 },
         "result": "前世它撞翻过你。这一世你脑袋一顶，它退了三步。" },
       { "text": "掉头就游", "effect": { "back": "down", "体温": -1 }, "result": "你掉头就游，一口气游回了浅水。它没追。" }
     ]

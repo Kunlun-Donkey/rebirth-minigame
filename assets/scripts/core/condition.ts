@@ -4,13 +4,16 @@
  *   根系>=5 & !flag:met_camel | (talent:bitter & stage>=2)
  *
  * 数值项：<属性id或中文名> | stage | season | life | legacy:<id> | pos:<up|down|side>
+ *   died:<死法id>（本命格累计死于该死法的次数，宿敌记仇）
+ *   xstage:<命格id>（另一命格的最高境界）| xlives:<命格id>（另一命格已轮回世数）
  *   比较符：>= <= > < == !=
  * 布尔项：flag:x talent:x item:x companion:x skill:x（本局拥有该技能） seen:<事件id> dead:<死法id> ending:<结局id>
+ *   xend:<命格id>（另一命格达成过任意结局）| xend:<命格id>/<结局id>（达成过指定结局）——跨命格彩蛋
  * 组合：! 非，& 与，| 或（& 优先于 |），括号
  */
 
-export type HasKind = 'flag' | 'talent' | 'item' | 'companion' | 'skill' | 'seen' | 'dead' | 'ending';
-export type NumKind = 'attr' | 'stage' | 'season' | 'life' | 'legacy' | 'pos';
+export type HasKind = 'flag' | 'talent' | 'item' | 'companion' | 'skill' | 'seen' | 'dead' | 'ending' | 'xend';
+export type NumKind = 'attr' | 'stage' | 'season' | 'life' | 'legacy' | 'pos' | 'died' | 'xstage' | 'xlives';
 export type Op = '>=' | '<=' | '>' | '<' | '==' | '!=';
 
 export interface NumRef {
@@ -29,7 +32,9 @@ export interface CondCtx {
     has(kind: HasKind, id: string): boolean;
 }
 
-const HAS_KINDS: HasKind[] = ['flag', 'talent', 'item', 'companion', 'skill', 'seen', 'dead', 'ending'];
+const HAS_KINDS: HasKind[] = ['flag', 'talent', 'item', 'companion', 'skill', 'seen', 'dead', 'ending', 'xend'];
+/** 带 id 的数值项前缀 */
+const NUM_PREFIXES = ['legacy', 'died', 'xstage', 'xlives'] as const;
 const OPS: Op[] = ['>=', '<=', '==', '!=', '>', '<'];
 
 type Tok = { k: 'op' | 'sym' | 'num' | 'word'; v: string };
@@ -95,7 +100,7 @@ export function parseCond(src: string, resolveAttr: (name: string) => string | u
             return { t: 'has', kind: prefix as HasKind, id };
         }
         let left: NumRef;
-        if (prefix === 'legacy') left = { kind: 'legacy', id };
+        if ((NUM_PREFIXES as readonly string[]).includes(prefix)) left = { kind: prefix as NumKind, id };
         else if (prefix === 'pos') {
             if (!['up', 'down', 'side'].includes(id)) fail(`pos 只能是 up/down/side`);
             left = { kind: 'pos', id };
@@ -167,7 +172,7 @@ export function describeCond(n: CondNode, names: DescribeNames): string {
     switch (n.t) {
         case 'and': return `${describeCond(n.a, names)} 且 ${describeCond(n.b, names)}`;
         case 'or': return `${describeCond(n.a, names)} 或 ${describeCond(n.b, names)}`;
-        case 'not': return n.a.t === 'has' && ['flag', 'seen', 'dead', 'ending'].includes(n.a.kind) ? '？？？' : `非(${describeCond(n.a, names)})`;
+        case 'not': return n.a.t === 'has' && ['flag', 'seen', 'dead', 'ending', 'xend'].includes(n.a.kind) ? '？？？' : `非(${describeCond(n.a, names)})`;
         case 'has':
             switch (n.kind) {
                 case 'talent': return `天赋·${names.talent(n.id)}`;
@@ -178,6 +183,8 @@ export function describeCond(n: CondNode, names: DescribeNames): string {
             }
         case 'cmp': {
             const r = n.left;
+            // 宿敌记仇 / 跨命格条件属于隐藏信息，不剧透
+            if (r.kind === 'died' || r.kind === 'xstage' || r.kind === 'xlives') return '？？？';
             const label =
                 r.kind === 'attr' ? names.attr(r.id!) :
                 r.kind === 'legacy' ? `传承·${names.legacy(r.id!)}` :

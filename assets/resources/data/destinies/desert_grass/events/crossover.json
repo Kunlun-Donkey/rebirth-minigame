@@ -1,0 +1,96 @@
+[
+  {
+    "id": "xo_dog_pee", "dir": "side", "cameo": true, "once": true, "weight": 10, "require": "xlives:local_dog>=1",
+    "text": "一条黄土狗颠颠地跑过荒漠，在你旁边停下，抬起了一条腿。",
+    "choices": [
+      { "text": "这个姿势我熟", "effect": { "水分": 3, "灵性": 2 }, "result": "前世你是那条狗，这一世你是被浇的草。水分有了，尊严没了。" },
+      { "text": "抖叶子抗议", "effect": { "茎叶": 1 }, "result": "狗吓了一跳，换了一株草。" }
+    ]
+  },
+  {
+    "id": "xo_dog_celestial", "dir": "any", "sudden": true, "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:local_dog/celestial",
+    "text": "一道金光落在沙丘上。是天狗仙君，它低头嗅了嗅你：这株草的味道，好熟。",
+    "choices": [
+      { "text": "是我啊", "effect": { "灵气": 20, "灵性": 3 }, "result": "仙君冲你摇了摇尾巴，留下一缕仙气。前世的你，在照顾今生的你。" },
+      { "text": "装作不认识", "effect": { "灵性": 2, "灵气": 8 }, "result": "仙君走了几步又回头，想不起在哪见过一株草。" }
+    ]
+  },
+  {
+    "id": "xo_dog_xiaocui", "dir": "side", "layers": ["L2"], "cameo": true, "once": true, "weight": 10, "require": "xend:local_dog/xiaocui_dog",
+    "text": "商队里有个扎红头绳的姑娘，蹲下来看你。她脚边的黄狗，一个劲冲你摇尾巴。",
+    "choices": [
+      { "text": "冲狗晃叶子", "effect": { "灵性": 3, "水分": 3 }, "result": "姑娘笑了：它好像认识你。她往你根上浇了半壶水。" },
+      { "text": "冲姑娘晃叶子", "effect": { "灵气": 10 }, "result": "姑娘把你画进了本子里。画得不太像，但很好看。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_munch", "dir": "up", "stage": [1, 99], "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
+    "text": "一条毛毛虫爬上你的叶子，正要下口。它抬头看了你一眼，犹豫了。",
+    "choices": [
+      { "text": "我前世也啃过叶子", "effect": { "灵性": 2, "茎叶": 1 }, "result": "毛毛虫红着脸爬走了。它说它也有前世，以后换别的啃。" },
+      { "text": "抖掉它", "effect": { "茎叶": 1 }, "result": "它掉在沙上，打了个滚，委屈地爬走了。" }
+    ]
+  },
+  {
+    "id": "xo_butterfly_effect", "dir": "up", "stage": [2, 99], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:caterpillar/butterfly_effect",
+    "text": "一只蝴蝶在你头顶扇了扇翅膀。三天后，荒漠下了十年来第一场大雨。",
+    "choices": [
+      { "text": "张开所有叶子", "effect": { "水分": 8, "灵气": 15 }, "result": "你喝饱了。远处云底下，那只蝴蝶好像冲你眨了眨眼。" },
+      { "text": "这翅膀我认识", "effect": { "灵性": 3, "灵气": 10 }, "result": "你没说出口。前世扇翅膀的那只，好像就是你自己。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_fossil", "dir": "down", "layers": ["D3"], "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1",
+    "text": "古河床的沙里埋着一只虾壳化石，两只大钳子还保持着出拳的姿势。",
+    "choices": [
+      { "text": "冲它行个礼", "effect": { "灵性": 2, "灵气": 8 }, "result": "你认得这个姿势。三千年前，这一拳没打完。" },
+      { "text": "用根缠住它", "effect": { "根系": 2, "韧性": 1 }, "result": "化石很硬，硬得像一个不服输的前世。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_lets_go", "dir": "side", "layers": ["L2"], "cameo": true, "once": true, "weight": 8, "require": "xend:mantis_shrimp/lets_go",
+    "text": "商队里有人举着一只干虾，冲骆驼喊：皮皮虾，我们走！骆驼一动不动。",
+    "choices": [
+      { "text": "替那只虾走", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵气": 15, "灵性": 2 }, "result": "你把根拔出来走了一步。商队全体沉默，然后掉头就跑。",
+        "fail": { "effect": { "水分": -2 }, "result": "你拔了半天根，没拔动。干虾冲你挥了挥钳子，以示鼓励。" } },
+      { "text": "看热闹", "effect": { "灵性": 2 }, "result": "骆驼最后也没走。你觉得那只虾，挺不容易的。" }
+    ]
+  },
+  {
+    "id": "xo_croc_tears", "dir": "side", "cameo": true, "once": true, "weight": 10, "require": "xlives:crocodile>=1",
+    "text": "一个商队路过，车上拉着一只铁笼子。笼子里的小鳄鱼，冲你流了两滴眼泪。",
+    "choices": [
+      { "text": "用根绊住车轮", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.06,
+        "effect": { "根系": 2, "灵气": 12 }, "result": "车轮一卡，笼门震开了。小鳄鱼钻进沙里，回头又冲你流了两滴泪。",
+        "easy": "你的根早就横在路上了。车一颠，笼门自己开了。",
+        "fail": { "effect": { "茎叶": -1 }, "result": "车轮碾了过去。小鳄鱼看着你，哭得更厉害了。" } },
+      { "text": "也流两滴泪", "effect": { "灵性": 2 }, "result": "你挤出两滴露水。小鳄鱼愣了一下，不哭了。" }
+    ]
+  },
+  {
+    "id": "xo_croc_dragon", "dir": "up", "layers": ["U4"], "gold": true, "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/dragon",
+    "text": "雷云里探出一个龙头，鳞片上还沾着河泥。它低头看你：嗯？你也想化形？",
+    "choices": [
+      { "text": "想", "effect": { "灵气": 25, "水分": 5 }, "result": "龙冲你吹了口气。云里落下一阵带泥腥味的雨，你喝得很饱。" },
+      { "text": "我前世就是你", "effect": { "灵性": 3, "灵气": 15 }, "result": "龙沉默了很久：怪不得这么丑。走的时候，它又回头看了你一眼。" }
+    ]
+  },
+  {
+    "id": "xo_croc_mars", "dir": "up", "stage": [2, 99], "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/mars_ancestor",
+    "text": "夜里，天边有颗红星一闪一闪，像在冲你眨眼。",
+    "choices": [
+      { "text": "冲它晃叶子", "effect": { "灵性": 3, "灵气": 10 }, "result": "红星闪得更快了。你总觉得，那上面有条鳄鱼在冲你招手。" },
+      { "text": "接着睡", "effect": { "水分": 1 }, "result": "火星上的事，明天再说。" }
+    ]
+  },
+  {
+    "id": "xo_all_stars", "dir": "any", "gold": true, "cameo": true, "stage": [2, 99], "once": true, "weight": 8,
+    "require": "xlives:local_dog>=1 & xlives:caterpillar>=1 & xlives:mantis_shrimp>=1 & xlives:crocodile>=1",
+    "text": "夜里，荒漠上空的星星排成了一条狗、一条虫、一只虾，还有一条鳄鱼。",
+    "choices": [
+      { "text": "那都是我", "effect": { "灵性": 5, "灵气": 20 }, "result": "天道远远叹了口气：这家伙，到处都是它。" },
+      { "text": "数星星", "effect": { "灵性": 2 }, "result": "你数到第五颗，睡着了。" }
+    ]
+  }
+]

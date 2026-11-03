@@ -48,8 +48,10 @@ assets/resources/data/destinies/<命格id>/
   ]
 }
 ```
-- 效果键：属性 id 或中文名（增量）；保留键 `flag` `unflag` `item` `loseItem` `skill`（领悟技能） `death` `ending` `back`（退回上一层）。
-- 条件：`属性>=N` `stage` `season` `life` `legacy:id>=N` `pos:down>=N`；`flag:` `talent:` `item:` `companion:` `skill:` `seen:事件` `dead:死法` `ending:结局`；`! & | ()`。
+- 效果键：属性 id 或中文名（增量）；保留键 `flag` `unflag` `item` `loseItem` `skill`（领悟技能） `death` `ending` `back`（退回上一层） `follow` `stageUp` `feud`（了结的恩怨，≤16 字，结算页「本世恩怨」逐条列出）。
+- 条件：`属性>=N` `stage` `season` `life` `legacy:id>=N` `pos:down>=N` `died:死法>=N`（本命格累计死于该死法几次）；`flag:` `talent:` `item:` `companion:` `skill:` `seen:事件` `dead:死法` `ending:结局`；跨命格 `xend:命格id` / `xend:命格id/结局id` / `xlives:命格id>=N` / `xstage:命格id>=N`；`! & | ()`。
+- 文本占位：`{died:死法id}` → 累计次数（「它吃过你{died:eaten_camel}回」），`{life}` → 第几世。
+- 选项附加字段：`easy`（成功率溢出到 100% 显示「稳」时替代 result 的碾压文案，需配 chanceAttr）、`absurd: true`（离谱选项，标「离谱」）。事件附加 `cameo: true`（跨命格彩蛋，卡片标「似曾相识」）。
 
 ## 技能
 - 每个技能必须有至少一条领悟途径（死法 `skills` / 境界 `skillPool` / 事件效果 `skill`），交互型技能必须有事件用 `useSkill` 用到它（校验会报错）。
@@ -105,6 +107,13 @@ assets/resources/data/destinies/<命格id>/
 1. **羁绊要具体**：物件（狗牌、半个馒头）、名字（小黄）、重复动作（每天掰一块供饼）。不写「他们感情很好」。
 2. **撕裂要有触发事件**：出嫁、被赶走、被冤枉；转折前必须有铺垫节点。
 3. **余韵靠动作和留白**：「你在村口坐到了天黑」「她过得很好。你转身回村了」。不哭、不解释。
+
+### 宿敌记仇 / 恩怨 / 离谱 / 跨命格彩蛋（每个命格都要有，放 `events/grudge.json`、`events/crossover.json`）
+- **宿敌记仇**：主要死法各一个 `require: "died:x>=2"` 的事件，正文用 `{died:x}` 点出「它X过你N回」；报仇选项带 `chance + chanceAttr`（属性够高变「稳」）、`easy` 碾压文案、`feud` 恩怨。死得越多，复仇越解气。
+- **恩怨 feud**：已有的复仇/打脸选项都加 `feud`（「老刀扎了满嘴刺」），结算页集中展示，也会飘弹幕。
+- **离谱选项**：`absurd: true` + 低成功率（0.1~0.3）+ 成了奖励高；失败文案本身要好笑，可以送命（「他们愣了一下，然后很高兴。」）——同一个坑死多了，前世标注会越来越嫌弃。
+- **跨命格彩蛋**：`cameo: true` + `require` 用 `xlives`（玩过就出）或 `xend`（通了某结局才出，`gold` 奖励更高）；其他命格的角色/结局在这里客串（前世是狗，这一世是被狗浇的草）。每个命格至少：每个其他命格 1 个 xlives 彩蛋 + 1~2 个 xend 彩蛋 + 1 个「全命格都玩过」的大彩蛋。
+- 天道（系统角色）、弹幕、墓志铭后缀、连胜、「稳」由引擎通用实现（`core/flavor.ts`），剧本不用写。
 
 ### 宿敌与报应
 - 嚣张度逐级上升，不重复同一种恶：小恶（抢食、嘲笑）→ 中恶（栽赃、抓走同伴）→ 大恶（要你的命）。

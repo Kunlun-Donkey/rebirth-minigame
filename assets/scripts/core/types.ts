@@ -36,6 +36,10 @@ export interface RawChoice extends RawOutcome {
     fail?: RawOutcome;
     /** 技能交互选项：需要该技能已冷却完毕，选择后进入冷却。通常配合 showIf: "skill:x" */
     useSkill?: string;
+    /** 碾压文案：成功率溢出到 100%（显示「稳」）时替代 result */
+    easy?: string;
+    /** 离谱选项：按钮上标「离谱」（通常成功率低、成了奖励高，失败文案本身好笑） */
+    absurd?: boolean;
 }
 
 export interface RawEvent {
@@ -55,6 +59,8 @@ export interface RawEvent {
     maps?: string[];
     /** 作为后续（follow）待触发时，在选方向界面显示的预告，如「那只蝎子说它还会回来」 */
     teaser?: string;
+    /** 跨命格彩蛋（前世今生）：事件卡标「似曾相识」，选完飘弹幕 */
+    cameo?: boolean;
     require?: string;
     text: string;
     choices: RawChoice[];
@@ -386,6 +392,8 @@ export interface Effect {
     follows: FollowDef[];
     /** 直接突破 N 个境界（无视条件，奇遇连锁用） */
     stageUp?: number;
+    /** 了结的恩怨（结算页「本世恩怨」逐条列出，如「独眼让出了那块石头」） */
+    feuds: string[];
 }
 
 /** 后续事件：在 delay 季之后（默认下一季）、玩家选择匹配方向时触发，ttl 季内没走到就作废 */
@@ -411,6 +419,8 @@ export interface Choice {
     chanceStep?: number;
     fail?: Outcome;
     useSkill?: string;
+    easy?: string;
+    absurd?: boolean;
 }
 
 export interface GameEvent {
@@ -425,6 +435,7 @@ export interface GameEvent {
     chainOnly: boolean;
     maps?: string[];
     teaser?: string;
+    cameo: boolean;
     require?: Cond;
     text: string;
     choices: Choice[];
@@ -459,8 +470,12 @@ export interface DestinyProfile {
     legacy: Record<string, number>;
     /** 下一世开局携带的遗物 */
     sealed: string[];
-    /** key = 事件id#选项序号 */
-    memory: Record<string, { life: number; text: string }>;
+    /** key = 事件id#选项序号；dead = 这个选项累计害死过你几次 */
+    memory: Record<string, { life: number; text: string; dead?: number }>;
+    /** 各死法累计次数（宿敌记仇：条件 died:x>=N、文本 {died:x}） */
+    deathCount?: Record<string, number>;
+    /** 最近连续同一死法：id 与连续世数（墓志铭「下次一定行」） */
+    deathRun?: { id: string; n: number };
     codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number };
     bestStage: number;
     /** 已解锁技能（技能图鉴） */
@@ -536,6 +551,12 @@ export interface RunState {
     spin?: boolean;
     /** 最后一搏：due = 下季开头触发，used = 本世已用过 */
     lastStand?: 'due' | 'used';
+    /** 有成功率的选项连续成功次数（势如破竹） */
+    streak?: number;
+    /** 本世了结的恩怨 */
+    feuds?: string[];
+    /** 最近一次失败是低成功率硬选（墓志铭「死于过度自信」） */
+    reckless?: boolean;
 }
 
 export interface UpgradeView {
@@ -579,6 +600,10 @@ export interface ChoiceView {
     tag?: string;
     /** 直觉 / 窥探天命 预告 */
     preview?: string;
+    /** 成功率溢出到 100%：必成（碾压） */
+    sure?: boolean;
+    /** 离谱选项 */
+    absurd?: boolean;
 }
 
 export interface EventView {
@@ -586,8 +611,14 @@ export interface EventView {
     text: string;
     gold: boolean;
     sudden: boolean;
+    /** 跨命格彩蛋（似曾相识） */
+    cameo: boolean;
     choices: ChoiceView[];
 }
+
+/** 值得飘弹幕的高光时刻（按优先级取一个） */
+export type Hype = 'ending' | 'tianhu' | 'breakthrough' | 'feud' | 'crush' | 'streak' | 'cameo' | 'crit' | 'revive';
+export const HYPE_ORDER: Hype[] = ['ending', 'tianhu', 'breakthrough', 'feud', 'crush', 'streak', 'cameo', 'crit', 'revive'];
 
 export interface StepResult {
     text?: string;
@@ -602,6 +633,8 @@ export interface StepResult {
     revived?: boolean;
     /** 大成功：成功后额外判定，属性收益翻倍 */
     crit?: boolean;
+    /** 高光时刻（UI 飘弹幕） */
+    hype?: Hype;
 }
 
 /** 距离下一境界：每一项「属性 >= N」的当前值与要求 */
@@ -653,4 +686,8 @@ export interface SettleResult {
     log: string[];
     /** 天胡：天命之子或走完奇遇连锁后达成的结局 */
     tianhu?: boolean;
+    /** 本世了结的恩怨 */
+    feuds: string[];
+    /** 天道的评语 */
+    remark: string;
 }

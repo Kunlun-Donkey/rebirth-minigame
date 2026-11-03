@@ -79,7 +79,7 @@
     "id": "d2_tiger_frame", "dir": "down", "layers": ["D2", "D3"], "once": true, "weight": 15, "require": "flag:tiger_grudge",
     "text": "主人家的鸡被咬死了。鸡窝边全是黑毛。主人拎着棍子，看向了你。",
     "choices": [
-      { "text": "叼起那撮黑毛", "require": "灵性>=3", "effect": { "follow": "f_tiger_punished", "忠义": 3, "牙口": 1 },
+      { "text": "叼起那撮黑毛", "require": "灵性>=3", "effect": { "feud": "黑虎的栽赃被揭穿", "follow": "f_tiger_punished", "忠义": 3, "牙口": 1 },
         "result": "主人盯着黑毛看了半天，扛起扁担去了地主家。" },
       { "text": "低头认了", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
         "effect": { "忠义": 1, "体力": -1 }, "result": "他打了你两下，没舍得赶你走。",
