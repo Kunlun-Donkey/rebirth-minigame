@@ -20,7 +20,24 @@
             "death": "old_age"
           },
           "result": "灵气散了。你轻轻弯下腰，伏在了沙上。"
-        }
+        },
+        "showIf": "stage<=3"
+      },
+      {
+        "text": "逆天，冲最后一关",
+        "chance": 0.12,
+        "effect": {
+          "stageUp": 1,
+          "灵气": 15
+        },
+        "result": "灵气冲开了枯萎的叶脉。你没有倒下，你长高了一截。",
+        "fail": {
+          "effect": {
+            "death": "old_age"
+          },
+          "result": "灵气散了。你轻轻弯下腰，伏在了沙上。"
+        },
+        "showIf": "stage>=4"
       },
       {
         "text": "在风里睡去",

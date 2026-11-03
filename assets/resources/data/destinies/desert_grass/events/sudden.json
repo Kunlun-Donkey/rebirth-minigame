@@ -27,7 +27,7 @@
     "id": "x_locust", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8,
     "text": "蝗虫过境。黑压压一片，从天边压过来。",
     "choices": [
-      { "text": "把叶子缩进沙里", "effect": { "茎叶": -1 }, "result": "它们啃掉了你露在外面的部分。还好，根还在。" },
+      { "text": "把叶子缩进沙里", "effect": { "follow": { "id": "f_locust_eggs", "delay": 2 }, "茎叶": -1 }, "result": "它们啃掉了你露在外面的部分。还好，根还在。" },
       { "text": "让它们尝尝苦", "require": "legacy:bitter_sap>=1 | talent:bitter", "effect": { "灵气": 5 },
         "result": "第一只蝗虫咬了一口，全体蝗虫决定绕路。" },
       { "text": "硬扛", "chance": 0.35, "chanceAttr": "韧性", "chanceStep": 0.05,
@@ -42,7 +42,7 @@
     "text": "荒漠的夜，冷得像另一个世界。",
     "choices": [
       { "text": "缩进沙里", "effect": { "根系": 1 }, "result": "沙子还留着白天的温度。你熬过去了。" },
-      { "text": "看星星", "effect": { "灵性": 2, "水分": -1 }, "result": "满天的星。你第一次想：上面有什么？" }
+      { "text": "看星星", "effect": { "follow": { "id": "f_star_blink", "delay": 2 }, "灵性": 2, "水分": -1 }, "result": "满天的星。你第一次想：上面有什么？" }
     ]
   },
   {
@@ -70,7 +70,7 @@
     "require": "companion:lizard & season>=4",
     "text": "你的蜥蜴伙伴最近看你的眼神不对。今天，它张开了嘴。",
     "choices": [
-      { "text": "喂它一片叶子", "effect": { "茎叶": -2 }, "result": "它吃了，低头走了。从此没再回来。" },
+      { "text": "喂它一片叶子", "effect": { "follow": { "id": "f_lizard_gone", "delay": 3, "ttl": 6 }, "茎叶": -2 }, "result": "它吃了，低头走了。从此没再回来。" },
       { "text": "求它别吃", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
         "effect": { "灵性": 2 }, "result": "它的嘴停在半空。最后，它舔了舔你，趴下了。",
         "fail": { "effect": { "death": "eaten_lizard" }, "result": "它说：对不起。" } },
@@ -96,14 +96,14 @@
     "choices": [
       { "text": "缠住他的剑", "require": "韧性>=8", "effect": { "灵气": 40, "韧性": 2 },
         "result": "他拔了三次，剑没出来。他终于记住了一株草。" },
-      { "text": "分他一口", "effect": { "水分": -2, "灵性": 3, "灵气": 15 }, "result": "他喝完愣了很久，冲你作了个揖。" }
+      { "text": "分他一口", "effect": { "follow": { "id": "f_immortal_gift", "delay": 2 }, "水分": -2, "灵性": 3, "灵气": 15 }, "result": "他喝完愣了很久，冲你作了个揖。" }
     ]
   },
   {
     "id": "x_dung_gift", "dir": "any", "sudden": true, "weight": 5, "require": "companion:dung_beetle & season>=5", "once": true,
     "text": "老粪推来一颗巨大的粪球，累得翻了肚皮。",
     "choices": [
-      { "text": "谢谢老粪", "effect": { "item": "dung", "灵性": 1 }, "result": "老粪很满意。它说下次推个更大的。" }
+      { "text": "谢谢老粪", "effect": { "follow": { "id": "f_dung_bigger", "delay": 3 }, "item": "dung", "灵性": 1 }, "result": "老粪很满意。它说下次推个更大的。" }
     ]
   }
 ]

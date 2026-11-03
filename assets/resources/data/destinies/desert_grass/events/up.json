@@ -24,7 +24,7 @@
       { "text": "挺直腰杆", "chance": 0.3, "effect": { "茎叶": 2, "灵性": 1 },
         "result": "骆驼盯着你看了很久，走了。它可能被你的勇气吓到了。",
         "fail": { "effect": { "death": "eaten_camel" }, "result": "骆驼被你的勇气吸引了。然后吃了你。" } },
-      { "text": "分泌苦汁", "showIf": "talent:bitter", "effect": { "灵性": 1 },
+      { "text": "分泌苦汁", "showIf": "talent:bitter", "effect": { "follow": { "id": "f_camel_spit", "delay": 2 }, "灵性": 1 },
         "result": "骆驼嚼了一口，呸了出来，记仇地看了你一眼。" },
       { "text": "装死", "showIf": "skill:play_dead", "useSkill": "play_dead", "effect": { "灵性": 1, "灵气": 2 },
         "result": "骆驼闻了闻：死草，不好吃。它嫌弃地走了。" },
@@ -37,12 +37,12 @@
     "require": "dead:eaten_camel & !flag:daodao_seen", "weight": 30,
     "text": "那头骆驼又来了。左边少一颗牙，嘴角挂着草沫。前世，它就是这样把你嚼碎的。",
     "choices": [
-      { "text": "记住它的脸", "effect": { "flag": "daodao_seen", "灵性": 1 },
+      { "text": "记住它的脸", "effect": { "follow": { "id": "f_daodao_tooth", "delay": 2 }, "flag": "daodao_seen", "灵性": 1 },
         "result": "你给它起了个名字，叫老刀。账，慢慢算。" },
       { "text": "让它尝尝苦头", "require": "legacy:bitter_sap>=1 | talent:bitter",
         "effect": { "flag": ["daodao_seen", "daodao_hurt"], "灵气": 5 },
         "result": "老刀一口下去，苦得原地转了三圈。它跑了，跑出三里地还在吐。" },
-      { "text": "藏进沙里", "effect": { "水分": -1, "flag": "daodao_seen" }, "result": "老刀在你头顶嗅了很久。这一世，还不是时候。" }
+      { "text": "藏进沙里", "effect": { "follow": { "id": "f_daodao_tooth", "delay": 2 }, "水分": -1, "flag": "daodao_seen" }, "result": "老刀在你头顶嗅了很久。这一世，还不是时候。" }
     ]
   },
   {
@@ -50,7 +50,7 @@
     "require": "flag:daodao_seen & !flag:daodao_hurt", "weight": 25,
     "text": "老刀又来了。它记得你，你也记得它。",
     "choices": [
-      { "text": "竖起尖刺", "require": "韧性>=4 | legacy:thorn>=1", "effect": { "flag": "daodao_hurt", "灵气": 6, "韧性": 1 },
+      { "text": "竖起尖刺", "require": "韧性>=4 | legacy:thorn>=1", "effect": { "follow": "f_daodao_rumor", "flag": "daodao_hurt", "灵气": 6, "韧性": 1 },
         "result": "老刀扎了满嘴刺，嗷的一声跑了。荒漠里第一次有骆驼怕草。" },
       { "text": "用牙吓它", "require": "item:camel_tooth", "effect": { "flag": "daodao_hurt", "灵气": 8 },
         "result": "你亮出那颗牙。老刀认出了自己的牙，吓得腿都软了。" },
@@ -59,7 +59,7 @@
         "fail": { "effect": { "death": "eaten_camel" }, "result": "历史重演了。" } },
       { "text": "藤缚老刀", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "flag": "daodao_hurt", "灵气": 10 },
         "result": "你把老刀捆了一夜。天亮放它走时，它不敢看你。" },
-      { "text": "毒刺伺候", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "flag": "daodao_hurt", "灵气": 8 },
+      { "text": "毒刺伺候", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "follow": "f_daodao_rumor", "flag": "daodao_hurt", "灵气": 8 },
         "result": "前世它一口吃了你。这一世，它扎了满嘴刺，边跑边吐。" }
     ]
   },
@@ -68,7 +68,7 @@
     "require": "flag:daodao_hurt",
     "text": "大旱。老刀瘦得只剩骨架，跪在你身边，盯着你叶子上的露水。",
     "choices": [
-      { "text": "赏它一滴", "effect": { "水分": -1, "灵性": 3, "灵气": 10, "flag": "daodao_tamed" },
+      { "text": "赏它一滴", "effect": { "follow": { "id": "f_daodao_job", "delay": 2 }, "水分": -1, "灵性": 3, "灵气": 10, "flag": "daodao_tamed" },
         "result": "老刀喝完，把头贴在沙上。从此它只给一株草打工。" },
       { "text": "当着它的面喝掉", "effect": { "水分": 2, "韧性": 2, "灵气": 6 },
         "result": "你慢慢把露水喝完。前世的账，算清了。" }
@@ -132,7 +132,7 @@
     "text": "一个小旋风盯上了你，绕着你越转越快。",
     "choices": [
       { "text": "死死抓住沙子", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.06,
-        "effect": { "根系": 1, "韧性": 1 }, "result": "旋风转累了，走了。你的根又深了一寸。",
+        "effect": { "follow": { "id": "f_devil_return", "delay": 2 }, "根系": 1, "韧性": 1 }, "result": "旋风转累了，走了。你的根又深了一寸。",
         "fail": { "effect": { "death": "sandstorm" }, "result": "你被拔了起来，越飞越高。" } },
       { "text": "跟着风转", "require": "legacy:grip_root>=1", "effect": { "茎叶": 2, "灵气": 4 },
         "result": "前世你被风拔起。这一世，你学会了跳舞。" },
@@ -144,7 +144,7 @@
     "id": "u2_pollen", "dir": "up", "layers": ["U2", "U3"], "stage": [2, 99],
     "text": "风送来一团金色的花粉，在你身边打转。",
     "choices": [
-      { "text": "接住", "effect": { "灵性": 2, "灵气": 3 }, "result": "你的叶脉里第一次有了金色。" },
+      { "text": "接住", "effect": { "follow": "f_pollen_bud", "灵性": 2, "灵气": 3 }, "result": "你的叶脉里第一次有了金色。" },
       { "text": "打个喷嚏", "effect": { "灵气": 1 }, "result": "阿嚏。花粉飘走了。" }
     ]
   },
@@ -172,8 +172,8 @@
     "text": "一只鹰盯上了你枝头的鸟窝。",
     "choices": [
       { "text": "用枝条挡", "chance": 0.55, "chanceAttr": "茎叶", "chanceStep": 0.03,
-        "effect": { "灵性": 3, "灵气": 8 }, "result": "鹰撞了一头叶子。百灵一家从此认你做主。",
-        "fail": { "effect": { "茎叶": -2 }, "result": "鹰折断了你一根枝，叼走了一枚蛋。" } },
+        "effect": { "follow": { "id": "f_lark_gift", "delay": 2 }, "灵性": 3, "灵气": 8 }, "result": "鹰撞了一头叶子。百灵一家从此认你做主。",
+        "fail": { "effect": { "follow": "f_eagle_back", "茎叶": -2 }, "result": "鹰折断了你一根枝，叼走了一枚蛋。" } },
       { "text": "装没看见", "effect": { "灵性": -1 }, "result": "百灵哭了一夜。你也没睡着。" }
     ]
   },
@@ -181,7 +181,7 @@
     "id": "u3_far_view", "dir": "up", "layers": ["U3", "U4"], "once": true,
     "text": "长得够高，你第一次看见了荒漠的尽头。那里有一抹绿。",
     "choices": [
-      { "text": "记住方向", "effect": { "灵性": 2, "flag": "saw_oasis", "skill": "sky_eye" }, "result": "原来荒漠，不是全世界。你的眼睛，从此看得更远。" }
+      { "text": "记住方向", "effect": { "follow": { "id": "f_far_green", "delay": 2, "ttl": 8 }, "灵性": 2, "flag": "saw_oasis", "skill": "sky_eye" }, "result": "原来荒漠，不是全世界。你的眼睛，从此看得更远。" }
     ]
   },
   {
@@ -198,7 +198,7 @@
     "text": "雷云压到了头顶。荒漠上最高的东西，就是你。",
     "choices": [
       { "text": "缩起来", "chance": 0.6, "chanceAttr": "韧性", "chanceStep": 0.03,
-        "effect": { "韧性": 1 }, "result": "雷落在你旁边，烧焦了一片沙。",
+        "effect": { "follow": "f_thunder_glass", "韧性": 1 }, "result": "雷落在你旁边，烧焦了一片沙。",
         "fail": { "effect": { "death": "lightning" }, "result": "雷选中了你。" } },
       { "text": "吞下这道雷", "require": "legacy:thunder_mark>=1", "effect": { "灵气": 25, "灵性": 3, "skill": "thunder_call" },
         "result": "雷落下来，被你吞了。天道沉默了一会儿。" },

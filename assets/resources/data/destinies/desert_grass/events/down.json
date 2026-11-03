@@ -27,7 +27,7 @@
     "id": "d1_wind_scrape", "dir": "down", "layers": ["D1"],
     "text": "风把你周围的沙刨走了一层，你半截根露在了外面。",
     "choices": [
-      { "text": "往下多扎一寸", "effect": { "根系": 2, "水分": -1 }, "result": "根钻回了沙里。疼，但稳了。" },
+      { "text": "往下多扎一寸", "effect": { "follow": "f_scrape_crack", "根系": 2, "水分": -1 }, "result": "根钻回了沙里。疼，但稳了。" },
       { "text": "等沙子回来", "chance": 0.5, "effect": { "灵性": 1 }, "result": "第二天，风又把沙子送回来了。",
         "fail": { "effect": { "水分": -2 }, "result": "沙子没回来。太阳晒了你一整天。" } }
     ]
@@ -81,7 +81,7 @@
     "id": "d3_shell", "dir": "down", "layers": ["D3"], "once": true,
     "text": "你的根碰到一块硬东西。是一只河蚌的化石。",
     "choices": [
-      { "text": "吸收里面的灵气", "effect": { "灵气": 8 }, "result": "三千年前的河水味道，有点咸。" },
+      { "text": "吸收里面的灵气", "effect": { "follow": "f_river_dream", "灵气": 8 }, "result": "三千年前的河水味道，有点咸。" },
       { "text": "把它撬开", "require": "韧性>=3", "effect": { "item": "pearl" }, "result": "里面有一颗珍珠。荒漠里，你是第一株富起来的草。" },
       { "text": "继续往下", "next": "d3_collapse" },
       { "text": "吞噬", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 15 },
@@ -93,9 +93,9 @@
     "text": "头顶的沙层在往下塌。",
     "choices": [
       { "text": "往旁边逃", "chance": 0.6, "chanceAttr": "根系", "chanceStep": 0.03,
-        "effect": { "根系": 1 }, "result": "你的根贴着塌方溜了过去。",
+        "effect": { "follow": "f_collapse_hollow", "根系": 1 }, "result": "你的根贴着塌方溜了过去。",
         "fail": { "effect": { "death": "collapse" }, "result": "一整条古河，压在了你身上。" } },
-      { "text": "撑住", "require": "韧性>=5", "effect": { "韧性": 2, "灵气": 5 }, "result": "你撑住了。整片沙层，压在一株草的根上。" },
+      { "text": "撑住", "require": "韧性>=5", "effect": { "follow": "f_collapse_hollow", "韧性": 2, "灵气": 5 }, "result": "你撑住了。整片沙层，压在一株草的根上。" },
       { "text": "藤蔓撑住", "showIf": "skill:vine_bind", "useSkill": "vine_bind", "effect": { "根系": 2, "韧性": 1 },
         "result": "藤蔓撑起了整片沙层。你在下面，悠闲地喝了口水。" }
     ]
@@ -107,7 +107,7 @@
       { "text": "唤醒它", "require": "灵性>=3", "effect": { "灵性": 3, "flag": "ancient_friend" },
         "result": "它说了一句你听不懂的话，又睡了。你觉得那是祝福。" },
       { "text": "吞了它", "effect": { "灵气": 12, "韧性": 1, "skill": "swallow", "flag": "ate_ancient" }, "result": "你得到了它一万年的力量，和一点点愧疚。" },
-      { "text": "收起来", "effect": { "item": "ancient_seed" }, "result": "你用根须把它包好。也许以后用得上。" }
+      { "text": "收起来", "effect": { "follow": { "id": "f_seed_whisper", "delay": 2 }, "item": "ancient_seed" }, "result": "你用根须把它包好。也许以后用得上。" }
     ]
   },
   {
@@ -142,7 +142,7 @@
       { "text": "硬推", "chance": 0.25, "chanceAttr": "韧性", "chanceStep": 0.04,
         "effect": { "item": "fire_crystal" }, "result": "门挪开一条缝，滚出来一块发烫的石头。",
         "fail": { "effect": { "水分": -2 }, "result": "门没动。你的根倒是快断了。" } },
-      { "text": "记住这里", "effect": { "flag": "saw_door" }, "result": "你记住了缺口的形状。" }
+      { "text": "记住这里", "effect": { "follow": "f_door_hum", "flag": "saw_door" }, "result": "你记住了缺口的形状。" }
     ]
   },
   {
@@ -152,7 +152,7 @@
       { "text": "打开陶罐", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
         "effect": { "item": "pottery" }, "result": "罐里只有一块陶片。骸骨的手松开了。",
         "fail": { "effect": { "death": "curse" }, "result": "罐子里冒出一股黑气。" } },
-      { "text": "绕开", "effect": { "根系": 1 }, "result": "你给他让了路。死人也有死人的尊严。" },
+      { "text": "绕开", "effect": { "follow": "f_skeleton_dream", "根系": 1 }, "result": "你给他让了路。死人也有死人的尊严。" },
       { "text": "想起那扇门", "require": "flag:saw_door", "effect": { "item": "pottery", "灵性": 1 },
         "result": "你轻轻掰开他的手。陶片的形状，和门上的缺口一模一样。" }
     ]
@@ -183,7 +183,7 @@
     "text": "岩浆里漂着一块会发光的石头。",
     "choices": [
       { "text": "捞上来", "effect": { "item": "fire_crystal", "水分": -2 }, "result": "根被烫出了泡。值。" },
-      { "text": "吸收热量", "effect": { "灵气": 15, "水分": -3 }, "result": "你像喝了一口熔化的太阳。" },
+      { "text": "吸收热量", "effect": { "follow": "f_lava_spirit", "灵气": 15, "水分": -3 }, "result": "你像喝了一口熔化的太阳。" },
       { "text": "吞噬", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 25 },
         "result": "火灵晶在你身体里烧成了一团光。" }
     ]
