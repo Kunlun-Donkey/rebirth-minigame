@@ -9,6 +9,7 @@ import { Label, Node, sys, view } from '../../tests/fake-cc';
 import { Game } from '../../assets/scripts/game/game';
 import { CONFIG } from '../../assets/scripts/game/config';
 import { showSplash } from '../../assets/scripts/game/screens/splash';
+import { showUnlockReveal } from '../../assets/scripts/game/screens/destiny';
 import { destinyProfile, Rng } from '../../assets/scripts/core';
 import { toHtml } from './serialize';
 
@@ -60,6 +61,9 @@ it('UI 巡检快照', async () => {
                 g.reset(); showSplash(g, '正在轮回……'); snap('启动页'); g.goMenu(); await flush();
                 snap('主菜单');
                 g.goDestinySelect('menu'); await flush(); snap('命格选择');
+                tap(taps(g.screen).find(n => labels(n).some(l => l.startsWith('随缘投胎')))!); await flush(8); snap('随缘投胎');
+                g.reset(); g.save.spinBonus = null; g.save.spinDay = '';
+                showUnlockReveal(g, ['local_dog']); await flush(8); snap('新命格解锁'); g.reset();
             }
             await g.switchDestiny(did); await flush(6);
 

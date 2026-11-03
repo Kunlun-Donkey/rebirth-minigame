@@ -1,12 +1,15 @@
 /**
  * 命格选择（从轮回殿进入）：所有命格并列，未解锁的显示解锁条件。
  * 封面图 textures/destiny/<id>/cover（1:1），缺图时显示命格名的最后一个字。
+ * 「随缘投胎」转盘：已解锁 ≥2 个命格时出现，每天首次免费、之后看视频；转出的命格本世轮回点 +30%。
+ * 新命格解锁时也用同一个转盘揭晓（停在新命格上）。
  */
-import { destinyStates } from '../../core';
+import { tween } from 'cc';
+import { destinyStates, SPIN_BONUS } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { box, button, chip, COLOR, estimateWidth, fadeIn, image, onTap, rect, text, textHeight } from '../ui/kit';
+import { box, button, chip, clear, COLOR, estimateWidth, fadeIn, image, modal, onTap, pop, rect, text, textHeight } from '../ui/kit';
 
 const MAX_CARD_H = 240;
 const GAP = 20;
@@ -79,5 +82,80 @@ export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): vo
         y += CARD_H + GAP;
     }
 
-    button(root, 60, g.H - 140, g.W - 120, { label: '返  回', style: 'ghost', size: 28, onClick: back });
+    if (states.filter(s => s.unlocked).length < 2) {
+        button(root, 60, g.H - 140, g.W - 120, { label: '返  回', style: 'ghost', size: 28, onClick: back });
+        return;
+    }
+    const half = (g.W - 120 - 20) / 2;
+    const free = g.canFreeSpin();
+    let busy = false;
+    button(root, 60, g.H - 140, half, {
+        label: free ? '随缘投胎 · 免费' : '随缘投胎 · 视频', style: free ? 'primary' : 'ad', size: 26, align: 'center',
+        onClick: async () => {
+            if (busy) return;
+            busy = true;
+            const id = await g.rollSpin().finally(() => { busy = false; });
+            if (!id) return;
+            spinWheel(g, states.filter(s => s.unlocked).map(s => s.entry.id), id, {
+                title: '随  缘  投  胎',
+                lines: name => [`这一世，你是「${name}」。`, `本世结算轮回点 +${Math.round(SPIN_BONUS * 100)}%`],
+                okText: '投  胎',
+                onOk: () => (id === g.data.meta.id ? g.goDraft() : g.switchDestiny(id, 'draft')),
+            });
+        },
+    });
+    button(root, 60 + half + 20, g.H - 140, half, { label: '返  回', style: 'ghost', size: 28, align: 'center', onClick: back });
+}
+
+/** 新命格解锁：转盘在已解锁命格间滚动，停在新命格上 */
+export function showUnlockReveal(g: Game, fresh: string[]): void {
+    const all = destinyStates(g.index, g.save.profile).filter(s => s.unlocked).map(s => s.entry.id);
+    const more = fresh.slice(1).map(id => g.index.destinies.find(e => e.id === id)?.name ?? id);
+    const desc = g.index.destinies.find(e => e.id === fresh[0])?.desc ?? '';
+    spinWheel(g, all, fresh[0], {
+        title: '新  命  格  解  锁',
+        lines: name => [`「${name}」已解锁，可在轮回殿切换。`, desc, ...(more.length ? [`同时解锁：${more.join('、')}`] : [])],
+        okText: '知  道  了',
+        onOk: () => undefined,
+    });
+}
+
+/** 转盘：在 ids 间依次高亮、逐渐减速，最后停在 target 上，再显示结果和按钮 */
+function spinWheel(g: Game, ids: string[], target: string,
+    o: { title: string; lines: (name: string) => string[]; okText: string; onOk: () => void }): void {
+    const nameOf = (id: string) => g.index.destinies.find(e => e.id === id)?.name ?? id;
+    const PH = 760;
+    const S = 260;
+    const { panel, close, panelW } = modal(g.overlay, g.W, g.H, PH, { dark: true });
+    pop(panel);
+    text(panel, o.title, 0, 36, panelW, { size: 38, color: COLOR.ochreD, align: 'center', bold: true });
+    const slot = box(panel, (panelW - S) / 2, 110, S, S + 60, 'slot');
+    const draw = (id: string, final: boolean) => {
+        clear(slot);
+        const art = box(slot, 0, 0, S, S, 'art');
+        rect(art, { fill: COLOR.ochre, fillAlpha: final ? 70 : 40, radius: 20, stroke: final ? COLOR.legend : COLOR.paperEdge, lineWidth: final ? 6 : 3 });
+        const ch = text(art, nameOf(id).slice(-1), 0, 0, S, { size: 120, color: COLOR.ochreD, align: 'center', valign: 'center', bold: true }, S);
+        image(art, TEX.cover(id), 8, 8, S - 16, S - 16, { onLoaded: () => { ch.active = false; } });
+        text(slot, nameOf(id), 0, S + 14, S, { size: 32, bold: true, align: 'center', color: final ? COLOR.legacy : COLOR.ink });
+    };
+    const start = Math.floor(Math.random() * ids.length);
+    const total = ids.length * 3 + ((ids.indexOf(target) - start + ids.length) % ids.length);
+    const tick = (i: number) => {
+        if (!panel.isValid) return;
+        const last = i >= total;
+        draw(last ? target : ids[(start + i) % ids.length], last);
+        if (!last) {
+            g.audio.play('click');
+            const p = i / total;
+            tween(panel).delay(0.05 + 0.3 * p * p).call(() => tick(i + 1)).start();
+            return;
+        }
+        g.audio.play('breakthrough');
+        Platform.vibrate();
+        pop(slot);
+        const body = o.lines(nameOf(target)).filter(Boolean).join('\n');
+        text(panel, body, 40, 110 + S + 80, panelW - 80, { size: 26, color: COLOR.ink2, align: 'center', wrap: true, lineHeight: 40 }, PH - 120 - (110 + S + 80) - 10);
+        button(panel, 30, PH - 120, panelW - 60, { label: o.okText, style: 'primary', size: 30, align: 'center', onClick: () => { close(); o.onOk(); } });
+    };
+    tick(0);
 }

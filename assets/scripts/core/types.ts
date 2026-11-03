@@ -532,6 +532,8 @@ export interface RunState {
     map?: string;
     /** 本世是天命之子 */
     blessed?: boolean;
+    /** 本世由「随缘投胎」转盘决定命格（结算轮回点加成） */
+    spin?: boolean;
     /** 最后一搏：due = 下季开头触发，used = 本世已用过 */
     lastStand?: 'due' | 'used';
 }

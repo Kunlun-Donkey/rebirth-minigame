@@ -15,6 +15,10 @@ export interface SaveData {
     freeRerollUsed: number;
     /** 静音（背景音乐 + 音效） */
     muted: boolean;
+    /** 上次免费「随缘投胎」的日期（YYYY-MM-DD，每天一次免费） */
+    spinDay: string;
+    /** 随缘投胎转出的命格：下一世若是它，结算轮回点加成 */
+    spinBonus: string | null;
 }
 
 export function loadSave(): SaveData {
@@ -29,12 +33,14 @@ export function loadSave(): SaveData {
                 rerollUsed: d.rerollUsed ?? false,
                 freeRerollUsed: d.freeRerollUsed ?? 0,
                 muted: d.muted ?? false,
+                spinDay: d.spinDay ?? '',
+                spinBonus: d.spinBonus ?? null,
             };
         } catch (e) {
             console.warn('[save] 存档损坏，已重置', e);
         }
     }
-    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false };
+    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false, spinDay: '', spinBonus: null };
 }
 
 export function writeSave(d: SaveData): void {

@@ -11,7 +11,7 @@ import { Platform } from './platform';
 import { loadSubBundle } from './res';
 import { loadSave, SaveData, writeSave } from './save';
 import { box, clear, COLOR, image, rect, setTapFeedback, text } from './ui/kit';
-import { showDestinySelect } from './screens/destiny';
+import { showDestinySelect, showUnlockReveal } from './screens/destiny';
 import { showMenu } from './screens/menu';
 import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
@@ -104,6 +104,7 @@ export class Game {
         const st = destinyStates(this.index, this.save.profile).find(s => s.entry.id === id);
         if (!st?.unlocked) return;
         this.switching = true;
+        if (id !== this.save.spinBonus) this.save.spinBonus = null;
         const prev = this.data.meta.id;
         this.loading(`正在投胎为「${st.entry.name}」……`);
         try {
@@ -118,6 +119,24 @@ export class Game {
         }
         if (then === 'menu') this.goMenu();
         else this.goDraft();
+    }
+
+    /** 随缘投胎：今天的免费次数还在吗 */
+    canFreeSpin(): boolean {
+        return this.save.spinDay !== todayKey();
+    }
+
+    /** 随缘投胎：每天首次免费、之后看视频，在已解锁命格里随机一个（看视频取消返回 null） */
+    async rollSpin(): Promise<string | null> {
+        const pool = destinyStates(this.index, this.save.profile).filter(s => s.unlocked).map(s => s.entry.id);
+        if (pool.length < 2) return null;
+        if (this.canFreeSpin()) this.save.spinDay = todayKey();
+        else if (!(await this.watchAd('spin_destiny'))) return null;
+        const id = pool[Math.floor(Math.random() * pool.length)];
+        this.save.spinBonus = id;
+        this.persist();
+        Platform.report('spin_destiny', { id });
+        return id;
     }
 
     /** 命格选择；from = 从哪个界面进来（返回时回到那里） */
@@ -189,15 +208,13 @@ export class Game {
         this.save.run = null;
         this.persist();
         const fresh = destinyStates(this.index, this.save.profile).filter(st => st.unlocked && !before.has(st.entry.id));
-        if (fresh.length) {
-            this.audio.play('breakthrough');
-            Platform.toast(`新命格解锁：${fresh.map(st => st.entry.name).join('、')}`);
-        }
         Platform.report('life_end', { kind: s.kind, cause: s.id, seasons: s.seasons, stage: s.stage });
         this.reset();
         this.audio.playBgm('bgm_settle');
         if (s.kind === 'ending') this.audio.play('ending');
         showSettle(this);
+        // 新命格解锁：转盘揭晓（停在新命格上）
+        if (fresh.length) showUnlockReveal(this, fresh.map(st => st.entry.id));
     }
 
     // ───────────── 动作 ─────────────
@@ -211,7 +228,9 @@ export class Game {
         } finally {
             this.starting = false;
         }
-        this.engine.startRun(pick, randomSeed());
+        const spin = this.save.spinBonus === this.data.meta.id;
+        this.save.spinBonus = null;
+        this.engine.startRun({ ...pick, spin }, randomSeed());
         this.save.peekUsed = 0;
         this.persist();
         const map = this.engine.mapDef();

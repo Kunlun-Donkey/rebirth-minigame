@@ -24,6 +24,8 @@ const ATTR_FLOOR = 0;
 const MEMORY_TEXT_MAX = 18;
 /** 今日首世轮回点加成 */
 export const DAILY_FIRST_BONUS = 0.5;
+/** 随缘投胎（转盘选命格）结算轮回点加成 */
+export const SPIN_BONUS = 0.3;
 const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [] };
 /** 有成功率的选项成功后，再判定一次大成功（属性收益翻倍） */
 export const CRIT_CHANCE = 0.15;
@@ -73,7 +75,7 @@ export class Engine {
     }
 
     /** pick.skills 为开局携带的技能；省略时自动携带（最多 skillSlots 个，优先最新领悟的） */
-    startRun(pick: { talent: string; item: string; companion: string; skills?: string[] }, seed: number): void {
+    startRun(pick: { talent: string; item: string; companion: string; skills?: string[]; spin?: boolean }, seed: number): void {
         const d = this.data;
         const dp = this.dp;
         const attrs: Record<string, number> = {};
@@ -107,6 +109,7 @@ export class Engine {
             learned: [],
             missed: [],
         };
+        if (pick.spin) this.run.spin = true;
         const slots = d.meta.settings.skillSlots;
         const owned = dp.skills.filter(id => d.skills.has(id));
         this.run.skills = (pick.skills ? pick.skills.filter(id => owned.includes(id)) : [...owned].reverse()).slice(0, slots);
@@ -523,6 +526,7 @@ export class Engine {
         const fortune = this.upgradeValue('pointsBonus');
         if (fortune) bonus(`命盘加成 +${Math.round(fortune * 100)}%`, 1 + fortune);
         if (this.run.firstOfDay) bonus(`今日首世 +${Math.round(DAILY_FIRST_BONUS * 100)}%`, 1 + DAILY_FIRST_BONUS);
+        if (this.run.spin) bonus(`随缘投胎 +${Math.round(SPIN_BONUS * 100)}%`, 1 + SPIN_BONUS);
 
         dp.lives += 1;
         dp.bestStage = Math.max(dp.bestStage, this.run.stage);

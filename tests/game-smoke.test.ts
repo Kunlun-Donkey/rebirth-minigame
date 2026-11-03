@@ -464,4 +464,64 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         await flush();
         expect(labels(g.overlay).some(l => l.includes('适龄提示'))).toBe(true);
     });
+
+    it('随缘投胎：每天首次免费、再转要看视频；转出的命格开局带加成；新命格解锁用转盘揭晓', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
+        const find = (layer: Node, s: string) => tappables(layer).find(n => labels(n).some(l => l.includes(s)));
+        // 只有一个命格时没有转盘
+        g.goDestinySelect('menu');
+        await flush();
+        expect(find(g.screen, '随缘投胎')).toBeUndefined();
+
+        g.save.profile.destinies.desert_grass.bestStage = 2;
+        destinyProfile(g.save.profile, 'local_dog').bestStage = 1;
+        g.goDestinySelect('menu');
+        await flush();
+        const root = g.screen.parent!;
+        const spin = find(g.screen, '随缘投胎 · 免费')!;
+        expect(spin).toBeTruthy();
+        expect(absTop(spin, root) + heightOf(spin)).toBeLessThanOrEqual(g.H);
+        tapNode(spin);
+        for (let i = 0; i < 5; i++) await flush();
+        const target = g.save.spinBonus!;
+        expect(target).toBeTruthy();
+        expect(labels(g.overlay).some(l => l.includes('本世结算轮回点 +30%'))).toBe(true);
+        tapNode(find(g.overlay, '投  胎')!);
+        for (let i = 0; i < 10; i++) await flush();
+        expect(screenName(g)).toBe('draft');
+        expect(g.data.meta.id).toBe(target);
+        for (let i = 0; i < 3; i++) {
+            tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+            await flush();
+        }
+        tapNode(find(g.screen, '重   生')!);
+        for (let i = 0; i < 5; i++) await flush();
+        expect(g.engine.run.spin).toBe(true);
+        expect(g.save.spinBonus).toBeNull();
+        g.engine.run.over = { kind: 'death', id: g.data.meta.rules.oldAgeDeath };
+        const s = g.engine.settle();
+        expect(s.breakdown.map(b => b.label)).toContain('随缘投胎 +30%');
+
+        // 今天第二次：看视频
+        g.goDestinySelect('menu');
+        await flush();
+        expect(find(g.screen, '随缘投胎 · 视频')).toBeTruthy();
+
+        // 转出后手动换成别的命格：加成作废
+        g.save.spinBonus = 'desert_grass';
+        await g.switchDestiny(g.data.meta.id === 'local_dog' ? 'mantis_shrimp' : 'local_dog');
+        expect(g.save.spinBonus).toBeNull();
+
+        // 新命格解锁：结算后弹出转盘揭晓
+        g.overlay.destroyAllChildren();
+        const { showUnlockReveal } = await import('../assets/scripts/game/screens/destiny');
+        showUnlockReveal(g, ['local_dog']);
+        expect(labels(g.overlay).some(l => l.includes('「一只土狗」已解锁'))).toBe(true);
+        tapNode(find(g.overlay, '知  道  了')!);
+        expect(g.overlay.children.filter(n => n.isValid).length).toBe(0);
+    });
 });
