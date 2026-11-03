@@ -29,7 +29,7 @@
   },
 
   {
-    "id": "f_boss_glove", "dir": "any", "chainOnly": true, "teaser": "老板去买手套了",
+    "id": "f_boss_glove", "dir": "any", "chainOnly": true, "layers": ["U1", "U2", "D1"], "teaser": "老板去买手套了",
     "text": "胖老板戴着一副厚胶皮手套回来了。他指着你：就你，今天收拾你。",
     "choices": [
       { "text": "打他手套", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.1,
@@ -39,7 +39,7 @@
     ]
   },
   {
-    "id": "f_boss_sign", "dir": "any", "chainOnly": true, "teaser": "老板在水箱上贴了张纸",
+    "id": "f_boss_sign", "dir": "any", "chainOnly": true, "layers": ["U1", "U2", "D1"], "teaser": "老板在水箱上贴了张纸",
     "text": "水箱上贴了张纸：此虾不卖。老板跟客人说，这只留着镇店。",
     "choices": [
       { "text": "冲他挥拳", "effect": { "拳力": 1, "海灵": 3, "flag": "boss_seen" }, "result": "老板也冲你挥了挥拳。你们俩，算是认识了。" },
@@ -47,7 +47,7 @@
     ]
   },
   {
-    "id": "f_tank_crack", "dir": "down", "chainOnly": true, "teaser": "箱底那道裂缝在渗水",
+    "id": "f_tank_crack", "dir": "down", "chainOnly": true, "layers": ["D1"], "teaser": "箱底那道裂缝在渗水",
     "text": "箱底那道裂缝又宽了一点。凉水从下面渗上来，带着海的咸味。",
     "choices": [
       { "text": "接着往下挖", "chance": 0.5, "chanceAttr": "打洞", "chanceStep": 0.1,
@@ -57,7 +57,7 @@
     ]
   },
   {
-    "id": "f_tank_night", "dir": "up", "chainOnly": true, "teaser": "等到夜里再说",
+    "id": "f_tank_night", "dir": "up", "chainOnly": true, "layers": ["U1", "U2"], "teaser": "等到夜里再说",
     "text": "夜里市场关了灯，只剩增氧泵咕噜咕噜。箱沿上一个人影都没有。",
     "choices": [
       { "text": "翻出去", "effect": { "游速": 2, "海灵": 4 }, "result": "你落进水沟，没人喊。顺着水，你一路冲进了海。" },

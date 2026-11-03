@@ -489,6 +489,21 @@ describe('后续剧情（follow）', () => {
         expect(e.threadTeasers()).toEqual([]);
     });
 
+    it('限定 layers 的后续：不在那一层时不触发、不显示预告', () => {
+        const ev: RawEvent[] = [
+            { id: 'meet', dir: 'down', layers: ['D1'], weight: 1000, once: true, text: '遇见', choices: [{ text: '约', effect: { follow: 'deep_only' }, result: '好' }] },
+            { id: 'deep_only', dir: 'down', layers: ['D2'], chainOnly: true, teaser: '深处见', text: '深', choices: [{ text: '嗯', result: '嗯' }] },
+        ];
+        const e = new Engine(buildDestiny(fixture(ev)), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        e.choose(0);
+        expect(e.threadTeasers()).toEqual([]);
+        expect(e.directionOptions().find(o => o.dir === 'down')!.thread).toBeUndefined();
+        e.chooseDirection('down');
+        expect(e.eventView().id).not.toBe('deep_only');
+    });
+
     it('局内状态带 threads 可序列化恢复', () => {
         const e = new Engine(buildDestiny(fixture(extra)), createProfile());
         e.startRun(pick, 1);

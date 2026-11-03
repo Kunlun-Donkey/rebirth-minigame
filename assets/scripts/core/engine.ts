@@ -722,7 +722,10 @@ export class Engine {
         for (const t of r.threads ?? []) {
             if (t.at > r.season || t.until < r.season) continue;
             const ev = this.data.events.get(t.id);
-            if (ev && (ev.dir === dir || ev.dir === 'any') && this.check(ev.require)) return ev;
+            if (!ev || (ev.dir !== dir && ev.dir !== 'any') || !this.check(ev.require)) continue;
+            // 限定了层的后续（如水箱里的事）：所选方向的当前层必须在其中
+            if (ev.layers && !ev.layers.includes(this.data.layersByDir[dir][r.pos[dir]]?.id)) continue;
+            return ev;
         }
         return undefined;
     }
@@ -733,7 +736,8 @@ export class Engine {
         return (r.threads ?? [])
             .filter(t => t.at <= r.season && t.until >= r.season)
             .map(t => this.data.events.get(t.id))
-            .filter((ev): ev is GameEvent => !!ev && !!ev.teaser && this.check(ev.require))
+            .filter((ev): ev is GameEvent => !!ev && !!ev.teaser && this.check(ev.require) &&
+                (!ev.layers || (['up', 'down', 'side'] as Dir[]).some(d => ev.layers!.includes(this.data.layersByDir[d][r.pos[d]]?.id))))
             .map(ev => ({ dir: ev.dir, text: ev.teaser! }));
     }
 
