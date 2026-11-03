@@ -51,7 +51,7 @@ it('UI 巡检快照', async () => {
                 const ph = scr === 'run' ? g.engine.run.phase + (g.engine.run.phase === 'event' ? (g.engine.eventView().gold ? '-gold' : g.engine.eventView().sudden ? '-sudden' : '') : '') : '';
                 return `${scr}|${ph}|${ov.replace(/\d+/g, '#').slice(0, 8)}`;
             };
-            const snapIfNew = () => { const s = sig(); if (!seen.has(s)) { seen.add(s); snap(s); } };
+            const snapIfNew = async () => { const s = sig(); if (!seen.has(s)) { seen.add(s); await flush(8); snap(s); } };
 
             // 解锁全部命格并切到目标命格
             g.save.profile.points = 5000;
@@ -65,12 +65,12 @@ it('UI 巡检快照', async () => {
 
             // 开局抽卡 3 步
             for (let i = 0; i < 4; i++) {
-                snapIfNew();
+                await snapIfNew();
                 const c = taps(g.screen).find(n => n.name.startsWith('card_'));
                 if (!c) break;
                 tap(c); await flush();
             }
-            snapIfNew();
+            await snapIfNew();
             const go = taps(g.screen).find(n => labels(n).some(l => l.replace(/\s/g, '').includes('重生')));
             if (go) { tap(go); await flush(6); }
 
@@ -78,7 +78,7 @@ it('UI 巡检快照', async () => {
             const rng = new Rng({ rng: 11 });
             const start = index.length;
             for (let i = 0; i < 1200 && index.length - start < 60; i++) {
-                snapIfNew();
+                await snapIfNew();
                 const layer = g.overlay.children.length ? g.overlay : g.screen;
                 const pool = taps(layer).filter(n => n.name !== 'modal' && !labels(n).some(l => /菜单|重新投胎|⇄/.test(l)));
                 const list = pool.length ? pool : taps(layer);
