@@ -199,6 +199,8 @@ function makeBundle(root: string) {
         loadDir(path: string, _type: unknown, cb: (err: Error | null, assets: unknown[]) => void) {
             setTimeout(() => {
                 const dir = join(root, path);
+                // 与真实引擎一致：目录不存在时回调空列表
+                if (!existsSync(dir)) return cb(null, []);
                 const out = readdirSync(dir).filter(f => f.endsWith('.json')).map(f => {
                     const a = new JsonAsset(f.replace(/\.json$/, ''));
                     a.json = JSON.parse(readFileSync(join(dir, f), 'utf8'));

@@ -1,0 +1,105 @@
+{
+  "id": "boss_zhou",
+  "name": "画饼老板老周",
+  "summary": "前世他画了你十年饼。这一世，饼你不吃了——你要把他的公司连同他一起买下来。",
+  "stage": [0, 2],
+  "states": {
+    "fooled": "又信了老周的饼",
+    "exposed": "当众拆穿了老周",
+    "pie_system": "夺来了老周的画饼系统",
+    "bought": "收购了老周的公司",
+    "arrested": "老周被带走了"
+  },
+  "events": [
+    {
+      "id": "first_pie", "entry": true, "dir": "up", "layers": ["U1"], "weight": 22,
+      "text": "入职第一天，老周拍着你的肩：好好干，明年上市，你就是元老。前世，你信了这句话十年。",
+      "choices": [
+        { "text": "使劲点头", "effect": { "身价": 2, "state": "fooled", "follow": { "id": "pie_again", "delay": 2 } }, "result": "老周很满意。他又拍了拍你的肩，拍得很用力。" },
+        { "text": "问期权写进合同吗", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.08,
+          "effect": { "脸皮": 1, "能力": 1, "follow": { "id": "meeting", "delay": 2 } }, "result": "老周愣了一下，笑着说：当然，当然。他记住你了。",
+          "easy": "你把合同推到他面前。老周看了你很久，签了字。",
+          "fail": { "effect": { "心态": -1 }, "result": "老周没回答，转身走了。第二天，你的工位被换到了厕所旁边。" } },
+        { "text": "前世吃了十年饼", "require": "legacy:pie_sense>=1", "effect": { "心态": 1, "身价": 4, "follow": { "id": "meeting", "delay": 2 } },
+          "result": "前世你信了十年。这一世你只笑了笑：老周，这个饼几寸的？" },
+        { "text": "当场把饼吃了", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 6, "follow": { "id": "meeting", "delay": 2 } }, "result": "你掏出一张真的烙饼，当着他的面吃了。老周沉默了。全公司都知道了你。",
+          "fail": { "effect": { "心态": -1 }, "result": "你掏出了饼。老周以为你饿了，又给你加了两个项目。" } }
+      ]
+    },
+    {
+      "id": "pie_again", "dir": "up", "chainOnly": true, "teaser": "老周又在群里发长语音", "require": "line:boss_zhou.fooled",
+      "text": "年底了。老周在群里发了一条六十秒的语音：今年大家辛苦了，年终奖明年一起发。",
+      "choices": [
+        { "text": "回复「收到」", "effect": { "精力": -1, "身价": 1, "follow": { "id": "ten_years", "delay": 4, "ttl": 8 } }, "result": "你回了收到。前面已经有四十个收到了。" },
+        { "text": "私聊问年终奖", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 6, "脸皮": 1, "state": "exposed", "follow": { "id": "meeting", "delay": 1 } }, "result": "老周拖了三天，最后转了你一半。你知道，这饼是可以讨的。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "ten_years", "delay": 4, "ttl": 8 } }, "result": "老周回了一个微笑的表情。从此，你的消息他都秒回「在开会」。" } },
+        { "text": "把语音转成文字存档", "require": "item:recorder", "effect": { "能力": 1, "flag": "evidence", "follow": { "id": "meeting", "delay": 1 } },
+          "result": "你把老周三年来的每一张饼，都存进了一个文件夹。" }
+      ]
+    },
+    {
+      "id": "ten_years", "dir": "any", "chainOnly": true, "teaser": "老周说明年一定上市", "require": "line:boss_zhou.fooled",
+      "text": "又一年。老周站在年会台上：明年，我们一定上市。台下鼓掌的人，比去年少了一半。",
+      "choices": [
+        { "text": "继续鼓掌", "effect": { "death": "pie" }, "result": "你鼓了十年掌。手都鼓麻了。" },
+        { "text": "这次不信了", "effect": { "心态": 2, "身价": 4, "state": "exposed", "follow": { "id": "meeting", "delay": 1 } }, "result": "你放下手，第一次没有鼓掌。旁边的人看了你一眼，也放下了手。" },
+        { "text": "上台抢话筒", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 3, "身价": 10, "state": "exposed", "feud": "抢了老周的年会话筒", "follow": { "id": "meeting", "delay": 1 } },
+          "result": "你抢过话筒：明年上市？去年你也这么说。全场安静了三秒，然后掌声雷动。",
+          "fail": { "effect": { "death": "laid_off" }, "result": "你还没开口，保安就把你请了出去。" } }
+      ]
+    },
+    {
+      "id": "meeting", "dir": "up", "chainOnly": true, "teaser": "周会上，老周点了你的名", "stage": [1, 99],
+      "text": "周会上，老周指着你：这个项目做不完，全组周末加班。你知道，这个项目根本不可能做完。",
+      "choices": [
+        { "text": "认了，加班", "effect": { "精力": -2, "能力": 1, "state": "fooled" }, "result": "你加了四个周末。项目没做完，老周说下周继续。" },
+        { "text": "当场算给他听", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "身价": 8, "state": "exposed", "follow": { "id": "pie_system", "delay": 2, "ttl": 6 } },
+          "result": "你在白板上一行一行地算：人手、工时、预算。算完，老周不说话了。",
+          "easy": "你只写了一个数字。老周看了一眼，宣布这个项目延期。",
+          "fail": { "effect": { "心态": -2, "state": "fooled" }, "result": "你算到一半卡住了。老周笑了：年轻人，多干少说。" } },
+        { "text": "拿出录音", "require": "flag:evidence | item:recorder", "effect": { "身价": 10, "脸皮": 2, "state": "exposed", "feud": "老周的饼被当场拆穿", "follow": { "id": "pie_system", "delay": 2, "ttl": 6 } },
+          "result": "你按下播放键。老周三年前的声音在会议室里回响：明年上市。" },
+        { "text": "画饼免疫", "showIf": "skill:pie_proof", "useSkill": "pie_proof", "effect": { "心态": 1, "身价": 6, "state": "exposed", "follow": { "id": "pie_system", "delay": 2, "ttl": 6 } },
+          "result": "饼飞过来，你侧身一让。它掉在了地上，所有人都看见了。" }
+      ]
+    },
+    {
+      "id": "pie_system", "dir": "any", "chainOnly": true, "teaser": "老周的眼神不太对", "require": "line:boss_zhou.exposed",
+      "text": "深夜加班，你听见老周办公室里有人在说话：【叮！】宿主画饼成功率下降，请尽快找到新的韭菜。屋里只有他一个人。",
+      "choices": [
+        { "text": "推门进去", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "unbind": true, "bind": "sys_pie", "skill": "anti_pie", "state": "pie_system", "身价": 10, "feud": "夺走了老周的画饼系统", "follow": { "id": "buyout", "delay": 3, "ttl": 10 } },
+          "result": "老周吓得一抖。那个声音从他脑子里，跳进了你脑子里：【叮！】检测到更合适的宿主。",
+          "fail": { "effect": { "心态": -2 }, "result": "你推门进去。老周正在泡脚，抬头看你：有事？" } },
+        { "text": "悄悄录下来", "effect": { "flag": "evidence", "能力": 1, "follow": { "id": "buyout", "delay": 3, "ttl": 10 } }, "result": "你把手机贴在门缝上。回家一听，里面只有老周的呼噜声。" },
+        { "text": "当没听见", "effect": { "心态": 1 }, "result": "你关上电脑，下班了。别人的系统，跟你没关系。" }
+      ]
+    },
+    {
+      "id": "buyout", "dir": "up", "layers": ["U3", "U4"], "chainOnly": true, "teaser": "老周的公司撑不住了", "stage": [3, 99],
+      "text": "老周的公司资金链断了。他坐在空荡荡的会议室里，桌上摆着一份转让协议。买家，是你。",
+      "choices": [
+        { "text": "签字，收购", "require": "身价>=60", "effect": { "state": "bought", "ending": "boss_of_boss" }, "result": "你签了字。老周站起来，第一次喊你：老板。" },
+        { "text": "留他当顾问", "effect": { "state": "bought", "人脉": 3, "身价": 15, "feud": "老周开始给你打工" }, "result": "你留下了他。第二天开会，老周在角落里认真记笔记。" },
+        { "text": "反向画饼", "showIf": "skill:anti_pie", "useSkill": "anti_pie", "effect": { "state": "bought", "身价": 25, "feud": "给老周画了一张饼" },
+          "result": "你对他说：好好干，明年上市，你就是元老。老周眼眶一红，信了。" },
+        { "text": "不买", "effect": { "心态": 1 }, "result": "你合上协议。他的公司，让他自己收拾吧。" }
+      ]
+    },
+    {
+      "id": "zhou_grudge", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 16, "require": "died:pie>=2",
+      "text": "老周又在走廊里拦住了新人，熟练地拍着肩膀。他画的饼，你吃了{died:pie}辈子。",
+      "choices": [
+        { "text": "把新人拉走", "effect": { "心态": 1, "人脉": 2, "feud": "截胡了老周的新韭菜" }, "result": "你拉着新人去了茶水间：别信。我吃过，没熟。" },
+        { "text": "冲老周笑", "effect": { "脸皮": 2, "身价": 4 }, "result": "老周看着你，突然有点心虚。他也说不清为什么。" },
+        { "text": "举报他拖欠工资", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "arrested", "身价": 12, "feud": "老周被劳动监察找上门" }, "result": "劳动监察的人来了。老周第一次，把年终奖发全了。",
+          "fail": { "effect": { "心态": -1 }, "result": "材料不够。老周照样拍着新人的肩膀。" } }
+      ]
+    }
+  ]
+}

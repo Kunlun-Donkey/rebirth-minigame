@@ -1,0 +1,146 @@
+{
+  "id": "wang_juanjuan",
+  "name": "卷王王卷卷",
+  "summary": "同期的王卷卷抢了你的功，后来脑子里多了个「内卷系统」。他卷到崩溃那天，你可以踩他一脚，也可以拉他一把。",
+  "stage": [0, 2],
+  "states": {
+    "rival": "和王卷卷成了死对头",
+    "broken": "王卷卷卷到崩溃了",
+    "saved": "拉了王卷卷一把"
+  },
+  "events": [
+    {
+      "id": "steal", "entry": true, "dir": "up", "layers": ["U1"], "weight": 20,
+      "text": "同期的王卷卷把你熬夜写的方案换了个封面，交给了组长。前世，你忍了。",
+      "choices": [
+        { "text": "忍了", "effect": { "能力": 1, "心态": -1, "state": "rival", "follow": { "id": "overtime", "delay": 2 } },
+          "result": "组长夸了他。他回头冲你眨了眨眼：谢了啊。" },
+        { "text": "当众问他方案细节", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.07,
+          "effect": { "脸皮": 1, "身价": 6, "state": "rival", "feud": "王卷卷答不出自己的方案", "follow": { "id": "system", "delay": 2 } },
+          "result": "你问第三页的数据哪来的。他张了张嘴，组长的眉头皱了起来。",
+          "easy": "你只问了一句：第一页标题啥意思？他答不上来。",
+          "fail": { "effect": { "心态": -2, "state": "rival", "follow": { "id": "overtime", "delay": 2 } }, "result": "他对答如流。连你熬夜时的错别字，他都背下来了。" } },
+        { "text": "前世被他挤走过", "require": "legacy:detour>=1",
+          "effect": { "心态": 1, "身价": 5, "state": "rival", "follow": { "id": "system", "delay": 2 } },
+          "result": "前世你跟他比加班，输了。这一世你把源文件抄送给了全组。" },
+        { "text": "带头给他鼓掌", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 5, "state": "rival", "follow": { "id": "system", "delay": 2 } },
+          "result": "你鼓掌：卷卷这个封面换得好！全组都笑了。他红到了耳根。",
+          "fail": { "effect": { "心态": -1, "state": "rival", "follow": { "id": "overtime", "delay": 2 } }, "result": "你鼓了两下，组长也跟着鼓。功劳彻底是他的了。" } }
+      ]
+    },
+    {
+      "id": "grudge", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 18, "once": true, "require": "died:out_rolled>=2",
+      "text": "凌晨三点，王卷卷又在工作群里发了一份周报。他把你挤走过{died:out_rolled}回。",
+      "choices": [
+        { "text": "设置免打扰", "effect": { "心态": 1, "state": "rival", "follow": { "id": "overtime", "delay": 2 } },
+          "result": "你关了群提醒，睡了个整觉。他的周报，明早再看。" },
+        { "text": "凌晨四点回「已阅」", "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "脸皮": 2, "身价": 6, "state": "rival", "feud": "让卷王第一次失眠", "follow": { "id": "system", "delay": 2 } },
+          "result": "他看见你四点还醒着，失眠了。第二天，他六点就下班了。",
+          "easy": "你四点回，五点再回。他慌了，第一次先睡了。",
+          "fail": { "effect": { "精力": -2, "state": "rival", "follow": { "id": "overtime", "delay": 2 } }, "result": "四点零一分，他回了你一份新需求。" } },
+        { "text": "这一世不比加班", "require": "legacy:detour>=1",
+          "effect": { "心态": 2, "身价": 6, "state": "rival", "follow": { "id": "system", "delay": 2 } },
+          "result": "前世你跟他比谁走得晚。这一世你比谁做得对，他赢不了。" }
+      ]
+    },
+    {
+      "id": "overtime", "dir": "up", "chainOnly": true, "teaser": "王卷卷又是最后一个走",
+      "text": "王卷卷每天十二点才走，朋友圈定位永远是公司。组长在周会上说：大家向卷卷学习。",
+      "choices": [
+        { "text": "跟他卷", "chance": 0.35, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "身价": 6, "精力": -1, "follow": { "id": "system", "delay": 2 } },
+          "result": "你走得比他晚了十分钟。第二天，他走得比你晚了一小时。",
+          "easy": "你干完活，十点就走了。他十二点还没干完。",
+          "fail": { "effect": { "精力": -2, "follow": { "id": "squeeze", "delay": 2 } }, "result": "你熬了一周，眼圈黑了。他熬了一周，脸色红润。" } },
+        { "text": "准点下班", "effect": { "心态": 1, "follow": { "id": "squeeze", "delay": 2 } },
+          "result": "你六点准时走了。组长看你的眼神，像在看一个逃兵。" },
+        { "text": "在公司搭帐篷", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 3, "身价": 8, "feud": "比卷王卷得还狠", "follow": { "id": "system", "delay": 2 } },
+          "result": "你住进了公司。第三天，王卷卷红着眼问你：你到底几点睡？",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "squeeze", "delay": 2 } }, "result": "保安凌晨两点把你请了出去。组长说你影响市容。" } }
+      ]
+    },
+    {
+      "id": "squeeze", "dir": "up", "chainOnly": true, "teaser": "组长说，你俩只能留一个",
+      "text": "年底只有一个转正名额。组长看看你，又看看王卷卷：你们俩，自己商量。",
+      "choices": [
+        { "text": "让给他", "effect": { "death": "out_rolled" },
+          "result": "你收拾了工位。他凌晨三点还在回邮件，你凌晨三点在搬家。" },
+        { "text": "拿作品说话", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "身价": 10, "feud": "转正名额没让给王卷卷", "follow": { "id": "system", "delay": 2 } },
+          "result": "他交了三十页，你交了三页。组长看完，留下了你的三页。",
+          "easy": "你只交了一页。组长看完，把他的三十页放进了碎纸机。",
+          "fail": { "effect": { "death": "out_rolled" }, "result": "他交了三十页，你交了三页。组长没看内容，看了页数。" } },
+        { "text": "甩锅", "showIf": "skill:blame_shift", "useSkill": "blame_shift",
+          "effect": { "身价": 12, "脸皮": 1, "feud": "卷王的锅回到了卷王手里", "follow": { "id": "system", "delay": 2 } },
+          "result": "他上个月延期的锅，你原样甩回了他桌上。组长一看，懂了。" },
+        { "text": "简历早投好了", "require": "legacy:resume_ready>=1",
+          "effect": { "人脉": 2, "身价": 10, "follow": { "id": "system", "delay": 3 } },
+          "result": "前世你被挤走才想起投简历。这一世，名额还没定，offer先到了。" }
+      ]
+    },
+    {
+      "id": "system", "dir": "any", "chainOnly": true, "teaser": "王卷卷开始自言自语", "require": "line:wang_juanjuan.rival",
+      "text": "深夜，王卷卷对着空气说「收到」。他屏幕边贴着张便签：内卷系统·今日KPI 312%。",
+      "choices": [
+        { "text": "离他远点", "effect": { "心态": 1, "follow": { "id": "collapse", "delay": 3, "ttl": 6 } },
+          "result": "你换了个工位。隔着三排，还能听见他敲键盘。" },
+        { "text": "问他累不累", "effect": { "人脉": 1, "flag": "asked", "follow": { "id": "collapse", "delay": 2, "ttl": 6 } },
+          "result": "他愣住了：系统不让我说累。说完，又低头干活了。" },
+        { "text": "让你的系统跟它聊", "require": "system:any",
+          "effect": { "身价": 5, "flag": "asked", "follow": { "id": "collapse", "delay": 2, "ttl": 6 } },
+          "result": "【叮！】检测到同类。对方系统发来一句话：救救他。" },
+        { "text": "举报他开外挂", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 6, "脸皮": 2, "feud": "举报了卷王的外挂", "follow": { "id": "collapse", "delay": 3, "ttl": 6 } },
+          "result": "HR真来查了。他的系统吓得静音三天，他睡了三个整觉。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "collapse", "delay": 3, "ttl": 6 } }, "result": "HR说：卷是福报。你要不也装一个？" } }
+      ]
+    },
+    {
+      "id": "collapse", "dir": "down", "chainOnly": true, "teaser": "楼梯间里有人在哭",
+      "text": "楼梯间里，王卷卷抱着电脑蹲在地上。他说：我从小考第二，我爸就不跟我说话。",
+      "choices": [
+        { "text": "顶上他的位置", "effect": { "state": "broken", "身价": 12, "能力": 1, "feud": "王卷卷的位置归你了", "follow": { "id": "empty_desk", "delay": 2 } },
+          "result": "你转身上楼，把他的活接了过来。第二天，组长把他的工位给了你。" },
+        { "text": "陪他坐一会儿", "effect": { "state": "saved", "心态": 1, "人脉": 2, "follow": { "id": "noodles", "delay": 3, "ttl": 8 } },
+          "result": "你在他旁边坐下，什么也没说。声控灯灭了，你俩谁也没跺脚。" },
+        { "text": "当没看见", "effect": { "state": "broken", "心态": -1, "follow": { "id": "empty_desk", "delay": 2 } },
+          "result": "你轻轻带上了楼梯间的门。第二天，他的工位空了。" },
+        { "text": "替他说一句「累了」", "require": "flag:asked",
+          "effect": { "state": "saved", "心态": 2, "人脉": 2, "follow": { "id": "noodles", "delay": 3, "ttl": 8 } },
+          "result": "你按住他的手，替他说：我累了。便签上的KPI，灭了。" }
+      ]
+    },
+    {
+      "id": "empty_desk", "dir": "up", "chainOnly": true, "teaser": "王卷卷的工位空了", "require": "line:wang_juanjuan.broken",
+      "text": "王卷卷走了。新来的实习生坐在他的位置上，十二点还没走。组长说：大家向小张学习。",
+      "choices": [
+        { "text": "你也开始卷", "effect": { "精力": -2, "身价": 8, "能力": 1 },
+          "result": "你接过了卷王的称号。凌晨三点，群里只剩你和小张。" },
+        { "text": "劝实习生回家", "effect": { "心态": 1, "人脉": 1 },
+          "result": "你合上了实习生的电脑：卷不出头的，我见过。" },
+        { "text": "给王卷卷发条消息", "effect": { "state": "saved", "心态": 1 },
+          "result": "他回了一个字：嗯。半年后，他晒了一碗热汤面，配文：六点下班。" }
+      ]
+    },
+    {
+      "id": "noodles", "dir": "side", "chainOnly": true, "teaser": "王卷卷约你吃面", "require": "line:wang_juanjuan.saved",
+      "text": "王卷卷辞职了，在楼下开了家面馆，六点准时关门。他给你下了碗面：这碗，还你的方案。",
+      "choices": [
+        { "text": "吃面", "effect": { "心态": 1, "精力": 2 },
+          "result": "面很烫。他坐在对面看你吃，第一次没看手机。" },
+        { "text": "拉他合伙", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 2, "身价": 15 },
+          "result": "他想了三天，答应了。条件是：谁也不许加班。",
+          "easy": "你刚开口，他就把围裙解了：等你这句话很久了。",
+          "fail": { "effect": { "心态": 1 }, "result": "他摇头：我不想再赢了。你把面汤喝完了。" } },
+        { "text": "跟他比谁吃得快", "absurd": true, "chance": 0.3, "chanceAttr": "精力", "chanceStep": 0.03,
+          "effect": { "心态": 2, "身价": 4 },
+          "result": "你赢了。他笑得呛了一口汤：总算有一样，我不想赢了。",
+          "fail": { "effect": { "心态": -1 }, "result": "他三秒吃完一碗。你明白了，卷王终究是卷王。" } }
+      ]
+    }
+  ]
+}

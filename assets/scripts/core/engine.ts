@@ -29,7 +29,7 @@ const MEMORY_TEXT_MAX = 18;
 export const DAILY_FIRST_BONUS = 0.5;
 /** 随缘投胎（转盘选命格）结算轮回点加成 */
 export const SPIN_BONUS = 0.3;
-const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [] };
+const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [], states: [] };
 /** 连胜几次起「势如破竹」，以及单次奖励上限 */
 const STREAK_MIN = 3;
 const STREAK_BONUS_MAX = 6;
@@ -75,7 +75,7 @@ export class Engine {
         return {
             talents: draw([...this.data.talents.values()], n),
             items: draw([...this.data.items.values()], n),
-            companions: draw([...this.data.companions.values()], n),
+            companions: draw([...this.data.companions.values()].filter(c => !c.system), n),
         };
     }
 
@@ -118,6 +118,7 @@ export class Engine {
             boost: 0,
             learned: [],
             missed: [],
+            lines: {},
         };
         if (pick.spin) this.run.spin = true;
         const slots = d.meta.settings.skillSlots;
@@ -160,6 +161,8 @@ export class Engine {
         if (t?.startEffect) this.applyEffect(t.startEffect, sink, false);
         const c = d.companions.get(pick.companion);
         if (c?.startEffect) this.applyEffect(c.startEffect, sink, false);
+        // 系统认主：上一世认主的系统开局自动绑定
+        if (dp.keptSystem && d.companions.get(dp.keptSystem)?.system) this.bindSystem(dp.keptSystem, sink);
         // 道具 + 上一世封存的遗物
         this.gainItem(pick.item, sink);
         for (const id of dp.sealed) this.gainItem(id, sink);
@@ -300,7 +303,7 @@ export class Engine {
             view.text = this.fmt(view.text);
             choices.push(view);
         });
-        return { id: ev.id, text: this.fmt(ev.text), gold: ev.gold, sudden: ev.sudden, cameo: ev.cameo, choices };
+        return { id: ev.id, text: this.fmt(ev.text), gold: ev.gold, sudden: ev.sudden, cameo: ev.cameo, cross: ev.cross, choices };
     }
 
     /** 广告「窥探天命」：预览当前事件所有选项 */
@@ -671,7 +674,7 @@ export class Engine {
         const dp = this.dp;
         const run = dp.deathRun?.id === id ? dp.deathRun.n : 0;
         if (run >= 3) return `连续第${run}世了，下次一定行`;
-        if (r.reckless) return '死于过度自信';
+        if (r.reckless && id !== this.data.meta.rules.oldAgeDeath) return '死于过度自信';
         if (r.season <= 2 && id !== this.data.meta.rules.oldAgeDeath) return '主打一个速通';
         const pg = this.stageProgress();
         if (pg && pg.parts.length && pg.parts.reduce((n, p) => n + Math.min(1, p.cur / Math.max(1, p.need)), 0) / pg.parts.length >= 0.8) {
@@ -896,7 +899,7 @@ export class Engine {
             // 寿元将尽：给一次最后一搏（下季开头触发）
             r.lastStand = 'due';
             step.messages.push('寿元将尽……还有最后一次机会。');
-        } else if (r.season >= lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying') return; }
+        } else if (r.season >= lifespan) { this.die(R.oldAgeDeath, step); if (this.phase() === 'dying' || this.phase() === 'over') return; }
         this.startSeason();
     }
 
@@ -968,6 +971,12 @@ export class Engine {
         r.lastEvent = id;
         r.phase = 'event';
         addUnique(r.seen, id);
+        // 进入线路的任意事件 = 这条线这一世开始了
+        if (ev.line) {
+            const lines = r.lines ?? (r.lines = {});
+            if (!(ev.line in lines)) lines[ev.line] = '';
+            addUnique(this.ever, ev.line);
+        }
         r.hint = undefined;
         const hc = this.mods().hintChance ?? 0;
         if (hc > 0 && this.rng.chance(hc)) {
@@ -990,6 +999,12 @@ export class Engine {
     private die(deathId: string, step: StepResult): void {
         const r = this.run;
         const def = this.data.deaths.get(deathId);
+        // 寿终结局：寿元到头时满足条件，判为结局（如「平凡一生」）
+        if (deathId === this.data.meta.rules.oldAgeDeath) {
+            const stage = this.data.stages.find(s => s.level === r.stage);
+            const end = stage?.oldAgeEndingConds?.find(e => this.check(e.cond));
+            if (end) { this.finish('ending', end.id, step); return; }
+        }
         // 护身道具
         const guard = r.items.find(id => this.data.items.get(id)?.saveFromDeath);
         if (guard) {
@@ -1083,6 +1098,21 @@ export class Engine {
         for (const it of e.items) this.gainItem(it, step);
         for (const it of e.loseItems) this.loseItem(it, step);
         for (const sk of e.skills) this.grantSkill(sk, step);
+        for (const st of e.states) {
+            const [line, state] = st.split('.');
+            (r.lines ?? (r.lines = {}))[line] = state;
+            addUnique(this.ever, line);
+            addUnique(this.ever, st);
+        }
+        if (e.unbind) this.unbindSystem(step);
+        if (e.bind) this.bindSystem(e.bind, step);
+        if (e.keepSystem) {
+            const sys = r.companions.find(id => this.data.companions.get(id)?.system);
+            if (sys) {
+                this.dp.keptSystem = sys;
+                step.messages.push(`【叮！】系统认主成功。从今往后，每一世都由本系统为宿主服务。`);
+            }
+        }
         for (const f of e.feuds) {
             r.feuds = r.feuds ?? [];
             addUnique(this.dp.codex.feuds ?? (this.dp.codex.feuds = []), f);
@@ -1103,6 +1133,37 @@ export class Engine {
             r.pos[e.back] = Math.max(0, r.pos[e.back] - 1);
             r.push[e.back] = 0;
         }
+    }
+
+    /** 任何一世到达过的线路 / 状态（存档） */
+    private get ever(): string[] {
+        return this.dp.ever ?? (this.dp.ever = []);
+    }
+
+    /** 当前绑定的系统 id */
+    systemId(): string | undefined {
+        return this.run.companions.find(id => this.data.companions.get(id)?.system);
+    }
+
+    /** 绑定系统：一世最多一个（已有系统时失败） */
+    private bindSystem(id: string, step: StepResult): void {
+        const def = this.data.companions.get(id);
+        if (!def?.system) return;
+        if (this.systemId()) {
+            step.messages.push('【叮！】宿主已绑定其他系统，本系统绑定失败。');
+            return;
+        }
+        this.run.companions.push(id);
+        if (def.startEffect) this.applyEffect(def.startEffect, step, false);
+        step.messages.push(`【叮！】系统绑定成功：${def.name}。${def.desc}`);
+        this.run.log.push(`第${this.run.season}季，绑定了${def.name}。`);
+    }
+
+    private unbindSystem(step: StepResult): void {
+        const id = this.systemId();
+        if (!id) return;
+        this.run.companions = this.run.companions.filter(x => x !== id);
+        step.messages.push(`【叮！】${this.data.companions.get(id)?.name ?? '系统'}已解绑。`);
     }
 
     private addAttr(id: string, v: number, step: StepResult): void {
@@ -1160,6 +1221,13 @@ export class Engine {
                 case 'seen': return this.dp.codex.events.includes(id) || r.seen.includes(id);
                 case 'dead': return this.dp.codex.deaths.includes(id);
                 case 'ending': return this.dp.codex.endings.includes(id);
+                case 'line': {
+                    const [line, state] = id.split('.');
+                    const cur = r.lines?.[line];
+                    return state === undefined ? cur !== undefined : cur === state;
+                }
+                case 'ever': return this.ever.includes(id) || (() => { const [l, st] = id.split('.'); return st === undefined ? r.lines?.[l] !== undefined : r.lines?.[l] === st; })();
+                case 'system': return id === 'any' ? !!this.systemId() : r.companions.includes(id);
                 case 'xend': {
                     // xend:命格id 或 xend:命格id/结局id
                     const [did, eid] = id.split('/');

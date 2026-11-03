@@ -1,0 +1,74 @@
+{
+  "id": "roommate",
+  "name": "合租室友",
+  "summary": "一个卫生间，两个人，早上七点半的战争。他在准备一场考试，已经考了三年。",
+  "maps": ["city", "workshop"],
+  "states": {
+    "friend": "和室友成了兄弟",
+    "landed": "室友考上了"
+  },
+  "events": [
+    {
+      "id": "bathroom", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 16,
+      "text": "早上七点半，卫生间门又锁着。室友在里面背书，声音隔着门传出来。你还有二十分钟打卡。",
+      "choices": [
+        { "text": "敲门", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.08,
+          "effect": { "脸皮": 1, "follow": { "id": "schedule", "delay": 1 } }, "result": "门开了。他抱着书冲出来：对不起对不起，最后一章了。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "schedule", "delay": 1 } }, "result": "他说：马上！马上是十五分钟。你迟到了。" } },
+        { "text": "在门外跟着背", "absurd": true, "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "能力": 2, "follow": { "id": "schedule", "delay": 1 } }, "result": "你背得比他还熟。门开了，他震惊地看着你：你也在考？",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "schedule", "delay": 1 } }, "result": "你背错了一句。他在里面纠正你。你更气了。" } },
+        { "text": "去公司上", "effect": { "精力": -1, "心态": 1, "follow": { "id": "schedule", "delay": 1 } }, "result": "你憋着气冲进了公司。公司的卫生间，比家里的干净。" }
+      ]
+    },
+    {
+      "id": "schedule", "dir": "any", "chainOnly": true, "teaser": "室友贴了张作息表", "require": "line:roommate",
+      "text": "冰箱上贴了一张作息表：六点起床，七点背书，七点半让卫生间给室友。下面写着：对不起，我第三年了。",
+      "choices": [
+        { "text": "在下面画个笑脸", "effect": { "state": "friend", "心态": 1, "follow": { "id": "new_year", "delay": 3, "ttl": 6 } }, "result": "第二天，作息表旁边多了一张纸：谢谢你。冰箱里有我做的饺子。" },
+        { "text": "改成你先用", "effect": { "精力": 1 }, "result": "他没说什么。第二天早上，卫生间是你的了。他在客厅背书，背得很小声。" },
+        { "text": "帮他划重点", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "state": "friend", "能力": 1, "人脉": 1, "follow": { "id": "new_year", "delay": 3, "ttl": 6 } }, "result": "你划了半本书。他看着你的笔记，说：你比我们老师讲得清楚。",
+          "fail": { "effect": { "心态": -1 }, "result": "你划的全是他已经会的。他礼貌地说了谢谢。" } }
+      ]
+    },
+    {
+      "id": "new_year", "dir": "any", "chainOnly": true, "teaser": "过年，他没回家", "require": "line:roommate.friend",
+      "text": "过年了。他没回家：考不上，没脸回。出租屋里只剩你们俩。",
+      "choices": [
+        { "text": "一起包饺子", "effect": { "心态": 2, "精力": 2, "follow": { "id": "exam_day", "delay": 2, "ttl": 6 } }, "result": "饺子包得奇形怪状。你们边吃边看晚会，他笑出了声。三年来第一次。" },
+        { "text": "带他回你家", "require": "line:parents.close", "effect": { "心态": 2, "人脉": 2, "follow": { "id": "exam_day", "delay": 2, "ttl": 6 } }, "result": "你妈给他夹了一整晚的菜。走的时候，往他包里塞了两罐辣酱。" },
+        { "text": "给他发个红包", "effect": { "人脉": 1, "身价": -1, "follow": { "id": "exam_day", "delay": 2, "ttl": 6 } }, "result": "他回：等我考上了，十倍还你。你说：先考上再说。" }
+      ]
+    },
+    {
+      "id": "exam_day", "dir": "any", "chainOnly": true, "teaser": "考试那天", "require": "line:roommate.friend",
+      "text": "考试那天早上，卫生间门开着。门上贴着一张纸：今天你先用，我已经准备好了。",
+      "choices": [
+        { "text": "送他到考场", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "state": "landed", "人脉": 3, "心态": 2, "feud": "室友第三年考上了" }, "result": "两个月后，他拿着通知书冲进门，抱着你转了三圈。",
+          "easy": "你什么都没说，只拍了拍他的肩。两个月后，他上岸了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "again", "delay": 2 } }, "result": "成绩出来，差了两分。他关上门，一晚上没出来。" } },
+        { "text": "给他煮个鸡蛋", "effect": { "state": "landed", "人脉": 2, "心态": 1 }, "result": "他剥鸡蛋的手在抖。出门的时候，他说：等我。他考上了。" }
+      ]
+    },
+    {
+      "id": "again", "dir": "any", "chainOnly": true, "teaser": "他说想放弃了", "require": "line:roommate.friend",
+      "text": "差两分。他坐在床边：我想放弃了。回老家，找个班上。",
+      "choices": [
+        { "text": "劝他再考一年", "effect": { "state": "landed", "人脉": 2, "心态": 1 }, "result": "他又考了一年。第四年，他上岸了。他说：第四年这个数，是你给的。" },
+        { "text": "支持他回老家", "effect": { "心态": 1, "人脉": 1 }, "result": "他走的那天，把那张作息表留给了你。后来他在老家开了个补习班，生意很好。" },
+        { "text": "前世卷不动就绕", "require": "legacy:detour>=1", "effect": { "state": "landed", "人脉": 3, "心态": 1 },
+          "result": "前世你也在一条路上撞了很多年。这一世你劝他换个方向考。他第二年就考上了。" }
+      ]
+    },
+    {
+      "id": "landed_call", "dir": "any", "once": true, "weight": 10, "require": "line:roommate.landed",
+      "text": "室友上岸后第一个月发工资，请你吃饭。点了一桌子菜，他一口没动，一直在笑。",
+      "choices": [
+        { "text": "干杯", "effect": { "心态": 2, "人脉": 3, "精力": 1 }, "result": "他说：你知道吗，那年过年，要不是你，我已经回家了。" },
+        { "text": "提醒他别骄傲", "effect": { "人脉": 2, "能力": 1 }, "result": "他认真点头。三年后，他成了单位里最靠谱的那个人。" }
+      ]
+    }
+  ]
+}

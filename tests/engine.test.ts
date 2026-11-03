@@ -807,3 +807,96 @@ describe('爽感 2：宿敌记仇 / 嫌弃式前世 / 稳 / 连胜 / 恩怨 / �
         expect(e.run.luck).toBe(true);
     });
 });
+
+describe('线路架构：命名空间 / 导出状态 / 交叉事件 / 系统 / 寿终结局', () => {
+    it('线路事件自动加命名空间；入口只进一次；state 写入线路状态并记入 ever；交叉事件按多条线路状态触发', () => {
+        const raw = fixture();
+        raw.lines = [
+            { id: 'trip', name: '团建', states: { escaped: '逃出', refused: '拒绝' }, events: [
+                { id: 'offer', entry: true, dir: 'down', layers: ['D1'], weight: 1000, text: '团建？', choices: [
+                    { text: '去', effect: { flag: 'went', follow: 'bus' }, result: '上车' },
+                    { text: '不去', effect: { state: 'refused' }, result: '丢了工作' },
+                ] },
+                { id: 'bus', dir: 'down', chainOnly: true, teaser: '车来了', require: 'flag:went', text: '车上', choices: [
+                    { text: '跑', effect: { state: 'escaped' }, result: '跑了' },
+                ] },
+            ] },
+            { id: 'stream', name: '直播', states: { live: '开播' }, events: [
+                { id: 'start', entry: true, dir: 'down', layers: ['D1'], weight: 1, text: '开播？', choices: [{ text: '开', effect: { state: 'live' }, result: '开了' }] },
+            ] },
+        ];
+        raw.crossings = [{ id: 'x_anti_scam', dir: 'down', weight: 5000, require: 'line:trip.escaped & line:stream.live', text: '把经历拍成视频', choices: [{ text: '发', result: '爆了' }] }];
+        const data = buildDestiny(raw);
+        expect(data.events.has('trip/offer')).toBe(true);
+        expect(data.events.get('trip/bus')!.line).toBe('trip');
+        expect(data.events.get('x_anti_scam')!.cross).toBe(true);
+
+        const e = new Engine(data, createProfile());
+        e.startRun(pick, 1);
+        Object.assign(e.run.attrs, { water: 99, waterMax: 99 });
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('trip/offer');
+        e.choose(0);
+        expect(e.run.flags).toContain('trip/went');
+        expect(e.run.lines).toEqual({ trip: '' });
+        // 入口不会再出现
+        Object.assign(e.run, { phase: 'direction', season: e.run.season + 1 });
+        e.chooseDirection('down');
+        expect(e.eventView().id).toBe('trip/bus');
+        e.choose(0);
+        expect(e.run.lines!.trip).toBe('escaped');
+        expect(e.dp.ever).toEqual(expect.arrayContaining(['trip', 'trip.escaped']));
+        // 交叉：两条线都满足时才出现
+        Object.assign(e.run, { phase: 'event', event: 'stream/start' });
+        e.choose(0);
+        for (let i = 0; i < 5 && e.run.phase === 'event'; i++) e.choose(0);
+        if (e.run.phase === 'direction') e.chooseDirection('down');
+        expect(e.eventView().id).toBe('x_anti_scam');
+        expect(e.eventView().cross).toBe(true);
+    });
+
+    it('系统：不进开局伙伴池；bind 中途绑定（一世一个）、unbind 解绑、keepSystem 认主后每世自动绑定；system:any 条件', () => {
+        const raw = fixture([{ id: 'ding', dir: 'down', layers: ['D1'], weight: 1000, require: '!system:any', text: '叮', choices: [
+            { text: '绑定', effect: { bind: 'sys_sign' }, result: '绑了' },
+            { text: '认主', showIf: 'system:sys_sign', effect: { keepSystem: true }, result: '认主' },
+        ] }]);
+        raw.companions.push({ id: 'sys_sign', name: '签到系统', rarity: 'legend', desc: '每季签到', system: true, every: { n: 1, effect: { 灵气: 1 }, text: '【叮！】签到成功' } });
+        const e = new Engine(buildDestiny(raw), createProfile());
+        for (let i = 0; i < 20; i++) expect(e.rollDraft(i).companions).not.toContain('sys_sign');
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        const st = e.choose(0);
+        expect(st.messages.some(m => m.startsWith('【叮！】系统绑定成功：签到系统'))).toBe(true);
+        expect(e.systemId()).toBe('sys_sign');
+        // 已有系统：再绑失败
+        const st2 = (e as unknown as { applyEffect(x: unknown, s: unknown): void });
+        const step = { deltas: {}, gained: [], lost: [], messages: [] as string[], skills: [] };
+        st2.applyEffect({ attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [], states: [], bind: 'sys_sign' }, step);
+        expect(step.messages[0]).toContain('绑定失败');
+        st2.applyEffect({ attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [], states: [], keepSystem: true }, step);
+        expect(e.dp.keptSystem).toBe('sys_sign');
+        e.run.over = { kind: 'death', id: 'lava' }; e.run.phase = 'over'; e.settle();
+        e.startRun(pick, 2);
+        expect(e.systemId()).toBe('sys_sign');
+    });
+
+    it('寿终结局：寿元到头时满足条件判为结局，否则正常寿终', () => {
+        const raw = fixture([{ id: 'idle', dir: 'down', layers: ['D1'], weight: 5000, text: '闲', choices: [{ text: '闲', effect: { 水分: 1 }, result: '闲' }] }]);
+        raw.meta.endings.push({ id: 'plain', name: '平凡一生', epitaph: '平平淡淡' });
+        raw.meta.stages[0].oldAgeEndings = [{ id: 'plain', require: '茎叶>=3' }];
+        const e = new Engine(buildDestiny(raw), createProfile());
+        e.startRun(pick, 1);
+        e.run.attrs.stem = 3;
+        e.run.season = 50;
+        e.chooseDirection('down');
+        e.choose(0);
+        expect(e.run.over).toEqual({ kind: 'ending', id: 'plain' });
+        e.settle();
+        e.startRun(pick, 2);
+        e.run.season = 50;
+        e.chooseDirection('down');
+        e.choose(0);
+        expect(e.run.phase).toBe('dying');
+        expect(e.run.dying).toBe('old_age');
+    });
+});

@@ -166,7 +166,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         inScreen(g.overlay);
     });
 
-    it.each(['caterpillar', 'mantis_shrimp', 'crocodile'])('新命格 %s：选择页放得下全部命格；开局弹出生地，HUD 显示出生地，随机点击 800 次不出错', async id => {
+    it.each(['caterpillar', 'mantis_shrimp', 'crocodile', 'worker'])('新命格 %s：选择页放得下全部命格；开局弹出生地，HUD 显示出生地，随机点击 800 次不出错', async id => {
         sys.localStorage.clear?.();
         const g = new Game(new Node('Canvas') as never);
         await g.boot();
@@ -488,10 +488,10 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         await flush();
         const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
         const find = (layer: Node, s: string) => tappables(layer).find(n => labels(n).some(l => l.includes(s)));
-        // 只有一个命格时没有转盘
+        // 新存档：荒漠一株草 + 一个打工人默认开放，已有转盘
         g.goDestinySelect('menu');
         await flush();
-        expect(find(g.screen, '随缘投胎')).toBeUndefined();
+        expect(find(g.screen, '随缘投胎')).toBeTruthy();
 
         g.save.profile.destinies.desert_grass.bestStage = 2;
         destinyProfile(g.save.profile, 'local_dog').bestStage = 1;

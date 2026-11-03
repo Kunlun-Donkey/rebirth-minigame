@@ -1,0 +1,70 @@
+{
+  "id": "rider_aqiang",
+  "name": "外卖小哥阿强",
+  "summary": "每天中午十二点零五分，阿强准时出现在你公司楼下。这座城的每条小路，他都熟。",
+  "maps": ["city", "workshop", "county"],
+  "states": {
+    "friend": "和阿强成了朋友",
+    "riding": "跟着阿强跑过单"
+  },
+  "events": [
+    {
+      "id": "first_order", "entry": true, "dir": "any", "stage": [0, 2], "weight": 14,
+      "text": "外卖到了，晚了十五分钟。小哥浑身湿透，一直在道歉：哥，求你别给差评，这单扣完我就白跑了。",
+      "choices": [
+        { "text": "给他五星好评", "effect": { "人脉": 1, "心态": 1, "follow": { "id": "noon", "delay": 2 } }, "result": "他愣了一下，冲你鞠了个躬。你记住了他胸牌上的名字：阿强。" },
+        { "text": "递给他一瓶水", "effect": { "state": "friend", "心态": 1, "follow": { "id": "noon", "delay": 2 } }, "result": "他接过水，一口气喝完：哥，你是今天第一个跟我说谢谢的人。" },
+        { "text": "差评", "effect": { "身价": 1, "心态": -2 }, "result": "你点了差评。那天下午，你一直在想他湿透的样子。" }
+      ]
+    },
+    {
+      "id": "noon", "dir": "any", "chainOnly": true, "teaser": "阿强又来送外卖了", "require": "line:rider_aqiang",
+      "text": "又是阿强。他把外卖递给你，压低声音：哥，你们公司楼下那家快餐，后厨不太干净，换一家吧。",
+      "choices": [
+        { "text": "听他的", "effect": { "state": "friend", "精力": 2, "follow": { "id": "rainstorm", "delay": 2, "ttl": 6 } }, "result": "你换了家小馆子。从那以后，你再没拉过肚子。" },
+        { "text": "问他还知道啥", "effect": { "state": "friend", "人脉": 2, "follow": { "id": "rainstorm", "delay": 2, "ttl": 6 } }, "result": "他知道哪个老板拖欠工资，哪个前台人好，哪栋楼要拆。他是这座城的地图。" },
+        { "text": "约他一起吃午饭", "absurd": true, "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "state": "friend", "人脉": 3, "心态": 1, "follow": { "id": "rainstorm", "delay": 2, "ttl": 6 } }, "result": "他坐在你对面，吃了十分钟，接了三单。他说：哥，下回我请你。",
+          "fail": { "effect": { "心态": -1 }, "result": "他说：哥，我还有八单。他跑了。" } }
+      ]
+    },
+    {
+      "id": "rainstorm", "dir": "any", "chainOnly": true, "teaser": "暴雨，阿强摔了一跤", "require": "line:rider_aqiang.friend",
+      "text": "暴雨天。阿强在你们公司门口摔了一跤，电动车倒在水里，餐洒了一地。他一边捡一边说：没事，没事。",
+      "choices": [
+        { "text": "冲下去扶他", "effect": { "人脉": 2, "心态": 1, "精力": -1, "follow": { "id": "ride_along", "delay": 3, "ttl": 8 } }, "result": "你帮他把车推到了屋檐下。他的膝盖破了，他先看的是餐盒。" },
+        { "text": "帮他把这单赔了", "effect": { "身价": -2, "人脉": 3, "follow": { "id": "ride_along", "delay": 3, "ttl": 8 } }, "result": "你给客人打了电话，说明情况，自己付了钱。阿强红着眼睛说：哥，这个我记一辈子。" },
+        { "text": "拍下来发网上", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 2, "身价": 4, "follow": { "id": "ride_along", "delay": 3, "ttl": 8 } }, "result": "视频火了。平台给阿强发了补贴，他打电话说：哥，你咋这么厉害。",
+          "fail": { "effect": { "心态": -2 }, "result": "评论区在吵谁的错。阿强说：哥，删了吧，我怕。" } }
+      ]
+    },
+    {
+      "id": "ride_along", "dir": "side", "chainOnly": true, "teaser": "阿强问你要不要跑一单", "require": "line:rider_aqiang.friend",
+      "text": "你最近不太顺。阿强说：哥，今晚跟我跑一趟吧，你就知道这座城有多大了。",
+      "choices": [
+        { "text": "坐上后座", "effect": { "state": "riding", "人脉": 3, "心态": 2, "精力": -1 }, "result": "你们跑了一夜。凌晨三点，他在江边停车：哥，你看，这城晚上真好看。" },
+        { "text": "自己骑一辆", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "state": "riding", "脸皮": 2, "身价": 6, "精力": -2 }, "result": "你跑了二十单，赚了一百八。你知道了每一块钱，都是从哪条路上来的。",
+          "fail": { "effect": { "精力": -3 }, "result": "你迷路了三次，超时了五单。阿强帮你一单单道歉。" } },
+        { "text": "改天吧", "effect": { "精力": 1 }, "result": "阿强说：行，哪天想跑，喊我。" }
+      ]
+    },
+    {
+      "id": "his_dream", "dir": "any", "once": true, "weight": 12, "stage": [2, 99], "require": "line:rider_aqiang.riding",
+      "text": "阿强说，他攒钱是为了开一家自己的小店，名字都想好了，叫「准时到」。",
+      "choices": [
+        { "text": "帮他做个计划书", "effect": { "能力": 2, "人脉": 2, "心态": 1 }, "result": "你帮他算了三天账。他把计划书叠好，放在了胸口的口袋里。" },
+        { "text": "说你也想开一家", "effect": { "人脉": 3, "身价": 4 }, "result": "他眼睛亮了：哥，那我们一起？" }
+      ]
+    },
+    {
+      "id": "laid_off_meal", "dir": "any", "once": true, "weight": 20, "require": "line:rider_aqiang.friend & line:layoff.laid_off",
+      "text": "你被裁的第二天，门铃响了。阿强站在门口，手里两份饭：哥，今天这单，我请。",
+      "choices": [
+        { "text": "请他进来吃", "effect": { "心态": 2, "精力": 2, "人脉": 2 }, "result": "你们坐在地上吃完了饭。他说：哥，没啥大不了的，你看我，不也活得好好的。" },
+        { "text": "跟他去跑单", "effect": { "state": "riding", "身价": 6, "脸皮": 2 }, "result": "那个月，你跑遍了这座城。你发现，失业也没那么可怕。" }
+      ]
+    }
+  ]
+}

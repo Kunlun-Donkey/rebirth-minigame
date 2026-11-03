@@ -1,0 +1,14 @@
+[
+  { "id": "iron_liver", "name": "铁打的身体", "icon": "vitality", "rarity": "common", "desc": "精力上限 +2。", "start": { "精力上限": 2 } },
+  { "id": "slack_body", "name": "摸鱼圣体", "icon": "vitality", "rarity": "common", "desc": "每 2 季才耗一次精力。", "mods": { "waterCostEvery": 2 } },
+  { "id": "top_student", "name": "学霸", "icon": "growth", "rarity": "common", "desc": "能力 +3。", "start": { "能力": 3 } },
+  { "id": "social_butterfly", "name": "社牛", "icon": "social", "rarity": "common", "desc": "人脉 +3。", "start": { "人脉": 3 } },
+  { "id": "thick_face", "name": "脸皮厚", "icon": "defense", "rarity": "common", "desc": "脸皮 +3。", "start": { "脸皮": 3 } },
+  { "id": "calm", "name": "情绪稳定", "icon": "wisdom", "rarity": "rare", "desc": "心态 +2，能力 +1。", "start": { "心态": 2, "能力": 1 } },
+  { "id": "unlucky", "name": "水逆体质", "icon": "cursed", "rarity": "rare", "desc": "【负面】突发事件更频繁，但轮回点 ×1.5。", "mods": { "suddenMul": 1.8, "pointsMul": 1.5 } },
+  { "id": "sharp_eye", "name": "一眼看穿", "icon": "wisdom", "rarity": "rare", "desc": "每个事件有 35% 概率看穿一个选项的结果。", "mods": { "hintChance": 0.35 } },
+  { "id": "small_mine", "name": "家里有矿", "icon": "luck", "rarity": "rare", "desc": "小矿。身价 +6，人脉 +1。", "start": { "身价": 6, "人脉": 1 } },
+  { "id": "tough_life", "name": "命硬", "icon": "rebirth", "rarity": "epic", "desc": "本局第一次倒下时，在医院躺三天又回到工位。", "mods": { "reviveOnce": true } },
+  { "id": "reborn_memory", "name": "重生者的记忆", "icon": "rebirth", "rarity": "epic", "desc": "身价获取 ×1.3，心态 +1。你记得这一世大部分的事。", "start": { "心态": 1 }, "mods": { "qiMul": 1.3 } },
+  { "id": "chosen_worker", "name": "天选打工人", "icon": "bloodline", "rarity": "legend", "desc": "成为「天选打工人」的概率 ×5；奇遇翻倍。", "mods": { "blessedMul": 5, "goldMul": 2 } }
+]

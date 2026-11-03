@@ -1,0 +1,30 @@
+[
+  {
+    "id": "z_last_stand", "dir": "any", "chainOnly": true,
+    "text": "你在工位上坐了很多年。体检报告越来越厚，人事开始问你：退休手续，什么时候办？",
+    "choices": [
+      { "text": "最后一次路演", "showIf": "stage<=3", "chance": 0.35, "chanceAttr": "心态", "chanceStep": 0.015,
+        "effect": { "stageUp": 1, "身价": 15 }, "result": "你站上台，讲了一个十年后的故事。台下有人站起来鼓掌。你又年轻了一回。",
+        "fail": { "effect": { "death": "old_age" }, "result": "你讲到一半，停了下来。你笑了笑：就讲到这儿吧。" } },
+      { "text": "逆天，再拼一轮", "showIf": "stage>=4", "chance": 0.12,
+        "effect": { "stageUp": 1, "身价": 15 }, "result": "你推开顶楼的窗，对着整个地球说：再给我一轮。",
+        "fail": { "effect": { "death": "old_age" }, "result": "风很大。你关上窗，回到了座位上。" } },
+      { "text": "办退休", "effect": { "death": "old_age" }, "result": "你办完手续，把工位上的绿萝抱回了家。" }
+    ]
+  },
+  {
+    "id": "u4_ipo", "dir": "up", "chainOnly": true,
+    "text": "上市前夜。所有材料都交上去了，明天早上九点，要么敲钟，要么从头再来。",
+    "choices": [
+      { "text": "等结果", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.025,
+        "effect": { "身价": 30, "能力": 2, "人脉": 2 }, "result": "早上八点五十九，电话响了：过了。你敲钟的时候，手一点也没抖。",
+        "easy": "你睡了个好觉。九点，你准时敲响了钟。",
+        "fail": { "effect": { "death": "ipo_fail" }, "result": "电话在半夜响了。你听完，挂掉，坐到了天亮。" } },
+      { "text": "主动撤回，再等一轮", "effect": { "back": "up", "心态": 1, "能力": 1 }, "result": "你撤回了材料。还不是时候，你知道。" },
+      { "text": "前世再来一轮", "require": "legacy:next_round>=1", "effect": { "身价": 35, "能力": 2 },
+        "result": "前世你在这里被否过。这一世，审核会问的每一个问题，你都提前写好了答案。" },
+      { "text": "带着创业的老兄弟", "require": "line:startup.listed", "effect": { "身价": 40, "人脉": 3 },
+        "result": "一起熬过来的几个人站在你身后。钟声响起，有人哭了。" }
+    ]
+  }
+]

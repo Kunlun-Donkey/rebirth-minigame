@@ -18,30 +18,46 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
         ...s.lost.map(i => ({ t: `失去 ${e.itemName(i)}`, c: COLOR.ink2 })),
     ];
 
-    // 估算高度
-    let h = 60;
-    if (s.success !== undefined) h += 56;
-    if (s.text) h += textHeight(s.text, innerW, 32, 52) + 20;
-    if (chipsText.length) h += Math.ceil(chipsText.length / 2) * 50 + 10;
-    for (const m of s.messages) h += textHeight(m, innerW, 26, 40) + 12;
-    if (breakthrough) h += 220;
-    h += 130;
+    // 估算高度；超出屏幕时依次换更紧凑的排版（缩小字号、收起突破大图）
+    const LEVELS = [
+        { ts: 32, tl: 52, ms: 26, ml: 40, big: true },
+        { ts: 28, tl: 44, ms: 23, ml: 34, big: true },
+        { ts: 26, tl: 40, ms: 21, ml: 30, big: false },
+    ];
+    const cap = g.H - 160;
+    const est = (L: typeof LEVELS[number]) => {
+        let h = 60;
+        if (s.success !== undefined) h += 56;
+        if (s.text) h += textHeight(s.text, innerW - L.ts * 1.5, L.ts, L.tl) + 20;
+        if (chipsText.length) h += Math.ceil(chipsText.length / 2) * 50 + 10;
+        // 估算留 1.5 个字的余量（标点换行），避免最后一行压到「继续」按钮
+        for (const m of s.messages) h += textHeight(m, innerW - L.ms * 1.5, L.ms, L.ml) + 12;
+        if (breakthrough) h += L.big ? 220 : 70;
+        return h + 130;
+    };
+    const L = LEVELS.find(l => est(l) <= cap) ?? LEVELS[LEVELS.length - 1];
+    const h = est(L);
 
-    const { panel, close, panelW } = modal(g.overlay, g.W, g.H, Math.min(h, g.H - 160), { onClose: then });
+    const { panel, close, panelW } = modal(g.overlay, g.W, g.H, Math.min(h, cap), { onClose: then });
     pop(panel);
     let y = 40;
     if (breakthrough) {
-        image(panel, TEX.stage(e.run.stage), (panelW - 150) / 2, y, 150, 150);
         const name = breakthrough.slice(4, breakthrough.indexOf('】'));
-        text(panel, `— ${name} —`, 0, y + 150, panelW, { size: 44, color: COLOR.legacy, align: 'center', bold: true });
-        y += 220;
+        if (L.big) {
+            image(panel, TEX.stage(e.run.stage), (panelW - 150) / 2, y, 150, 150);
+            text(panel, `— ${name} —`, 0, y + 150, panelW, { size: 44, color: COLOR.legacy, align: 'center', bold: true });
+            y += 220;
+        } else {
+            text(panel, `— ${name} —`, 0, y, panelW, { size: 40, color: COLOR.legacy, align: 'center', bold: true });
+            y += 70;
+        }
     }
     if (s.success !== undefined) {
         chip(panel, s.success ? '成  功' : '失  败', 40, y, s.success ? COLOR.good : COLOR.bad, true, 24);
         y += 56;
     }
     if (s.text) {
-        const n = text(panel, s.text, 40, y, innerW, { size: 32, wrap: true, lineHeight: 52 });
+        const n = text(panel, s.text, 40, y, innerW, { size: L.ts, wrap: true, lineHeight: L.tl }, textHeight(s.text, innerW - L.ts * 1.5, L.ts, L.tl));
         y += sizeOf(n).h + 20;
     }
     if (chipsText.length) {
@@ -55,10 +71,11 @@ export function showStep(g: Game, s: StepResult, then: () => void): void {
     }
     for (const m of s.messages) {
         const color = m.startsWith('【领悟') || m.startsWith('【想起') ? COLOR.skill
+            : m.startsWith('【叮') ? COLOR.rare
             : m.startsWith('【天道') || m.startsWith('【连胜断了') ? COLOR.ochreD
             : m.startsWith('【恩怨') || m.startsWith('【碾压') ? COLOR.bad
             : m.startsWith('【') ? COLOR.legacy : COLOR.ink2;
-        const n = text(panel, m, 40, y, innerW, { size: 26, wrap: true, color, lineHeight: 40, bold: m.startsWith('【') });
+        const n = text(panel, m, 40, y, innerW, { size: L.ms, wrap: true, color, lineHeight: L.ml, bold: m.startsWith('【') }, textHeight(m, innerW - L.ms * 1.5, L.ms, L.ml));
         y += sizeOf(n).h + 12;
     }
     if (breakthrough || s.crit || s.hype === 'feud' || s.hype === 'crush') Platform.vibrate();
@@ -74,8 +91,8 @@ export function showDying(g: Game): void {
     const def = e.data.deaths.get(e.run.dying ?? '');
     const { panel, panelW, close } = modal(g.overlay, g.W, g.H, 520, { dark: true });
     pop(panel);
-    text(panel, '你 要 死 了', 0, 50, panelW, { size: 44, color: COLOR.bad, align: 'center', bold: true });
-    text(panel, `死因：${def?.name ?? '未知'}`, 0, 130, panelW, { size: 30, color: COLOR.ink2, align: 'center' });
+    text(panel, e.data.meta.rules.dyingTitle ?? '你 要 死 了', 0, 50, panelW, { size: 44, color: COLOR.bad, align: 'center', bold: true });
+    text(panel, `${e.data.meta.rules.dyingTitle ? '原因' : '死因'}：${def?.name ?? '未知'}`, 0, 130, panelW, { size: 30, color: COLOR.ink2, align: 'center' });
     const boost = [...e.data.upgrades.values()].find(u => u.kind === 'reviveBoost' && e.upgradeLevel(u.id) > 0);
     // 广告未开通时只能接受命运（道具/天赋保命在引擎里已自动生效）
     const canAd = CONFIG.adsEnabled && e.canReviveByAd();

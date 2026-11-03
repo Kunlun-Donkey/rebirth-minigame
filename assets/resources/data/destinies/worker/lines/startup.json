@@ -1,0 +1,142 @@
+{
+  "id": "startup",
+  "name": "创业",
+  "summary": "烧烤摊上一句「别打工了，跟我干」。前世你被合伙人请出了自己的公司。这一世，股份协议你先写。",
+  "maps": ["city", "workshop"],
+  "stage": [2, 99],
+  "states": {
+    "founded": "和朋友开了公司",
+    "betrayed": "被合伙人背刺了",
+    "listed": "公司开始准备上市"
+  },
+  "events": [
+    {
+      "id": "pitch", "entry": true, "dir": "side", "layers": ["L1", "L2"], "weight": 18,
+      "text": "烧烤摊上，大学室友阿杰喝到第三瓶：别打工了，跟我干！我出点子，你出技术，三年上市。",
+      "choices": [
+        { "text": "辞职跟他干", "effect": { "能力": 1, "脸皮": 1, "state": "founded", "follow": { "id": "equity", "delay": 1 } },
+          "result": "第二天你交了辞职信。老板问你去哪，你说：去当老板。" },
+        { "text": "先下班后兼职干", "effect": { "精力": -1, "能力": 1, "state": "founded", "follow": { "id": "equity", "delay": 2 } },
+          "result": "白天上班，晚上写代码。你的黑眼圈，比公司先成立。" },
+        { "text": "不干，接着喝", "effect": { "心态": 1, "精力": 1 }, "result": "你给阿杰又开了一瓶。三年上市这种话，你听过一个老周就够了。" },
+        { "text": "前世倒在敲钟前", "require": "legacy:next_round>=1",
+          "effect": { "能力": 2, "身价": 4, "state": "founded", "flag": "clean_books", "follow": { "id": "equity", "delay": 1 } },
+          "result": "前世你倒在敲钟前一晚。这一世，从第一天起，每笔账都按上市的规矩记。" }
+      ]
+    },
+    {
+      "id": "equity", "dir": "any", "chainOnly": true, "teaser": "阿杰说股份回头再说", "require": "line:startup.founded",
+      "text": "公司注册那天，阿杰揽着你：股份的事，咱俩谁跟谁，回头再说。你想起老周也爱说「回头」。",
+      "choices": [
+        { "text": "那就回头再说", "effect": { "人脉": 1, "follow": { "id": "first_money", "delay": 2 } },
+          "result": "你点了点头。那个「回头」，你们谁也没再提。" },
+        { "text": "今天就写进协议", "chance": 0.55, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "心态": 1, "flag": "contract", "follow": { "id": "first_money", "delay": 2 } },
+          "result": "阿杰愣了一下，笑着签了：你还挺较真。",
+          "easy": "你把打印好的协议放在桌上，连笔都替他拔好了帽。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "first_money", "delay": 2 } }, "result": "阿杰说：你这是不信我？你没再坚持。" } },
+        { "text": "录下这句话", "require": "item:recorder", "effect": { "能力": 1, "flag": "contract", "follow": { "id": "first_money", "delay": 2 } },
+          "result": "你把「咱俩一人一半」这句录了下来。录音笔比协议还管用。" },
+        { "text": "给阿杰画饼", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 4, "flag": "contract", "follow": { "id": "first_money", "delay": 2 } },
+          "result": "你说：股份不急，上市了给你十个点。阿杰愣了：那还是现在签吧。",
+          "fail": { "effect": { "follow": { "id": "first_money", "delay": 2 } }, "result": "阿杰说好啊。你俩互相画饼，谁也没签。" } }
+      ]
+    },
+    {
+      "id": "first_money", "dir": "any", "chainOnly": true, "teaser": "第一个大客户打款了", "require": "line:startup.founded",
+      "text": "第一个大客户打款了。当晚，你路过隔壁饭店，看见阿杰和投资人在包间里碰杯，没叫你。",
+      "choices": [
+        { "text": "推门进去", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 10, "人脉": 2, "feud": "当面截了阿杰的饭局", "follow": { "id": "fund", "delay": 2 } },
+          "result": "投资人看看你，又看看阿杰：原来东西是你做的？他把名片递给了你。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "betray", "delay": 2 } }, "result": "阿杰笑着说：正要叫你。你知道他没打算叫。" } },
+        { "text": "回去接着改代码", "effect": { "能力": 2, "follow": { "id": "betray", "delay": 2 } },
+          "result": "你回到公司，改代码改到凌晨。包间里的事，你不想猜。" },
+        { "text": "回家再读一遍协议", "require": "flag:contract", "effect": { "心态": 1, "follow": { "id": "betray", "delay": 2 } },
+          "result": "你没进去。回家把协议又看了一遍，每一条都写得很清楚。" },
+        { "text": "【叮！】天眼预警", "require": "system:sys_eye", "effect": { "心态": 1, "身价": 6, "flag": "contract", "follow": { "id": "fund", "delay": 2 } },
+          "result": "【叮！】前方合伙人正在背刺。你连夜补签了协议，还把投资人约到了自己这边。" }
+      ]
+    },
+    {
+      "id": "betray", "dir": "up", "chainOnly": true, "teaser": "董事会临时开会", "require": "line:startup.founded",
+      "text": "临时董事会。阿杰和投资人坐在一边：公司需要更职业的管理层。你被请出自己创的公司。",
+      "choices": [
+        { "text": "签字走人", "effect": { "心态": -2, "身价": 10, "state": "betrayed", "follow": { "id": "comeback", "delay": 4, "ttl": 10 } },
+          "result": "你签了字，股份折了现。走到楼下，你的工牌已经刷不开门了。" },
+        { "text": "拿出股份协议", "require": "flag:contract",
+          "effect": { "身价": 15, "脸皮": 1, "feud": "阿杰被董事会请了出去", "follow": { "id": "fund", "delay": 2 } },
+          "result": "你把协议放上桌。投资人看了五分钟，转头看向了阿杰。" },
+        { "text": "甩锅", "showIf": "skill:blame_shift", "useSkill": "blame_shift",
+          "effect": { "身价": 12, "脸皮": 2, "feud": "锅回到了阿杰手里", "follow": { "id": "fund", "delay": 2 } },
+          "result": "你把阿杰这半年签的烂合同一份份摊开。锅，回到了它主人手里。" },
+        { "text": "带走核心团队", "chance": 0.35, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "state": "betrayed", "flag": "team", "follow": { "id": "comeback", "delay": 2, "ttl": 10 } },
+          "result": "你起身往外走。技术组五个人，合上电脑，跟你出了门。",
+          "fail": { "effect": { "心态": -2, "state": "betrayed", "follow": { "id": "comeback", "delay": 4, "ttl": 10 } }, "result": "没人跟你走。他们都有房贷，你懂。" } }
+      ]
+    },
+    {
+      "id": "comeback", "dir": "any", "chainOnly": true, "teaser": "老客户约你喝咖啡", "require": "line:startup.betrayed",
+      "text": "被踢出来半年。当初第一个打款的老客户约你：他们做得一塌糊涂。你要是再干，我投你。",
+      "choices": [
+        { "text": "重新开一家", "effect": { "身价": 10, "state": "founded", "flag": "contract", "follow": { "id": "fund", "delay": 2 } },
+          "result": "新公司的名字比上一家短，股份协议比上一家长。" },
+        { "text": "带着老部下重来", "require": "flag:team", "effect": { "身价": 15, "能力": 2, "state": "founded", "follow": { "id": "fund", "delay": 2 } },
+          "result": "五个人搬进了新办公室。第一天，就把老产品重写了一遍。" },
+        { "text": "回去打工", "effect": { "心态": 1, "能力": 1 }, "result": "你投了简历，第二周就入职了。周五下午六点，你准时下了班。" },
+        { "text": "收购阿杰的公司", "absurd": true, "chance": 0.15, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "身价": 20, "state": "founded", "feud": "买下了阿杰的公司", "follow": { "id": "fund", "delay": 2 } },
+          "result": "老客户出钱，你出价。阿杰签字那天，没敢抬头。",
+          "fail": { "effect": { "心态": -1 }, "result": "阿杰的公司虽然烂，还轮不到你来买。" } }
+      ]
+    },
+    {
+      "id": "fund", "dir": "up", "chainOnly": true, "teaser": "投资人在会议室等你", "require": "line:startup.founded",
+      "text": "会议室里坐着三家投资机构。他们问的第一个问题都一样：什么时候能上市？",
+      "choices": [
+        { "text": "说实话：不知道", "effect": { "心态": 1, "身价": 10, "follow": { "id": "ipo_prep", "delay": 3, "ttl": 10 } },
+          "result": "两家起身走了。留下的那家说：就你了。我们最怕说「明年」的。" },
+        { "text": "画一张大饼", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 25, "follow": { "id": "ipo_prep", "delay": 2, "ttl": 10 } },
+          "result": "你画的饼又大又圆。三家抢着投，估值翻了一倍。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "ipo_prep", "delay": 5, "ttl": 10 } }, "result": "投资人笑了：这饼，我们老板也画过。" } },
+        { "text": "摊开每一笔账", "require": "flag:clean_books | 能力>=8", "effect": { "身价": 20, "能力": 1, "follow": { "id": "ipo_prep", "delay": 2, "ttl": 10 } },
+          "result": "你的账干净得像新本子。投资人翻完，直接问在哪签字。" },
+        { "text": "前世被否过", "require": "legacy:next_round>=1", "effect": { "身价": 20, "能力": 2, "follow": { "id": "ipo_prep", "delay": 2, "ttl": 10 } },
+          "result": "前世你倒在审核上。这一世，审核会问的四十个问题，你提前答好了。" }
+      ]
+    },
+    {
+      "id": "ipo_prep", "dir": "up", "chainOnly": true, "teaser": "券商说可以准备上市了", "require": "line:startup.founded",
+      "text": "券商的人带着一箱子材料来了：准备好的话，明年就能递表。你想起老周说了十年的「明年上市」。",
+      "choices": [
+        { "text": "开始准备", "effect": { "身价": 15, "能力": 1, "state": "listed" },
+          "result": "这一次的「明年上市」，是你说的。而且是真的。" },
+        { "text": "再打磨两年", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 3, "心态": 1, "state": "listed" }, "result": "两年后，所有窟窿都补上了。券商说：这是他见过最好准备的公司。",
+          "easy": "你只用了半年就把底子打牢了。券商连夜改了时间表。",
+          "fail": { "effect": { "心态": -2, "身价": 5 }, "result": "等了两年，窗口期过了。你把材料锁进了柜子。" } },
+        { "text": "请阿杰来观礼", "absurd": true, "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "人脉": 3, "身价": 10, "state": "listed", "feud": "阿杰来给你当了顾问" },
+          "result": "阿杰来了，站在角落。你给了他一个顾问的位置，他接了。",
+          "fail": { "effect": { "心态": -1, "state": "listed" }, "result": "阿杰没回消息。不来也好，你也没留他的座位。" } },
+        { "text": "把公司卖了", "effect": { "身价": 30, "心态": 1 }, "result": "你签完字，第一件事是睡了三天。醒来时，你是个有钱的闲人。" }
+      ]
+    },
+    {
+      "id": "old_partner", "dir": "side", "layers": ["L1", "L2"], "once": true, "weight": 14, "stage": [2, 99], "require": "ever:startup.betrayed & !line:startup",
+      "text": "烧烤摊上，阿杰又喝多了，拉着一个年轻人：别打工了，跟我干！前世，那个年轻人是你。",
+      "choices": [
+        { "text": "把年轻人拉走", "effect": { "人脉": 2, "心态": 1, "feud": "截走了阿杰的新合伙人" },
+          "result": "你把他拉到一边：要干也行，先写协议。他愣愣地点了头。" },
+        { "text": "坐下，这次你出协议", "effect": { "能力": 1, "state": "founded", "flag": "contract", "follow": { "id": "first_money", "delay": 3 } },
+          "result": "你把一张写好的股份协议推给阿杰。他看了你半天：你怎么什么都知道？" },
+        { "text": "替他把账结了", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "脸皮": 1, "身价": 5 }, "result": "你结了账，走了。阿杰追出来问你是谁，你没回头。",
+          "fail": { "effect": { "心态": -1 }, "result": "你掏出手机，余额不够。阿杰大手一挥：我请。" } }
+      ]
+    }
+  ]
+}

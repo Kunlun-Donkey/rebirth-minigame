@@ -1,0 +1,279 @@
+{
+  "id": "system",
+  "name": "系统",
+  "summary": "七个系统排着队找上门。绑不绑、做不做任务、最后谁给谁打工——这一世，你说了算。",
+  "states": {
+    "bound": "绑定了系统",
+    "tasked": "完成了系统任务",
+    "owned": "系统认主",
+    "deleted": "删除了系统"
+  },
+  "events": [
+    {
+      "id": "signin_bind", "dir": "up", "layers": ["U1"], "once": true, "weight": 8, "require": "!system:any & season<=3",
+      "text": "入职第一天，你刚坐到工位上，脑子里响了一声：【叮！】检测到宿主落座，签到系统绑定中……",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_signin", "state": "bound", "follow": { "id": "signin_task", "delay": 2 } },
+          "result": "【叮！】绑定成功。今日签到奖励：身价+1。你觉得这系统很懂你。" },
+        { "text": "不用了，谢谢", "effect": { "心态": 1 }, "result": "天道：难得有个不要外挂的。系统叹了口气，去找隔壁工位了。" },
+        { "text": "前世卸过系统", "require": "ever:system.deleted", "effect": { "心态": 2, "能力": 1 },
+          "result": "前世你亲手删过系统。这一世你只说：不必了。【叮！】……好的。" },
+        { "text": "能补签前世十年吗", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "bind": "sys_signin", "state": "bound", "身价": 6, "follow": { "id": "signin_task", "delay": 2 } },
+          "result": "【叮！】……系统查了你前世的考勤，沉默了。批了，身价+6。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】检测到宿主贪心。系统转身绑定了隔壁的王卷卷。" } }
+      ]
+    },
+    {
+      "id": "signin_task", "dir": "up", "weight": 12, "teaser": "【叮！】连续签到任务已发布", "require": "system:sys_signin",
+      "text": "【叮！】新任务：连续签到三十天，奖励神秘大礼包。断签一天，清零。今天周六，外面下着暴雨。",
+      "choices": [
+        { "text": "冒雨去公司签到", "effect": { "精力": -1, "身价": 8, "item": "coffee", "state": "tasked" },
+          "result": "你浑身湿透坐到工位。【叮！】大礼包到账：一杯冰美式。" },
+        { "text": "在家签行不行", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 5, "state": "tasked" }, "result": "【叮！】……检测到宿主坐在椅子上。勉强算你过。",
+          "easy": "你把家里的椅子拍照发给系统。【叮！】……行，你赢了。",
+          "fail": { "effect": { "心态": -2 }, "result": "【叮！】宿主断签。累计天数清零。系统很失望。" } },
+        { "text": "跟系统吵补签卡", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 15, "能力": 1, "state": "tasked" }, "result": "你和系统吵了半小时。它说你比上一个宿主难缠，给你补了。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】补签卡售价：身价 30。你默默关掉了提示。" } }
+      ]
+    },
+    {
+      "id": "shenhao_bind", "dir": "any", "once": true, "weight": 20, "stage": [1, 99], "require": "!system:any & 身价<=15 & season>=3",
+      "text": "交完房租，余额 0.37 元。【叮！】检测到宿主穷得很纯粹，神豪系统请求绑定。",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_shenhao", "state": "bound", "身价": 3, "follow": "shenhao_task" },
+          "result": "【叮！】绑定成功，新手礼包到账。你盯着余额，数了三遍零。" },
+        { "text": "不要，吃泡面", "effect": { "心态": 1, "脸皮": 1 }, "result": "天道：难得有个不要外挂的。你吃了一包泡面，睡得很香。" },
+        { "text": "前世背过一身债", "require": "legacy:bookkeeping>=1", "effect": { "身价": 6, "能力": 1 },
+          "result": "前世你背过一身债。这一世 0.37 元也做成表格，一分没乱花。" },
+        { "text": "能先预支吗", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "bind": "sys_shenhao", "state": "bound", "身价": 10, "follow": "shenhao_task" },
+          "result": "【叮！】本系统第一次被宿主借钱。……批了。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】宿主信用分过低。系统转身绑定了你的房东。" } }
+      ]
+    },
+    {
+      "id": "shenhao_task", "dir": "any", "weight": 12, "teaser": "【叮！】花钱任务已发布", "require": "system:sys_shenhao",
+      "text": "【叮！】任务：一天内花光十万，只能花在自己身上。完成奖励一百万。失败，全部没收。",
+      "choices": [
+        { "text": "体检加保温杯", "effect": { "精力上限": 1, "精力": 2, "身价": 12, "state": "tasked" },
+          "result": "全套体检、健身卡、二十个保温杯。【叮！】……行吧，算你的。" },
+        { "text": "给爸妈买房", "chance": 0.35, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 20, "人脉": 2, "state": "tasked" }, "result": "【叮！】爸妈也算宿主的一部分……这个漏洞，系统认了。",
+          "fail": { "effect": { "身价": -5, "心态": 1 }, "result": "【叮！】花在别人身上，任务失败。爸妈很高兴，系统不高兴。" } },
+        { "text": "买下老周的公司", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 25, "state": "tasked", "feud": "十万买下了老周的公司" },
+          "result": "老周的公司估值九万八。你还找回了两千。",
+          "fail": { "effect": { "心态": -2 }, "result": "老周说：十万？连我的饼都买不起。" } }
+      ]
+    },
+    {
+      "id": "slack_bind", "dir": "down", "layers": ["D1"], "once": true, "weight": 7, "require": "!system:any & season>=3",
+      "text": "你第三次在茶水间被老板撞见。他刚要开口，你脑子里响了：【叮！】摸鱼天赋检测满分。",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_slack", "state": "bound", "follow": "slack_task" },
+          "result": "【叮！】绑定成功。老板话说到一半，忘了自己要说什么。" },
+        { "text": "拒绝，回工位", "effect": { "能力": 1, "心态": 1 }, "result": "天道：难得有个不要外挂的。老板看你回了工位，满意地走了。" },
+        { "text": "绑定算工时吗", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "bind": "sys_slack", "state": "bound", "精力": 2, "follow": "slack_task" },
+          "result": "【叮！】本系统认可宿主的摸鱼觉悟。绑定期间，带薪。",
+          "fail": { "effect": { "心态": -1 }, "result": "你和系统讨价还价的时候，老板一直站在旁边。" } }
+      ]
+    },
+    {
+      "id": "slack_task", "dir": "down", "weight": 12, "teaser": "【叮！】摸鱼任务已发布", "require": "system:sys_slack",
+      "text": "【叮！】任务：今天摸鱼满八小时，不得被发现。检测到宿主在工作，扣十分。",
+      "choices": [
+        { "text": "带薪如厕八小时", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "精力": 3, "心态": 1, "state": "tasked" }, "result": "你在隔间刷完了一整部剧。【叮！】任务完成。奖励：明天继续。",
+          "fail": { "effect": { "心态": -1 }, "result": "你蹲到第三小时，老板敲门：用完了吗？" } },
+        { "text": "抱电脑假装开会", "effect": { "精力": 1, "身价": 3, "state": "tasked" },
+          "result": "你在会议室坐了一天。没人敢问你在开什么会。" },
+        { "text": "认真干活", "effect": { "能力": 2, "精力": -1 }, "result": "【叮！】警告：宿主在工作。你升职了，系统很难过。" },
+        { "text": "前世累进过医院", "require": "legacy:wellness>=1", "effect": { "精力上限": 1, "心态": 1, "state": "tasked" },
+          "result": "前世你累进了医院。这一世你摸鱼摸得心安理得，系统都夸你。" }
+      ]
+    },
+    {
+      "id": "eye_bind", "dir": "up", "layers": ["U2"], "once": true, "weight": 18, "stage": [1, 99], "require": "!system:any",
+      "text": "你熬了三个通宵的方案，组长在会上念成了他的。散会时，眼前跳出一行字：【叮！】天眼系统，看清谁在坑你。",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_eye", "state": "bound", "follow": "eye_task" },
+          "result": "【叮！】绑定成功。你再看组长，他头顶飘着两个字：心虚。" },
+        { "text": "不用，我有记录", "effect": { "心态": 1, "能力": 1, "feud": "组长抢功被记录拆穿" },
+          "result": "天道：难得有个不要外挂的。你把修改记录发到了群里。" },
+        { "text": "前世背过锅", "require": "legacy:paper_trail>=1", "effect": { "能力": 2, "身价": 6, "feud": "组长抢的功原样退回" },
+          "result": "前世你背过锅。这一世每一版都抄送了全组。组长念到一半，自己停了。" },
+        { "text": "能看彩票号吗", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "bind": "sys_eye", "state": "bound", "身价": 8, "follow": "eye_task" },
+          "result": "【叮！】只能看昨天的。可昨天的事，已经够你用了。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】彩票功能需开通会员。你没开，系统也走了。" } }
+      ]
+    },
+    {
+      "id": "eye_task", "dir": "up", "weight": 12, "teaser": "【叮！】天眼看见了一个坑", "require": "system:sys_eye",
+      "text": "【叮！】天眼任务：揭穿一次谎言。前方：老板正在画饼，饼里有坑，坑里有你。",
+      "choices": [
+        { "text": "当场指出坑", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 10, "能力": 1, "state": "tasked" }, "result": "你指出合同第三页的坑。老板愣住，改了条款。【叮！】任务完成。",
+          "easy": "你还没开口，老板先把第三页撕了。【叮！】任务完成。",
+          "fail": { "effect": { "心态": -2 }, "result": "你说得对，但没证据。老板记住你了。" } },
+        { "text": "悄悄绕开", "effect": { "心态": 1, "state": "tasked" }, "result": "你换了个项目组。三个月后那个项目黄了。【叮！】勉强算完成。" },
+        { "text": "前世吃了十年饼", "require": "legacy:pie_sense>=1", "effect": { "身价": 12, "心态": 1, "state": "tasked" },
+          "result": "前世你吃了十年饼。这一世天眼还没报完，你已经报出了饼的尺寸。" },
+        { "text": "偷看老板工资条", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 15, "state": "tasked" }, "result": "你看到了老板的工资条。他看到了你的眼神，给你涨了薪。",
+          "fail": { "effect": { "unbind": true, "心态": -2 }, "result": "【叮！】越权查看。天道：外挂，没收。" } }
+      ]
+    },
+    {
+      "id": "undying_bind", "dir": "any", "once": true, "weight": 24, "stage": [1, 99], "require": "!system:any & 精力<=2",
+      "text": "连轴转第三周，你眼前一黑，扶住了桌子。【叮！】检测到宿主血条见底，不死系统紧急上线。",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_undying", "state": "bound", "精力": 2, "follow": "undying_task" },
+          "result": "【叮！】绑定成功。你直起了腰。本系统不接受退货。" },
+        { "text": "请假回家睡觉", "effect": { "精力": 3, "心态": 1 }, "result": "天道：难得有个不要外挂的。你睡了两天，醒来天是蓝的。" },
+        { "text": "前世累垮过", "require": "legacy:wellness>=1", "effect": { "精力": 4, "精力上限": 1 },
+          "result": "前世你累进了医院。这一世抽屉里有枸杞，你泡了一杯，缓过来了。" },
+        { "text": "能顺便不加班吗", "absurd": true, "chance": 0.2, "chanceAttr": "心态", "chanceStep": 0.03,
+          "effect": { "bind": "sys_undying", "state": "bound", "精力": 4, "心态": 1, "follow": "undying_task" },
+          "result": "【叮！】不加班超纲了。系统给你批了三天假，当没听见。",
+          "fail": { "effect": { "精力": 1 }, "result": "【叮！】超出服务范围。系统挂了，你还扶着桌子。" } }
+      ]
+    },
+    {
+      "id": "undying_task", "dir": "any", "weight": 12, "teaser": "【叮！】不死任务已发布", "require": "system:sys_undying",
+      "text": "【叮！】任务：本季每天睡满八小时。宿主不死，是本系统的 KPI。",
+      "choices": [
+        { "text": "照做，早睡", "effect": { "精力": 3, "心态": 1, "state": "tasked" },
+          "result": "你第一次十一点就睡着了。同事问你是不是谈恋爱了。" },
+        { "text": "熬夜赶项目", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "能力": 2, "身价": 8 }, "result": "项目赶完了。【叮！】本系统决定，替你瞒下这次。",
+          "fail": { "effect": { "精力": -3 }, "result": "【叮！】宿主违约。系统强制你关机三天。" } },
+        { "text": "带系统去体检", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "精力上限": 2, "state": "tasked" }, "result": "医生看完报告：你这身体比我还好。【叮！】那是。",
+          "fail": { "effect": { "心态": -1 }, "result": "医生问你脑子里的声音响了多久。你说没有，没有。" } }
+      ]
+    },
+    {
+      "id": "antijuan_bind", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 20, "stage": [1, 99],
+      "require": "!system:any & (line:wang_juanjuan.rival | 精力<=2)",
+      "text": "隔壁工位凌晨三点还在回邮件。你卷不动了，趴在桌上。【叮！】反卷系统：别人卷，你涨修为。",
+      "choices": [
+        { "text": "绑定", "effect": { "bind": "sys_antijuan", "state": "bound", "follow": "antijuan_task" },
+          "result": "【叮！】绑定成功。隔壁又发了一封邮件。你的修为 +1。" },
+        { "text": "关灯回家", "effect": { "精力": 2, "心态": 1 }, "result": "天道：难得有个不要外挂的。你关灯走了，隔壁愣了一下。" },
+        { "text": "前世被卷王挤走", "require": "legacy:detour>=1", "effect": { "心态": 1, "脸皮": 1, "身价": 5 },
+          "result": "前世你被卷王挤走。这一世你不比加班，比谁先下班。" },
+        { "text": "让他再卷狠点", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "bind": "sys_antijuan", "state": "bound", "身价": 12, "follow": "antijuan_task" },
+          "result": "你给隔壁点了份夜宵。他吃饱了接着卷，你的修为蹭蹭涨。",
+          "fail": { "effect": { "心态": -2 }, "result": "【叮！】检测到宿主教唆内卷。系统拒绝了你。" } }
+      ]
+    },
+    {
+      "id": "antijuan_task", "dir": "up", "weight": 12, "teaser": "【叮！】反卷任务已发布", "require": "system:sys_antijuan",
+      "text": "【叮！】任务：本周全组准点下班。检测到隔壁工位已经订好了通宵的咖啡。",
+      "choices": [
+        { "text": "六点拉闸", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "心态": 1, "身价": 10, "人脉": 2, "state": "tasked" }, "result": "整层楼黑了。大家愣了一下，然后都笑着走了。",
+          "fail": { "effect": { "心态": -1 }, "result": "你刚拉闸，备用电源就亮了。卷王说：谢谢，凉快。" } },
+        { "text": "带全组吃火锅", "effect": { "人脉": 3, "身价": 4, "state": "tasked" },
+          "result": "火锅一开，没人想回去加班。【叮！】任务完成。卷王也来了。" },
+        { "text": "把任务转给卷王", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 20, "能力": 2, "state": "tasked" }, "result": "卷王一晚上做完了一周的任务。修为全算你的。",
+          "fail": { "effect": { "unbind": true, "心态": -1 }, "result": "【叮！】检测到卷王更适合当宿主。系统连夜跳槽了。" } }
+      ]
+    },
+    {
+      "id": "upgrade", "dir": "any", "once": true, "weight": 14, "require": "system:any & line:system.tasked",
+      "text": "【叮！】任务完成率百分百，系统可升级。升级后功能更强。副作用：可能会吵。",
+      "choices": [
+        { "text": "升一级", "effect": { "身价": 10, "能力": 1, "心态": -1 },
+          "result": "【叮！】升级完成。新功能：每天早上用老板的声音叫你起床。" },
+        { "text": "认主", "require": "stage>=3", "effect": { "keepSystem": true, "state": "owned", "身价": 10, "follow": { "id": "boss", "delay": 2, "ttl": 8 } },
+          "result": "【叮！】认主成功。你在哪一世，本系统就在哪一世。" },
+        { "text": "前世被系统撑爆", "require": "legacy:sys_affinity>=1", "effect": { "身价": 20, "能力": 2 },
+          "result": "前世系统在你脑子里炸过一次。这一世你先清了缓存，升得很稳。" },
+        { "text": "一口气升满", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "身价": 30, "能力": 2 }, "result": "【叮！】满级。系统放了一段烟花，附赠一句：宿主英明。",
+          "fail": { "effect": { "death": "overload" }, "result": "【叮！】升级包过大，宿主内存不足。宿主……宿主——" } }
+      ]
+    },
+    {
+      "id": "confiscate", "dir": "any", "once": true, "weight": 10, "stage": [2, 99],
+      "require": "system:any & (line:system.bound | line:system.tasked)",
+      "text": "天道敲了敲你的脑门：外挂，交出来。系统在你脑子里缩成一团，一声不吭。",
+      "choices": [
+        { "text": "交出去", "effect": { "unbind": true, "心态": 2, "能力": 1 },
+          "result": "天道收走系统，在小本子上记了一笔：又是你。脑子里安静了。" },
+        { "text": "藏进待办清单", "chance": 0.35, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 8 }, "result": "你把系统塞进待办清单最底下。天道翻了两页，嫌烦，走了。",
+          "fail": { "effect": { "unbind": true, "心态": -2 }, "result": "天道：待办清单？我也有。系统没收了。" } },
+        { "text": "前世被封过号", "require": "legacy:low_profile>=1", "effect": { "心态": 1, "身价": 6 },
+          "result": "前世你被封过号。这一世开挂只开三成，天道以为你是普通人。" },
+        { "text": "问天道要分成吗", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 15, "人脉": 2 }, "result": "天道沉默了很久：你是第一个想贿赂我的。下不为例。",
+          "fail": { "effect": { "death": "banned" }, "result": "天道：行贿，罪加一等。封了。" } }
+      ]
+    },
+    {
+      "id": "fight", "dir": "any", "once": true, "gold": true, "weight": 3, "stage": [2, 99], "require": "system:any",
+      "text": "【叮！】【叮！】一个新系统闯进你脑子，和原来那个打了起来。两个都在喊：宿主是我的！",
+      "choices": [
+        { "text": "坐下看戏", "effect": { "心态": 1, "身价": 8 }, "result": "两个系统打了一整天，最后握手言和，各掏了一份礼包给你。" },
+        { "text": "给老系统加油", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 20, "能力": 2 }, "result": "老系统赢了。它很感动：宿主果然向着我。奖励翻倍。",
+          "fail": { "effect": { "心态": -2 }, "result": "你喊错了名字。两个系统停下来，一起瞪着你。" } },
+        { "text": "两个都要", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 40, "能力": 3, "人脉": 3 }, "result": "你劝它们合并。合并后的系统第一句话：老板好。",
+          "fail": { "effect": { "death": "overload" }, "result": "两个系统同时往里挤。【叮！】宿……主……内存……" } }
+      ]
+    },
+    {
+      "id": "boss", "dir": "any", "once": true, "weight": 6, "stage": [3, 99], "teaser": "【叮！】系统有话想说",
+      "require": "system:any & line:system.owned",
+      "text": "【叮！】宿主，今天的任务是——你打断它：今天的任务，我来定。系统沉默了三秒。",
+      "choices": [
+        { "text": "给系统派活", "require": "stage>=4 & 能力>=14 & line:system.tasked", "effect": { "ending": "system_boss" },
+          "result": "你给系统列了一张任务清单。【叮！】……收到，老板。" },
+        { "text": "反向画饼", "showIf": "skill:anti_pie & stage>=4", "useSkill": "anti_pie", "effect": { "ending": "system_boss" },
+          "result": "你说：好好干，明年给你升级。系统信了，干得比你还卖力。" },
+        { "text": "硬气地定一次", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 15, "脸皮": 2 }, "result": "系统犹豫了一下：……那今天放假吧。【叮！】全天带薪。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】宿主越权。今日任务翻倍。" } },
+        { "text": "照旧听它的", "effect": { "身价": 8 }, "result": "【叮！】今日任务：签到、喝水、别跟老板吵架。" }
+      ]
+    },
+    {
+      "id": "delete", "dir": "any", "once": true, "weight": 10, "stage": [2, 99],
+      "require": "system:any & (line:system.tasked | line:system.owned)",
+      "text": "【叮！】今日任务第三十七条已发布。设置页最底下，有个灰色的小按钮：卸载。",
+      "choices": [
+        { "text": "按下卸载", "require": "stage>=3 & 心态>=20", "effect": { "unbind": true, "state": "deleted", "ending": "delete_system" },
+          "result": "进度条走完，脑子里安静了。你第一次靠自己，上完了一整天班。" },
+        { "text": "先卸了试试", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "unbind": true, "state": "deleted", "心态": 2 }, "result": "没有叮，没有任务，楼下煎饼摊在吆喝。还挺好。",
+          "fail": { "effect": { "心态": -1 }, "result": "【叮！】检测到宿主想卸载本系统。它哭了一晚上，你没卸成。" } },
+        { "text": "继续做任务", "effect": { "身价": 6, "精力": -1 }, "result": "你做完了第三十七条。第三十八条已经在路上了。" },
+        { "text": "顺手卸载天道", "absurd": true, "chance": 0.1, "chanceAttr": "脸皮", "chanceStep": 0.02,
+          "effect": { "心态": 2, "身价": 10 }, "result": "天道的卸载键是灰的，旁边写着：权限不足。你笑了一天。",
+          "fail": { "effect": { "unbind": true, "身价": -10 }, "result": "天道：我听见了。连你带系统，罚款。" } }
+      ]
+    },
+    {
+      "id": "i_am", "dir": "any", "once": true, "gold": true, "weight": 3, "stage": [3, 99],
+      "require": "ever:system.owned & line:system.deleted",
+      "text": "【叮！】系统总部招聘：要求有宿主经验，会画饼，懂打工人。地点：别人的脑子里。",
+      "choices": [
+        { "text": "投简历", "require": "stage>=4 & legacy:sys_affinity>=1", "effect": { "unbind": true, "ending": "i_am_system" },
+          "result": "你成了系统。第一位宿主是个实习生。【叮！】你好，我也是打工人。" },
+        { "text": "推荐老周", "effect": { "身价": 15, "feud": "把老周推荐成了系统" },
+          "result": "老周入职了系统总部。听说他画的第一张饼，是给自己的。" },
+        { "text": "婉拒", "effect": { "心态": 1 }, "result": "打了这么多年工，你不想再住进别人的脑子里。" }
+      ]
+    }
+  ]
+}

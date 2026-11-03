@@ -115,6 +115,14 @@ assets/resources/data/destinies/<命格id>/
 - **跨命格彩蛋**：`cameo: true` + `require` 用 `xlives`（玩过就出）或 `xend`（通了某结局才出，`gold` 奖励更高）；其他命格的角色/结局在这里客串（前世是狗，这一世是被狗浇的草）。每个命格至少：每个其他命格 1 个 xlives 彩蛋 + 1~2 个 xend 彩蛋 + 1 个「全命格都玩过」的大彩蛋。
 - 天道（系统角色）、弹幕、墓志铭后缀、连胜、「稳」由引擎通用实现（`core/flavor.ts`），剧本不用写。
 
+### 线路（lines/）与交叉事件（crossings/）——新命格推荐写法
+- 一条故事线一个文件，格式与要求见 `docs/design/06-worker-lines-brief.md`，范例 `data/destinies/worker/lines/boss_zhou.json`。
+- 线路内 id / flag / follow 写短名，自动加命名空间；对外只通过 `states` 导出状态交互（`line:线路.状态`、`ever:线路.状态`、效果 `state`）。
+- 交叉事件放 `crossings/`，require 引用两条以上线路的状态；新增线路不改旧线，只加交叉事件。
+- 系统（金手指）：companions 里 `system: true`，事件效果 `bind / unbind / keepSystem`，台词「【叮！】」开头。
+- 寿终结局：境界 `oldAgeEndings`，平凡安稳也可以是结局。
+- 写完跑 `npm run validate`、`npm run lines <命格>`、`npm run sim -- --destiny <命格>`（看线路进入率与结局分布）。
+
 ### 宿敌与报应
 - 嚣张度逐级上升，不重复同一种恶：小恶（抢食、嘲笑）→ 中恶（栽赃、抓走同伴）→ 大恶（要你的命）。
 - 报应与恶行**对应**：抢食的被抢、抓狗的被抓、笑你的来求你。2~3 句带过，爽在对应感，不在描写长度。

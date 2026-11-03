@@ -2,7 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { DestinyIndex, RawDestiny, RawEvent } from '../assets/scripts/core/types';
+import type { DestinyIndex, RawDestiny, RawEvent, RawLine } from '../assets/scripts/core/types';
 
 export const DATA_ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources', 'data', 'destinies');
 
@@ -29,6 +29,21 @@ export function loadRawDestiny(id: string): { raw: RawDestiny; eventFiles: Recor
             eventFiles[ev.id] = f;
         }
     }
+    // 线路（一条故事一个文件）与交叉事件
+    const jsonFiles = (d: string) => (existsSync(d) ? readdirSync(d).filter(f => f.endsWith('.json')).sort() : []);
+    const lines: RawLine[] = [];
+    for (const f of jsonFiles(join(dir, 'lines'))) {
+        const l = readJson<RawLine>(join(dir, 'lines', f));
+        lines.push(l);
+        for (const ev of l.events ?? []) eventFiles[ev.id.includes('/') ? ev.id : `${l.id}/${ev.id}`] = `lines/${f}`;
+    }
+    const crossings: RawEvent[] = [];
+    for (const f of jsonFiles(join(dir, 'crossings'))) {
+        for (const ev of readJson<RawEvent[]>(join(dir, 'crossings', f))) {
+            crossings.push(ev);
+            eventFiles[ev.id] = `crossings/${f}`;
+        }
+    }
     return {
         raw: {
             meta: readJson(join(dir, 'destiny.json')),
@@ -37,6 +52,8 @@ export function loadRawDestiny(id: string): { raw: RawDestiny; eventFiles: Recor
             companions: readJson(join(dir, 'companions.json')),
             skills: existsSync(join(dir, 'skills.json')) ? readJson(join(dir, 'skills.json')) : [],
             events,
+            lines,
+            crossings,
         },
         eventFiles,
     };

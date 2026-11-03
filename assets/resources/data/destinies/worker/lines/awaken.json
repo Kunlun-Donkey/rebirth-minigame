@@ -1,0 +1,143 @@
+{
+  "id": "awaken",
+  "name": "灵气复苏",
+  "summary": "天上下了一场发光的雨。地铁站里开了秘境，写字楼里来了妖。这一世，你修仙也得先打卡。",
+  "maps": ["awaken"],
+  "stage": [0, 2],
+  "states": {
+    "awakened": "灵气复苏中觉醒了",
+    "sect": "加入了宗门"
+  },
+  "events": [
+    {
+      "id": "rain", "entry": true, "dir": "any", "weight": 24,
+      "text": "入职第三天，天上下了一场发光的雨。雨停后，你看见键盘缝里，冒出一缕一缕的光。",
+      "choices": [
+        { "text": "伸手去抓", "effect": { "skill": "spirit_sense", "state": "awakened", "心态": 1, "follow": "subway" },
+          "result": "光钻进了指尖。你听见整栋楼的呼吸，包括老板在偷吃零食。" },
+        { "text": "拍照发朋友圈", "effect": { "人脉": 2, "follow": "colleague" },
+          "result": "你发了九宫格。点赞的人里，有三个已经会飞了。" },
+        { "text": "前世淋过这场雨", "require": "ever:awaken.awakened", "effect": { "skill": "spirit_sense", "state": "awakened", "身价": 6, "心态": 1, "follow": "subway" },
+          "result": "前世你在雨里愣了三天。这一世你张嘴接雨，接了一肚子灵气。" },
+        { "text": "当场盘腿打坐", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "skill": "spirit_sense", "state": "awakened", "身价": 10, "能力": 1, "follow": "subway" },
+          "result": "你在工位上坐了一下午。睁眼时，桌上的绿萝开花了。",
+          "fail": { "effect": { "心态": -1, "follow": "colleague" }, "result": "你坐了一下午。保洁阿姨问你腿是不是麻了。" } }
+      ]
+    },
+    {
+      "id": "colleague", "dir": "up", "chainOnly": true, "teaser": "隔壁大姐会瞬移了",
+      "text": "隔壁工位的大姐觉醒了瞬移，专门用来抢电梯。全公司就剩你还没觉醒。",
+      "choices": [
+        { "text": "求大姐带一程", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "skill": "spirit_sense", "state": "awakened", "follow": "subway" }, "result": "大姐一把拽你进了电梯。落地那一下，你的灵觉开了。",
+          "fail": { "effect": { "精力": -1, "follow": "subway" }, "result": "大姐瞬移走了，你一头撞在电梯门上。" } },
+        { "text": "自己憋", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "skill": "spirit_sense", "state": "awakened", "能力": 1, "follow": "subway" }, "result": "你憋了一个周末。周一早上，你闻见了老板身上的饼味。",
+          "fail": { "effect": { "心态": -1 }, "result": "你憋了一个周末，憋出了一场感冒。" } },
+        { "text": "找人事要补贴", "effect": { "脸皮": 1, "身价": 3 }, "result": "人事说：觉醒补贴要先觉醒。她给你发了张表。" }
+      ]
+    },
+    {
+      "id": "subway", "dir": "down", "layers": ["D2"], "weight": 14, "teaser": "地铁站的墙裂开了",
+      "text": "下班的地铁站，墙上裂开一道口子，里面是起雾的山谷。门口贴着纸：秘境，闲人勿入。",
+      "choices": [
+        { "text": "往雾里走", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "身价": 8, "能力": 1, "follow": "deep" }, "result": "你在雾里走了半小时，看见远处有光。",
+          "fail": { "effect": { "精力": -2 }, "result": "你在雾里转了一圈，又转回站台。末班车已经走了。" } },
+        { "text": "灵觉引路", "showIf": "skill:spirit_sense", "useSkill": "spirit_sense", "effect": { "身价": 10, "心态": 1, "follow": "deep" },
+          "result": "灵觉一开，雾里亮出一条路。你走得像下班一样快。" },
+        { "text": "回家，饭要凉了", "effect": { "心态": 1 }, "result": "你看了一眼，上了末班车。秘境不会跑，饭会凉。" },
+        { "text": "在门口卖门票", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "身价": 12, "脸皮": 2, "follow": "market" }, "result": "纸板上写着「秘境一日游，五十」。队伍绕了站台三圈。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "地铁保安走过来：这里不让摆摊。" } }
+      ]
+    },
+    {
+      "id": "deep", "dir": "down", "chainOnly": true, "teaser": "雾里有东西在发光",
+      "text": "秘境深处长着一株发光的草，旁边蹲着一只狐狸，戴着工牌：守门员，实习。",
+      "choices": [
+        { "text": "跟狐狸聊聊", "effect": { "人脉": 2, "身价": 6, "follow": { "id": "sect", "delay": 2 } },
+          "result": "狐狸说它实习三个月了，还没转正。你们互加了好友。" },
+        { "text": "摘了草就跑", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 15, "精力上限": 1, "follow": "monster" }, "result": "你抓起草就跑。狐狸在后面喊：那是我的 KPI！",
+          "fail": { "effect": { "death": "realm_lost" }, "result": "雾合上了。你绕了很久，没找到出口。" } },
+        { "text": "前世没走出来", "require": "legacy:way_finder>=1", "effect": { "身价": 15, "心态": 1, "follow": "monster" },
+          "result": "前世你在这片雾里没出来。这一世每个岔口你都往左，草也带出来了。" },
+        { "text": "灵觉看穿", "showIf": "skill:spirit_sense", "useSkill": "spirit_sense", "effect": { "身价": 12, "能力": 2, "follow": "sect" },
+          "result": "灵觉告诉你：草是假的，狐狸是面试官。你给它鞠了一躬。" }
+      ]
+    },
+    {
+      "id": "monster", "dir": "any", "chainOnly": true, "teaser": "楼里来了只加班妖",
+      "text": "写字楼里来了只加班妖，专吸人下班的念头。整层楼的人，默默打开了第二个文档。",
+      "choices": [
+        { "text": "抄起键盘拍", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 12, "能力": 1, "feud": "把加班妖拍回了秘境", "follow": "sect" }, "result": "一键盘下去，它缩成一张加班申请单。你把它撕了。",
+          "easy": "你还没抬手，加班妖看见你，自己填了请假条。",
+          "fail": { "effect": { "精力": -2 }, "result": "你拍了个空，自己打开了第二个文档。" } },
+        { "text": "灵觉找弱点", "showIf": "skill:spirit_sense", "useSkill": "spirit_sense", "effect": { "身价": 15, "心态": 1, "feud": "加班妖被准点吓散了", "follow": "sect" },
+          "result": "灵觉一扫：它怕准点。你把墙上的钟拨到六点，它当场散了。" },
+        { "text": "喊大家下班", "effect": { "人脉": 2, "心态": 1, "follow": "sect" },
+          "result": "你喊了一嗓子。三十台电脑同时合上，加班妖饿跑了。" },
+        { "text": "跟它谈加班费", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 20, "脸皮": 2 }, "result": "加班妖第一次听人提加班费。它愣住，然后哭着跑了。",
+          "fail": { "effect": { "精力": -2 }, "result": "加班妖问：加班费是什么？你被多吸了两小时。" } }
+      ]
+    },
+    {
+      "id": "market", "dir": "any", "chainOnly": true, "teaser": "修士夜市开张了",
+      "text": "城中村夜市多了一排摊：卖灵石的、卖功法的，还有卖「三天速成金丹」的。",
+      "choices": [
+        { "text": "买本功法", "effect": { "能力": 2, "身价": -3 }, "result": "你花半个月工资买了本《打工人吐纳法》。第一页：深呼吸。" },
+        { "text": "举报速成金丹", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "人脉": 2, "身价": 8, "feud": "速成金丹摊被端了" }, "result": "执法修士来了。摊主的金丹，是一锅糖丸。",
+          "fail": { "effect": { "心态": -1 }, "result": "你刚开口，摊主瞬移走了，只留下一锅糖丸。" } },
+        { "text": "支摊卖灵气煎饼", "effect": { "身价": 10, "脸皮": 1, "follow": "sect" },
+          "result": "修士们排队买你的煎饼，说有家的味道。有个宗门的人，多看了你两眼。" }
+      ]
+    },
+    {
+      "id": "sect", "dir": "up", "once": true, "weight": 14, "stage": [1, 99], "teaser": "宗门的 HR 打来电话", "require": "line:awaken.awakened",
+      "text": "一个宗门打来电话：正规宗门，五险一金，包住宿。下午面试，带上你的灵根。",
+      "choices": [
+        { "text": "去面试", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "state": "sect", "身价": 15, "能力": 2, "follow": "sect_kpi" }, "result": "面试官是那只狐狸。它转正了，第一件事是把你招进来。",
+          "easy": "你刚坐下，宗主亲自来倒茶：什么时候能入职？",
+          "fail": { "effect": { "心态": -1 }, "result": "面试官问：五年后你想在哪个境界？你答错了。" } },
+        { "text": "前世被优化过", "require": "legacy:resume_ready>=1", "effect": { "state": "sect", "身价": 12, "follow": "sect_kpi" },
+          "result": "前世你被优化过。这一世简历是最新版，灵根写进了特长栏。" },
+        { "text": "当散修", "effect": { "心态": 1, "身价": 6 }, "result": "你挂了电话。散修也挺好，至少没人画饼。" },
+        { "text": "修仙要加班吗", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "state": "sect", "身价": 20, "心态": 1, "follow": "sect_kpi" }, "result": "宗主愣了：修仙还用加班？你当场签了。",
+          "fail": { "effect": { "心态": -2 }, "result": "宗主说：修仙就是一万年的加班。你挂了电话。" } }
+      ]
+    },
+    {
+      "id": "sect_kpi", "dir": "up", "chainOnly": true, "teaser": "宗门也要打卡", "require": "line:awaken.sect",
+      "text": "宗门七点点卯，十点晚课。师兄说：咱们这儿，一万年才发一次年终奖。",
+      "choices": [
+        { "text": "老实修炼", "effect": { "能力": 2, "精力": -1, "身价": 10 }, "result": "你修了一季，师兄说你是这届最卷的。你不知道该不该高兴。" },
+        { "text": "灵觉找摸鱼地", "showIf": "skill:spirit_sense", "useSkill": "spirit_sense", "effect": { "身价": 20, "心态": 1 },
+          "result": "你找到了藏经阁顶楼。一万年没人来查过，书还都是真的。" },
+        { "text": "提议宗门双休", "chance": 0.35, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "身价": 15, "feud": "让宗门有了周末" }, "result": "宗主同意了。从此修仙界多了一个词：周末。",
+          "fail": { "effect": { "心态": -2 }, "result": "宗主笑了：修仙哪有周末？你被罚扫三天山门。" } }
+      ]
+    },
+    {
+      "id": "realm_close", "dir": "down", "layers": ["D2", "D3"], "once": true, "weight": 10, "require": "line:awaken.awakened",
+      "text": "秘境的口子在缩小。里面还有加班的同事。站台广播：下一班车，三分钟后进站。",
+      "choices": [
+        { "text": "冲进去拉人", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "身价": 12 }, "result": "你把同事拽了出来。他抱着电脑：文档还没保存。",
+          "fail": { "effect": { "death": "realm_lost" }, "result": "你冲了进去。口子合上了，下一班车照常进站。" } },
+        { "text": "灵觉找出口", "showIf": "skill:spirit_sense", "useSkill": "spirit_sense", "effect": { "人脉": 3, "身价": 15 },
+          "result": "你找到了最近的出口。一车厢的人跟着你走了出来。" },
+        { "text": "前世没出来", "require": "legacy:way_finder>=1", "effect": { "人脉": 4, "身价": 15 },
+          "result": "前世你没出来。这一世每条岔路你都记得，带出一整车厢的人。" },
+        { "text": "在外面喊", "effect": { "人脉": 1 }, "result": "你喊了三分钟。同事自己跑出来了，鞋掉了一只。" }
+      ]
+    }
+  ]
+}

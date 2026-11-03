@@ -1,0 +1,65 @@
+{
+  "id": "cleaner",
+  "name": "保洁阿姨",
+  "summary": "她在这栋楼里擦了二十年的地。每个加班到深夜的人，她都记得。",
+  "maps": ["city", "workshop"],
+  "states": {
+    "helped": "帮过保洁阿姨",
+    "revealed": "知道了阿姨的身份"
+  },
+  "events": [
+    {
+      "id": "spill", "entry": true, "dir": "down", "layers": ["D1"], "weight": 14,
+      "text": "茶水间里，保洁阿姨的水桶被人踢翻了。踢翻它的人头也没回，阿姨蹲在地上一点点擦。",
+      "choices": [
+        { "text": "蹲下来帮她擦", "effect": { "state": "helped", "心态": 1, "follow": { "id": "night_desk", "delay": 2 } }, "result": "阿姨说：小伙子，你衣服都弄脏了。你说：没事，反正也不贵。" },
+        { "text": "去找那个人", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "state": "helped", "脸皮": 2, "feud": "踢翻水桶的人回来道了歉", "follow": { "id": "night_desk", "delay": 2 } }, "result": "你把他叫了回来。他看了看你，又看了看阿姨，说了声对不起。",
+          "fail": { "effect": { "心态": -1 }, "result": "那人说：你谁啊？电梯门关上了。" } },
+        { "text": "当没看见", "effect": { "精力": 1 }, "result": "你接了杯水，回了工位。前世，你也是这样。" }
+      ]
+    },
+    {
+      "id": "night_desk", "dir": "any", "chainOnly": true, "teaser": "深夜，有人在擦你的桌子", "require": "line:cleaner.helped",
+      "text": "加班到十一点，阿姨推着车经过。她擦完你的桌子，在键盘边放了一颗糖。",
+      "choices": [
+        { "text": "跟她聊聊", "effect": { "人脉": 2, "心态": 1, "follow": { "id": "her_story", "delay": 2 } }, "result": "她说她老伴在楼下车库当保安，下夜班了就一起回家。" },
+        { "text": "回她一颗糖", "effect": { "心态": 1, "follow": { "id": "her_story", "delay": 2 } }, "result": "第二天，你键盘边多了两颗。" },
+        { "text": "让她早点下班", "effect": { "心态": 1 }, "result": "她笑了：我比你下班早多了，傻孩子。" }
+      ]
+    },
+    {
+      "id": "her_story", "dir": "down", "chainOnly": true, "teaser": "阿姨落下了一本旧相册", "require": "line:cleaner.helped",
+      "text": "阿姨的推车上落下一本旧相册。翻开第一页，是这栋楼刚建好时的剪彩照片。剪彩的人里，有一个很像她。",
+      "choices": [
+        { "text": "去还给她", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "state": "revealed", "心态": 2, "人脉": 2 }, "result": "阿姨接过相册，沉默了一会儿：那是我。这家公司，是我和老头子一起开的。",
+          "easy": "你什么都没问，只把相册放回了推车上。阿姨看着你：你看出来了吧？",
+          "fail": { "effect": { "人脉": 1 }, "result": "阿姨接过相册，说了声谢谢，没多说。" } },
+        { "text": "拍下来查一查", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "revealed", "能力": 2 }, "result": "你查到了公司二十年前的工商记录。创始人一栏，是两个你每天都见的名字。",
+          "fail": { "effect": { "精力": -1 }, "result": "你查了一夜，什么都没查到。" } },
+        { "text": "放回去", "effect": { "心态": 1 }, "result": "你把相册放回了推车上。别人的事，你不问。" }
+      ]
+    },
+    {
+      "id": "why", "dir": "down", "layers": ["D2", "D3"], "once": true, "weight": 16, "require": "line:cleaner.revealed",
+      "text": "你问阿姨：为什么要在自己的公司里擦地？阿姨说：我想看看，现在在这儿上班的人，过得好不好。",
+      "choices": [
+        { "text": "说实话", "effect": { "心态": 2, "人脉": 3, "能力": 1 }, "result": "你讲了加班、画饼、裁员。阿姨听完叹了口气：跟我们那时候，不一样了。" },
+        { "text": "说挺好的", "effect": { "心态": 1, "人脉": 1 }, "result": "阿姨看着你：你骗人的时候，眉毛会动。" },
+        { "text": "建议她回去管", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "人脉": 4, "身价": 10, "feud": "老板第一次见到了真正的老板" }, "result": "第二天的董事会上，多了一个穿保洁服的人。所有人都站了起来。",
+          "fail": { "effect": { "心态": -1 }, "result": "阿姨笑了：我老了，管不动了。" } }
+      ]
+    },
+    {
+      "id": "candy_jar", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 10, "require": "line:cleaner.helped",
+      "text": "你发现整层楼，只有你的键盘边每天有一颗糖。同事问你是不是有人暗恋你。",
+      "choices": [
+        { "text": "笑而不语", "effect": { "心态": 1 }, "result": "你剥开糖。是橘子味的，跟小时候奶奶给的一样。" },
+        { "text": "分给大家", "effect": { "人脉": 3 }, "result": "第二天，每个人的键盘边都多了一颗糖。阿姨冲你眨了眨眼。" }
+      ]
+    }
+  ]
+}

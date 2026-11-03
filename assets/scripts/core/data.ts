@@ -1,11 +1,57 @@
 /** 把剧本原始 JSON 归一化为引擎数据：解析条件、解析效果、属性中文名 → id。 */
 import { parseCond } from './condition';
 import type {
-    Choice, Cond, Destiny, Dir, Effect, GameEvent, Outcome, RawChoice, RawDestiny, RawEffect, RawEvent, RawOutcome,
+    Choice, Cond, Destiny, Dir, Effect, GameEvent, Outcome, RawChoice, RawDestiny, RawEffect, RawEvent, RawFollow, RawLine, RawOutcome,
 } from './types';
 
 /** 效果中的保留键，其余键视为属性增量 */
-export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp', 'feud'] as const;
+export const RESERVED_EFFECT_KEYS = ['flag', 'unflag', 'item', 'loseItem', 'skill', 'death', 'ending', 'back', 'follow', 'stageUp', 'feud', 'state', 'bind', 'unbind', 'keepSystem'] as const;
+
+/** 线路内的事件 / flag 引用：不带「/」的 id 加上线路前缀 */
+const localId = (line: string, id: string) => (id.includes('/') ? id : `${line}/${id}`);
+
+/** 改写线路内条件：flag:x / seen:x → flag:线路/x（已带「/」的不动） */
+function localCond(line: string, src: string | undefined): string | undefined {
+    if (!src) return src;
+    return src.replace(/(^|[\s()&|!])(flag|seen):([^\s()&|!<>=]+)/g, (_m, pre: string, k: string, id: string) => `${pre}${k}:${localId(line, id)}`);
+}
+
+function localEffect(line: string, e: RawEffect | undefined): RawEffect | undefined {
+    if (!e) return e;
+    const out: RawEffect = { ...e };
+    const list = (v: unknown) => (Array.isArray(v) ? v : [v]).map(x => localId(line, String(x)));
+    if (e.flag !== undefined) out.flag = list(e.flag);
+    if (e.unflag !== undefined) out.unflag = list(e.unflag);
+    if (e.state !== undefined) out.state = (Array.isArray(e.state) ? e.state : [e.state]).map(x => (String(x).includes('.') ? String(x) : `${line}.${x}`));
+    if (e.follow !== undefined) {
+        const fs = Array.isArray(e.follow) ? e.follow : [e.follow];
+        out.follow = (fs as RawFollow[]).map(f => (typeof f === 'string' ? localId(line, f) : { ...f, id: localId(line, f.id) }));
+    }
+    return out;
+}
+
+/** 把线路展开成普通事件（加命名空间、入口条件、默认 maps / stage） */
+export function flattenLine(l: RawLine): (RawEvent & { line: string })[] {
+    const L = l.id;
+    const outcome = <T extends RawOutcome>(o: T): T => ({ ...o, effect: localEffect(L, o.effect), next: o.next && localId(L, o.next) });
+    return l.events.map(ev => {
+        const require = localCond(L, ev.require);
+        return {
+            ...ev,
+            id: localId(L, ev.id),
+            line: L,
+            maps: ev.maps ?? l.maps,
+            stage: ev.stage ?? (ev.entry ? l.stage : undefined),
+            require: ev.entry ? (require ? `!line:${L} & (${require})` : `!line:${L}`) : require,
+            choices: ev.choices.map(c => ({
+                ...outcome(c),
+                require: localCond(L, c.require),
+                showIf: localCond(L, c.showIf),
+                fail: c.fail && outcome(c.fail),
+            })),
+        };
+    });
+}
 
 export class DataError extends Error {}
 
@@ -39,7 +85,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
     const toList = (v: unknown): string[] => (v === undefined ? [] : Array.isArray(v) ? v.map(String) : [String(v)]);
 
     const effect = (r: RawEffect | undefined, where: string): Effect => {
-        const e: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [] };
+        const e: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [], states: [] };
         if (!r) return e;
         for (const [k, v] of Object.entries(r)) {
             switch (k) {
@@ -54,6 +100,10 @@ export function buildDestiny(raw: RawDestiny): Destiny {
                 case 'stageUp': e.stageUp = Number(v); break;
                 case 'follow': e.follows = toFollows(v, where); break;
                 case 'feud': e.feuds = toList(v); break;
+                case 'state': e.states = toList(v); break;
+                case 'bind': e.bind = String(v); break;
+                case 'unbind': e.unbind = !!v; break;
+                case 'keepSystem': e.keepSystem = !!v; break;
                 default: {
                     const id = resolveAttr(k);
                     if (!id) throw new DataError(`${where}: 效果中未知属性「${k}」`);
@@ -88,11 +138,22 @@ export function buildDestiny(raw: RawDestiny): Destiny {
     function fail(msg: string): never { throw new DataError(msg); }
 
     const events = new Map<string, GameEvent>();
-    for (const ev of raw.events) {
+    const all: (RawEvent & { line?: string; cross?: boolean })[] = [
+        ...raw.events,
+        ...(raw.lines ?? []).flatMap(flattenLine),
+        ...(raw.crossings ?? []).map(ev => ({ ...ev, cross: true })),
+    ];
+    for (const ev of all) {
         if (events.has(ev.id)) fail(`事件 id 重复：${ev.id}`);
         events.set(ev.id, normEvent(ev));
     }
-    function normEvent(ev: RawEvent): GameEvent {
+    const lineIds = new Set<string>();
+    for (const l of raw.lines ?? []) {
+        if (lineIds.has(l.id)) fail(`线路 id 重复：${l.id}`);
+        if (l.id.includes('/') || l.id.includes('.')) fail(`线路 id 不能含「/」「.」：${l.id}`);
+        lineIds.add(l.id);
+    }
+    function normEvent(ev: RawEvent & { line?: string; cross?: boolean }): GameEvent {
         const where = `事件 ${ev.id}`;
         if (!ev.choices?.length) fail(`${where}: 没有选项`);
         return {
@@ -108,6 +169,8 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             maps: ev.maps,
             teaser: ev.teaser,
             cameo: ev.cameo ?? false,
+            line: ev.line,
+            cross: ev.cross ?? false,
             require: cond(ev.require, `${where}.require`),
             text: ev.text,
             choices: ev.choices.map((c, i) => choice(c, `${where}.choices[${i}]`)),
@@ -137,6 +200,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
             cond: cond(s.require, `境界 ${s.level}`),
             bonusEffect: s.bonus ? effect(s.bonus, `境界 ${s.level}.bonus`) : undefined,
             endingConds: s.endings?.map(e => ({ id: e.id, cond: cond(e.require, `境界 ${s.level}.endings`) })),
+            oldAgeEndingConds: s.oldAgeEndings?.map(e => ({ id: e.id, cond: cond(e.require, `境界 ${s.level}.oldAgeEndings`) })),
         })),
         deaths: new Map(meta.deaths.map(d => [d.id, {
             ...d,
@@ -152,5 +216,6 @@ export function buildDestiny(raw: RawDestiny): Destiny {
         fates: new Map((meta.fates ?? []).map(f => [f.id, { ...f, startEffect: f.start ? effect(f.start, `天命 ${f.id}`) : undefined }])),
         blessedStart: meta.blessed?.start ? effect(meta.blessed.start, '天命之子') : undefined,
         maps: new Map((meta.maps ?? []).map(m => [m.id, { ...m, startEffect: m.start ? effect(m.start, `地图 ${m.id}`) : undefined }])),
+        lines: new Map((raw.lines ?? []).map(l => [l.id, { id: l.id, name: l.name, summary: l.summary, states: l.states ?? {} }])),
     };
 }

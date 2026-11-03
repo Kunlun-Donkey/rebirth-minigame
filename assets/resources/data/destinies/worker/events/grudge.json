@@ -1,0 +1,50 @@
+[
+  {
+    "id": "r_layoff_again", "dir": "up", "stage": [1, 99], "once": true, "weight": 14, "require": "died:laid_off>=2",
+    "text": "人事部又来了个新的优化专员，抱着一摞名单。他优化过你{died:laid_off}回，这次他先看了你一眼。",
+    "choices": [
+      { "text": "先把他优化了", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+        "effect": { "人脉": 2, "身价": 12, "feud": "优化专员先被优化了" },
+        "result": "你把他这三年的考勤和报销单整理好，放在了大老板桌上。名单上第一个名字，换成了他。",
+        "easy": "你只打了一个电话。第二天，他抱着纸箱下了楼。",
+        "fail": { "effect": { "心态": -2 }, "result": "大老板看完，说：他是我外甥。" } },
+      { "text": "简历早就更新好了", "effect": { "人脉": 2, "心态": 1 }, "result": "你打开招聘网站。他还没走到你工位，你已经收到了三个面试邀请。" },
+      { "text": "请他喝咖啡", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+        "effect": { "人脉": 3, "身价": 8 }, "result": "你们聊了一下午。他说他也不想干这个，他也在名单上。你们成了朋友。",
+        "fail": { "effect": { "death": "laid_off" }, "result": "他喝完咖啡，递给你一张纸：签个字吧。" } }
+    ]
+  },
+  {
+    "id": "r_rolled_again", "dir": "up", "layers": ["U1", "U2"], "once": true, "weight": 14, "require": "died:out_rolled>=2",
+    "text": "凌晨一点，王卷卷的工位还亮着灯。他把你挤走过{died:out_rolled}回，今天他在你的工位上放了一杯咖啡。",
+    "choices": [
+      { "text": "跟他比", "chance": 0.35, "chanceAttr": "能力", "chanceStep": 0.05,
+        "effect": { "能力": 3, "身价": 10, "精力": -2, "feud": "王卷卷先你一步下班了" }, "result": "你干到三点。三点零一分，王卷卷关了电脑。他第一次比你先走。",
+        "fail": { "effect": { "精力": -3 }, "result": "你干到三点，他干到五点。你认了。" } },
+      { "text": "前世卷不动就绕", "require": "legacy:detour>=1", "effect": { "心态": 2, "身价": 8 },
+        "result": "前世你跟他比加班，输了。这一世你六点下班，把精力花在他看不见的地方。" },
+      { "text": "把咖啡还给他", "effect": { "心态": 1, "人脉": 1 }, "result": "你说：早点回去睡吧。他愣了很久，说：你不卷，我卷给谁看？" }
+    ]
+  },
+  {
+    "id": "r_scam_again", "dir": "any", "sudden": true, "once": true, "weight": 12, "require": "died:scammed>=2",
+    "text": "手机弹出一条消息：亲，有个稳赚不赔的项目。你被这种话骗光过{died:scammed}回。",
+    "choices": [
+      { "text": "直接报警", "effect": { "心态": 1, "人脉": 2, "feud": "骗子在派出所见到了你" }, "result": "你把截图交给了民警。三天后，民警打电话：抓到了，谢谢你。" },
+      { "text": "跟他聊聊", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.03,
+        "effect": { "心态": 2, "身价": 10, "feud": "骗子被你反向说服了" }, "result": "你跟他聊了一晚上前世的经历。第二天他说：哥，我去自首了。",
+        "fail": { "effect": { "心态": -1 }, "result": "他把你拉黑了。你有点失落。" } },
+      { "text": "删掉", "effect": { "心态": 1 }, "result": "你删掉了消息。你的存款，这一世安全了。" }
+    ]
+  },
+  {
+    "id": "r_exhaust_again", "dir": "any", "sudden": true, "once": true, "weight": 12, "stage": [1, 99], "require": "died:exhausted>=2",
+    "text": "又是一个通宵。你的心跳有点快，眼前的字开始重影。你在医院醒来过{died:exhausted}回。",
+    "choices": [
+      { "text": "关电脑，回家睡觉", "effect": { "精力": 4, "心态": 1, "feud": "这一世没再进医院" }, "result": "你关了电脑。第二天老板问起，你说：命要紧。他也没说什么。" },
+      { "text": "再撑一下", "chance": 0.3, "chanceAttr": "精力", "chanceStep": 0.05,
+        "effect": { "能力": 2, "身价": 8 }, "result": "你撑过去了。但你决定，这是最后一次。",
+        "fail": { "effect": { "death": "exhausted" }, "result": "你醒来的时候，看见的是医院的天花板。又是这块天花板。" } }
+    ]
+  }
+]

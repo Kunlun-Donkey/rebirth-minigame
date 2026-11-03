@@ -50,6 +50,21 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
     const checkText = (s: string | undefined, where: string) => {
         for (const m of (s ?? '').matchAll(/\{died:(\w+)\}/g)) if (!d.deaths.has(m[1])) errors.push(`${where}: 文本占位 {died:${m[1]}} 不是本命格的死法`);
     };
+    /** 线路引用：线路id 或 线路id.状态（状态必须在 states 里导出） */
+    const statesRead = new Set<string>();
+    const statesSet = new Set<string>();
+    const checkLineRef = (id: string, where: string, mode: 'read' | 'set'): boolean => {
+        const [line, state] = id.split('.');
+        const l = d.lines.get(line);
+        if (!l) return false;
+        if (state === undefined) return mode === 'read';
+        if (!(state in l.states)) {
+            errors.push(`${where}: 线路 ${line} 没有导出状态「${state}」（在 states 里登记）`);
+            return true;
+        }
+        (mode === 'read' ? statesRead : statesSet).add(id);
+        return true;
+    };
     const checkCond = (c: Cond | undefined, where: string) => {
         if (!c) return;
         walkCond(c.ast, leaf => {
@@ -64,6 +79,8 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
                     leaf.kind === 'seen' ? d.events.has(id) :
                     leaf.kind === 'dead' ? d.deaths.has(id) :
                     leaf.kind === 'xend' ? checkWorld(id) :
+                    leaf.kind === 'line' || leaf.kind === 'ever' ? checkLineRef(id, where, 'read') :
+                    leaf.kind === 'system' ? id === 'any' || !!d.companions.get(id)?.system :
                     d.endings.has(id);
                 if (!ok) errors.push(`${where}: 条件引用了不存在的 ${leaf.kind}:${id}`);
             } else if (leaf.left.kind === 'legacy' && !d.legacies.has(leaf.left.id!)) {
@@ -89,6 +106,11 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
             if (!d.endings.has(e.ending)) errors.push(`${where}: 不存在的结局 ${e.ending}`);
         }
         if (e.back && !['up', 'down', 'side'].includes(e.back)) errors.push(`${where}: back 只能是 up/down/side`);
+        for (const st of e.states) {
+            if (!st.includes('.')) errors.push(`${where}: 线路外的 state 要写成「线路id.状态」：${st}`);
+            else if (!checkLineRef(st, where, 'set')) errors.push(`${where}: state 引用了不存在的线路 ${st}`);
+        }
+        if (e.bind && !d.companions.get(e.bind)?.system) errors.push(`${where}: bind 的 ${e.bind} 不是系统（companions 里需 system: true）`);
         for (const sk of e.skills) addSource(sk, where);
         for (const f of e.follows) {
             referencedEvents.add(f.id);
@@ -139,6 +161,11 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
         checkCond(s.cond, `境界 ${s.level}`);
         for (const sk of s.skillPool ?? []) addSource(sk, `境界 ${s.level}.skillPool`);
         if (s.bonusEffect) checkEffect(s.bonusEffect, `境界 ${s.level}.bonus`);
+        for (const e of s.oldAgeEndingConds ?? []) {
+            endingsUsed.add(e.id);
+            checkCond(e.cond, `境界 ${s.level}.oldAgeEndings`);
+            if (!d.endings.has(e.id)) errors.push(`境界 ${s.level}: 寿终结局 ${e.id} 不存在`);
+        }
         (s.endingConds ?? []).forEach((e, i, all) => {
             endingsUsed.add(e.id);
             checkCond(e.cond, `境界 ${s.level}.endings`);
@@ -245,6 +272,24 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
     for (const [f, where] of flagsChecked) if (!flagsSet.has(f)) errors.push(`${where}: 检查了 flag:${f}，但没有任何效果设置它`);
     for (const f of flagsSet) if (!flagsChecked.has(f) && !ENGINE_FLAGS.includes(f)) warnings.push(`flag:${f} 被设置了，但没有任何条件用到它`);
 
+    // 线路：要有入口；读到的状态要有地方设置；导出了没人读的给提示
+    for (const l of raw.lines ?? []) {
+        if (!l.events?.some(ev => ev.entry || !ev.chainOnly)) errors.push(`线路 ${l.id}: 没有入口事件（entry: true 或非 chainOnly）`);
+        if (!Object.keys(l.states ?? {}).length) warnings.push(`线路 ${l.id}: 没有导出任何状态，别的线路无法和它交叉`);
+        for (const st of Object.keys(l.states ?? {})) {
+            const id = `${l.id}.${st}`;
+            if (!statesSet.has(id)) warnings.push(`线路 ${l.id}: 导出状态「${st}」没有任何效果设置它`);
+            else if (!statesRead.has(id)) warnings.push(`线路 ${l.id}: 导出状态「${st}」没有被任何条件用到`);
+        }
+    }
+    for (const id of statesRead) if (!statesSet.has(id)) errors.push(`条件用到了线路状态 ${id}，但没有任何效果设置它`);
+    for (const ev of d.events.values()) {
+        if (!ev.cross) continue;
+        const lines = new Set<string>();
+        if (ev.require) walkCond(ev.require.ast, l => { if (l.t === 'has' && (l.kind === 'line' || l.kind === 'ever')) lines.add(l.id.split('.')[0]); });
+        if (lines.size < 2) warnings.push(`事件 ${ev.id}: 交叉事件的 require 只引用了 ${lines.size} 条线路`);
+    }
+
     // 层覆盖：每层（不算兜底/any）至少 2 个专属事件
     for (const l of d.layers.values()) {
         const n = [...d.events.values()].filter(e => !e.sudden && !e.chainOnly && e.layers?.includes(l.id)).length;
@@ -275,6 +320,9 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
             地图: d.maps.size,
             彩蛋: evs.filter(e => e.cameo).length,
             离谱: evs.reduce((n, e) => n + e.choices.filter(c => c.absurd).length, 0),
+            线路: d.lines.size,
+            交叉: evs.filter(e => e.cross).length,
+            系统: [...d.companions.values()].filter(c => c.system).length,
         },
     };
 }

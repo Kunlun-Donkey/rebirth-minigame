@@ -1,0 +1,136 @@
+{
+  "id": "xiaolin",
+  "name": "同期实习生小林",
+  "summary": "入职第一天，隔壁工位的小林递来半包饼干。互相背锅还是互相罩，决定了你们是一起下班，还是各奔东西。",
+  "stage": [0, 1],
+  "states": {
+    "friend": "和小林是朋友",
+    "close": "和小林是过命的交情",
+    "parted": "和小林走散了"
+  },
+  "events": [
+    {
+      "id": "meet", "entry": true, "dir": "up", "layers": ["U1"], "weight": 20,
+      "text": "入职第一天，隔壁工位的小林递来半包饼干：同期？以后互相照应。前世，你们谁也没照应谁。",
+      "choices": [
+        { "text": "接过饼干", "effect": { "state": "friend", "人脉": 1, "心态": 1, "follow": { "id": "blame", "delay": 2 } },
+          "result": "饼干有点潮。你俩约好，每天十二点一起下楼吃饭。" },
+        { "text": "礼貌点头", "effect": { "能力": 1, "follow": { "id": "blame", "delay": 2 } },
+          "result": "你点了点头，转回屏幕。他把饼干收回去，自己吃了。" },
+        { "text": "前世退休那天", "require": "legacy:veteran>=1",
+          "effect": { "state": "friend", "人脉": 2, "心态": 1, "follow": { "id": "blame", "delay": 2 } },
+          "result": "前世你退休那天，想起的第一个人是小林。这一世，你接住了饼干。" },
+        { "text": "当场拜把子", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "state": "close", "人脉": 2, "心态": 1, "follow": { "id": "blame", "delay": 2 } },
+          "result": "他愣了三秒，真跟你拜了。隔板上多了两个歪歪扭扭的名字。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "blame", "delay": 2 } }, "result": "他笑着把椅子往后挪了挪。那一周，他都绕着你走。" } }
+      ]
+    },
+    {
+      "id": "blame", "dir": "up", "chainOnly": true, "teaser": "组里出了个大锅",
+      "text": "上线出了事故。组长在群里问：谁改的？那段代码，你和小林都碰过。小林看了你一眼。",
+      "choices": [
+        { "text": "我来扛", "effect": { "state": "close", "心态": -1, "follow": { "id": "cover", "delay": 2 } },
+          "result": "你举了手，被骂了十分钟。散会后，小林给你带了杯奶茶。" },
+        { "text": "先甩给他", "effect": { "state": "parted", "身价": 4, "follow": { "id": "moments", "delay": 4, "ttl": 10 } },
+          "result": "你说：小林最后提交的。他没说话。中午，他一个人下楼了。" },
+        { "text": "拉他一起查日志", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "state": "close", "能力": 2, "身价": 6, "follow": { "id": "cover", "delay": 2 } },
+          "result": "你俩查到半夜，查出是测试环境的锅。组长道了歉。",
+          "easy": "你看了一眼日志就笑了：配置文件，组长上周改的。",
+          "fail": { "effect": { "state": "friend", "心态": -1, "follow": { "id": "cover", "delay": 2 } }, "result": "日志查到一半，周报里已经写上了你俩的名字。" } },
+        { "text": "翻出提交记录", "require": "legacy:paper_trail>=1",
+          "effect": { "state": "close", "身价": 8, "feud": "组长的锅还给了组长", "follow": { "id": "cover", "delay": 2 } },
+          "result": "前世你俩互相甩锅，一起被开。这一世记录写着：锅是组长的。" }
+      ]
+    },
+    {
+      "id": "cover", "dir": "any", "chainOnly": true, "teaser": "小林替你顶了一天", "require": "line:xiaolin.close | line:xiaolin.friend",
+      "text": "你发烧请不下假。第二天到公司，桌上放着退烧药，和同款的半包饼干。小林说：组长那边我顶着。",
+      "choices": [
+        { "text": "记下这份情", "effect": { "state": "close", "心态": 1, "follow": { "id": "crossroad", "delay": 3, "ttl": 8 } },
+          "result": "你把饼干放进抽屉，一直没舍得吃。" },
+        { "text": "请他吃顿火锅", "effect": { "state": "close", "人脉": 1, "精力": 1, "follow": { "id": "crossroad", "delay": 3, "ttl": 8 } },
+          "result": "他吃到一半说：咱俩以后，谁也别把谁卖了。" },
+        { "text": "带病硬上", "effect": { "state": "friend", "精力": -2, "能力": 1, "follow": { "id": "ontime", "delay": 3, "ttl": 8 } },
+          "result": "你吞了药，打开电脑。小林叹了口气，把你的屏幕调暗了一格。" }
+      ]
+    },
+    {
+      "id": "crossroad", "dir": "any", "chainOnly": true, "teaser": "小林说他不想干了", "require": "line:xiaolin.close",
+      "text": "加班到十点，小林忽然说：我不想干了。我妈身体不好，想回老家。你走不走？",
+      "choices": [
+        { "text": "一起辞职", "effect": { "state": "close", "脸皮": 1, "follow": { "id": "quit", "delay": 1 } },
+          "result": "你俩同一天交了辞职信。组长看着两封信：你们商量好的？" },
+        { "text": "一起回老家", "effect": { "state": "close", "心态": 1, "follow": { "id": "train", "delay": 1 } },
+          "result": "你给老妈打了电话。她愣了很久，说：回来好，回来好。" },
+        { "text": "劝他留下", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "state": "close", "身价": 6, "follow": { "id": "ontime", "delay": 2, "ttl": 8 } },
+          "result": "你说：不走，咱俩一起准时下班。他笑了：行，试试。",
+          "easy": "你说：我帮你跟组长请假，先回去看看阿姨。他点了头。",
+          "fail": { "effect": { "state": "parted", "follow": { "id": "moments", "delay": 4, "ttl": 10 } }, "result": "他还是走了。临走前，把剩下的饼干留在了你桌上。" } },
+        { "text": "祝他一路顺风", "effect": { "state": "parted", "心态": 1, "follow": { "id": "moments", "delay": 4, "ttl": 10 } },
+          "result": "你送他到地铁口。他挥了挥手，没回头。" }
+      ]
+    },
+    {
+      "id": "quit", "dir": "any", "chainOnly": true, "teaser": "辞职后的第一天", "require": "line:xiaolin.close",
+      "text": "辞职后第一天，你俩坐在公园长椅上，不知道该干什么。小林说：要不，咱俩干点自己的？",
+      "choices": [
+        { "text": "合伙接私活", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 15, "能力": 1, "follow": { "id": "ontime", "delay": 3, "ttl": 8 } },
+          "result": "第一单赚了两千。你们在路边摊吃了顿烧烤，他喝多了，哭了。",
+          "fail": { "effect": { "state": "parted", "心态": -2, "follow": { "id": "moments", "delay": 4, "ttl": 10 } }, "result": "私活接了三个月，客户跑了两个。小林回了老家。" } },
+        { "text": "各自找工作", "effect": { "state": "friend", "人脉": 2 },
+          "result": "你们去了不同的公司。每周五，还是约着吃饭。" },
+        { "text": "在长椅上坐到天黑", "effect": { "心态": 2, "精力": 2 },
+          "result": "什么也没干。这是入职以来，你们第一次看见日落。" }
+      ]
+    },
+    {
+      "id": "train", "dir": "any", "chainOnly": true, "teaser": "回老家的绿皮车", "require": "line:xiaolin.close",
+      "text": "回老家的火车上，小林剥了个橘子分你一半：县城工资低，但我妈做的饭是热的。",
+      "choices": [
+        { "text": "回县城上班", "effect": { "心态": 2, "身价": 4 },
+          "result": "你进了县城的单位。六点下班，到家饭是热的。" },
+        { "text": "一起开个小店", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "身价": 12, "人脉": 2 },
+          "result": "店名用了你俩的姓。开张那天，两家爸妈都来了。",
+          "fail": { "effect": { "心态": -1 }, "result": "店开了半年，关了。你俩蹲在门口，又分了一个橘子。" } },
+        { "text": "到站后又回城", "effect": { "state": "parted", "能力": 1, "follow": { "id": "moments", "delay": 4, "ttl": 10 } },
+          "result": "你送他到家门口，又坐上回城的车。他妈往你包里塞了一袋橘子。" }
+      ]
+    },
+    {
+      "id": "ontime", "dir": "up", "chainOnly": true, "teaser": "下午五点五十九分", "require": "line:xiaolin.close | line:xiaolin.friend",
+      "text": "五点五十九分，组长端着电脑走过来：今晚有个急事。小林在旁边，已经背好了包。",
+      "choices": [
+        { "text": "准时下班", "require": "line:xiaolin.close & 心态>=7 & 脸皮>=2",
+          "effect": { "ending": "on_time" },
+          "result": "六点整，你俩一起关了电脑。组长张了张嘴，电梯门已经关上了。" },
+        { "text": "留下加班", "effect": { "state": "friend", "精力": -2, "身价": 6 },
+          "result": "小林等了你十分钟，先走了。他发来消息：饭给你留了。" },
+        { "text": "让小林先走", "effect": { "state": "close", "心态": 1, "人脉": 1, "follow": { "id": "ontime", "delay": 4, "ttl": 8 } },
+          "result": "你冲小林摆摆手。他犹豫了一下，走了。你的饭，又凉了。" },
+        { "text": "把组长也拉走", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "心态": 2, "人脉": 3, "feud": "组长第一次准时下班" },
+          "result": "你说：组长，一起吃饭？他愣了一下，合上了电脑。全组都走了。",
+          "fail": { "effect": { "精力": -2 }, "result": "组长坐下了：那你俩都留下吧。" } }
+      ]
+    },
+    {
+      "id": "moments", "dir": "any", "chainOnly": true, "teaser": "刷到了小林的朋友圈", "require": "line:xiaolin.parted",
+      "text": "几年后，你刷到小林的朋友圈：在老家开了间文具店。照片角落里，摆着半包你熟悉的饼干。",
+      "choices": [
+        { "text": "点个赞", "effect": { "心态": 1 },
+          "result": "你点了个赞。他秒回了一个笑脸。" },
+        { "text": "打个电话", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "state": "friend", "人脉": 2, "心态": 1 },
+          "result": "电话通了。他说：你小子，还活着呢。你俩都笑了。",
+          "fail": { "effect": { "心态": -1 }, "result": "电话响了很久。你挂了，发了条消息：有空回来吃饭。" } },
+        { "text": "买张车票去看他", "effect": { "state": "friend", "心态": 2, "精力": -1 },
+          "result": "你站在他店门口。他抬头看见你，手里的饼干掉了。" }
+      ]
+    }
+  ]
+}

@@ -13,7 +13,7 @@ export const RARITIES: Rarity[] = ['common', 'rare', 'epic', 'legend'];
 // ───────────── 剧本原始数据（JSON 格式，给写手用） ─────────────
 
 /** 效果：属性键（id 或中文名）→ 增量；保留键见 RESERVED_EFFECT_KEYS */
-export type RawEffect = Record<string, number | string | string[] | RawFollow | RawFollow[]>;
+export type RawEffect = Record<string, number | string | boolean | string[] | RawFollow | RawFollow[]>;
 export type RawFollow = string | { id: string; delay?: number; ttl?: number };
 
 export interface RawOutcome {
@@ -145,6 +145,8 @@ export interface StageDef {
     endings?: { id: string; require?: string }[];
     /** 突破时从中领悟一个技能（优先未解锁的） */
     skillPool?: string[];
+    /** 寿终结局：在这个境界寿元到头时，满足条件就判为结局而不是寿终死法（如「平凡一生」） */
+    oldAgeEndings?: { id: string; require?: string }[];
 }
 
 /** 死亡时可能领悟的技能 */
@@ -231,6 +233,8 @@ export interface ItemDef extends PoolEntryBase {
 export interface CompanionDef extends PoolEntryBase {
     start?: RawEffect;
     every?: { n: number; effect: RawEffect; text: string };
+    /** 系统（金手指）：不进开局伙伴池，只能由事件效果 bind 中途绑定；一世最多一个 */
+    system?: boolean;
 }
 
 /**
@@ -335,6 +339,8 @@ export interface DestinyRules {
     dirPrompt?: string;
     /** 道具栏为空时的提示 */
     emptyItems?: string;
+    /** 濒死弹窗标题（缺省「你 要 死 了」；人类命格用「这一世要到头了」这类温和说法） */
+    dyingTitle?: string;
 }
 
 /** 命格索引（data/destinies/index.json）：轮回殿里可选的命格及解锁条件 */
@@ -367,6 +373,31 @@ export interface RawDestiny {
     companions: CompanionDef[];
     skills: SkillDef[];
     events: RawEvent[];
+    /** 线路（lines/*.json）：一条故事一个模块，内部 id / flag 自动加命名空间 */
+    lines?: RawLine[];
+    /** 交叉事件（crossings/*.json）：引用多条线路导出状态的胶水事件 */
+    crossings?: RawEvent[];
+}
+
+/**
+ * 线路：一条故事线一个文件。
+ *   - 事件 id、follow / next、flag / seen 条件里不带「/」的 id 自动加前缀「线路id/」，不同线路互不撞名
+ *   - 效果 state: "escaped" → 线路状态 线路id.escaped；跨线写 "其他线路.状态"
+ *   - 条件 line:线路id（这一世开始了）、line:线路id.状态、ever:线路id.状态（任何一世到达过）
+ *   - entry: true 的事件是入口：自动加条件「这一世还没碰过这条线」，并继承线路的 stage
+ *   - 别的线路 / 交叉事件只能引用 states 里登记（导出）的状态
+ */
+export interface RawLine {
+    id: string;
+    name: string;
+    summary?: string;
+    /** 线路所有事件默认只在这些世界线（maps）出现 */
+    maps?: string[];
+    /** 入口事件默认的境界范围 */
+    stage?: [number, number];
+    /** 导出状态：状态 id → 说明 */
+    states: Record<string, string>;
+    events: (RawEvent & { entry?: boolean })[];
 }
 
 // ───────────── 归一化后的数据（引擎使用） ─────────────
@@ -394,6 +425,14 @@ export interface Effect {
     stageUp?: number;
     /** 了结的恩怨（结算页「本世恩怨」逐条列出，如「独眼让出了那块石头」） */
     feuds: string[];
+    /** 线路状态（已加命名空间：线路id.状态） */
+    states: string[];
+    /** 绑定系统（companions 里 system: true 的条目） */
+    bind?: string;
+    /** 解绑当前系统 */
+    unbind?: boolean;
+    /** 系统认主：当前系统以后每一世开局自动绑定 */
+    keepSystem?: boolean;
 }
 
 /** 后续事件：在 delay 季之后（默认下一季）、玩家选择匹配方向时触发，ttl 季内没走到就作废 */
@@ -436,6 +475,10 @@ export interface GameEvent {
     maps?: string[];
     teaser?: string;
     cameo: boolean;
+    /** 所属线路 id */
+    line?: string;
+    /** 交叉事件（多条线路交汇） */
+    cross: boolean;
     require?: Cond;
     text: string;
     choices: Choice[];
@@ -452,7 +495,9 @@ export interface Destiny {
     /** 每个方向按顺序排列的层 */
     layersByDir: Record<Dir, (LayerDef & { cond?: Cond })[]>;
     dirs: (DirDef & { cond?: Cond })[];
-    stages: (StageDef & { cond?: Cond; bonusEffect?: Effect; endingConds?: { id: string; cond?: Cond }[] })[];
+    stages: (StageDef & { cond?: Cond; bonusEffect?: Effect; endingConds?: { id: string; cond?: Cond }[]; oldAgeEndingConds?: { id: string; cond?: Cond }[] })[];
+    /** 线路（导出状态表） */
+    lines: Map<string, { id: string; name: string; summary?: string; states: Record<string, string> }>;
     deaths: Map<string, DeathDef & { skillConds: { id: string; chance: number; cond?: Cond }[] }>;
     skills: Map<string, SkillDef & { useEffect?: Effect }>;
     legacies: Map<string, LegacyDef & { levelEffects: Effect[] }>;
@@ -476,6 +521,10 @@ export interface DestinyProfile {
     deathCount?: Record<string, number>;
     /** 最近连续同一死法：id 与连续世数（墓志铭「下次一定行」） */
     deathRun?: { id: string; n: number };
+    /** 任何一世到达过的线路 / 线路状态（「线路id」「线路id.状态」） */
+    ever?: string[];
+    /** 系统认主：每一世开局自动绑定的系统 */
+    keptSystem?: string;
     codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number; feuds?: string[] };
     bestStage: number;
     /** 已解锁技能（技能图鉴） */
@@ -559,6 +608,8 @@ export interface RunState {
     reckless?: boolean;
     /** 新手手气已用（第 1 世第一次冒险必成） */
     luck?: boolean;
+    /** 线路状态：线路id → 当前状态（"" = 已开始、尚无状态） */
+    lines?: Record<string, string>;
 }
 
 export interface UpgradeView {
@@ -615,6 +666,8 @@ export interface EventView {
     sudden: boolean;
     /** 跨命格彩蛋（似曾相识） */
     cameo: boolean;
+    /** 命运交汇（交叉事件） */
+    cross: boolean;
     choices: ChoiceView[];
 }
 

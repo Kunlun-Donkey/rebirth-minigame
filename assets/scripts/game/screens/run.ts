@@ -128,8 +128,8 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
     });
     image(card, tex, 0, 0, cardW, cardH, { maxAspectDiff: 1.2 });
     const r = e.run;
-    const head = v.cameo ? '◈ 似曾相识' : v.gold ? '✦ 奇遇' : v.sudden ? '⚡ 突发' : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
-    text(card, head, 40, 30, 300, { size: 24, color: v.cameo ? COLOR.skill : v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2, bold: v.cameo });
+    const head = v.cross ? '✕ 命运交汇' : v.cameo ? '◈ 似曾相识' : v.gold ? '✦ 奇遇' : v.sudden ? '⚡ 突发' : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
+    text(card, head, 40, 30, 300, { size: 24, color: v.cross ? COLOR.rare : v.cameo ? COLOR.skill : v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2, bold: v.cameo || v.cross });
     text(card, `${e.stageName(r.stage)}`, cardW - 240, 30, 200, { size: 24, color: COLOR.ink2, align: 'right' });
     text(card, v.text, 40, 80, textW, { size: L.size, wrap: true, lineHeight: L.lh });
 
@@ -305,7 +305,7 @@ function companionsPopup(g: Game): void {
     }
     for (const id of e.run.companions) {
         const c = e.data.companions.get(id);
-        if (c) lines.push(`【伙伴】${c.name}\n${c.desc}`);
+        if (c) lines.push(`【${c.system ? '系统' : '伙伴'}】${c.name}\n${c.desc}`);
     }
     showInfo(g, '伙  伴', lines.length ? lines : ['这一世，你孤身一人。']);
 }

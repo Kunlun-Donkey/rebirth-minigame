@@ -1,0 +1,132 @@
+{
+  "id": "scam_trip",
+  "name": "海外团建",
+  "summary": "高薪外派是个坑。去了可能回不来；不去会丢工作，但别的门会打开。",
+  "maps": ["city", "workshop"],
+  "stage": [0, 2],
+  "states": {
+    "joined": "报名了团建",
+    "escaped": "逃出了园区",
+    "refused": "拒绝了团建",
+    "reported": "举报了公司"
+  },
+  "events": [
+    {
+      "id": "offer", "entry": true, "dir": "any", "stage": [1, 2], "weight": 16,
+      "text": "老周在群里宣布：公司包机去海外团建，表现好的直接外派，月薪五万。报名要先交护照，再签一份「自愿外派协议」。",
+      "choices": [
+        { "text": "报名", "effect": { "state": "joined", "身价": 2, "follow": { "id": "bus", "delay": 1, "ttl": 4 } }, "result": "你交了护照。老周拍拍你：好好干，回来就是骨干。" },
+        { "text": "找借口不去", "effect": { "state": "refused", "心态": 1, "follow": { "id": "fired", "delay": 1 } }, "result": "你说老家有事。老周的脸色变了一下，又笑了：没事，下次。" },
+        { "text": "先查一查", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "state": "refused", "心态": 1, "follow": [ { "id": "fired", "delay": 1 }, { "id": "news", "delay": 3, "ttl": 6 } ] },
+          "result": "公司账上没钱，协议里写着「自愿承担一切后果」。你把护照收了回来。",
+          "easy": "你只看了协议第三页，就把护照揣回了兜里。",
+          "fail": { "effect": { "state": "joined", "follow": { "id": "bus", "delay": 1, "ttl": 4 } }, "result": "你查了一圈，没发现问题。好像挺正规的。你交了护照。" } },
+        { "text": "前世没能回来", "require": "legacy:anti_scam>=1", "effect": { "state": "reported", "心态": 2, "人脉": 2, "身价": 10, "feud": "画饼老板在机场被带走" },
+          "result": "前世你上了那趟车。这一世你转身报了警。出发那天，警察在机场等着老周。" },
+        { "text": "【叮！】高危预警", "showIf": "system:sys_eye", "effect": { "state": "refused", "心态": 1, "身价": 6, "follow": { "id": "news", "delay": 3, "ttl": 6 } },
+          "result": "【叮！】检测到前方高危，建议宿主立刻离开。你看了老周一眼，默默退了群。" }
+      ]
+    },
+    {
+      "id": "bus", "dir": "any", "chainOnly": true, "teaser": "出发的日子到了", "require": "line:scam_trip.joined",
+      "text": "落地后换了三次车，窗外越来越荒。带队的人收走了所有人的手机，说是「统一保管」。",
+      "choices": [
+        { "text": "偷偷给爸妈发定位", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "flag": "sent_location", "心态": 1, "follow": { "id": "compound", "delay": 1 } },
+          "result": "你在交手机前三秒，按下了发送键。屏幕暗了。你不知道发出去没有。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "compound", "delay": 1 } }, "result": "信号只有一格。转了半天圈，手机被收走了。" } },
+        { "text": "装肚子疼", "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "state": "escaped", "精力": -2, "follow": { "id": "home_again", "delay": 1 } },
+          "result": "你疼得满地打滚。他们嫌麻烦，把你扔在了半路的小镇。你一路问，一路走，回了国。",
+          "fail": { "effect": { "follow": { "id": "compound", "delay": 1 } }, "result": "他们看了你一眼：到了地方再说。" } },
+        { "text": "跟着走", "effect": { "精力": -1, "follow": { "id": "compound", "delay": 1 } }, "result": "车停在一片高墙前面。墙上有铁丝网，门口站着人。" }
+      ]
+    },
+    {
+      "id": "compound", "dir": "any", "chainOnly": true, "teaser": "高墙里面", "require": "line:scam_trip.joined",
+      "text": "这里没有团建，只有一排排电脑和每天的「业绩」。门口的人二十四小时轮班。你想起了老周那句：回来就是骨干。",
+      "choices": [
+        { "text": "假装配合，摸规律", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "flag": "knows_shift", "心态": 1, "follow": { "id": "night_run", "delay": 1 } },
+          "result": "你记下了换班的时间。每天凌晨四点，有十分钟没人。",
+          "fail": { "effect": { "精力": -2, "follow": { "id": "night_run", "delay": 2 } }, "result": "你记了半个月，还是没摸清。时间一天天过去。" } },
+        { "text": "联络其他被骗的人", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "flag": "allies", "人脉": 2, "follow": { "id": "night_run", "delay": 1 } },
+          "result": "你找到了三个和你一样被骗来的人。你们约好：要走一起走。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "night_run", "delay": 2 } }, "result": "没人敢接你的话。大家低着头，敲着键盘。" } },
+        { "text": "【叮！】不死系统", "showIf": "system:sys_undying", "effect": { "state": "escaped", "follow": { "id": "home_again", "delay": 1 } },
+          "result": "【叮！】宿主处境危险，启动保护。那天夜里，所有监控同时黑了十分钟。" },
+        { "text": "直接翻墙", "absurd": true, "chance": 0.1, "chanceAttr": "脸皮", "chanceStep": 0.02,
+          "effect": { "state": "escaped", "脸皮": 3, "follow": { "id": "home_again", "delay": 1 } },
+          "result": "你翻过去了。你自己都不知道怎么翻过去的。",
+          "fail": { "effect": { "death": "no_return" }, "result": "墙太高了。" } }
+      ]
+    },
+    {
+      "id": "night_run", "dir": "any", "chainOnly": true, "teaser": "凌晨四点", "require": "line:scam_trip.joined",
+      "text": "凌晨四点，门口的人去换班了。你的心跳得像擂鼓。",
+      "choices": [
+        { "text": "跑", "chance": 0.35, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "escaped", "精力": -2, "follow": { "id": "home_again", "delay": 1 } },
+          "result": "你跑了一夜，天亮时看见了回家的路牌。你坐在路边，哭得像个孩子。",
+          "easy": "你记得每一个拐角。天亮前，你已经坐上了回家的车。",
+          "fail": { "effect": { "death": "no_return" }, "result": "门口的人回来得比平时早。" } },
+        { "text": "带上约好的人一起跑", "require": "flag:allies", "chance": 0.6, "chanceAttr": "人脉", "chanceStep": 0.04,
+          "effect": { "state": "escaped", "人脉": 4, "feud": "带着四个人逃出了园区", "follow": { "id": "home_again", "delay": 1 } },
+          "result": "四个人，四个方向。你们约好在边境的小卖部碰头。天亮的时候，一个都没少。",
+          "fail": { "effect": { "death": "no_return" }, "result": "人太多了，动静太大。" } },
+        { "text": "按规律溜出去", "require": "flag:knows_shift", "effect": { "state": "escaped", "心态": 1, "follow": { "id": "home_again", "delay": 1 } },
+          "result": "十分钟，一秒不差。你走出那扇门的时候，没有回头。" },
+        { "text": "再等等", "effect": { "精力": -2, "follow": { "id": "night_run", "delay": 2 } }, "result": "你缩回了被子里。下一次，也许会更好。" }
+      ]
+    },
+    {
+      "id": "home_again", "dir": "any", "chainOnly": true, "teaser": "你回来了", "require": "line:scam_trip.escaped",
+      "text": "你回来了。工作没了，护照还在那边。你站在出租屋楼下，觉得这座城从来没这么好看过。",
+      "choices": [
+        { "text": "去派出所做笔录", "effect": { "state": "reported", "人脉": 2, "心态": 1, "feud": "园区被一锅端了" }, "result": "民警听你讲了三个小时。一个月后，那片高墙空了。" },
+        { "text": "先睡三天", "effect": { "精力": 5, "心态": 1 }, "result": "你睡了三天三夜。醒来的时候，老妈坐在床边，削着苹果。" },
+        { "text": "把经历写下来", "effect": { "能力": 2, "人脉": 2, "身价": 6 }, "result": "你写了一篇长文。第二天，转发破了十万。有人留言：我差一点就去了。" }
+      ]
+    },
+    {
+      "id": "fired", "dir": "up", "chainOnly": true, "teaser": "老周找你谈话", "require": "line:scam_trip.refused",
+      "text": "老周把你叫进办公室：团队需要的是有凝聚力的人。下周，你不用来了。",
+      "choices": [
+        { "text": "收拾东西走人", "effect": { "心态": 1, "精力": 2, "身价": -3 }, "result": "你抱着纸箱下楼。阳光很好。你有一种奇怪的预感：躲过了什么。" },
+        { "text": "要补偿", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 10, "脸皮": 1 }, "result": "你把劳动法打印出来放在他桌上。他沉默了一会儿，签了补偿。",
+          "fail": { "effect": { "心态": -1 }, "result": "老周说：你自己不去的，算主动离职。" } },
+        { "text": "前世的简历常备", "require": "legacy:resume_ready>=1", "effect": { "人脉": 2, "身价": 8 },
+          "result": "前世你从没准备过退路。这一世你走出公司大门，第二天就去面试了。" }
+      ]
+    },
+    {
+      "id": "news", "dir": "any", "chainOnly": true, "teaser": "一条新闻", "require": "line:scam_trip.refused",
+      "text": "几个月后，你刷到一条新闻：一批人以「海外团建」名义被骗出境，至今未归。配图里，有你以前的同事。",
+      "choices": [
+        { "text": "报警，提供线索", "effect": { "state": "reported", "人脉": 3, "心态": 1, "feud": "老周在报警电话后被带走", "follow": { "id": "rescue", "delay": 2 } }, "result": "你把群聊记录、协议照片都交了上去。民警说：你提供的东西，很关键。" },
+        { "text": "给同事家里打电话", "effect": { "人脉": 2, "心态": 1 }, "result": "电话那头是同事的妈妈。她哭着问你，他还好吗。你说：会回来的。" },
+        { "text": "划过去", "effect": { "心态": -2 }, "result": "你划走了。那天夜里，你梦见自己坐在那辆车上。" }
+      ]
+    },
+    {
+      "id": "rescue", "dir": "any", "chainOnly": true, "teaser": "派出所来电话了", "require": "line:scam_trip.reported",
+      "text": "派出所打来电话：人找到了，明天到。你要不要来接？",
+      "choices": [
+        { "text": "去接", "effect": { "人脉": 4, "心态": 2, "身价": 8 }, "result": "同事走出来，瘦了一圈。他看见你，什么都没说，抱了你很久。" },
+        { "text": "托人带句话", "effect": { "心态": 1 }, "result": "你托民警带了一句：欢迎回来。" }
+      ]
+    },
+    {
+      "id": "deja_vu", "dir": "any", "once": true, "weight": 18, "stage": [1, 2], "require": "died:no_return>=1 & !line:scam_trip",
+      "text": "群里又有人在转一条招聘：海外高薪，包吃包住，先交护照。这个团建，你去过{died:no_return}回了。",
+      "choices": [
+        { "text": "在群里提醒大家", "effect": { "人脉": 3, "心态": 1, "feud": "这次没人上那辆车" }, "result": "你发了一长段话。群里安静了很久，然后一个接一个地退出了报名。" },
+        { "text": "截图举报", "effect": { "state": "reported", "心态": 2, "身价": 6 }, "result": "你点了举报。这一世，那辆车没有发出去。" },
+        { "text": "装没看见", "effect": { "心态": -1 }, "result": "你划过去了。那条消息，在你心里扎了一下。" }
+      ]
+    }
+  ]
+}

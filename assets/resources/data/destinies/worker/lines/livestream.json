@@ -1,0 +1,141 @@
+{
+  "id": "livestream",
+  "name": "直播",
+  "summary": "楼梯间里录的一段吐槽，一夜三百万播放。前世你一句话说翻了车。这一世，每个打工人都在等你开播。",
+  "stage": [1, 99],
+  "states": {
+    "live": "开始拍视频",
+    "viral": "视频爆了",
+    "crashed": "直播翻车了"
+  },
+  "events": [
+    {
+      "id": "clip", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 18,
+      "text": "楼梯间里，你对着手机录了一段：老板说的「我们是一家人」，翻译过来就是……录完，你犹豫要不要发。",
+      "choices": [
+        { "text": "发出去", "effect": { "脸皮": 1, "state": "live", "follow": { "id": "blowup", "delay": 1 } },
+          "result": "你点了发布，把手机扣在桌上。一晚上没敢看。" },
+        { "text": "打码变声再发", "effect": { "能力": 1, "state": "live", "follow": { "id": "blowup", "delay": 1 } },
+          "result": "你把脸打了码，声音调成了卡通。连你妈都认不出来。" },
+        { "text": "删了，回去干活", "effect": { "心态": 1 }, "result": "你删了视频。那句吐槽，你咽回了肚子里。" },
+        { "text": "发完@老板", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 10, "state": "viral", "feud": "老板亲自转发了你的吐槽", "follow": { "id": "stream", "delay": 1 } },
+          "result": "老板转发了，配文：说的不是我。点赞当晚过了十万。",
+          "fail": { "effect": { "心态": -2, "state": "live", "follow": { "id": "boss", "delay": 1 } }, "result": "老板点了个赞。第二天，你的工位换到了他门口。" } }
+      ]
+    },
+    {
+      "id": "blowup", "dir": "any", "chainOnly": true, "teaser": "你的视频播放量不太对", "require": "line:livestream.live",
+      "text": "一觉醒来，播放量三百万。评论区全是：这不就是我们老板？公司群里，有人把视频转了进来。",
+      "choices": [
+        { "text": "趁热开直播", "effect": { "身价": 6, "脸皮": 1, "state": "viral", "follow": { "id": "stream", "delay": 1 } },
+          "result": "你连夜买了补光灯。房间小，灯一开，像审讯室。" },
+        { "text": "群里装没看见", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 4, "心态": 1, "state": "viral", "follow": { "id": "stream", "delay": 2 } },
+          "result": "你在群里回了个「哈哈」。没人怀疑，连你自己都差点信了。",
+          "fail": { "effect": { "state": "viral", "follow": { "id": "boss", "delay": 1 } }, "result": "同组的人听出了你的口头禅。老板在群里@了你。" } },
+        { "text": "认怂删视频", "effect": { "心态": 1 }, "result": "你删了视频。它已经被搬运了三百份，你一份也删不掉。" },
+        { "text": "前世一句话翻车", "require": "legacy:persona>=1",
+          "effect": { "身价": 10, "心态": 1, "state": "viral", "flag": "script", "follow": { "id": "stream", "delay": 1 } },
+          "result": "前世你一句话说翻了车。这一世开播之前，你先写好了稿子。" }
+      ]
+    },
+    {
+      "id": "boss", "dir": "up", "chainOnly": true, "teaser": "老板让你去他办公室", "require": "line:livestream",
+      "text": "老板把手机推到你面前：这个人，是你吧？他的表情很复杂，像在生气，又像在算账。",
+      "choices": [
+        { "text": "承认，准备走人", "effect": { "心态": 1, "state": "viral", "follow": { "id": "stream", "delay": 1 } },
+          "result": "老板沉默了很久，说：你接着拍。别拍我正脸。" },
+        { "text": "拿出录音", "require": "item:recorder",
+          "effect": { "身价": 8, "脸皮": 1, "state": "viral", "feud": "老板求你删视频", "follow": { "id": "stream", "delay": 1 } },
+          "result": "你按下播放。视频里每一句，都有出处。老板说：这事，咱们私了。" },
+        { "text": "提议给公司拍宣传", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 10, "人脉": 2, "state": "viral", "follow": { "id": "deal", "delay": 2 } },
+          "result": "你给公司拍了条招聘视频。投简历的人，第一次排到了下个月。",
+          "fail": { "effect": { "心态": -1, "state": "viral", "follow": { "id": "stream", "delay": 1 } }, "result": "老板说：你先把本职工作做好。然后加了你的关注。" } },
+        { "text": "当场开播", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 15, "脸皮": 2, "state": "viral", "feud": "老板在你直播间宣布下班", "follow": { "id": "deal", "delay": 1 } },
+          "result": "老板对着镜头憋了半天，说了句：大家，下班吧。直播间炸了。",
+          "fail": { "effect": { "death": "laid_off" }, "result": "老板看了一眼镜头：这位同事，明天不用来了。直播间涨粉一万。" } }
+      ]
+    },
+    {
+      "id": "stream", "dir": "side", "chainOnly": true, "teaser": "直播间今晚八点开播", "require": "line:livestream.viral",
+      "text": "第一场直播，在线两万人。弹幕刷得飞快，有人问：你们老板到底多离谱？说点真的。",
+      "choices": [
+        { "text": "讲段子，不点名", "effect": { "身价": 8, "脸皮": 1, "follow": { "id": "deal", "delay": 2 } },
+          "result": "你讲了四十分钟的周会。弹幕刷满了：一模一样。" },
+        { "text": "爆个大料", "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 15, "人脉": 1, "follow": { "id": "deal", "delay": 2 } },
+          "result": "你说的那件事，第二天被三个行业号转发了。没有一句是假的。",
+          "fail": { "effect": { "state": "crashed", "follow": { "id": "crash", "delay": 1 } }, "result": "你说漏了一个名字。弹幕停了一秒。" } },
+        { "text": "照稿子念", "require": "flag:script | legacy:persona>=1", "effect": { "身价": 12, "心态": 1, "follow": { "id": "deal", "delay": 2 } },
+          "result": "你说：我们不聊人，聊事。弹幕刷了一排「清醒」。" },
+        { "text": "直播加班", "absurd": true, "chance": 0.25, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "身价": 12, "能力": 1, "follow": { "id": "deal", "delay": 2 } }, "result": "你直播写了三小时周报。两万人陪你加班，有人哭了。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "deal", "delay": 2 } }, "result": "你写着写着睡着了。醒来时，直播间还有八千人在看你睡。" } }
+      ]
+    },
+    {
+      "id": "crash", "dir": "any", "chainOnly": true, "teaser": "热搜上出现了你的名字", "require": "line:livestream.crashed",
+      "text": "你说过的一句话被人剪了出来，前后一掐，意思全反了。评论区一夜之间，全在骂你。",
+      "choices": [
+        { "text": "放出完整版", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 6, "state": "viral", "feud": "剪你视频的号被骂到删号", "follow": { "id": "deal", "delay": 2 } },
+          "result": "完整版一出，风向反转了。骂你的人，排着队来道歉。",
+          "fail": { "effect": { "心态": -2 }, "result": "没人看完整版。大家只记得那十秒。" } },
+        { "text": "道歉，停播一阵", "effect": { "心态": 1, "脸皮": 1, "follow": { "id": "deal", "delay": 4, "ttl": 8 } },
+          "result": "你停播了三个月。回来的时候，粉丝还剩一半。都是真的。" },
+        { "text": "开播对线一整晚", "effect": { "death": "stream_crash" },
+          "result": "你对线到天亮，越说越多。第二天，账号没了。" },
+        { "text": "甩锅给剪辑号", "showIf": "skill:blame_shift", "useSkill": "blame_shift",
+          "effect": { "身价": 10, "脸皮": 2, "state": "viral", "feud": "锅被原样甩回剪辑号", "follow": { "id": "deal", "delay": 2 } },
+          "result": "你把原片和剪辑版并排放出：这锅，是你剪出来的。" }
+      ]
+    },
+    {
+      "id": "deal", "dir": "any", "chainOnly": true, "teaser": "有公司想签你", "require": "line:livestream",
+      "text": "一家经纪公司发来合同：签五年，保底是你现在年薪的十倍。条款写了二十页。",
+      "choices": [
+        { "text": "签了", "effect": { "身价": 15, "精力": -1, "flag": "signed", "follow": { "id": "award", "delay": 3, "ttl": 8 } },
+          "result": "你签了字。从此每周三更，一更都不能少。" },
+        { "text": "逐页看完再签", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 18, "能力": 1, "flag": "signed", "follow": { "id": "award", "delay": 3, "ttl": 8 } },
+          "result": "你划掉了第十七页那条，对方同意了。合同干净得像新的。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "award", "delay": 3, "ttl": 8 } }, "result": "第十七页写着：你说的每句话都归公司。你没签。" } },
+        { "text": "不签，自己干", "effect": { "脸皮": 1, "身价": 8, "follow": { "id": "award", "delay": 3, "ttl": 8 } },
+          "result": "你继续在出租屋里拍。灯是自己买的，号也是自己的。" },
+        { "text": "反签下他们", "absurd": true, "chance": 0.1, "chanceAttr": "人脉", "chanceStep": 0.02,
+          "effect": { "身价": 25, "人脉": 3, "feud": "经纪公司来给你打工", "follow": { "id": "award", "delay": 3, "ttl": 8 } },
+          "result": "你说：我这边缺个运营团队，你们来吗？他们来了。",
+          "fail": { "effect": { "心态": -1 }, "result": "对方以为你在开玩笑，笑完把合同收回去了。" } }
+      ]
+    },
+    {
+      "id": "award", "dir": "any", "chainOnly": true, "teaser": "年度打工人榜单出来了", "require": "line:livestream",
+      "text": "年底，你被评为年度最受打工人欢迎的博主。领奖台下，坐着好几个你吐槽过的老板。",
+      "choices": [
+        { "text": "上台领奖", "require": "line:livestream.viral & (脸皮>=3 | flag:signed)", "effect": { "ending": "internet_worker" },
+          "result": "你只说了一句：大家，到点了，下班吧。台下的老板们，鼓掌鼓得很勉强。" },
+        { "text": "前世翻过的车", "require": "line:livestream.viral & legacy:persona>=1", "effect": { "ending": "internet_worker" },
+          "result": "前世你在直播间翻了车。这一世，你站在台上，一个字都没说错。" },
+        { "text": "替同事领奖", "effect": { "人脉": 3, "身价": 8 },
+          "result": "你让同组的人上台替你领了。他拿着奖杯，在朋友圈发了九张图。" },
+        { "text": "不去，在工位看", "effect": { "心态": 1, "能力": 1 },
+          "result": "你在工位上看了直播。领奖的那个空座位，比谁都显眼。" }
+      ]
+    },
+    {
+      "id": "grudge", "dir": "side", "once": true, "weight": 14, "stage": [1, 99], "require": "died:stream_crash>=2",
+      "text": "你又打开了直播间。镜头一亮，你就想起那句话。它让你翻了{died:stream_crash}次车。",
+      "choices": [
+        { "text": "先写稿子", "effect": { "心态": 1, "能力": 1 }, "result": "稿子写了三页。那句话，你划掉了三遍。" },
+        { "text": "关播，去吃夜宵", "effect": { "精力": 1, "心态": 1 }, "result": "你关了直播。烧烤摊上没人认识你，挺好。" },
+        { "text": "拿翻车讲段子", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 12, "脸皮": 2, "feud": "把翻车讲成了招牌段子" },
+          "result": "你说：我翻过的车，比你们坐过的车都多。弹幕笑疯了。",
+          "fail": { "effect": { "心态": -1 }, "result": "段子讲到一半，你发现自己笑不出来。" } }
+      ]
+    }
+  ]
+}

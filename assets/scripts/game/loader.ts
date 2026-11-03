@@ -1,6 +1,6 @@
 /** 从 resources 加载命格剧本，组装成 RawDestiny（与 Node 端 tools/load.ts 等价） */
 import { ImageAsset, JsonAsset, resources, SpriteFrame } from 'cc';
-import { buildDestiny, Destiny, DestinyIndex, RawDestiny, RawEvent } from '../core';
+import { buildDestiny, Destiny, DestinyIndex, RawDestiny, RawEvent, RawLine } from '../core';
 import { bundleOf } from './res';
 
 function loadJson<T>(path: string): Promise<T> {
@@ -23,16 +23,20 @@ export function loadDestinyIndex(): Promise<DestinyIndex> {
 
 export async function loadDestiny(id: string): Promise<Destiny> {
     const base = `data/destinies/${id}`;
-    const [meta, talents, items, companions, skills, eventFiles] = await Promise.all([
+    const [meta, talents, items, companions, skills, eventFiles, lineFiles, crossFiles] = await Promise.all([
         loadJson<RawDestiny['meta']>(`${base}/destiny`),
         loadJson<RawDestiny['talents']>(`${base}/talents`),
         loadJson<RawDestiny['items']>(`${base}/items`),
         loadJson<RawDestiny['companions']>(`${base}/companions`),
         loadJson<RawDestiny['skills']>(`${base}/skills`).catch(() => []),
         loadJsonDir<RawEvent[]>(`${base}/events`),
+        // 线路与交叉事件目录可能不存在（老命格）
+        loadJsonDir<RawLine>(`${base}/lines`).catch(() => []),
+        loadJsonDir<RawEvent[]>(`${base}/crossings`).catch(() => []),
     ]);
-    const events = eventFiles.sort((a, b) => a.name.localeCompare(b.name)).flatMap(f => f.json);
-    return buildDestiny({ meta, talents, items, companions, skills, events });
+    const byName = <T>(fs: { name: string; json: T }[]) => fs.sort((a, b) => a.name.localeCompare(b.name)).map(f => f.json);
+    const events = byName(eventFiles).flat();
+    return buildDestiny({ meta, talents, items, companions, skills, events, lines: byName(lineFiles), crossings: byName(crossFiles).flat() });
 }
 
 /** 贴图缓存：缺图返回 null（不报错），由 UI 兜底；分包里的图会等分包下载完再加载 */

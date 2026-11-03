@@ -1,0 +1,79 @@
+{
+  "id": "doom",
+  "name": "末世",
+  "summary": "末日来了，写字楼成了避难所。老板还在开会，王卷卷在囤物资，你要带全楼的人活下去。",
+  "maps": ["doom"],
+  "states": {
+    "shelter": "把公司守成了避难所",
+    "leader": "成了避难所的主心骨"
+  },
+  "events": [
+    {
+      "id": "lockdown", "entry": true, "dir": "any", "stage": [0, 2], "weight": 24,
+      "text": "外面的世界变了。大堂里挤满了人，保安把卷帘门拉了下来。有人喊：现在谁说了算？",
+      "choices": [
+        { "text": "站出来", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "state": "shelter", "人脉": 3, "脸皮": 1, "follow": { "id": "boss_meeting", "delay": 1 } }, "result": "你站上前台：先清点人数，再清点物资。没人反对。",
+          "easy": "你还没开口，大家已经看向了你。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "boss_meeting", "delay": 1 } }, "result": "你刚开口，就被淹没在吵闹声里。" } },
+        { "text": "先去仓库", "effect": { "state": "shelter", "精力": 2, "身价": 4, "follow": { "id": "hoarder", "delay": 1 } }, "result": "你在储物间找到了两箱矿泉水和一箱泡面。这一世，你知道什么最重要。" },
+        { "text": "回工位继续干活", "absurd": true, "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "心态": 2, "身价": 6, "follow": { "id": "boss_meeting", "delay": 1 } }, "result": "你打开电脑，把季度报告写完了。大家看着你，突然都冷静了下来。",
+          "fail": { "effect": { "精力": -1 }, "result": "停电了。你对着黑屏发了一会儿呆。" } }
+      ]
+    },
+    {
+      "id": "boss_meeting", "dir": "up", "chainOnly": true, "teaser": "老周召集开会", "require": "line:doom",
+      "text": "老周在会议室召集全员开会：末日只是暂时的，我们的季度目标不变。投影仪是用发电机供的电。",
+      "choices": [
+        { "text": "掐掉发电机", "effect": { "state": "leader", "人脉": 4, "feud": "老周的末日周会被叫停", "follow": { "id": "hoarder", "delay": 1 } }, "result": "会议室黑了。你说：电，留给医务室。全场安静了三秒，然后鼓起了掌。" },
+        { "text": "听完再说", "effect": { "精力": -2, "心态": -1, "follow": { "id": "hoarder", "delay": 1 } }, "result": "会开了三个小时。散会时，发电机没油了。" },
+        { "text": "前世看穿大饼", "require": "legacy:pie_sense>=1", "effect": { "state": "leader", "心态": 2, "人脉": 3, "follow": { "id": "hoarder", "delay": 1 } },
+          "result": "前世你听了十年他的饼。这一世，末日都来了，你一个字都没让他说完。" }
+      ]
+    },
+    {
+      "id": "hoarder", "dir": "down", "chainOnly": true, "teaser": "有人在偷偷囤物资", "require": "line:doom",
+      "text": "王卷卷把半个仓库的物资搬进了自己的工位，堆得比隔板还高。他说：卷不动了，囤总可以吧。",
+      "choices": [
+        { "text": "跟他谈", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "leader", "人脉": 3, "follow": { "id": "breakout", "delay": 2, "ttl": 8 } }, "result": "你们谈了一夜。天亮的时候，他把物资推回了仓库，自己当了仓库管理员。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "breakout", "delay": 2, "ttl": 8 } }, "result": "他抱着泡面不撒手：凭什么？我加班的时候，你在摸鱼。" } },
+        { "text": "定配给制度", "effect": { "能力": 2, "人脉": 2, "follow": { "id": "breakout", "delay": 2, "ttl": 8 } }, "result": "你在白板上画了一张表。按人头分，谁也不多，谁也不少。" },
+        { "text": "也开始囤", "effect": { "精力": 3, "人脉": -2 }, "result": "你的工位也堆满了。全楼的人看你的眼神，变了。" }
+      ]
+    },
+    {
+      "id": "breakout", "dir": "side", "chainOnly": true, "teaser": "避难所撑不下去了", "stage": [2, 99], "require": "line:doom.leader",
+      "text": "物资快见底了。广播里说，城外有一个安全区。全楼三百个人，都在等你一句话。",
+      "choices": [
+        { "text": "带所有人走", "require": "人脉>=8", "effect": { "ending": "doom_savior" }, "result": "你走在最前面。三天后，三百个人，一个不少地走进了安全区。" },
+        { "text": "先派人探路", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "身价": 15, "follow": { "id": "breakout", "delay": 2 } }, "result": "探路的人回来了：路是通的。大家开始收拾东西。",
+          "fail": { "effect": { "精力": -3, "follow": { "id": "breakout", "delay": 2 } }, "result": "探路的人迷路了，又回来了。还得再等等。" } },
+        { "text": "守住这里", "effect": { "能力": 2, "心态": 1 }, "result": "你们在楼顶种起了菜。写字楼，变成了一座小小的城。" }
+      ]
+    },
+    {
+      "id": "roof_garden", "dir": "up", "layers": ["U3", "U4"], "once": true, "weight": 14, "require": "line:doom.shelter",
+      "text": "楼顶的天台空着。保洁阿姨说，花盆里的土，种菜够用。",
+      "choices": [
+        { "text": "全楼一起种", "effect": { "精力": 3, "人脉": 3 }, "result": "一个月后，楼顶长出了第一茬小白菜。老周蹲在地里，拔得最认真。" },
+        { "text": "种点葱就行", "effect": { "精力": 2, "心态": 1 }, "result": "葱长得飞快。泡面里，终于有了点绿色。" }
+      ]
+    },
+    {
+      "id": "radio", "dir": "any", "once": true, "weight": 12, "stage": [1, 99], "require": "line:doom",
+      "text": "前台那台老收音机突然响了，传出一个沙哑的声音：还有人吗？我们在城东，有吃的。",
+      "choices": [
+        { "text": "回话", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 4, "身价": 8 }, "result": "你们约好每周交换一次物资。末日里，第一次有了别的楼的朋友。",
+          "fail": { "effect": { "心态": -1 }, "result": "信号断了。你守着收音机，等了一夜。" } },
+        { "text": "先观望", "effect": { "心态": 1 }, "result": "你关了收音机。末日里，谨慎一点不是坏事。" },
+        { "text": "用收音机放音乐", "absurd": true, "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "心态": 2, "人脉": 2 }, "result": "你找到一个还在放歌的台。整个大堂的人，跟着唱了起来。",
+          "fail": { "effect": { "精力": -1 }, "result": "只有沙沙声。放了一晚上，没人睡着。" } }
+      ]
+    }
+  ]
+}

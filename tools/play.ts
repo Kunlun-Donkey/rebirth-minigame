@@ -311,6 +311,9 @@ function simulate(lives: number, seed: number) {
     let revives = 0;
     let fullAt = 0;
     const upgradeDone: Record<string, number> = {};
+    // 线路统计：每条线路这一世开始过的世数、各状态到达的世数；系统绑定次数
+    const lineHits: Record<string, number> = {};
+    const systemHits: Record<string, number> = {};
 
     for (let life = 1; life <= lives; life++) {
         e.todayFate(`day${Math.floor(life / 6)}`); // 假设每天玩 6 世
@@ -341,6 +344,12 @@ function simulate(lives: number, seed: number) {
                 e.choose(c.index);
             }
         }
+        for (const [l, st] of Object.entries(e.run.lines ?? {})) {
+            lineHits[l] = (lineHits[l] ?? 0) + 1;
+            if (st) lineHits[`${l}.${st}`] = (lineHits[`${l}.${st}`] ?? 0) + 1;
+        }
+        const sys = e.systemId();
+        if (sys) systemHits[sys] = (systemHits[sys] ?? 0) + 1;
         const s = e.settle();
         if (ads) e.doublePoints();
         // 命盘：每世结算后买得起就买最便宜的
@@ -381,6 +390,16 @@ function simulate(lives: number, seed: number) {
     console.log(`技能首次领悟（第几世）：${skillLine.join('、')}`);
     console.log(`天命之子 ${blessedN} 次（${(blessedN / lives * 100).toFixed(1)}%）· 天胡结局 ${tianhuN} 次（${(tianhuN / lives * 100).toFixed(1)}%）`);
     console.log(`结局分布：${[...data.endings.values()].map(en => `${en.name} ${endingHits[en.id] ?? 0}`).join(' · ')}`);
+    if (data.lines.size) {
+        const pc = (n = 0) => `${(n / lives * 100).toFixed(1)}%`;
+        console.log(`\n线路（进入率 · 各状态到达率）：`);
+        for (const l of data.lines.values()) {
+            const states = Object.keys(l.states).map(st => `${st} ${pc(lineHits[`${l.id}.${st}`])}`).join(' · ');
+            console.log(`  ${l.name}（${l.id}）${pc(lineHits[l.id])}  ${states}`);
+        }
+        const systems = [...data.companions.values()].filter(c => c.system);
+        if (systems.length) console.log(`系统绑定：${systems.map(c => `${c.name} ${pc(systemHits[c.id])}`).join(' · ')}`);
+    }
     const never = [...data.events.keys()].filter(id => !eventHits[id]);
     if (never.length) console.log(`从未触发的事件（${never.length}）：${never.join(', ')}`);
 }

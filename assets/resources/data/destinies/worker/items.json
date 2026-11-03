@@ -1,0 +1,12 @@
+[
+  { "id": "coffee", "name": "一杯冰美式", "icon": "supply", "rarity": "common", "desc": "使用：精力 +3。", "use": { "精力": 3 }, "useText": "你一口气喝完了冰美式。眼睛亮了，心跳也快了。" },
+  { "id": "goji", "name": "保温杯泡枸杞", "icon": "supply", "rarity": "common", "desc": "使用：精力 +1，心态 +1，身价 +2。", "use": { "精力": 1, "心态": 1, "身价": 2 }, "useText": "你拧开保温杯，吹了吹，抿了一口。人到这个岁数，就得这样。" },
+  { "id": "badge", "name": "旧工牌", "icon": "shield", "rarity": "common", "desc": "被动：替你挡下一次「这一世结束」。", "saveFromDeath": true },
+  { "id": "recorder", "name": "录音笔", "icon": "guide", "rarity": "rare", "desc": "被动：凡事留痕。很多事件里有专属选项。" },
+  { "id": "resume", "name": "最新版简历", "icon": "token", "rarity": "common", "desc": "使用：人脉 +2，身价 +3。", "use": { "人脉": 2, "身价": 3 }, "useText": "你把简历挂到了网上。当天下午，电话就没停过。" },
+  { "id": "bacon", "name": "老家寄来的腊肉", "icon": "supply", "rarity": "rare", "desc": "使用：精力 +2，心态 +2。", "use": { "精力": 2, "心态": 2 }, "useText": "腊肉蒸好的时候，整个出租屋都是老家的味道。" },
+  { "id": "anti_scam_app", "name": "反诈 App", "icon": "shield", "rarity": "rare", "desc": "被动：识破骗局的专属选项。" },
+  { "id": "red_packet", "name": "锦鲤红包", "icon": "gem", "rarity": "rare", "desc": "使用：身价 +8，人脉 +1。", "use": { "身价": 8, "人脉": 1 }, "useText": "红包打开，是个吉利数。你觉得今年会转运。" },
+  { "id": "chairman_badge", "name": "董事长的工牌", "icon": "key", "rarity": "epic", "desc": "使用：身价 +15，能力 +2。", "use": { "身价": 15, "能力": 2 }, "useText": "你戴上工牌在楼里走了一圈。所有人都给你让路。" },
+  { "id": "tiandao_notebook", "name": "天道的小本子", "icon": "relic", "rarity": "legend", "desc": "被动：轮回点 ×1.3。本子上记着你每一世的事。", "mods": { "pointsMul": 1.3 } }
+]

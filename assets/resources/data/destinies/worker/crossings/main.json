@@ -1,0 +1,575 @@
+[
+  {
+    "id": "x_anti_scam_star",
+    "dir": "any",
+    "once": true,
+    "weight": 30,
+    "require": "line:scam_trip.escaped & line:livestream",
+    "text": "你对着镜头坐了很久，最后开口：我讲讲那趟回不来的团建。",
+    "choices": [
+      {
+        "text": "讲完整的",
+        "require": "心态>=6",
+        "effect": {
+          "ending": "anti_scam_star"
+        },
+        "result": "视频发出去的第二天，有人留言：我刚取消了一张去海外的机票。"
+      },
+      {
+        "text": "先讲一点",
+        "effect": {
+          "人脉": 3,
+          "身价": 12,
+          "state": "livestream.viral"
+        },
+        "result": "播放量一夜破了百万。评论区里，有人说：我差点也去了。"
+      },
+      {
+        "text": "不讲了",
+        "effect": {
+          "心态": 1
+        },
+        "result": "你关了摄像头。有些事，你还没准备好说出来。"
+      }
+    ]
+  },
+  {
+    "id": "x_partner_aqiang",
+    "dir": "any",
+    "once": true,
+    "weight": 30,
+    "stage": [
+      2,
+      99
+    ],
+    "require": "line:rider_aqiang.friend & (line:layoff.laid_off | line:startup.founded)",
+    "text": "阿强又给你送外卖来了。他看了看你的样子：哥，你要干点啥，算我一个。",
+    "choices": [
+      {
+        "text": "拉他入伙",
+        "require": "人脉>=8",
+        "effect": {
+          "ending": "partner_aqiang"
+        },
+        "result": "你们在城中村租了间小办公室。开业那天，阿强给全楼送了一份外卖。"
+      },
+      {
+        "text": "让他再等等",
+        "effect": {
+          "人脉": 3,
+          "心态": 1
+        },
+        "result": "阿强说：行，我等你。他走的时候，多给你留了一份饭。"
+      },
+      {
+        "text": "一起跑一单",
+        "absurd": true,
+        "chance": 0.4,
+        "chanceAttr": "精力",
+        "chanceStep": 0.05,
+        "effect": {
+          "精力": -1,
+          "人脉": 4,
+          "身价": 8
+        },
+        "result": "你坐在他电动车后座，跑了一晚上。你第一次知道，这座城有这么多条小路。",
+        "fail": {
+          "effect": {
+            "精力": -2
+          },
+          "result": "你们迷路了。阿强说：这是我第一次迷路，都怪你。"
+        }
+      }
+    ]
+  },
+  {
+    "id": "x_heir",
+    "dir": "down",
+    "once": true,
+    "weight": 30,
+    "stage": [
+      3,
+      99
+    ],
+    "require": "line:old_guard.apprentice & line:cleaner.revealed",
+    "text": "地下车库里，老保安和保洁阿姨并排坐着，桌上放着一份文件：公司股权转让书。",
+    "choices": [
+      {
+        "text": "接下来",
+        "require": "能力>=10",
+        "effect": {
+          "ending": "heir"
+        },
+        "result": "阿姨把笔递给你：我们干了一辈子，就想找个不嫌弃保安和保洁的人。"
+      },
+      {
+        "text": "我还不够格",
+        "effect": {
+          "心态": 2,
+          "能力": 2,
+          "身价": 15
+        },
+        "result": "老保安笑了：那就再干几年，我们等得起。"
+      }
+    ]
+  },
+  {
+    "id": "x_landlord",
+    "dir": "any",
+    "once": true,
+    "weight": 30,
+    "stage": [
+      2,
+      99
+    ],
+    "require": "line:roommate.friend & line:system.bound & system:sys_shenhao",
+    "text": "【叮！】检测到宿主的出租屋正在出售。是否执行「神豪任务：买下整栋楼」？室友在旁边，正在算这个月的房租。",
+    "choices": [
+      {
+        "text": "买",
+        "require": "身价>=80",
+        "effect": {
+          "ending": "landlord"
+        },
+        "result": "【叮！】交易完成。你把室友的房租改成了零。他愣了三秒，抱住了你。"
+      },
+      {
+        "text": "先给他免一年房租",
+        "effect": {
+          "人脉": 4,
+          "心态": 2,
+          "身价": 10
+        },
+        "result": "【叮！】任务部分完成。室友说：你哪来的钱？你说：发了笔小财。"
+      },
+      {
+        "text": "不买",
+        "effect": {
+          "心态": 1
+        },
+        "result": "【叮！】宿主拒绝消费，扣十分。你和室友接着算房租。"
+      }
+    ]
+  },
+  {
+    "id": "x_juan_duo",
+    "dir": "any",
+    "once": true,
+    "weight": 30,
+    "stage": [
+      3,
+      99
+    ],
+    "maps": [
+      "awaken"
+    ],
+    "require": "line:wang_juanjuan.saved & line:awaken.awakened",
+    "text": "王卷卷也觉醒了。他的功法叫《卷经》，修炼速度是别人的三倍。他找到你：一起？",
+    "choices": [
+      {
+        "text": "一起飞升",
+        "require": "心态>=10",
+        "effect": {
+          "ending": "juan_duo"
+        },
+        "result": "你们在写字楼顶一起渡劫。雷劈下来的时候，他还在回工作消息。"
+      },
+      {
+        "text": "教他摸鱼",
+        "effect": {
+          "心态": 2,
+          "人脉": 3,
+          "身价": 12
+        },
+        "result": "他第一次知道修炼也可以躺着。他的修为反而涨得更快了。"
+      },
+      {
+        "text": "各修各的",
+        "effect": {
+          "能力": 2
+        },
+        "result": "他点点头，回去接着卷了。你们隔着两个工位，各自打坐。"
+      }
+    ]
+  },
+  {
+    "id": "x_zhou_scammed",
+    "dir": "any",
+    "once": true,
+    "weight": 24,
+    "require": "line:pig_butcher.busted & line:boss_zhou",
+    "text": "老周一脸憔悴地来上班。听说他网恋了一个完美的人，把公司的钱都投了进去。这套路，你见过。",
+    "choices": [
+      {
+        "text": "帮他报警",
+        "effect": {
+          "人脉": 3,
+          "心态": 1,
+          "state": "boss_zhou.exposed"
+        },
+        "result": "你帮他整理了证据。他握着你的手说：以后我再也不画饼了。你没信。"
+      },
+      {
+        "text": "在旁边看着",
+        "effect": {
+          "心态": 1,
+          "身价": 6,
+          "feud": "老周被饼骗了一回"
+        },
+        "result": "他画了一辈子饼，这一次，被别人的饼噎住了。"
+      }
+    ]
+  },
+  {
+    "id": "x_doom_jianbing",
+    "dir": "any",
+    "once": true,
+    "weight": 24,
+    "maps": [
+      "doom"
+    ],
+    "require": "line:doom.shelter & line:jianbing.friend",
+    "text": "避难所断粮第三天，大爷推着他的煎饼车进了大堂：面粉还有半袋，鸡蛋没了，凑合吃。",
+    "choices": [
+      {
+        "text": "帮他摊",
+        "effect": {
+          "人脉": 4,
+          "精力": 3,
+          "state": "doom.leader"
+        },
+        "result": "你们摊了一夜。全楼三百个人，每人一张煎饼。大爷说：明天我教你们种菜。"
+      },
+      {
+        "text": "去找鸡蛋",
+        "chance": 0.5,
+        "chanceAttr": "脸皮",
+        "chanceStep": 0.05,
+        "effect": {
+          "人脉": 3,
+          "身价": 10
+        },
+        "result": "你从废墟里抱回来一箱鸡蛋。大爷说：今天每人加一个蛋。",
+        "fail": {
+          "effect": {
+            "精力": -2
+          },
+          "result": "你空手回来。大爷说：没事，不加蛋也好吃。"
+        }
+      }
+    ]
+  },
+  {
+    "id": "x_xiaolin_home",
+    "dir": "any",
+    "once": true,
+    "weight": 24,
+    "require": "line:xiaolin.close & line:parents.close",
+    "text": "过年，小林没地方去。你在电话里问老妈：我能带个朋友回家吗？老妈说：多双筷子的事。",
+    "choices": [
+      {
+        "text": "带他回家",
+        "effect": {
+          "心态": 2,
+          "精力": 3,
+          "人脉": 2,
+          "state": "parents.home"
+        },
+        "result": "老妈做了一桌菜，小林吃了三碗饭。走的时候，老妈给他塞了一袋腊肉。"
+      },
+      {
+        "text": "陪他在城里过",
+        "effect": {
+          "心态": 2,
+          "人脉": 2
+        },
+        "result": "你们在出租屋里煮了一锅速冻饺子，看完了整台晚会。"
+      }
+    ]
+  },
+  {
+    "id": "x_layoff_stall",
+    "dir": "side",
+    "once": true,
+    "weight": 24,
+    "require": "line:layoff.laid_off & line:night_market",
+    "text": "被裁的那天晚上，你没回家，直接推着三轮车去了夜市。纸箱里的东西，正好当货卖。",
+    "choices": [
+      {
+        "text": "开卖",
+        "effect": {
+          "脸皮": 3,
+          "身价": 12,
+          "state": "night_market.stall",
+          "feud": "被裁当天就开了张"
+        },
+        "result": "工牌、马克杯、键盘，一晚上卖光了。有人问你：老板，明天还来吗？"
+      },
+      {
+        "text": "先睡一觉",
+        "effect": {
+          "精力": 3,
+          "心态": 1
+        },
+        "result": "你把三轮车停在楼下，睡了个好觉。明天再说。"
+      }
+    ]
+  },
+  {
+    "id": "x_stream_zhou",
+    "dir": "side",
+    "once": true,
+    "weight": 24,
+    "require": "line:livestream.viral & line:boss_zhou.fooled",
+    "text": "粉丝留言：讲讲你老板吧。你看了看手机里老周的六十秒语音，一共两百条。",
+    "choices": [
+      {
+        "text": "放一条给大家听",
+        "chance": 0.5,
+        "chanceAttr": "脸皮",
+        "chanceStep": 0.05,
+        "effect": {
+          "身价": 15,
+          "人脉": 3,
+          "state": "boss_zhou.exposed",
+          "feud": "老周的饼上了热搜"
+        },
+        "result": "评论区炸了：这不是我老板吗？第二天，老周把群公告改成了：年终奖下周发。",
+        "fail": {
+          "effect": {
+            "state": "livestream.crashed",
+            "心态": -2
+          },
+          "result": "老周看到了。第二天，你收到了律师函。"
+        }
+      },
+      {
+        "text": "不讲具体的人",
+        "effect": {
+          "人脉": 2,
+          "心态": 1
+        },
+        "result": "你只讲了饼的种类和尺寸。大家听得很懂。"
+      }
+    ]
+  },
+  {
+    "id": "x_loan_roommate",
+    "dir": "any",
+    "once": true,
+    "weight": 24,
+    "require": "line:loan.borrowed & line:roommate.friend",
+    "text": "催收电话打到了室友那儿。他敲开你的门，手里拿着一张银行卡：先拿去，别跟我客气。",
+    "choices": [
+      {
+        "text": "收下，写借条",
+        "effect": {
+          "心态": 2,
+          "人脉": 2,
+          "state": "loan.cleared"
+        },
+        "result": "你写了借条，他撕了。你说你会还，他说：我知道。"
+      },
+      {
+        "text": "不要，自己扛",
+        "chance": 0.4,
+        "chanceAttr": "能力",
+        "chanceStep": 0.05,
+        "effect": {
+          "能力": 2,
+          "身价": 4,
+          "state": "loan.cleared"
+        },
+        "result": "你接了三份私活，熬了一个季度，自己还清了。室友给你做了碗面。",
+        "fail": {
+          "effect": {
+            "精力": -3
+          },
+          "result": "你熬了一个季度，还了一半。剩下的，还在利滚利。"
+        }
+      }
+    ]
+  },
+  {
+    "id": "x_wang_project",
+    "dir": "up",
+    "once": true,
+    "weight": 24,
+    "require": "line:wang_juanjuan.rival & line:project.credited",
+    "text": "年终汇报会上，王卷卷站起来说：这个项目，其实大部分是我做的。全场看向你。",
+    "choices": [
+      {
+        "text": "打开提交记录",
+        "effect": {
+          "能力": 2,
+          "身价": 15,
+          "state": "wang_juanjuan.broken",
+          "feud": "王卷卷的谎被提交记录拆穿"
+        },
+        "result": "每一行代码后面都是你的名字，时间是凌晨两点。王卷卷坐下了，再没说话。"
+      },
+      {
+        "text": "让给他",
+        "effect": {
+          "心态": 2,
+          "人脉": 2
+        },
+        "result": "你说：他也辛苦了。会后，王卷卷在楼梯间站了很久。"
+      }
+    ]
+  },
+  {
+    "id": "x_scam_parents",
+    "dir": "any",
+    "sudden": true,
+    "once": true,
+    "weight": 40,
+    "require": "line:scam_trip.joined & line:parents.close & flag:scam_trip/sent_location",
+    "text": "你偷偷发出去的那个定位，老妈收到了。她不懂什么是定位，但她拿着手机，去了派出所。",
+    "choices": [
+      {
+        "text": "等",
+        "effect": {
+          "state": "scam_trip.escaped",
+          "心态": 2,
+          "人脉": 2,
+          "feud": "园区被老妈一个电话端了"
+        },
+        "result": "半个月后，有人敲开了园区的门。你回家那天，老妈在车站等了你一下午。"
+      }
+    ]
+  },
+  {
+    "id": "x_starsea_aqiang",
+    "dir": "any",
+    "once": true,
+    "weight": 20,
+    "require": "line:starsea.colony & line:rider_aqiang.friend",
+    "text": "殖民地的舱门响了。门外是阿强，穿着宇航服，手里提着一份外卖：哥，三十八万公里，没超时。",
+    "choices": [
+      {
+        "text": "给他五星好评",
+        "effect": {
+          "心态": 3,
+          "人脉": 4,
+          "身价": 20
+        },
+        "result": "阿强在舱门口站了一会儿：哥，这里能接单吗？我想留下来。"
+      }
+    ]
+  },
+  {
+    "id": "x_tiandao_zhou",
+    "dir": "down",
+    "once": true,
+    "weight": 20,
+    "require": "line:tiandao.met & line:boss_zhou.bought",
+    "text": "天道翻着小本子：老周啊，他前世是一张饼。被人画了一辈子，这一世，轮到他画别人。",
+    "choices": [
+      {
+        "text": "原谅他",
+        "effect": {
+          "心态": 2,
+          "身价": 10
+        },
+        "result": "天道在小本子上划了一笔：这一世，你们两清了。"
+      },
+      {
+        "text": "问天道：我前世是什么",
+        "effect": {
+          "心态": 1,
+          "能力": 2
+        },
+        "result": "天道看了你一眼：你啊？你什么都当过。草、狗、虫、虾、鳄鱼。"
+      }
+    ]
+  },
+  {
+    "id": "x_abroad_parents",
+    "dir": "any",
+    "once": true,
+    "weight": 24,
+    "require": "line:go_abroad.settled & line:parents.close",
+    "text": "你在海外站稳了脚，给爸妈订了两张机票。老爸在电话里说：坐飞机？我晕车。",
+    "choices": [
+      {
+        "text": "接他们来",
+        "effect": {
+          "心态": 3,
+          "人脉": 2,
+          "精力": 2
+        },
+        "result": "老妈在机场拍了两百张照片。老爸一路说不好玩，回国后跟全村讲了一个月。"
+      },
+      {
+        "text": "自己回去看他们",
+        "effect": {
+          "心态": 2,
+          "精力": 3
+        },
+        "result": "你提着两大箱东西回了老家。老妈说：买这些干啥，人回来就行。"
+      }
+    ]
+  },
+  {
+    "id": "x_zhou_visit",
+    "dir": "any",
+    "once": true,
+    "weight": 20,
+    "require": "line:boss_zhou.arrested & line:xiaolin.friend",
+    "text": "小林说：老周被带走以后，他家里就剩一个上小学的孩子。我们要不要去看看？",
+    "choices": [
+      {
+        "text": "去看看",
+        "effect": {
+          "心态": 2,
+          "人脉": 3
+        },
+        "result": "孩子在写作业。作文题目是《我的爸爸》，第一句是：我爸爸很会画画。"
+      },
+      {
+        "text": "不去了",
+        "effect": {
+          "心态": 1
+        },
+        "result": "小林自己去了。回来的时候，他一句话都没说。"
+      }
+    ]
+  },
+  {
+    "id": "x_pie_live",
+    "dir": "side",
+    "once": true,
+    "weight": 22,
+    "require": "line:boss_zhou.pie_system & line:livestream.live",
+    "text": "【叮！】检测到宿主正在直播，在线人数三千。是否对观众使用「画饼」？",
+    "choices": [
+      {
+        "text": "画",
+        "chance": 0.4,
+        "chanceAttr": "脸皮",
+        "chanceStep": 0.05,
+        "effect": {
+          "身价": 20,
+          "人脉": 3
+        },
+        "result": "你说：下个月抽一百台手机。弹幕疯了。下个月，你真抽了。画饼系统说：宿主，你变了。",
+        "fail": {
+          "effect": {
+            "state": "livestream.crashed",
+            "心态": -2
+          },
+          "result": "有人截图了你三个月前画的饼。评论区开始翻旧账。"
+        }
+      },
+      {
+        "text": "不画",
+        "effect": {
+          "心态": 2,
+          "人脉": 2
+        },
+        "result": "【叮！】宿主拒绝画饼，扣十分。观众说：这个主播实在。"
+      }
+    ]
+  }
+]

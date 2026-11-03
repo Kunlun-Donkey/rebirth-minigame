@@ -1,0 +1,25 @@
+[
+  { "id": "pothos", "name": "工位绿萝", "rarity": "common", "desc": "每 3 季心态 +1。全公司最难养死的植物，也是你的。",
+    "every": { "n": 3, "effect": { "心态": 1 }, "text": "绿萝又长出一片新叶。你看着它，气就消了。" } },
+    { "id": "buddy", "name": "摸鱼搭子", "rarity": "common", "desc": "每 3 季精力 +1。他总知道哪个时间茶水间没人。",
+    "every": { "n": 3, "effect": { "精力": 1 }, "text": "搭子拉你去楼梯间聊了半小时。回来的时候，你满血了。" } },
+  { "id": "office_cat", "name": "公司的猫", "rarity": "rare", "desc": "心态 +1，每 4 季人脉 +1。整栋楼的人都来撸它，顺便认识了你。", "start": { "心态": 1 },
+    "every": { "n": 4, "effect": { "人脉": 1 }, "text": "隔壁部门的人来撸猫，顺手加了你好友。" } },
+  { "id": "mentor", "name": "老师傅", "rarity": "rare", "desc": "能力 +1，每 4 季能力 +1。快退休的老员工，什么都会，什么都不争。", "start": { "能力": 1 },
+    "every": { "n": 4, "effect": { "能力": 1 }, "text": "老师傅随口点了你一句。你琢磨了一个月，才琢磨透。" } },
+  { "id": "mom_call", "name": "老妈的电话", "rarity": "common", "desc": "每 4 季精力 +1，心态 +1。每周日晚上八点，准时响。",
+    "every": { "n": 4, "effect": { "精力": 1, "心态": 1 }, "text": "老妈在电话里问你吃了没。你说吃了。其实还没。" } },
+  { "id": "netfriend", "name": "网友·夜猫", "rarity": "epic", "desc": "每 3 季身价 +2。素未谋面，总能在半夜给你指一条路。",
+    "every": { "n": 3, "effect": { "身价": 2 }, "text": "夜猫半夜给你发来一条消息：这个机会，你去试试。" } },
+
+  { "id": "sys_signin", "name": "签到系统", "system": true, "rarity": "rare", "desc": "每季签到，身价 +1。【叮！】今日签到成功。",
+    "every": { "n": 1, "effect": { "身价": 1 }, "text": "【叮！】今日签到成功，奖励：身价 +1。" } },
+  { "id": "sys_shenhao", "name": "神豪系统", "system": true, "rarity": "epic", "desc": "身价获取 ×1.5。【叮！】请宿主尽快花钱。", "mods": { "qiMul": 1.5 } },
+  { "id": "sys_slack", "name": "摸鱼系统", "system": true, "rarity": "rare", "desc": "每 2 季才耗一次精力。【叮！】检测到宿主在工作，扣 10 分。", "mods": { "waterCostEvery": 2 } },
+  { "id": "sys_eye", "name": "天眼系统", "system": true, "rarity": "rare", "desc": "每个事件有 50% 概率预告一个选项的结果。【叮！】前方老板正在画饼。", "mods": { "hintChance": 0.5 } },
+  { "id": "sys_undying", "name": "不死系统", "system": true, "rarity": "epic", "desc": "这一世倒下一次还能站起来。【叮！】本系统不接受退货。", "mods": { "reviveOnce": true } },
+  { "id": "sys_antijuan", "name": "反卷系统", "system": true, "rarity": "legend", "desc": "每 2 季身价 +3、能力 +1。【叮！】隔壁卷王加班中，您的修为 +1。",
+    "every": { "n": 2, "effect": { "身价": 3, "能力": 1 }, "text": "【叮！】检测到同事在加班。宿主修为 +1。" } },
+  { "id": "sys_pie", "name": "画饼系统", "system": true, "rarity": "epic", "desc": "每 3 季人脉 +2、身价 +2。从老周那儿夺来的。【叮！】请宿主给别人画饼。",
+    "every": { "n": 3, "effect": { "人脉": 2, "身价": 2 }, "text": "【叮！】宿主画饼成功。对方信了。" } }
+]

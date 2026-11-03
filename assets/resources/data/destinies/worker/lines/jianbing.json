@@ -1,0 +1,74 @@
+{
+  "id": "jianbing",
+  "name": "煎饼大爷",
+  "summary": "楼下煎饼摊的大爷，每天多给你加一个蛋。前世你从没问过他叫什么。",
+  "states": {
+    "friend": "和大爷成了忘年交",
+    "shop": "帮大爷开了店"
+  },
+  "events": [
+    {
+      "id": "first_egg", "entry": true, "dir": "up", "layers": ["U1"], "weight": 18,
+      "text": "早上八点四十，楼下煎饼摊。大爷看了你一眼：新来的？加个蛋，不要钱。",
+      "choices": [
+        { "text": "谢谢大爷", "effect": { "精力": 1, "心态": 1, "follow": { "id": "every_morning", "delay": 2 } }, "result": "煎饼很烫。你在电梯里吃完，一整个上午都是暖的。" },
+        { "text": "坚持给钱", "effect": { "人脉": 1, "follow": { "id": "every_morning", "delay": 2 } }, "result": "大爷不收。你把钱压在了他的调料罐底下。第二天，他多给你加了根肠。" },
+        { "text": "问他叫什么", "effect": { "state": "friend", "心态": 1, "follow": { "id": "every_morning", "delay": 2 } }, "result": "大爷愣了一下：老马。好多年没人问了。前世，你吃了十年，没问过一次。" }
+      ]
+    },
+    {
+      "id": "every_morning", "dir": "any", "chainOnly": true, "teaser": "老马的摊子今天没出", "require": "line:jianbing",
+      "text": "连着三天，楼下的煎饼摊没出。你站在空空的路口，突然觉得早饭没了着落。",
+      "choices": [
+        { "text": "去打听", "chance": 0.6, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "state": "friend", "人脉": 1, "follow": { "id": "chengguan", "delay": 2 } }, "result": "隔壁报亭的大姐说，老马腰扭了。你买了一袋水果，按地址找了过去。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "chengguan", "delay": 2 } }, "result": "没人知道他去哪了。第四天，摊子又出来了，大爷一句没提。" } },
+        { "text": "换一家吃", "effect": { "精力": 1 }, "result": "新的那家没加蛋。你吃了两口，扔了。" },
+        { "text": "自己摊一个", "absurd": true, "chance": 0.3, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "能力": 1, "精力": 2, "state": "friend" }, "result": "你在出租屋里摊了一个，像模像样。老马回来后尝了一口：还行，蛋放早了。",
+          "fail": { "effect": { "精力": -1 }, "result": "你把锅烧黑了。烟雾报警器响了一早上。" } }
+      ]
+    },
+    {
+      "id": "chengguan", "dir": "side", "layers": ["L1"], "chainOnly": true, "teaser": "老马的推车被拦了", "require": "line:jianbing",
+      "text": "城管拦住了老马的推车：这里不让摆了。老马低着头，手里还攥着一个没摊完的煎饼。",
+      "choices": [
+        { "text": "帮他找个合规的位置", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "state": "friend", "人脉": 2, "心态": 1, "follow": { "id": "rainy", "delay": 2 } }, "result": "你问遍了街道办，找到一个夜市里的固定摊位。老马说：你比我儿子还上心。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "rainy", "delay": 2 } }, "result": "你跑了一下午，没找到。老马说：没事，我再想办法。" } },
+        { "text": "把那个煎饼买了", "effect": { "精力": 1, "心态": 1, "state": "friend" }, "result": "你接过那个没摊完的煎饼，付了十块钱。老马说：明天，我去别处摆。" },
+        { "text": "跟城管讲道理", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "脸皮": 2, "人脉": 2, "state": "friend" }, "result": "你讲了二十分钟。城管小伙子听完，买了两个煎饼，说：早上八点前，我没看见。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "城管听完，说：你说得对，但还是不行。" } }
+      ]
+    },
+    {
+      "id": "rainy", "dir": "any", "chainOnly": true, "teaser": "下雨天，老马还在摆", "require": "line:jianbing.friend",
+      "text": "下暴雨了。老马还守着摊，给每个没带伞的上班族递一个塑料袋。",
+      "choices": [
+        { "text": "帮他撑伞", "effect": { "人脉": 2, "心态": 1, "follow": { "id": "open_shop", "delay": 3, "ttl": 8 } }, "result": "你们俩挤在一把伞下，看着人来人往。老马说：我年轻的时候，也在写字楼上班。" },
+        { "text": "请他上楼躲雨", "effect": { "心态": 2, "follow": { "id": "open_shop", "delay": 3, "ttl": 8 } }, "result": "老马在茶水间坐了一下午，跟保洁阿姨聊得很开心。" },
+        { "text": "买走所有的面糊", "effect": { "身价": -2, "人脉": 3, "follow": { "id": "open_shop", "delay": 3, "ttl": 8 } }, "result": "你给全组带了早饭。老马早早收了摊，回家了。" }
+      ]
+    },
+    {
+      "id": "open_shop", "dir": "side", "chainOnly": true, "teaser": "老马想有个自己的店", "stage": [2, 99], "require": "line:jianbing.friend",
+      "text": "老马说，他这辈子就一个心愿：有个不怕风吹雨淋的小门脸。街角有间铺子要转让。",
+      "choices": [
+        { "text": "帮他盘下来", "require": "身价>=30", "effect": { "state": "shop", "身价": -20, "人脉": 4, "心态": 2 }, "result": "开业那天，老马在门口挂了个牌子：加蛋免费。你是第一个客人。" },
+        { "text": "帮他众筹", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "shop", "人脉": 5, "心态": 2 }, "result": "整栋楼吃过他煎饼的人，凑了三万块。铺子上的招牌写着：老马煎饼，全楼合资。",
+          "fail": { "effect": { "人脉": 1 }, "result": "钱没凑够。老马说：心意我领了，我还推我的车。" } },
+        { "text": "不了，帮不上", "effect": { "心态": -1 }, "result": "老马说：没事。他还是每天给你多加一个蛋。" }
+      ]
+    },
+    {
+      "id": "old_photo", "dir": "any", "once": true, "weight": 12, "stage": [2, 99], "require": "line:jianbing.shop",
+      "text": "老马的店里挂着一张老照片：一群年轻人站在一栋刚盖好的写字楼前。最边上那个，是年轻的老马。",
+      "choices": [
+        { "text": "问他这是哪", "effect": { "心态": 2, "能力": 1 }, "result": "老马说：就是你们那栋楼。我是第一批员工。后来公司没了，楼还在，我就在楼下摆摊。" },
+        { "text": "拍下来", "effect": { "人脉": 2, "心态": 1 }, "result": "你把照片发到了公司群里。第二天，好几个老员工来店里吃煎饼。" }
+      ]
+    }
+  ]
+}

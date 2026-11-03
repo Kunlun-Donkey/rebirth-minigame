@@ -1,0 +1,115 @@
+{
+  "id": "loan",
+  "name": "网贷",
+  "summary": "月底卡里只剩三十七块，手机弹出「秒到账」。借的时候点一下，还的时候要好多年。这一世，有人拉你一把。",
+  "stage": [1, 3],
+  "states": {
+    "borrowed": "借了网贷",
+    "cleared": "还清了网贷"
+  },
+  "events": [
+    {
+      "id": "ad", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 16,
+      "text": "月底，卡里还剩三十七块，房租还差两千。手机弹出一条广告：凭身份证，秒到账，首月免息。",
+      "choices": [
+        { "text": "点开，借两千", "effect": { "精力": 1, "身价": 2, "state": "borrowed", "follow": { "id": "due", "delay": 2 } },
+          "result": "钱真的秒到账了。房东收钱的时候，你松了一口气。" },
+        { "text": "吃一个月泡面", "effect": { "精力": -1, "心态": 1, "脸皮": 1 },
+          "result": "房租交上了。泡面的味道，你记了一辈子。" },
+        { "text": "找室友周转", "require": "line:roommate.friend", "effect": { "人脉": 1, "心态": 1 },
+          "result": "室友二话没说转了你。只说：发工资请我吃顿烧烤。" },
+        { "text": "前世背过一身债", "require": "legacy:bookkeeping>=1", "effect": { "心态": 1, "能力": 1, "身价": 3 },
+          "result": "前世你点开了。这一世你看了眼年化利率，把广告关了，接了份私活。" }
+      ]
+    },
+    {
+      "id": "due", "dir": "any", "chainOnly": true, "teaser": "还款日到了", "require": "line:loan.borrowed",
+      "text": "还款日到了。两千块借了一个月，要还两千四。客服很热情：还不上没关系，可以再借一笔。",
+      "choices": [
+        { "text": "再借一笔先还上", "effect": { "身价": 1, "follow": { "id": "snowball", "delay": 2 } },
+          "result": "你在另一个App上借了三千。拆东墙，补西墙，墙还挺多。" },
+        { "text": "咬牙加班还清", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "精力": -1, "能力": 1, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "你加了三个周末的班，还清了。然后把那个App删了。",
+          "easy": "你接了个私活，一晚上就挣回来了。还完款，顺手删了App。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "snowball", "delay": 2 } }, "result": "还差三百。你盯着屏幕，还是点了「再借一笔」。" } },
+        { "text": "跟家里说实话", "effect": { "心态": -1, "follow": { "id": "family", "delay": 1 } },
+          "result": "你拨了家里的电话，响了三声。你差点挂掉。" },
+        { "text": "跟客服砍价", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 2, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "你跟客服聊了两个小时。对方免了利息，只求你别再打来。",
+          "fail": { "effect": { "follow": { "id": "snowball", "delay": 2 } }, "result": "客服很耐心。挂电话时，你的额度被提高了。" } }
+      ]
+    },
+    {
+      "id": "snowball", "dir": "any", "chainOnly": true, "teaser": "催收短信来了", "require": "line:loan.borrowed",
+      "text": "你在三个App之间来回倒腾，账单从两千滚到了两万。手机一响，你就心慌。",
+      "choices": [
+        { "text": "继续借新还旧", "effect": { "death": "debt" },
+          "result": "窟窿越滚越大。你退了出租屋，回了老家，从头再来。" },
+        { "text": "跟家里说实话", "effect": { "心态": -1, "follow": { "id": "family", "delay": 1 } },
+          "result": "你拨通了电话，第一句是：妈，我跟你说个事。" },
+        { "text": "一笔一笔算清楚", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "follow": { "id": "negotiate", "delay": 1 } },
+          "result": "你把所有账单摊在桌上算了一夜。有几笔，不太对。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "family", "delay": 1 } }, "result": "你算到第三张就算不下去了。你拿起手机，打给了家里。" } },
+        { "text": "室友帮你理账", "require": "line:roommate.friend", "effect": { "人脉": 2, "心态": 1, "follow": { "id": "negotiate", "delay": 1 } },
+          "result": "室友拿走你的手机，把账一条条抄在纸上：慌什么，先算。" }
+      ]
+    },
+    {
+      "id": "family", "dir": "any", "chainOnly": true, "teaser": "老家打来了电话", "require": "line:loan.borrowed",
+      "text": "你吞吞吐吐说完，电话那头沉默了很久。老爸开口：多大点事。卡号发过来。",
+      "choices": [
+        { "text": "收下，写借条", "effect": { "心态": 1, "精力": 1, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "你写了借条拍照发过去。老妈回：字还是那么丑。" },
+        { "text": "爸妈：周末回来", "require": "line:parents.close", "effect": { "心态": 2, "精力": 2, "人脉": 1, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "老妈说：钱我们出，你周末回来吃饭。你回去了，桌上全是你爱吃的。" },
+        { "text": "不要，自己扛", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "脸皮": 1, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "你说不用，挂了电话，接了三份私活。半年后，你还清了。",
+          "fail": { "effect": { "心态": -1, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } }, "result": "利息跑得比私活快。第二天，老妈还是把钱打了过来。" } }
+      ]
+    },
+    {
+      "id": "negotiate", "dir": "any", "chainOnly": true, "teaser": "你决定把账理清楚", "require": "line:loan.borrowed",
+      "text": "账算清了。有几笔利息，早就超过了规定的上限。催收电话还在打，一天十几个。",
+      "choices": [
+        { "text": "按本金协商分期", "effect": { "能力": 1, "心态": 1, "state": "cleared", "follow": { "id": "fresh", "delay": 2 } },
+          "result": "你打了一下午电话。最后谈成了：只还本金，分十二期。" },
+        { "text": "投诉超标利息", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 6, "能力": 1, "state": "cleared", "feud": "超标的利息被退了回来", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "你把账单和规定一起交了上去。一个月后，多收的钱退回来了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "family", "delay": 1 } }, "result": "投诉在排队。催收不排队。你还是给家里打了电话。" } },
+        { "text": "拿出催收录音", "require": "item:recorder", "effect": { "身价": 8, "脸皮": 2, "state": "cleared", "feud": "催收的被你录音投诉了", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "你把催收电话一通通录了下来。平台主动打来：利息全免，求您删了。" },
+        { "text": "前世没算清", "require": "legacy:bookkeeping>=1", "effect": { "能力": 2, "身价": 8, "state": "cleared", "follow": { "id": "fresh", "delay": 1 } },
+          "result": "前世你一笔都没算清。这一世，你算得比平台还清楚。" }
+      ]
+    },
+    {
+      "id": "fresh", "dir": "any", "chainOnly": true, "teaser": "最后一笔还完了", "require": "line:loan.cleared",
+      "text": "最后一笔还完那天，你把三个App一个个卸载。手机里突然空出了一大块。",
+      "choices": [
+        { "text": "开个记账本", "effect": { "能力": 1, "心态": 1 }, "result": "第一页你写：泡面，三块五。第二页你写：存款，五百。" },
+        { "text": "请帮过你的人吃饭", "effect": { "人脉": 2, "心态": 1, "精力": 1 }, "result": "你点了一桌菜。买单的时候，没有借钱。" },
+        { "text": "发帖劝人别借", "effect": { "脸皮": 1, "人脉": 1, "身价": 3 }, "result": "你只写了一行：秒到账的，都要慢慢还。点赞的人很多。" },
+        { "text": "把账单裱起来", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "心态": 2, "身价": 4 }, "result": "你把它挂在床头。每次想点「秒到账」，就抬头看一眼。",
+          "fail": { "effect": { "心态": 1 }, "result": "打印店老板看了半天，免费给你加了个框。他说他也借过。" } }
+      ]
+    },
+    {
+      "id": "grudge", "dir": "down", "layers": ["D1", "D2"], "once": true, "weight": 14, "require": "died:debt>=2",
+      "text": "手机又弹出那条广告：秒到账，首月免息。这几个字，坑了你{died:debt}辈子。",
+      "choices": [
+        { "text": "关掉", "effect": { "心态": 1 }, "result": "你关掉广告。它又弹了一次。你又关掉了。" },
+        { "text": "举报这条广告", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 1, "身价": 5, "feud": "秒到账的广告被下架了" }, "result": "三天后，那条广告不见了。你截图发给了老家的表弟。",
+          "fail": { "effect": { "心态": -1 }, "result": "广告换了个颜色，又弹了出来。" } },
+        { "text": "前世点开过", "require": "legacy:bookkeeping>=1", "effect": { "人脉": 2, "能力": 1, "身价": 6, "feud": "给全组算了一遍网贷利息" },
+          "result": "前世你点开了。这一世你把年化利率算给全组听，算完没人敢点。" }
+      ]
+    }
+  ]
+}

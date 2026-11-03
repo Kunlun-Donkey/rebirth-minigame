@@ -1,0 +1,129 @@
+{
+  "id": "old_guard",
+  "name": "地下车库老保安",
+  "summary": "楼梯间拐角泡茶的老保安，是全公司最会摸鱼的人。摸鱼搭子、棋友、师父——后来你才知道，这栋楼是他盖的。",
+  "stage": [0, 3],
+  "states": {
+    "buddy": "成了老保安的摸鱼搭子",
+    "apprentice": "拜了老保安为师",
+    "founder_known": "知道了老保安是创始人"
+  },
+  "events": [
+    {
+      "id": "meet", "entry": true, "dir": "down", "layers": ["D2", "D3"], "weight": 20,
+      "text": "楼梯间拐角，一个穿保安服的老头在泡茶。他抬眼看你：摸鱼？坐。这地儿，监控拍不到。",
+      "choices": [
+        { "text": "坐下喝茶", "effect": { "state": "buddy", "心态": 1, "follow": { "id": "chess", "delay": 2 } },
+          "result": "茶很苦。老头说：苦就对了，楼上的人喝不出来。" },
+        { "text": "怕被抓，回去", "effect": { "能力": 1, "follow": { "id": "chess", "delay": 4, "ttl": 8 } },
+          "result": "你回了工位。路过时，老头冲你举了举茶杯。" },
+        { "text": "前世退休才找到", "require": "legacy:veteran>=1",
+          "effect": { "state": "buddy", "心态": 2, "人脉": 1, "follow": { "id": "chess", "delay": 2 } },
+          "result": "前世你退休那天才发现这块地方。这一世，你第一天就坐下了。" },
+        { "text": "问他公司股价", "absurd": true, "chance": 0.2, "chanceAttr": "心态", "chanceStep": 0.03,
+          "effect": { "state": "buddy", "人脉": 2, "flag": "hint", "follow": { "id": "chess", "delay": 2 } },
+          "result": "老头报了个数，精确到分。然后他眯起眼：你这娃，有点意思。",
+          "fail": { "effect": { "心态": -1 }, "result": "老头说：我一个看车库的，懂啥股价。他把茶收了。" } }
+      ]
+    },
+    {
+      "id": "chess", "dir": "down", "chainOnly": true, "teaser": "老头在车库摆了棋盘",
+      "text": "老头在车库摆了张棋盘：来一盘？输了，下午替我看岗亭。他落子很快，像早就算好了。",
+      "choices": [
+        { "text": "认真下", "chance": 0.35, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "state": "buddy", "能力": 2, "身价": 4, "flag": "won", "follow": { "id": "tea", "delay": 2 } },
+          "result": "你赢了一盘。老头盯着棋盘看了很久：三十年了，你是第二个。",
+          "easy": "你十步就赢了。老头把棋盘一推：明天还来。",
+          "fail": { "effect": { "state": "buddy", "精力": 2, "心态": 1, "follow": { "id": "tea", "delay": 2 } }, "result": "你输了。那个下午你坐在岗亭里，睡得特别香。" } },
+        { "text": "故意输给他", "effect": { "state": "buddy", "人脉": 1, "心态": 1, "follow": { "id": "tea", "delay": 2 } },
+          "result": "老头把棋子一推：让我？你还嫩。但他嘴角是翘着的。" },
+        { "text": "边下边回消息", "effect": { "state": "buddy", "能力": 1, "精力": -1, "follow": { "id": "tea", "delay": 3 } },
+          "result": "老头说：一心二用，两样都输。他说对了。" },
+        { "text": "掀棋盘", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "buddy", "脸皮": 2, "心态": 1, "flag": "won", "follow": { "id": "tea", "delay": 2 } },
+          "result": "老头愣住了，然后大笑：好！不按规矩来，才赢得了。",
+          "fail": { "effect": { "state": "buddy", "精力": -1, "follow": { "id": "tea", "delay": 2 } }, "result": "老头把棋子一颗颗捡起来摆好：再来。你下了一下午。" } }
+      ]
+    },
+    {
+      "id": "tea", "dir": "down", "chainOnly": true, "teaser": "老头说要教你点东西", "require": "line:old_guard.buddy",
+      "text": "老头问：知道楼上的人为啥累吗？他们以为工位是战场。战场在别处。要不要学？",
+      "choices": [
+        { "text": "拜师", "effect": { "state": "apprentice", "心态": 1, "能力": 1, "follow": { "id": "lesson", "delay": 2 } },
+          "result": "你给他倒了杯茶。他接过去：这杯我喝了，你就是我徒弟。" },
+        { "text": "我赢过你的", "require": "flag:won",
+          "effect": { "state": "apprentice", "心态": 2, "身价": 6, "flag": "key", "follow": { "id": "lesson", "delay": 2 } },
+          "result": "老头笑了：是我要收你。他把一把旧钥匙，放进你手心。" },
+        { "text": "不学了，回去卷", "effect": { "能力": 2, "精力": -1 },
+          "result": "老头摆摆手：去吧。累了再下来。" },
+        { "text": "先问学费多少", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "state": "apprentice", "心态": 1, "follow": { "id": "lesson", "delay": 2 } },
+          "result": "老头笑出了声：学费？每天下来陪我喝茶。",
+          "fail": { "effect": { "心态": -1 }, "result": "老头说：一个月三万。你转身就走，他在后面笑。" } }
+      ]
+    },
+    {
+      "id": "lesson", "dir": "any", "chainOnly": true, "teaser": "师父的第一课", "require": "line:old_guard.apprentice",
+      "text": "第一课：老板来之前三秒，你就得知道。师父指着墙角的通风口：这里，能听见十八楼的电梯。",
+      "choices": [
+        { "text": "认真记下来", "effect": { "心态": 1, "能力": 1, "follow": { "id": "reveal", "delay": 3, "ttl": 8 } },
+          "result": "你记住了每个通风口。从此老板走到你工位前，你总在认真干活。" },
+        { "text": "偷听高层开会", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 12, "人脉": 1, "follow": { "id": "reveal", "delay": 3, "ttl": 8 } },
+          "result": "你听到下季度要换总监。你比所有人早一个月准备好了。",
+          "easy": "你听了十分钟，把明年的组织架构图画了出来。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "reveal", "delay": 3, "ttl": 8 } }, "result": "你贴着通风口听了半小时，只听见有人在打呼。" } },
+        { "text": "让天眼系统也听听", "require": "system:sys_eye",
+          "effect": { "身价": 6, "心态": 1, "follow": { "id": "reveal", "delay": 3, "ttl": 8 } },
+          "result": "【叮！】天眼已开启。系统沉默片刻：宿主，你师父比我准。" }
+      ]
+    },
+    {
+      "id": "reveal", "dir": "down", "chainOnly": true, "teaser": "车库停了一排黑车", "require": "line:old_guard.apprentice",
+      "text": "公司周年庆，董事会的人全下了车库，在岗亭前站成一排：创始人好。师父还在泡茶。",
+      "choices": [
+        { "text": "接着下棋", "effect": { "state": "founder_known", "心态": 2, "follow": { "id": "choice", "delay": 2 } },
+          "result": "你落下一子。师父看了你一眼：不错，你是第一个没改口的。" },
+        { "text": "求他提拔你", "effect": { "state": "founder_known", "身价": 20, "能力": 2 },
+          "result": "师父看了你很久：好，明天去十八楼。他把你那杯茶倒了。" },
+        { "text": "问他为啥当保安", "effect": { "state": "founder_known", "心态": 1, "人脉": 2, "follow": { "id": "choice", "delay": 2 } },
+          "result": "他说：在顶楼三十年，没喝过一口热茶。在这儿，天天有。" },
+        { "text": "我早猜到了", "require": "flag:hint",
+          "effect": { "state": "founder_known", "身价": 10, "心态": 1, "follow": { "id": "choice", "delay": 2 } },
+          "result": "你说：报股价精确到分的保安，我就见过一个。师父哈哈大笑。" }
+      ]
+    },
+    {
+      "id": "choice", "dir": "down", "chainOnly": true, "teaser": "师父要退休了", "require": "line:old_guard.founder_known",
+      "text": "师父说他要退了。走之前，他问你：顶楼的位子，和车库的岗亭，你要哪个？",
+      "choices": [
+        { "text": "要岗亭", "effect": { "state": "apprentice", "flag": "booth", "心态": 1, "follow": { "id": "exam", "delay": 2 } },
+          "result": "师父点点头，把保温杯推给你：最后一课，过两天考。" },
+        { "text": "要顶楼", "effect": { "身价": 30, "能力": 3, "人脉": 2 },
+          "result": "你坐进了顶楼。窗外很亮，但再没人给你泡那杯苦茶了。" },
+        { "text": "掏出那把旧钥匙", "require": "flag:key",
+          "effect": { "state": "apprentice", "flag": "booth", "身价": 10, "follow": { "id": "exam", "delay": 2 } },
+          "result": "钥匙开的是顶楼办公室。里面没有文件，只有一张棋盘。你懂了。" },
+        { "text": "两个都要", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 25, "脸皮": 2, "feud": "顶楼和岗亭你全拿了" },
+          "result": "师父笑骂：贪心。然后把两把钥匙都给了你。",
+          "fail": { "effect": { "心态": -2 }, "result": "师父说：贪心的人，一个都拿不住。他把两把钥匙都收了。" } }
+      ]
+    },
+    {
+      "id": "exam", "dir": "down", "chainOnly": true, "teaser": "师父的最后一课", "require": "line:old_guard.apprentice & flag:booth",
+      "text": "最后一课。师父坐在岗亭里：老板就在楼梯口，往下走了。你怎么办？",
+      "choices": [
+        { "text": "接着喝茶", "require": "line:old_guard.apprentice & 心态>=8",
+          "effect": { "ending": "slacker_master" },
+          "result": "老板推门进来，看看你，又看看茶：给我也来一杯。" },
+        { "text": "起身假装巡逻", "effect": { "心态": 1, "身价": 6, "follow": { "id": "exam", "delay": 3, "ttl": 8 } },
+          "result": "你拿起手电筒走了一圈。师父摇头：还差点火候。" },
+        { "text": "请老板一起摸鱼", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "人脉": 3, "身价": 10, "feud": "老板也下车库摸鱼了" },
+          "result": "老板坐下喝了三杯，走的时候说：明天我也来。",
+          "fail": { "effect": { "心态": -2 }, "result": "老板说：你俩，明天都来我办公室。师父装作没听见。" } }
+      ]
+    }
+  ]
+}

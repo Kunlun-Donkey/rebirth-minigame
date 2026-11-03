@@ -23,7 +23,9 @@
 - `assets/scripts/core/` 引擎：`types` · `condition` 条件 DSL · `data` 剧本归一化 · `engine` 局内状态机 + 局外命盘/每日天命 · `profile` 局外存档 · `destinies` 多命格解锁 · `rng`
   - **引擎不认识任何具体属性名**：生命/成长货币/每季回复与产出/饿死渴死/寿终都由 destiny.json 的 `rules` 指定；HUD 读 `attrs[]` 的 `short/color/desc/stat`
   - 多命格并列可选：`data/destinies/index.json` 登记命格与解锁条件（`unlock.bestStage/lives/endings`），玩家选择记在 `profile.current`；轮回点全局通用，传承/技能/命盘按命格独立
-  - 当前 5 个命格：荒漠一株草（默认）→ 一条毛毛虫（草到嫩芽）/ 一只土狗（草到小草）→ 一只皮皮虾（狗到土狗）→ 一条鳄鱼（虾到拳虾）；设计文档 `docs/design/0{1..5}-*.md`
+  - 当前 6 个命格：荒漠一株草、一个打工人（默认开放）→ 一条毛毛虫（草到嫩芽）/ 一只土狗（草到小草）→ 一只皮皮虾（狗到土狗）→ 一条鳄鱼（虾到拳虾）；设计文档 `docs/design/0{1..6}-*.md`
+  - **线路架构**（打工人起使用，所有命格可用）：`lines/*.json` 一条故事一个文件（事件 id / flag 自动加「线路id/」命名空间，`entry` 入口、`states` 导出状态、效果 `state`、条件 `line:线路.状态` / `ever:线路.状态`），`crossings/*.json` 交叉事件只引用导出状态；`npm run lines <命格>` 打印线路图，`npm run sim` 输出线路进入率；写法见 `docs/design/06-worker-lines-brief.md`
+  - 系统（金手指）= companions 里 `system: true` 的条目，不进开局池，事件效果 `bind` / `unbind` / `keepSystem`（认主后每世自动绑定），条件 `system:any|id`；境界 `oldAgeEndings` = 寿终时满足条件判为结局（如「平凡一生」）
   - 随机出生地图：destiny.json 的 `maps`（每世按 weight 随机，可覆盖层名/旁白、开局效果、mods），事件用 `maps: [...]` 限定地图；`engine.mapDef()/layerName()` 取显示名，兜底事件不能带 maps
   - 重生不限次数；命盘（destiny.json `upgrades`）只放大广告收益、**不提供免费复活/窥探等替代广告的效果**；改价格后用 `npm run sim`（含 `-- --ads`）看全满世数（设计文档 §6.4.2）
 - `assets/scripts/game/` Cocos 表现层（UI 全部代码生成，入口 `GameRoot` 挂 Canvas）

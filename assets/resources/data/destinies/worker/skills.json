@@ -1,0 +1,31 @@
+[
+  { "id": "paid_break", "name": "带薪如厕", "icon": "rest", "cd": 4, "use": "direction",
+    "desc": "精力 +3，心态 +1。", "effect": { "精力": 3, "心态": 1 },
+    "useText": "你在厕所隔间里刷了四十分钟手机。出来的时候，神清气爽。", "hint": "转正为打工人时可能领悟；累垮住院后可能领悟" },
+  { "id": "manage_up", "name": "向上管理", "icon": "grow", "cd": 3, "use": "direction",
+    "desc": "身价 +8，能力 +1，精力 -1。", "effect": { "身价": 8, "能力": 1, "精力": -1 },
+    "useText": "你在老板开口之前，把他想要的报告放在了他桌上。", "hint": "转正为打工人时可能领悟" },
+  { "id": "big_picture", "name": "格局打开", "icon": "burst", "cd": 8, "use": "direction",
+    "desc": "身价 +25，精力 -3。", "effect": { "身价": 25, "精力": -3 },
+    "useText": "你把一个部门的事，想成了一个行业的事。", "hint": "成为一方大佬时可能领悟；退休或上市被否后可能领悟" },
+  { "id": "social_bull", "name": "社牛", "icon": "rally", "cd": 4, "use": "direction",
+    "desc": "人脉 +2，身价 +4。", "effect": { "人脉": 2, "身价": 4 },
+    "useText": "你在电梯里认识了三个部门的人，下电梯时已经约好了饭。", "hint": "成为都市高手时可能领悟；被优化、摆摊亏光后可能领悟" },
+
+  { "id": "read_no_reply", "name": "已读不回", "icon": "feign", "cd": 4, "use": "event", "skip": true,
+    "desc": "化解当前的普通事件，当它没发生过。", "useText": "你看了一眼消息，锁上了屏幕。这件事，就这么过去了。",
+    "hint": "觉醒时可能领悟；被卷王挤走、直播翻车后可能领悟" },
+  { "id": "pie_proof", "name": "画饼免疫", "icon": "immune", "cd": 3, "use": "event", "boost": 0.3,
+    "desc": "当前事件所有有风险的选项成功率 +30%。", "useText": "老板的饼飞过来，你侧身一让。",
+    "hint": "觉醒时可能领悟；吃了十年饼后可能领悟" },
+  { "id": "paper_trail", "name": "留痕", "icon": "insight", "cd": 5, "use": "event", "reveal": true,
+    "desc": "看清当前事件每个选项的后果。", "useText": "你把每一句话都记了下来，抄送给了所有人。",
+    "hint": "成为都市高手时可能领悟；背锅被开后可能领悟" },
+
+  { "id": "blame_shift", "name": "甩锅", "icon": "counter", "cd": 3,
+    "desc": "锅飞过来的时候，你接得住，也甩得回去。只在特定事件里出现。", "hint": "成为一方大佬时可能领悟" },
+  { "id": "anti_pie", "name": "反向画饼", "icon": "talk", "cd": 3,
+    "desc": "给老板画一张更大的饼。只在特定事件里出现。", "hint": "在老周线拿下画饼系统时领悟" },
+  { "id": "spirit_sense", "name": "灵觉", "icon": "wind", "cd": 4,
+    "desc": "灵气复苏后觉醒的感知。只在特定事件里出现。", "hint": "在灵气复苏的世界线里觉醒时领悟" }
+]

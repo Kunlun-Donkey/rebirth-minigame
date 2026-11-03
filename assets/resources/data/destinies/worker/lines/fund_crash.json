@@ -1,0 +1,121 @@
+{
+  "id": "fund_crash",
+  "name": "理财暴雷",
+  "summary": "年化十八，保本保息，同事都投了。前世你把积蓄放了进去。这一世，你先问一句：保本写进合同了吗？",
+  "stage": [1, 3],
+  "states": {
+    "invested": "投了高收益理财",
+    "crashed": "理财暴雷了",
+    "dodged": "躲过了暴雷"
+  },
+  "events": [
+    {
+      "id": "pitch", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 18,
+      "text": "茶水间里，隔壁组的老张压低声音：年化百分之十八，保本，我投了三年了，从没出过事。",
+      "choices": [
+        { "text": "积蓄全投进去", "effect": { "身价": 4, "state": "invested", "follow": { "id": "boom", "delay": 2 } },
+          "result": "你把卡里的钱全转了进去。老张拍拍你：以后跟着哥。" },
+        { "text": "少投一点试试", "effect": { "身价": 2, "state": "invested", "follow": { "id": "boom", "delay": 2 } },
+          "result": "你投了一个月工资。每天早上醒来，先看一眼收益。" },
+        { "text": "不投，喝水", "effect": { "心态": 1, "follow": { "id": "news", "delay": 4, "ttl": 8 } },
+          "result": "你接满一杯热水走了。老张在背后说：年轻人，胆子太小。" },
+        { "text": "前世也信了保本", "require": "legacy:scam_radar>=1 | legacy:bookkeeping>=1",
+          "effect": { "心态": 1, "能力": 1, "flag": "warned", "follow": { "id": "news", "delay": 4, "ttl": 8 } },
+          "result": "前世你信了「保本」两个字。这一世你只问：保本写进合同了吗？" }
+      ]
+    },
+    {
+      "id": "boom", "dir": "any", "chainOnly": true, "teaser": "理财账户又涨了", "require": "line:fund_crash.invested",
+      "text": "收益每月准时到账。老张又来了：下个月有个新产品，年化二十五，名额有限，我给你留了一个。",
+      "choices": [
+        { "text": "追加投入", "effect": { "身价": 6, "follow": { "id": "crash", "delay": 2 } },
+          "result": "你又转了一笔。老张说你有眼光，你也觉得自己有。" },
+        { "text": "落袋为安，赎回", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 8, "state": "dodged", "follow": { "id": "news", "delay": 2 } },
+          "result": "你赎回了本金和利息。老张摇头：年轻人，没格局。",
+          "easy": "你点了赎回，钱当天到账。你顺手把App删了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "crash", "delay": 2 } }, "result": "赎回要排队三个月。你排上了，但没排到。" } },
+        { "text": "去查这家公司", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 1, "身价": 4, "state": "dodged", "flag": "evidence", "follow": { "id": "news", "delay": 2 } },
+          "result": "注册才八个月，地址是个快递驿站。你连夜赎回，截了图。",
+          "fail": { "effect": { "follow": { "id": "crash", "delay": 2 } }, "result": "你查了一晚上，什么也没查出来。看着挺正规的。" } },
+        { "text": "给老张推我的理财", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "心态": 1, "人脉": 2, "身价": 6, "state": "dodged", "feud": "老张被你的饼劝醒了", "follow": { "id": "news", "delay": 2 } },
+          "result": "你给他画了个年化三十的饼。他当场要转钱。你说：你看，就这么容易。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "crash", "delay": 2 } }, "result": "老张反手又给你推了三个产品。论推销，你推不过他。" } }
+      ]
+    },
+    {
+      "id": "crash", "dir": "any", "chainOnly": true, "teaser": "理财群突然安静了", "require": "line:fund_crash.invested",
+      "text": "周一早上，理财App打不开了。群里有人发了一句：老板跑了。老张坐在工位上，脸是白的。",
+      "choices": [
+        { "text": "拉上同事去报案", "effect": { "人脉": 1, "state": "crashed", "follow": { "id": "rights", "delay": 1 } },
+          "result": "你和老张排在派出所门口。前面还有三十多个，都在打电话。" },
+        { "text": "一个人扛着", "effect": { "心态": -2, "身价": -4, "state": "crashed" },
+          "result": "你谁也没说，吃了三个月泡面。钱没回来，你也不想再提。" },
+        { "text": "前世背过债", "require": "legacy:bookkeeping>=1",
+          "effect": { "心态": 1, "能力": 1, "state": "crashed", "follow": { "id": "rights", "delay": 1 } },
+          "result": "前世你把老本都押上了。这一世你只投了闲钱，亏得起，也追得动。" },
+        { "text": "去老板家门口蹲", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 10, "state": "crashed", "feud": "蹲到了跑路的老板", "follow": { "id": "rights", "delay": 1 } },
+          "result": "你蹲到了老板，他正往车上搬箱子。你报了警。",
+          "fail": { "effect": { "心态": -1, "state": "crashed", "follow": { "id": "rights", "delay": 1 } }, "result": "你蹲了三天，蹲到一个快递员。他说这家半年前就搬了。" } }
+      ]
+    },
+    {
+      "id": "news", "dir": "any", "chainOnly": true, "teaser": "那家理财上新闻了",
+      "text": "新闻说：某理财平台暴雷，涉及上万人。茶水间里，老张对着手机发呆。你那笔钱，还在你卡上。",
+      "choices": [
+        { "text": "陪老张去报案", "effect": { "人脉": 2, "心态": 1, "state": "dodged", "follow": { "id": "rights", "delay": 1 } },
+          "result": "你陪他排了一下午队。出来的时候，他说：你那天要是劝我就好了。" },
+        { "text": "庆幸，不吭声", "effect": { "心态": 1, "身价": 3, "state": "dodged" },
+          "result": "你下班多买了一个鸡腿。这个鸡腿，值一个月工资。" },
+        { "text": "群里说我早说过", "require": "flag:warned", "effect": { "脸皮": 2, "身价": 4, "state": "dodged", "feud": "老张承认你说得对" },
+          "result": "群里安静了很久。最后老张回了一句：你说得对。" }
+      ]
+    },
+    {
+      "id": "rights", "dir": "any", "chainOnly": true, "teaser": "维权群里来了个「律师」",
+      "text": "维权群五百多人，每天吵到半夜。有人私聊你：我有门路，保证追回，先付三成代理费。",
+      "choices": [
+        { "text": "付钱找门路", "effect": { "death": "scammed" },
+          "result": "对方收了钱，第二天退了群。两回，你把积蓄都交了学费。" },
+        { "text": "走正规渠道登记", "effect": { "能力": 1, "心态": 1, "follow": { "id": "refund", "delay": 3, "ttl": 8 } },
+          "result": "你填了表，交了材料，拿到一张回执。慢，但是真的。" },
+        { "text": "交出查到的证据", "require": "flag:evidence", "effect": { "身价": 6, "人脉": 2, "follow": { "id": "refund", "delay": 2, "ttl": 8 } },
+          "result": "你那张快递驿站的截图，成了立案材料的第一页。" },
+        { "text": "群里拆穿二道贩子", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "脸皮": 1, "feud": "拆穿了维权群里的骗子", "follow": { "id": "refund", "delay": 3, "ttl": 8 } },
+          "result": "你把聊天记录发进群里。那个「律师」当晚就退群了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "refund", "delay": 3, "ttl": 8 } }, "result": "群里有人骂你挡财路。你没再说话，自己去登记了。" } }
+      ]
+    },
+    {
+      "id": "refund", "dir": "any", "chainOnly": true, "teaser": "维权有了消息", "require": "line:fund_crash.crashed | line:fund_crash.dodged",
+      "text": "一年后，通知来了：涉案资产追回一部分，按比例返还。老张拿到钱那天，请全组喝了奶茶。",
+      "choices": [
+        { "text": "拿钱，长记性", "effect": { "身价": 8, "心态": 1 }, "result": "钱只回来六成。剩下四成，你当是学费。" },
+        { "text": "把维权经历写下来", "effect": { "人脉": 2, "脸皮": 1, "身价": 5 },
+          "result": "你只写了一句：高收益三个字，就是风险。转发的人比你想的多。" },
+        { "text": "从此只存定期", "effect": { "心态": 2, "精力": 1 }, "result": "利息很低。但你每天晚上，都睡得着。" },
+        { "text": "去找跑路老板要利息", "absurd": true, "chance": 0.1, "chanceAttr": "脸皮", "chanceStep": 0.02,
+          "effect": { "身价": 15, "脸皮": 2, "feud": "跑路老板给你赔了利息" }, "result": "你写了封信寄到看守所。三个月后，他家人把利息也退了。",
+          "fail": { "effect": { "心态": -1 }, "result": "信退回来了，上面盖了个章：查无此「利息」。" } }
+      ]
+    },
+    {
+      "id": "grudge", "dir": "down", "layers": ["D1", "D2"], "once": true, "weight": 14, "require": "died:scammed>=2",
+      "text": "「年化十八，保本。」茶水间里又响起这句话。为这种话，你交了{died:scammed}辈子的学费。",
+      "choices": [
+        { "text": "把新人拉走", "effect": { "人脉": 2, "心态": 1 }, "result": "你把新人拉到楼梯间：保本的东西，不会有十八。" },
+        { "text": "问保本写合同吗", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 6, "脸皮": 1, "state": "dodged", "feud": "推销理财的被你问跑了" },
+          "result": "推销的人愣了三秒，说去拿合同。再也没回来。",
+          "fail": { "effect": { "心态": -1 }, "result": "他掏出一张盖着章的纸。你看不懂，但你没签。" } },
+        { "text": "前世信了保本", "require": "legacy:scam_radar>=1",
+          "effect": { "人脉": 3, "身价": 8, "state": "dodged", "feud": "茶水间再没人推理财" },
+          "result": "前世你信了。这一世你把茶水间的门打开：大家都来听听。" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "id": "pig_butcher",
+  "name": "网恋杀猪盘",
+  "summary": "深夜加错的好友，完美得不像真人。前世你把积蓄交给了一个头像。这一世，换你来收网。",
+  "stage": [0, 3],
+  "states": {
+    "hooked": "陷进了一场网恋",
+    "busted": "识破了杀猪盘"
+  },
+  "events": [
+    {
+      "id": "match", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 18,
+      "text": "加班到十一点，一个陌生头像加了你：「你好，加错人了。不过……你也还没睡？」头像很好看。",
+      "choices": [
+        { "text": "陪TA聊两句", "effect": { "心态": 1, "state": "hooked", "follow": { "id": "sweet", "delay": 1 } },
+          "result": "你们聊到了凌晨两点。TA说，好久没遇到这么聊得来的人了。" },
+        { "text": "加错了就删了", "effect": { "心态": 1, "精力": 1 }, "result": "你删了好友，关灯睡觉。那晚你睡得很香。" },
+        { "text": "前世也是加错人", "require": "legacy:scam_radar>=1",
+          "effect": { "心态": 1, "身价": 3, "state": "busted", "follow": { "id": "reverse", "delay": 1 } },
+          "result": "前世你回了「没睡」。这一世你回：没睡，正好陪你演。" },
+        { "text": "回：你先转我五十", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 3 }, "result": "对面愣了一会儿，真转了五十。然后把你拉黑了。",
+          "fail": { "effect": { "state": "hooked", "follow": { "id": "sweet", "delay": 1 } }, "result": "TA回了一个害羞的表情：好呀，等我们见面。" } }
+      ]
+    },
+    {
+      "id": "sweet", "dir": "any", "chainOnly": true, "teaser": "那个头像又发来了早安", "require": "line:pig_butcher.hooked",
+      "text": "每天准时的早安晚安。TA的朋友圈里是海边、跑车、健身房。TA说，你是这座城里唯一懂TA的人。",
+      "choices": [
+        { "text": "越聊越上头", "effect": { "心态": 1, "精力": 1, "follow": { "id": "invest", "delay": 1 } },
+          "result": "你下班第一件事是看手机。工位上的绿萝，你半个月没浇了。" },
+        { "text": "要求视频通话", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "能力": 1, "flag": "doubt", "follow": { "id": "invest", "delay": 1 } },
+          "result": "视频那头信号总是不好，画面卡在一张很好看的脸上。你起了疑心。",
+          "easy": "你刚拨过去，TA就说手机坏了。坏得非常准时。",
+          "fail": { "effect": { "follow": { "id": "invest", "delay": 1 } }, "result": "TA说在加班，下次一定。你信了，还叮嘱TA早点睡。" } },
+        { "text": "打开反诈App", "require": "item:anti_scam_app",
+          "effect": { "心态": 1, "身价": 4, "state": "busted", "follow": { "id": "reverse", "delay": 1 } },
+          "result": "App提示：对方头像疑似网图。你一搜，那是个健身博主。" },
+        { "text": "约TA来公司加班", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "心态": 1, "state": "busted" }, "result": "TA三天没回消息。原来骗子也怕加班。",
+          "fail": { "effect": { "follow": { "id": "invest", "delay": 1 } }, "result": "TA说好呀。然后发来一个链接：加班之前，先带你赚点。" } }
+      ]
+    },
+    {
+      "id": "invest", "dir": "any", "chainOnly": true, "teaser": "TA说有个内部机会", "require": "line:pig_butcher.hooked",
+      "text": "TA发来一个链接：我舅舅在做的平台，稳赚不赔。先投一点，赚了给你买那双鞋。",
+      "choices": [
+        { "text": "投一点试试", "effect": { "身价": 4, "follow": { "id": "all_in", "delay": 1 } },
+          "result": "你投了两千，第二天变成两千六，提现秒到。你觉得自己被爱了。" },
+        { "text": "截图去派出所", "effect": { "人脉": 1, "state": "busted", "follow": { "id": "police", "delay": 1 } },
+          "result": "民警看了一眼链接：这个，我们见过。你后背一凉。" },
+        { "text": "陪TA演下去", "require": "flag:doubt | item:anti_scam_app | legacy:scam_radar>=1",
+          "effect": { "脸皮": 1, "state": "busted", "follow": { "id": "reverse", "delay": 1 } },
+          "result": "你回：好呀，怎么投？屏幕那头的人，以为钓到了鱼。" },
+        { "text": "先问问稳在哪", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "心态": 1, "state": "busted", "follow": { "id": "police", "delay": 1 } },
+          "result": "你连问三个问题，TA一个没答上来，只说：你不信我？",
+          "fail": { "effect": { "follow": { "id": "all_in", "delay": 1 } }, "result": "TA发来一段很长的语音。听完，你觉得自己太多疑了。" } }
+      ]
+    },
+    {
+      "id": "all_in", "dir": "any", "chainOnly": true, "teaser": "平台说你中了大单", "require": "line:pig_butcher.hooked",
+      "text": "账户上的数字一天一个样。TA说：这波是大行情，把积蓄都放进来，我们就能在海边买房了。",
+      "choices": [
+        { "text": "全部投进去", "effect": { "death": "scammed" },
+          "result": "你按下了确认。第二天，平台打不开了，TA的头像也灰了。" },
+        { "text": "先提现试试", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": -2, "state": "busted", "follow": { "id": "police", "delay": 1 } },
+          "result": "你只提出来一半。剩下的，你决定不要了，转身去报了警。",
+          "fail": { "effect": { "身价": -6, "心态": -1, "state": "busted", "follow": { "id": "police", "delay": 1 } },
+            "result": "提现要先交「解冻费」。你盯着这四个字，终于醒了。" } },
+        { "text": "给老妈打个电话", "effect": { "心态": 1, "state": "busted", "follow": { "id": "police", "delay": 1 } },
+          "result": "老妈只问了一句：你见过TA本人吗？你沉默了很久。" },
+        { "text": "打开反诈App", "require": "item:anti_scam_app",
+          "effect": { "身价": 2, "心态": 1, "state": "busted", "follow": { "id": "police", "delay": 1 } },
+          "result": "App直接打来电话：您访问的平台涉嫌诈骗。你出了一身冷汗。" }
+      ]
+    },
+    {
+      "id": "reverse", "dir": "any", "chainOnly": true, "teaser": "TA又来催你投钱了", "require": "line:pig_butcher.busted",
+      "text": "TA以为你是鱼，你知道TA是钩。你们每晚照样说晚安，现在比的是谁先沉不住气。",
+      "choices": [
+        { "text": "边聊边留证据", "effect": { "能力": 1, "flag": "evidence", "follow": { "id": "police", "delay": 1 } },
+          "result": "转账账号、话术、头像，你一样一样存进了文件夹。" },
+        { "text": "反向画饼", "showIf": "skill:anti_pie", "useSkill": "anti_pie",
+          "effect": { "身价": 10, "脸皮": 2, "flag": "evidence", "feud": "骗子被你的饼套住了", "follow": { "id": "police", "delay": 1 } },
+          "result": "你说你有个内部项目，回报更高。TA犹豫三天，问你怎么投。" },
+        { "text": "套出TA的上家", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 8, "脸皮": 2, "flag": "evidence", "feud": "把骗子的上家套了出来", "follow": { "id": "police", "delay": 1 } },
+          "result": "你装作要投大钱。TA一着急，把「财务」的号推给了你。",
+          "easy": "你只说了一句「我想见见你舅舅」。TA就把整个群拉给了你。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "police", "delay": 1 } }, "result": "TA察觉了，把你拉黑了。你只截到了一半。" } },
+        { "text": "劝TA从良", "absurd": true, "chance": 0.15, "chanceAttr": "心态", "chanceStep": 0.03,
+          "effect": { "心态": 2, "人脉": 2, "feud": "劝骗子去正经上班了" },
+          "result": "你每天跟TA聊五险一金。一个月后，TA说想找份正经工作。",
+          "fail": { "effect": { "心态": 1 }, "result": "TA拉黑了你，顺手把你标成了「难搞客户」。" } }
+      ]
+    },
+    {
+      "id": "police", "dir": "any", "chainOnly": true, "teaser": "派出所给你回了电话", "require": "line:pig_butcher.busted",
+      "text": "民警把你的材料存了档：这个号，我们盯了半年。你给的转账记录，正好补上最后一环。",
+      "choices": [
+        { "text": "做完笔录发个帖", "effect": { "人脉": 2, "心态": 1, "身价": 3 },
+          "result": "帖子被转了两万次。好几个人私信你：我差点也信了。" },
+        { "text": "交出整套证据", "require": "flag:evidence", "effect": { "人脉": 2, "身价": 12, "feud": "骗子团伙被一锅端" },
+          "result": "一个月后，新闻说端掉了一个窝点。民警打来电话：谢谢你的文件夹。" },
+        { "text": "申请追回损失", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "身价": 12, "心态": 1 }, "result": "钱追回来了，一分不少。你请民警喝茶，他们没收。",
+          "fail": { "effect": { "心态": -1, "身价": 2 }, "result": "钱要排队退。你排在第四百多号，但总归在排。" } },
+        { "text": "主动当卧底", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 15, "脸皮": 2, "人脉": 2, "feud": "陪骗子演到了收网" },
+          "result": "你按民警说的又演了三天。收网那天，所里送了你一面锦旗。",
+          "fail": { "effect": { "心态": -1 }, "result": "民警说：心意领了，剩下的交给我们。你有点失落。" } }
+      ]
+    },
+    {
+      "id": "grudge", "dir": "down", "layers": ["D1", "D2"], "once": true, "weight": 14, "require": "died:scammed>=2",
+      "text": "「你好，加错人了。」又是这句。这样的开场白，骗走了你{died:scammed}辈子的积蓄。",
+      "choices": [
+        { "text": "回：我也加错了", "effect": { "心态": 1 }, "result": "你删了好友。对面大概在想，这条鱼怎么这么滑。" },
+        { "text": "截图举报", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "人脉": 2, "身价": 6, "state": "busted", "feud": "开场白刚发完就被举报" },
+          "result": "账号当晚就被封了。你截了个图，发到了公司群。",
+          "fail": { "effect": { "心态": 1 }, "result": "对方先把你删了。看来它也认出了你。" } },
+        { "text": "前世回了没睡", "require": "legacy:scam_radar>=1",
+          "effect": { "心态": 1, "身价": 8, "state": "busted", "feud": "骗子被你一句话劝退" },
+          "result": "前世你回了「没睡」。这一世你回：派出所也没睡，要不去聊聊？" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "id": "night_market",
+  "name": "夜市摆摊",
+  "summary": "一辆八百块的三轮车，一个炉子。前世你进了三千块的货，卖出七块五。这一世，这条街要听你的。",
+  "stage": [1, 99],
+  "states": {
+    "stall": "在夜市摆了摊",
+    "chain": "摊子开成了连锁"
+  },
+  "events": [
+    {
+      "id": "start", "entry": true, "dir": "side", "layers": ["L1", "L2"], "weight": 20,
+      "text": "下班路过夜市。卖烤肠的大哥收摊早，冲你喊：小伙子，三轮车转让，八百，带炉子。",
+      "choices": [
+        { "text": "买下来", "effect": { "脸皮": 1, "身价": -1, "state": "stall", "follow": { "id": "goods", "delay": 1 } },
+          "result": "你推着三轮车回了出租屋。房东看了你很久，没说话。" },
+        { "text": "先帮他看一晚摊", "effect": { "人脉": 1, "能力": 1, "state": "stall", "follow": { "id": "goods", "delay": 1 } },
+          "result": "你卖了一晚烤肠。收摊时大哥说：车给你，便宜两百。" },
+        { "text": "前世卖了七块五", "require": "legacy:hawker>=1",
+          "effect": { "脸皮": 2, "身价": 5, "state": "stall", "follow": { "id": "goods", "delay": 1 } },
+          "result": "前世你亏得只剩七块五。这一世你一开口，半条街都回了头。" },
+        { "text": "拿工牌抵车钱", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 4, "state": "stall", "follow": { "id": "goods", "delay": 1 } },
+          "result": "大哥看了看你的工牌：上班的不容易。车送你，炉子你自己买。",
+          "fail": { "effect": { "心态": -1 }, "result": "大哥说：工牌我要它干嘛？推着车走了。" } }
+      ]
+    },
+    {
+      "id": "goods", "dir": "side", "chainOnly": true, "teaser": "凌晨四点，去批发市场进货", "require": "line:night_market.stall",
+      "text": "凌晨四点的批发市场。卖手机壳的、卖发光气球的、卖臭豆腐料的，都在冲你招手。",
+      "choices": [
+        { "text": "进手机壳，稳", "effect": { "身价": 4, "follow": { "id": "patrol", "delay": 1 } },
+          "result": "手机壳不会过时，也不会火。你每晚稳稳地卖出十几个。" },
+        { "text": "进一批网红玩具", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "身价": 10, "flag": "trendy", "follow": { "id": "spot", "delay": 1 } },
+          "result": "玩具上了热门。你的摊前第一次排起了队。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "patrol", "delay": 1 } }, "result": "这批玩具上周就过气了。你堆了半屋子。" } },
+        { "text": "自己研发小吃", "chance": 0.35, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "身价": 8, "flag": "recipe", "follow": { "id": "spot", "delay": 1 } },
+          "result": "你调了七天酱料。第一个顾客吃完，又买了三份带走。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "patrol", "delay": 1 } }, "result": "你炒糊了三锅。邻摊大姐笑得直不起腰。" } }
+      ]
+    },
+    {
+      "id": "patrol", "dir": "side", "chainOnly": true, "teaser": "城管的车停在了街口", "require": "line:night_market.stall",
+      "text": "城管的车停在街口。旁边的摊主推着车就跑，有个大姐的车轱辘卡进了沟里。",
+      "choices": [
+        { "text": "帮大姐抬车", "effect": { "人脉": 2, "心态": 1, "flag": "sister", "follow": { "id": "spot", "delay": 1 } },
+          "result": "城管走过来，帮你俩一起抬：别跑了，挪到划线的地方去。" },
+        { "text": "推车就跑", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 2, "follow": { "id": "spot", "delay": 1 } }, "result": "你跑出了两条街。回头一看，城管根本没追。",
+          "fail": { "effect": { "身价": -2, "心态": -1, "follow": { "id": "spot", "delay": 1 } }, "result": "你跑丢了半车货。城管捡起来，还给了你。" } },
+        { "text": "去问怎么办证", "effect": { "能力": 1, "心态": 1, "follow": { "id": "spot", "delay": 1 } },
+          "result": "原来夜市有划线摊位，抽签分，一个月一百。你早该问的。" }
+      ]
+    },
+    {
+      "id": "spot", "dir": "side", "chainOnly": true, "teaser": "夜市要重新抽摊位", "require": "line:night_market.stall",
+      "text": "夜市划线管理，摊位抽签。路口那个黄金位，炸串摊的老马盯了三年。他放话：谁抢我跟谁急。",
+      "choices": [
+        { "text": "老老实实抽签", "effect": { "心态": 1, "身价": 3, "follow": { "id": "hot", "delay": 2 } },
+          "result": "你抽到了厕所旁边。人流量，其实也不小。" },
+        { "text": "找老马合摆", "effect": { "人脉": 2, "flag": "mate", "follow": { "id": "hot", "delay": 2 } },
+          "result": "老马想了想：你卖喝的，我卖炸串，正好。" },
+        { "text": "凌晨两点去排", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "身价": 6, "脸皮": 1, "feud": "老马第一次排在你后面", "follow": { "id": "hot", "delay": 2 } },
+          "result": "你两点到，老马三点到。他看了你一眼，搬凳子坐在了你后面。",
+          "easy": "你到的时候，老马还没起床。黄金位是你的了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "hot", "delay": 2 } }, "result": "老马一点就到了。他冲你笑了笑，递过来一串炸串。" } },
+        { "text": "跟老马比嗓门", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 8, "flag": "mate", "feud": "老马把黄金位让给了你", "follow": { "id": "hot", "delay": 2 } },
+          "result": "你一嗓子吼完，整条街安静了。老马说：这嗓子，不摆摊可惜了。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "hot", "delay": 2 } }, "result": "你吼破了嗓子。老马递过来一杯胖大海。" } }
+      ]
+    },
+    {
+      "id": "hot", "dir": "side", "chainOnly": true, "teaser": "你的摊前排起了长队", "require": "line:night_market.stall",
+      "text": "有人把你的摊拍成视频发上了网。队伍排到了街口，批发商打来电话：要不要多进点？",
+      "choices": [
+        { "text": "稳住，限量卖", "effect": { "身价": 8, "心态": 1, "follow": { "id": "chain", "delay": 2 } },
+          "result": "每晚只卖两百份，卖完收摊。队伍反而越排越长。" },
+        { "text": "借钱囤一大批货", "chance": 0.35, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 15, "follow": { "id": "chain", "delay": 2 } }, "result": "货刚到，热度正好冲顶。你一个月卖完了一年的量。",
+          "fail": { "effect": { "death": "stall_broke" }, "result": "热度三天就过了。你蹲在一屋子货中间，算了一整晚账。" } },
+        { "text": "带邻摊一起做", "require": "flag:sister | flag:mate", "effect": { "人脉": 3, "身价": 6, "follow": { "id": "chain", "delay": 2 } },
+          "result": "大姐卖酱料，老马卖炸串，你卖招牌。半条街都排起了队。" },
+        { "text": "招牌秘方", "require": "flag:recipe | flag:trendy", "effect": { "身价": 12, "能力": 1, "follow": { "id": "chain", "delay": 2 } },
+          "result": "别人学了一个月，学不像。顾客说：还是你家的对味。" }
+      ]
+    },
+    {
+      "id": "chain", "dir": "side", "chainOnly": true, "teaser": "有人想加盟你的摊", "require": "line:night_market.stall",
+      "text": "一个穿西装的人蹲在你摊前吃完三份：我想加盟。你这个摊，能不能开到十个夜市去？",
+      "choices": [
+        { "text": "自己慢慢开", "effect": { "能力": 2, "身价": 8, "state": "chain", "follow": { "id": "king", "delay": 3, "ttl": 8 } },
+          "result": "你一条街一条街地开。一年后，第五家店的灯亮了。" },
+        { "text": "签加盟，铺开", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 18, "人脉": 2, "state": "chain", "follow": { "id": "king", "delay": 2, "ttl": 8 } },
+          "result": "合同你逐字看了三遍。半年后，十个夜市都挂上了你的招牌。",
+          "fail": { "effect": { "心态": -1 }, "result": "合同第九页，藏着「配方归甲方」。你没签。" } },
+        { "text": "把配方卖了", "effect": { "身价": 20, "心态": 1 },
+          "result": "你拿着钱回去上班。周末路过夜市，那个摊前还排着队。" },
+        { "text": "让老马当区域经理", "absurd": true, "chance": 0.25, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "人脉": 3, "身价": 10, "state": "chain", "feud": "老马成了你的区域经理", "follow": { "id": "king", "delay": 2, "ttl": 8 } },
+          "result": "老马系上了领带。第一次开会，他带了一盒炸串给大家。",
+          "fail": { "effect": { "心态": -1 }, "result": "老马说他只会炸串。你说那正好。他还是没来。" } }
+      ]
+    },
+    {
+      "id": "king", "dir": "side", "chainOnly": true, "teaser": "整条街的摊主都来了", "require": "line:night_market.chain",
+      "text": "年底，夜市开大会。整条街的摊主都来了。老马站起来：我提议，以后这条街，听他的。",
+      "choices": [
+        { "text": "接下这条街", "require": "line:night_market.chain & 人脉>=5", "effect": { "ending": "night_king" },
+          "result": "你站起来，冲大家点了点头。夜市的灯，一串一串亮了。" },
+        { "text": "前世亏光的那条街", "require": "line:night_market.chain & legacy:hawker>=1", "effect": { "ending": "night_king" },
+          "result": "前世你在这条街亏得只剩七块五。这一世，这条街是你的。" },
+        { "text": "推老马当会长", "effect": { "人脉": 3, "心态": 1 },
+          "result": "老马当了会长。他上任第一件事，是给你送了一把炸串。" },
+        { "text": "回公司上班", "effect": { "身价": 10, "能力": 1 },
+          "result": "你把摊交给了大姐。工位上，同事问你周末去哪了。你说：摆摊。" }
+      ]
+    },
+    {
+      "id": "grudge", "dir": "side", "layers": ["L1", "L2"], "once": true, "weight": 14, "stage": [1, 99], "require": "died:stall_broke>=2",
+      "text": "批发市场的老板又冲你招手：这批货，包火。这句话，你信过{died:stall_broke}回。",
+      "choices": [
+        { "text": "转身就走", "effect": { "心态": 1 }, "result": "你走得很快。他在后面喊：真的包火！你没回头。" },
+        { "text": "先拿十个试试", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 5, "能力": 1 }, "result": "十个卖完了。你回去又拿了十个，就十个。",
+          "fail": { "effect": { "心态": -1 }, "result": "十个只卖出去两个。还好，只拿了十个。" } },
+        { "text": "前世进了三千", "require": "legacy:hawker>=1", "effect": { "身价": 8, "脸皮": 2, "feud": "批发老板第一次亏本卖货" },
+          "result": "前世你三千进货，卖出七块五。这一世你砍到了三折，老板差点哭了。" }
+      ]
+    }
+  ]
+}

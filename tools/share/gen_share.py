@@ -61,6 +61,7 @@ SLOGAN = {
     'caterpillar': '谁见了都想捏死的虫，要飞上天',
     'mantis_shrimp': '差点上桌的皮皮虾，一拳打出一片海',
     'crocodile': '谁都嫌丑的小鳄鱼，要从烂泥里化龙',
+    'worker': '重生回入职第一天，这一世不吃饼',
 }
 for d in index['destinies']:
     card(d['id'], d['name'], SLOGAN.get(d['id'], d['desc'][:16]))

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "x_subway", "dir": "any", "sudden": true, "weight": 10, "maps": ["city", "workshop", "awaken"],
+    "text": "早高峰，地铁停在两站之间不动了。车厢里挤得连手机都掏不出来。",
+    "choices": [
+      { "text": "给老板发消息请假", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.08,
+        "effect": { "精力": 2, "心态": 1 }, "result": "老板回：好的。你在车厢里睡了一觉，到公司已经是中午。",
+        "fail": { "effect": { "心态": -1, "身价": -2 }, "result": "老板回：迟到扣钱。你盯着那四个字，看到地铁重新开动。" } },
+      { "text": "跟旁边的人聊天", "effect": { "人脉": 2 }, "result": "旁边是个程序员，你们聊了四十分钟。下车的时候，他给你内推了一个岗位。" },
+      { "text": "闭眼站着睡", "effect": { "精力": 1 }, "result": "你站着睡着了。被挤得很稳，比床还稳。" }
+    ]
+  },
+  {
+    "id": "x_checkup", "dir": "any", "sudden": true, "weight": 10, "stage": [1, 99],
+    "text": "公司组织体检。报告出来，你看了一眼：颈椎、腰椎、视力、脂肪肝，全是箭头。",
+    "choices": [
+      { "text": "开始养生", "effect": { "精力上限": 1, "心态": 1 }, "result": "你买了保温杯，泡上枸杞。同事们说你老了。你说你在投资。" },
+      { "text": "假装没看见", "effect": { "精力": -1, "身价": 2 }, "result": "你把报告塞进抽屉，继续加班。抽屉里，已经塞了三份。" },
+      { "text": "前世的养生之道", "require": "legacy:wellness>=1", "effect": { "精力上限": 2, "精力": 2 },
+        "result": "前世你累倒在工位上。这一世，你每天都走一万步。体检报告上，只有一个箭头。" }
+    ]
+  },
+  {
+    "id": "x_salary_late", "dir": "any", "sudden": true, "weight": 9, "stage": [1, 99], "maps": ["workshop", "city"],
+    "text": "发工资的日子到了，工资没到。财务说：系统问题，下周发。",
+    "choices": [
+      { "text": "等等吧", "effect": { "心态": -1, "身价": -2 }, "result": "下周过去了。财务说：还是系统问题。" },
+      { "text": "带同事一起去问", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+        "effect": { "身价": 6, "人脉": 2 }, "result": "十几个人站在财务门口。当天下午，工资到账了，一分没少。",
+        "fail": { "effect": { "心态": -2 }, "result": "大家说好一起去，到了门口，回头一看，只有你一个。" } },
+      { "text": "前世凡事留痕", "require": "legacy:paper_trail>=1", "effect": { "身价": 8, "能力": 1 },
+        "result": "前世这个系统问题拖了半年。这一世你把劳动合同条款截图发进了群，第二天全员到账。" }
+    ]
+  },
+  {
+    "id": "x_annual_party", "dir": "any", "sudden": true, "weight": 9, "stage": [1, 99],
+    "text": "年会抽奖。一等奖是一台手机，二等奖是一箱苹果，三等奖是「和老板共进晚餐」。",
+    "choices": [
+      { "text": "认真抽", "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
+        "effect": { "身价": 10, "心态": 1 }, "result": "一等奖！你上台领奖，老板拍着你的肩：明年继续努力。",
+        "fail": { "effect": { "心态": -1, "人脉": 1 }, "result": "三等奖。老板请你吃了顿饭，饭后让你写一份年度总结。" } },
+      { "text": "上台表演节目", "effect": { "脸皮": 2, "人脉": 3 }, "result": "你唱了一首歌。没人记得你唱了什么，但大家都记住了你。" },
+      { "text": "躲在角落吃饭", "effect": { "精力": 2 }, "result": "你吃了三盘虾。今晚最大的赢家，是你。" }
+    ]
+  },
+  {
+    "id": "x_rainstorm", "dir": "any", "sudden": true, "weight": 8,
+    "text": "下暴雨了。写字楼门口挤满了没带伞的人，打车软件排到了第三百位。",
+    "choices": [
+      { "text": "冲进雨里", "effect": { "精力": -1, "心态": 1 }, "result": "你淋了个透。到家洗了个热水澡，觉得很久没这么痛快了。" },
+      { "text": "回去接着加班", "effect": { "能力": 1, "身价": 2, "精力": -1 }, "result": "雨停的时候，已经是半夜。活干完了，雨也停了。" },
+      { "text": "把伞借给保洁阿姨", "effect": { "人脉": 2, "心态": 1 }, "result": "阿姨推辞了三次，最后收下了。第二天，你的工位被擦得锃亮。" }
+    ]
+  },
+  {
+    "id": "x_boss_patrol", "dir": "any", "sudden": true, "weight": 8,
+    "text": "大老板突然下来巡视，挨个工位看。他停在了你身后。",
+    "choices": [
+      { "text": "继续干活", "effect": { "能力": 1, "身价": 3 }, "result": "大老板看了一会儿，点点头，走了。第二天，你的名字出现在了表扬名单里。" },
+      { "text": "回头打招呼", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "人脉": 3, "身价": 4 }, "result": "你说：领导好，我在做第三季度的方案。他问了两句，你答得很好。",
+        "fail": { "effect": { "心态": -1 }, "result": "你一回头，屏幕上是购物网站。" } },
+      { "text": "【叮！】天眼预警", "showIf": "system:sys_eye", "effect": { "身价": 6, "能力": 1 }, "result": "【叮！】检测到大老板距宿主三米。你提前切好了屏幕，他看得很满意。" }
+    ]
+  },
+  {
+    "id": "x_birthday", "dir": "any", "sudden": true, "weight": 6, "once": true, "stage": [1, 99],
+    "text": "今天是你生日。一直到下午五点，没人记得。",
+    "choices": [
+      { "text": "自己买块蛋糕", "effect": { "心态": 1, "精力": 1 }, "result": "你吃了一整块。挺甜的。" },
+      { "text": "打开老妈的语音", "effect": { "心态": 2 }, "result": "早上七点就到了的语音：生日快乐，记得吃面。你一直没点开。" },
+      { "text": "在群里说一声", "absurd": true, "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+        "effect": { "人脉": 3, "心态": 1 }, "result": "群里炸了。半小时后，你桌上多了三块蛋糕、两杯奶茶和一张贺卡。",
+        "fail": { "effect": { "心态": -1 }, "result": "群里回了一排「生日快乐」的表情包。然后，接着聊工作。" } }
+    ]
+  },
+  {
+    "id": "x_awaken_beast", "dir": "any", "sudden": true, "weight": 12, "maps": ["awaken"], "stage": [1, 99],
+    "text": "一只长着角的大猫从电梯里走出来，在前台趴下了。保安拿着拖把，不知道该不该上。",
+    "choices": [
+      { "text": "给它一根火腿肠", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+        "effect": { "心态": 1, "身价": 6 }, "result": "大猫吃完，舔了舔你的手，从窗户飞走了。前台那块地砖，从此在发光。",
+        "fail": { "effect": { "精力": -2 }, "result": "它不爱吃火腿肠。它打了个喷嚏，把你吹回了工位。" } },
+      { "text": "灵觉感应", "showIf": "skill:spirit_sense", "useSkill": "spirit_sense", "effect": { "身价": 12, "心态": 1 },
+        "result": "你闭上眼，听见它在说：我饿了，我迷路了。你帮它找到了回秘境的路。" },
+      { "text": "跟着大家躲起来", "effect": { "精力": 1 }, "result": "你躲在工位底下。它在前台睡了一下午，傍晚自己走了。" }
+    ]
+  },
+  {
+    "id": "x_doom_supply", "dir": "any", "sudden": true, "weight": 12, "maps": ["doom"], "stage": [1, 99],
+    "text": "避难所的物资只够三天了。大家在大堂吵了起来，有人看向你。",
+    "choices": [
+      { "text": "带人出去找", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.05,
+        "effect": { "人脉": 3, "身价": 8, "精力": -1 }, "result": "你们在一家关门的超市里找到了几箱方便面。回来的时候，大堂里有人鼓掌。",
+        "fail": { "effect": { "精力": -3 }, "result": "外面什么都没有。你们空着手回来，天已经黑了。" } },
+      { "text": "定规矩，按人头分", "effect": { "人脉": 2, "能力": 1 }, "result": "你在白板上写了一张分配表。吵架的声音小了。" },
+      { "text": "去翻老板的办公室", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+        "effect": { "精力": 3, "人脉": 2, "身价": 6 }, "result": "老板的柜子里全是零食和茶叶。全楼的人过了一个丰盛的周末。",
+        "fail": { "effect": { "心态": -1 }, "result": "柜子里只有一摞「年度优秀员工」的空白奖状。" } }
+    ]
+  },
+  {
+    "id": "x_gold_rain", "dir": "any", "sudden": true, "gold": true, "stage": [1, 99], "weight": 3, "once": true,
+    "text": "下班路上，你在路边捡到一张刮刮卡，背面写着：给今天最累的人。",
+    "choices": [
+      { "text": "刮开", "effect": { "身价": 15, "心态": 1 }, "result": "刮出来一行字：再坚持一下，好日子在后头。下面还夹着一个红包。" },
+      { "text": "留给后面的人", "effect": { "心态": 2, "人脉": 2 }, "result": "你把它放回了原处。走出十米，你回头看，一个外卖小哥弯腰捡了起来。" }
+    ]
+  }
+]

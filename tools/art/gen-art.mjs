@@ -12,7 +12,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // 首屏用到的图进主包 resources，其余进分包 subres（见 assets/scripts/game/res.ts）
 const MAIN_TEX = join(ROOT, 'assets/resources/textures');
 const SUB_TEX = join(ROOT, 'assets/subres/textures');
-const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'destiny/caterpillar/main_bg', 'destiny/mantis_shrimp/main_bg', 'destiny/crocodile/main_bg', 'common/ui/logo_title', 'common/ui/panel',
+const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'destiny/caterpillar/main_bg', 'destiny/mantis_shrimp/main_bg', 'destiny/crocodile/main_bg', 'destiny/worker/main_bg', 'common/ui/logo_title', 'common/ui/panel',
   'common/ui/btn_normal', 'common/ui/btn_primary', 'common/ui/btn_ad', 'common/ui/btn_locked']);
 const TMP = join(tmpdir(), 'rebirth-art');
 const filter = process.argv[2] ?? '';
@@ -1006,6 +1006,94 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
     ${[[104, 136], [150, 132], [128, 168]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="#6a7a4a"/>`).join('')}
     <path d="M206 140 Q236 130 232 110" stroke="#9aa87a" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="232" cy="106" r="5" fill="#2a1a10"/>
     <path d="M72 194 l-16 16 M184 194 l16 16 M70 112 l-18 -14 M186 112 l18 -14" stroke="#9aa87a" stroke-width="12" stroke-linecap="round"/>`);
+
+  // ---------- 14. 一个打工人 worker：奶油纸 + 写字楼蓝灰 + 晚霞橙 ----------
+  // 打工人小人（原点脚底中心，高约 150；c 衣服色，bag 背包）
+  const worker = (x, y, s, c = '#4a6a8a', skin = '#f2d2b0', bag = true, tie = null) => `<g transform="translate(${x} ${y}) scale(${s})">
+    ${bag ? '<rect x="-30" y="-108" width="22" height="44" rx="8" fill="#6a5a4a"/>' : ''}
+    <rect x="-22" y="-112" width="44" height="66" rx="16" fill="${c}"/>
+    ${tie ? `<path d="M0 -108 l-5 8 l5 26 l5 -26Z" fill="${tie}"/>` : ''}
+    <rect x="-18" y="-50" width="14" height="50" rx="6" fill="#3a3a4a"/><rect x="4" y="-50" width="14" height="50" rx="6" fill="#3a3a4a"/>
+    <circle cx="0" cy="-132" r="22" fill="${skin}"/><path d="M-22 -138 Q-18 -160 4 -158 Q22 -156 22 -138 Q10 -146 -22 -138Z" fill="#2a2a2a"/>
+    <circle cx="-7" cy="-130" r="2.6" fill="#2a1a10"/><circle cx="8" cy="-130" r="2.6" fill="#2a1a10"/>
+    <rect x="-34" y="-104" width="12" height="44" rx="6" fill="${c}"/><rect x="22" y="-104" width="12" height="44" rx="6" fill="${c}"/></g>`;
+  // 写字楼剪影：x0..x1 一排楼，亮着随机的窗
+  const towers = (seed, x0, x1, base, c, win, lit = 0.45, hMin = 380, hRange = 620) => {
+    const r = rng(seed); let out = '';
+    for (let x = x0; x < x1;) {
+      const w = 90 + r() * 90, h = hMin + r() * hRange;
+      out += `<rect x="${f(x)}" y="${f(base - h)}" width="${f(w)}" height="${f(h)}" fill="${c}"/>`;
+      for (let wy = base - h + 30; wy < base - 40; wy += 46) for (let wx = x + 14; wx < x + w - 24; wx += 30) if (r() < lit) out += `<rect x="${f(wx)}" y="${f(wy)}" width="16" height="22" fill="${win}"/>`;
+      x += w + 10 + r() * 20;
+    }
+    return out;
+  };
+  const screen = (x, y, s, glow, sym) => `<g transform="translate(${x} ${y}) scale(${s})">
+    <rect x="-70" y="-56" width="140" height="96" rx="12" fill="#1e2a3a"/><rect x="-60" y="-46" width="120" height="76" rx="6" fill="${glow}"/>
+    <rect x="-12" y="40" width="24" height="18" fill="#3a4a5a"/><rect x="-36" y="56" width="72" height="8" rx="4" fill="#3a4a5a"/>
+    <text x="0" y="6" font-size="40" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="#fff">${sym}</text></g>`;
+
+  job('destiny/worker/main_bg', W, H, `${grad('s', [[0, '#fbf2e2'], [0.55, '#f4dfc4'], [1, '#e8c09a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="820" cy="420" r="230" fill="#ffe2b0" opacity=".6" filter="url(#soft)"/>
+    ${towers(1401, -40, 1120, 1720, '#c9b8a8', '#fff3d6', 0.35)}
+    ${towers(1402, 60, 1100, 1760, '#a8988a', '#ffe9a8', 0.4)}
+    <rect x="0" y="1740" width="${W}" height="180" fill="#8a7a6a"/><rect x="0" y="1740" width="${W}" height="10" fill="#6a5a4a"/>
+    ${worker(380, 1800, 1.3, '#4a6a8a')}${worker(560, 1810, 1.1, '#8a5a4a', '#f2d2b0', false)}
+    <g transform="translate(760 1760)"><rect x="-60" y="-70" width="120" height="70" rx="10" fill="#d98a3a"/><rect x="-50" y="-60" width="100" height="16" fill="#fff3d6"/><circle cx="-36" cy="6" r="14" fill="#3a3a3a"/><circle cx="36" cy="6" r="14" fill="#3a3a3a"/></g>
+    ${grain}`, { jpg: true });
+  job('destiny/worker/settle_bg', W, H, `${grad('s', [[0, '#0e1626'], [0.6, '#18202e'], [1, '#22242a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${dust(rng(1411), 90, 0, 0, W, 900, '#fff8e0', 2)}
+    <circle cx="780" cy="360" r="66" fill="#f6ecd2" opacity=".85"/>
+    ${towers(1412, -40, 1120, 1760, '#1c2434', '#ffd27a', 0.18)}
+    <rect x="0" y="1740" width="${W}" height="180" fill="#14181e"/>
+    ${glowDot(540, 1700, 140, '#ffd27a')}${worker(540, 1760, 1.4, '#3a4a5a', '#e2c2a0')}
+    ${grain}`, { jpg: true });
+  job('destiny/worker/settle_bg_ending', W, H, `${grad('s', [[0, '#fff4da'], [0.5, '#fde0ad'], [1, '#f0b07a']])}
+    <rect width="${W}" height="${H}" fill="url(#s)"/>
+    <circle cx="540" cy="760" r="200" fill="#fff6e4" opacity=".95"/><circle cx="540" cy="760" r="380" fill="#fff6dc" opacity=".45" filter="url(#soft)"/>
+    ${cloud(220, 1000, 1.5, '#fff', 0.85)}${cloud(880, 1100, 1.3, '#fff', 0.8)}
+    ${towers(1421, -40, 1120, 1740, '#e8c8a0', '#fff6dc', 0.5)}
+    <rect x="0" y="1720" width="${W}" height="200" fill="#c9a07a"/>
+    ${worker(540, 1760, 1.6, '#4a6a8a', '#f2d2b0', true, '#c0392b')}
+    ${dust(rng(1422), 36, 200, 500, 680, 600, '#fff8e0', 3)}${grain}`, { jpg: true });
+  job('destiny/worker/cover', 512, 512, coverBox([[0, '#fbe8cc'], [1, '#e8b88a']], `
+    <circle cx="400" cy="110" r="56" fill="#fff3c4" opacity=".85" filter="url(#soft)"/><circle cx="400" cy="110" r="30" fill="#fff6dc"/>
+    ${towers(1431, -10, 520, 420, '#c9a88a', '#fff3d6', 0.4, 150, 200)}
+    <rect x="0" y="410" width="512" height="102" fill="#8a7a6a"/>
+    ${worker(250, 470, 1.9, '#4a6a8a', '#f2d2b0', true, '#c0392b')}`), { jpg: true });
+
+  stage('worker', 1, `${halo('#ffe9a8')}<rect x="146" y="390" width="220" height="16" rx="6" fill="#8a6a4a"/>
+    ${screen(256, 340, 0.9, '#4a90c8', '')}${worker(150, 470, 1.1, '#4a6a8a')}`);
+  stage('worker', 2, `${halo('#c8e0ff')}${sparks(1441, '#fff1b0')}${worker(256, 470, 1.6, '#4a6a8a', '#f2d2b0', true)}
+    <path d="M200 210 l20 -40 l20 40 M296 210 l20 -40 l20 40" stroke="#ffd27a" stroke-width="8" fill="none" stroke-linecap="round"/>`);
+  stage('worker', 3, `${halo('#ffd8a0', 200)}${sparks(1442, '#fff1b0')}
+    ${towers(1443, 120, 400, 470, '#a8988a', '#ffe9a8', 0.5, 160, 180)}${worker(256, 480, 1.4, '#2a3a5a', '#f2d2b0', false, '#c0392b')}`);
+  stage('worker', 4, `${halo('#ffd27a', 210)}${sparks(1444, '#fff1b0')}
+    <rect x="90" y="380" width="332" height="30" rx="10" fill="#6a4a2a"/>${worker(256, 380, 1.4, '#1e2a3a', '#f2d2b0', false, '#e2b04a')}
+    <path d="M226 168 l14 -26 l16 18 l16 -18 l14 26Z" fill="#e2b04a"/>`);
+  stage('worker', 5, `${halo('#ffe9a8', 230)}${sparks(1445, '#fff1b0')}
+    <circle cx="256" cy="330" r="130" fill="#4a90c8"/><path d="M170 290 q40 -40 80 -10 q30 20 60 -10 q30 20 40 60 q-40 30 -80 10 q-60 30 -100 -50Z" fill="#7bb556"/>
+    <circle cx="256" cy="330" r="130" fill="none" stroke="#fff" stroke-width="6" opacity=".6"/>
+    ${worker(256, 210, 0.9, '#1e2a3a', '#f2d2b0', false, '#e2b04a')}`);
+
+  comp('worker', 'pothos', `<rect x="92" y="150" width="72" height="62" rx="10" fill="#c9784a"/>
+    ${[[-40, -30], [-10, -60], [30, -50], [50, -10], [-56, 10]].map(([dx, dy], i) => `<path d="M128 150 Q${128 + dx / 2} ${150 + dy / 2} ${128 + dx} ${150 + dy}" stroke="#4a8a3a" stroke-width="5" fill="none"/><ellipse cx="${128 + dx}" cy="${150 + dy}" rx="18" ry="12" fill="${i % 2 ? '#6ab04a' : '#5a9a3a'}" transform="rotate(${dx} ${128 + dx} ${150 + dy})"/>`).join('')}`);
+  comp('worker', 'buddy', `${worker(118, 230, 1.25, '#7a6a9a', '#f2d2b0', false)}<g transform="translate(176 150)"><rect x="-16" y="-24" width="32" height="40" rx="6" fill="#fff"/><rect x="-16" y="-24" width="32" height="10" fill="#8a5a3a"/><path d="M16 -14 q14 4 0 18" stroke="#fff" stroke-width="6" fill="none"/></g>`);
+  comp('worker', 'office_cat', `<ellipse cx="128" cy="170" rx="66" ry="48" fill="#e2a85a"/><circle cx="128" cy="110" r="44" fill="#e2a85a"/>
+    <path d="M90 84 l6 -34 l24 22Z M166 84 l-6 -34 l-24 22Z" fill="#e2a85a"/>${eyes(112, 144, 108, 6)}<path d="M120 124 q8 8 16 0" stroke="#2a1a10" stroke-width="3" fill="none"/>
+    <path d="M100 96 l-6 -8 M128 92 v-10 M156 96 l6 -8" stroke="#c8883a" stroke-width="5" stroke-linecap="round"/><path d="M190 180 q40 -10 30 -60" stroke="#e2a85a" stroke-width="14" fill="none" stroke-linecap="round"/>`);
+  comp('worker', 'mentor', `${worker(128, 236, 1.3, '#6a6a5a', '#efcfa8', false)}<rect x="104" y="58" width="20" height="14" rx="5" fill="none" stroke="#2a1a10" stroke-width="3"/><rect x="132" y="58" width="20" height="14" rx="5" fill="none" stroke="#2a1a10" stroke-width="3"/><path d="M104 46 Q128 30 152 46" stroke="#d9d9d9" stroke-width="10" fill="none"/>`);
+  comp('worker', 'mom_call', `<rect x="84" y="40" width="88" height="170" rx="16" fill="#2a2a3a"/><rect x="92" y="56" width="72" height="130" rx="6" fill="#8ac8a8"/>
+    <circle cx="128" cy="106" r="24" fill="#fff"/><path d="M116 106 q12 -20 24 0 q-12 14 -24 0Z" fill="#c0392b"/><text x="128" y="166" font-size="22" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="#fff">妈</text>`);
+  comp('worker', 'netfriend', `<circle cx="128" cy="128" r="80" fill="#2a3a5a"/><path d="M168 74 a46 46 0 1 0 0 96 a36 36 0 1 1 0 -96Z" fill="#ffe9a8"/>
+    <rect x="58" y="150" width="96" height="48" rx="18" fill="#fff"/><path d="M78 196 l-8 18 l22 -16Z" fill="#fff"/><circle cx="86" cy="174" r="6" fill="#4a90c8"/><circle cx="106" cy="174" r="6" fill="#4a90c8"/><circle cx="126" cy="174" r="6" fill="#4a90c8"/>`);
+  // 系统：发光屏幕 + 系统专属字
+  [['sys_signin', '#3c8a2a', '签'], ['sys_shenhao', '#d99a2b', '豪'], ['sys_slack', '#4a90c8', '摸'], ['sys_eye', '#8e5bc9', '眼'],
+    ['sys_undying', '#c0392b', '命'], ['sys_antijuan', '#e2b04a', '反'], ['sys_pie', '#c9784a', '饼']].forEach(([id, c, ch]) => {
+    comp('worker', id, `<circle cx="128" cy="128" r="96" fill="${c}" opacity=".25" filter="url(#soft)"/>${screen(128, 128, 1.25, c, ch)}
+      <text x="128" y="52" font-size="22" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="${c}">【叮！】</text>`, c);
+  });
 
 }
 

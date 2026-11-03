@@ -1,0 +1,123 @@
+{
+  "id": "go_abroad",
+  "name": "出海",
+  "summary": "正规外派，合同签证保险齐全，就是那边没人说中文。前世你被一份看不懂的合同坑了。这一世，外面的套路你都见过。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [3, 99],
+  "states": {
+    "abroad": "出海闯市场",
+    "settled": "在海外站稳了脚跟"
+  },
+  "events": [
+    {
+      "id": "offer", "entry": true, "dir": "side", "layers": ["L3"], "weight": 18,
+      "text": "公司要开拓海外市场，名单上第一个是你。人事说：正规外派，合同签证保险齐全，就是那边没人说中文。",
+      "choices": [
+        { "text": "收拾行李就去", "effect": { "脸皮": 1, "身价": 4, "state": "abroad", "follow": { "id": "language", "delay": 1 } },
+          "result": "你在机场给老妈打电话：出个差。老妈说：带件厚衣服。" },
+        { "text": "先把合同查清楚", "effect": { "能力": 1, "state": "abroad", "flag": "checked", "follow": { "id": "language", "delay": 1 } },
+          "result": "备案、驻外机构、保险条款，你一条条查。都是真的。你订了机票。" },
+        { "text": "不去", "effect": { "心态": 1 }, "result": "你推掉了。同事去了，过年回来晒黑了一圈，升了两级。" },
+        { "text": "前世在那边被坑", "require": "legacy:seen_world>=1",
+          "effect": { "人脉": 2, "心态": 1, "state": "abroad", "flag": "lawyer", "follow": { "id": "language", "delay": 1 } },
+          "result": "前世你看不懂合同，被坑光了。这一世，你落地前就请好了当地律师。" }
+      ]
+    },
+    {
+      "id": "language", "dir": "side", "chainOnly": true, "teaser": "落地第一天，一句都听不懂", "require": "line:go_abroad.abroad",
+      "text": "落地第一天。司机说了一长串，你只听懂一个词：OK。你学了十年的外语，在这里一句都不管用。",
+      "choices": [
+        { "text": "每天背一百个词", "effect": { "能力": 2, "精力": -1, "follow": { "id": "dinner", "delay": 1 } },
+          "result": "三个月后，你能跟司机砍价了。他说你口音很怪，但很好懂。" },
+        { "text": "靠翻译软件硬聊", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "人脉": 2, "follow": { "id": "dinner", "delay": 1 } }, "result": "你举着手机聊了一下午。客户笑着说：明天见。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "dinner", "delay": 1 } }, "result": "软件把「合作愉快」翻成了「我们合不来」。对方愣了很久。" } },
+        { "text": "找个本地搭档", "effect": { "人脉": 1, "follow": { "id": "partner", "delay": 1 } },
+          "result": "搭档会说两种话，笑起来很真诚。他说：这边的事，交给我。" },
+        { "text": "全程靠比划", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "人脉": 2, "身价": 10, "follow": { "id": "dinner", "delay": 1 } },
+          "result": "你比划了二十分钟，对方签了单。他说没见过这么有诚意的人。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "dinner", "delay": 1 } }, "result": "你比的手势，在那边不太礼貌。对方客气地送你出了门。" } }
+      ]
+    },
+    {
+      "id": "dinner", "dir": "side", "chainOnly": true, "teaser": "客户请你去家里吃饭", "require": "line:go_abroad.abroad",
+      "text": "客户请你去家里吃饭。桌上的菜你一样都不认识。一家人都看着你，等你先动筷子。",
+      "choices": [
+        { "text": "每样都尝一口", "effect": { "人脉": 2, "脸皮": 1, "follow": { "id": "deal", "delay": 1 } },
+          "result": "有一样特别辣。你吃完眼泪直流，主人一家鼓起了掌。" },
+        { "text": "先问问规矩", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "follow": { "id": "deal", "delay": 1 } }, "result": "主人很高兴，把每道菜的来历讲了一晚上。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "deal", "delay": 1 } }, "result": "你问得太多，主人以为你嫌弃。气氛冷了半顿饭。" } },
+        { "text": "拿出老家的腊肉", "require": "item:bacon", "effect": { "loseItem": "bacon", "人脉": 4, "身价": 6, "follow": { "id": "deal", "delay": 1 } },
+          "result": "主人尝了一口，问你还有没有。第二天，他介绍了三个客户给你。" },
+        { "text": "给全家做顿老家菜", "absurd": true, "chance": 0.25, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "人脉": 4, "身价": 8, "follow": { "id": "deal", "delay": 1 } },
+          "result": "一桌菜被吃得精光。主人的老母亲拉着你的手，非要认你当干孙子。",
+          "fail": { "effect": { "人脉": 1, "follow": { "id": "deal", "delay": 1 } }, "result": "你把烟雾报警器弄响了，全楼都下来了。也算认识了。" } }
+      ]
+    },
+    {
+      "id": "partner", "dir": "side", "chainOnly": true, "teaser": "搭档说有个大单", "require": "line:go_abroad.abroad",
+      "text": "本地搭档带来一个大单：先打一笔保证金到他个人账户，下周就签约。他笑得很真诚。",
+      "choices": [
+        { "text": "打钱，信他", "effect": { "death": "abroad_fail" },
+          "result": "你打了钱。第二周，搭档的电话成了空号。" },
+        { "text": "钱只走公司账户", "effect": { "能力": 1, "心态": 1, "follow": { "id": "deal", "delay": 1 } },
+          "result": "你说钱只走公司账户，签正式合同。搭档说：那就算了。你躲过了一次。" },
+        { "text": "交给律师看", "require": "flag:lawyer | flag:checked | legacy:seen_world>=1",
+          "effect": { "身价": 10, "人脉": 2, "feud": "海外骗子被当地警方带走", "follow": { "id": "deal", "delay": 1 } },
+          "result": "律师只看了一页：报警吧。三天后，搭档被带走了。" },
+        { "text": "打开反诈App", "require": "item:anti_scam_app", "effect": { "心态": 1, "身价": 4, "follow": { "id": "deal", "delay": 1 } },
+          "result": "App提醒：「私人账户收保证金」属高风险。你把搭档拉黑了。" }
+      ]
+    },
+    {
+      "id": "deal", "dir": "side", "chainOnly": true, "teaser": "那边最大的客户约你", "require": "line:go_abroad.abroad",
+      "text": "那边最大的经销商约你见面：你们的东西不错，但我要独家代理，还要压价三成。合同是外文的。",
+      "choices": [
+        { "text": "按规矩一条条谈", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 18, "人脉": 2, "follow": { "id": "settle", "delay": 2 } },
+          "result": "你们谈了三轮。最后他让了两成，还请你喝了一杯。",
+          "easy": "你把他的成本算得比他自己还清楚。他笑了：照你的价。",
+          "fail": { "effect": { "身价": 6, "follow": { "id": "settle", "delay": 2 } }, "result": "他起身走了。三天后，他又打来电话，压价一成。" } },
+        { "text": "答应，先占住市场", "effect": { "身价": 8, "人脉": 1, "follow": { "id": "settle", "delay": 2 } },
+          "result": "利润薄了，货铺开了。你在那边，算是有了名字。" },
+        { "text": "当场签字图痛快", "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "身价": 12, "follow": { "id": "settle", "delay": 2 } }, "result": "你签了。运气不错，合同里没有坑。",
+          "fail": { "effect": { "death": "abroad_fail" }, "result": "合同是外文写的。你看懂的时候，货已经发了出去。" } },
+        { "text": "前世看不懂合同", "require": "legacy:seen_world>=1", "effect": { "身价": 20, "能力": 1, "feud": "经销商的坑被你一眼看穿", "follow": { "id": "settle", "delay": 2 } },
+          "result": "前世你看不懂这份合同。这一世你指着第七条：这一条，删掉。" }
+      ]
+    },
+    {
+      "id": "settle", "dir": "side", "chainOnly": true, "teaser": "海外分公司要挂牌了", "require": "line:go_abroad.abroad",
+      "text": "一年后，海外分公司挂牌。门口的牌子上有两种文字，其中一种，你已经能看懂了。",
+      "choices": [
+        { "text": "留下来扎根", "effect": { "身价": 15, "人脉": 3, "state": "settled" },
+          "result": "你在那边租了个带院子的房子。邻居每周都来串门。" },
+        { "text": "带着打法回国", "effect": { "能力": 3, "身价": 10, "state": "settled" },
+          "result": "你回来的时候，行李箱里装着一整套打法。总部给你升了两级。" },
+        { "text": "把老同事带出来", "effect": { "人脉": 4, "身价": 8, "state": "settled", "feud": "笑你的同事来投奔你" },
+          "result": "当年笑你外语烂的同事，发来了简历。你回：来吧，管饭。" },
+        { "text": "申请去更远的地方", "absurd": true, "chance": 0.2, "chanceAttr": "心态", "chanceStep": 0.03,
+          "effect": { "身价": 20, "心态": 1, "state": "settled" },
+          "result": "公司说，更远的地方只剩太空了。你说：可以。他们开始认真考虑。",
+          "fail": { "effect": { "心态": 1, "state": "settled" }, "result": "公司说没有更远的了。你在地图上找了很久。" } }
+      ]
+    },
+    {
+      "id": "grudge", "dir": "side", "layers": ["L3"], "once": true, "weight": 14, "stage": [3, 99], "require": "died:abroad_fail>=2",
+      "text": "又一个「本地朋友」凑过来：兄弟，有个大单，先打保证金。这种朋友，你在那边交过{died:abroad_fail}个。",
+      "choices": [
+        { "text": "转身就走", "effect": { "心态": 1 }, "result": "你走得很快。这句话的每个音节，你都熟。" },
+        { "text": "录音，报警", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "身价": 8, "人脉": 2, "feud": "「本地朋友」被警方带走了" },
+          "result": "你跟他聊了十分钟，把他的话全录了下来。警察来得很快。",
+          "fail": { "effect": { "心态": -1 }, "result": "他看你掏手机，转身就跑。跑得比你还熟。" } },
+        { "text": "前世交过学费", "require": "legacy:seen_world>=1", "effect": { "身价": 10, "能力": 1, "feud": "骗子被你反问到哑口" },
+          "result": "前世你信了。这一世你问：保证金打到哪个公司账户？他想了很久。" }
+      ]
+    }
+  ]
+}

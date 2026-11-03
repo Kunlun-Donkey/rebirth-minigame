@@ -6,7 +6,7 @@ import { Node } from 'cc';
 import { CodexView } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
-import { box, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
+import { box, chip, clampText, COLOR, fadeIn, image, onTap, rect, sizeOf, text } from '../ui/kit';
 
 type Tab = 'endings' | 'deaths' | 'cameos' | 'feuds';
 const TABS: { id: Tab; name: string }[] = [
@@ -102,14 +102,6 @@ function cell(parent: Node, c: Cell, x: number, y: number, w: number): void {
         : { fill: COLOR.ink, fillAlpha: 40, stroke: COLOR.ink2, strokeAlpha: 80, lineWidth: 2, radius: 18 });
     text(n, c.title, 18, 16, w - 36, { size: 28, color: c.got ? c.color : COLOR.ink2, bold: true });
     const bodyH = CARD_H - 70 - (c.foot ? 34 : 12);
-    text(n, fit(c.body, w - 36, 22, 32, bodyH), 18, 62, w - 36, { size: 22, color: c.got ? COLOR.ink : COLOR.ink2, wrap: true, lineHeight: 32 }, bodyH);
+    text(n, clampText(c.body, w - 36, 22, 32, bodyH), 18, 62, w - 36, { size: 22, color: c.got ? COLOR.ink : COLOR.ink2, wrap: true, lineHeight: 32 }, bodyH);
     if (c.foot) text(n, c.foot, 18, CARD_H - 42, w - 36, { size: 20, color: COLOR.ochre });
-}
-
-/** 文字超出高度时截断加省略号 */
-function fit(s: string, w: number, size: number, lh: number, h: number): string {
-    if (textHeight(s, w, size, lh) <= h) return s;
-    let t = s;
-    while (t.length > 1 && textHeight(`${t}…`, w, size, lh) > h) t = t.slice(0, -1);
-    return `${t}…`;
 }

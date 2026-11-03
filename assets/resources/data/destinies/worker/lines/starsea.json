@@ -1,0 +1,69 @@
+{
+  "id": "starsea",
+  "name": "卷出地球",
+  "summary": "地球上已经没有你卷不赢的人了。你把目光，投向了头顶。",
+  "stage": [4, 99],
+  "states": {
+    "orbit": "上了近地轨道",
+    "colony": "在殖民地站稳了脚"
+  },
+  "events": [
+    {
+      "id": "launch_plan", "entry": true, "dir": "up", "layers": ["U4"], "weight": 18,
+      "text": "董事会上，你把一份计划书推到桌子中央：《关于把业务拓展到地球以外的可行性报告》。没人笑。",
+      "choices": [
+        { "text": "正式立项", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "state": "orbit", "身价": 30, "能力": 2, "follow": { "id": "first_flight", "delay": 2 } }, "result": "投票全票通过。三个月后，第一艘印着公司标志的飞船上了天。",
+          "easy": "你只说了一句：地球卷完了。全场起立鼓掌。",
+          "fail": { "effect": { "心态": -2 }, "result": "股东们说：先把地球上的事做好。你把计划书锁进了抽屉。" } },
+        { "text": "先找人聊聊", "effect": { "人脉": 3, "follow": { "id": "first_flight", "delay": 3 } }, "result": "你约了几个造火箭的人吃饭。饭桌上，他们画的饼比老周还大。" },
+        { "text": "格局打开", "showIf": "skill:big_picture", "useSkill": "big_picture", "effect": { "state": "orbit", "身价": 45, "follow": { "id": "first_flight", "delay": 2 } },
+          "result": "你没讲地球以外，你讲的是一百年以后。有人当场签了投资意向书。" }
+      ]
+    },
+    {
+      "id": "first_flight", "dir": "up", "chainOnly": true, "teaser": "飞船要发射了", "require": "line:starsea",
+      "text": "发射台上，飞船的舱门开着。按计划，第一批上去的应该是工程师。你看着那扇门。",
+      "choices": [
+        { "text": "自己上", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "orbit", "身价": 25, "心态": 2, "follow": { "id": "colony", "delay": 2 } }, "result": "失重的那一刻，你飘了起来。你从舷窗往下看，地球很小，你的工位更小。",
+          "fail": { "effect": { "精力": -3, "follow": { "id": "colony", "delay": 3 } }, "result": "体检没过。你在地面看着飞船升空，心里空了一块。" } },
+        { "text": "让工程师先上", "effect": { "state": "orbit", "人脉": 3, "follow": { "id": "colony", "delay": 2 } }, "result": "工程师们在轨道上给你发来一张照片：老板，地球真好看。" },
+        { "text": "往舱里塞一盆绿萝", "absurd": true, "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "orbit", "心态": 2, "身价": 10, "follow": { "id": "colony", "delay": 2 } }, "result": "绿萝在太空里长疯了。工程师说，看着它，就不想家了。",
+          "fail": { "effect": { "心态": -1 }, "result": "绿萝没通过安检。你把它带回了办公室。" } }
+      ]
+    },
+    {
+      "id": "colony", "dir": "side", "chainOnly": true, "teaser": "殖民地缺一个管事的", "require": "line:starsea.orbit",
+      "text": "第一个殖民地建好了，三十个人，一台咖啡机。他们需要一个管事的，也需要一张考勤表。",
+      "choices": [
+        { "text": "定规矩：不打卡", "effect": { "state": "colony", "人脉": 4, "心态": 2, "follow": { "id": "aliens", "delay": 3, "ttl": 8 } }, "result": "殖民地第一条规定：在这里，没有人需要回消息。所有人都哭了。" },
+        { "text": "照搬地球那一套", "effect": { "state": "colony", "能力": 2, "身价": 20, "follow": { "id": "aliens", "delay": 3, "ttl": 8 } }, "result": "效率很高。三个月后，殖民地有了第一个辞职的人。他说他想回地球摸鱼。" },
+        { "text": "前世卷不动就绕", "require": "legacy:detour>=1", "effect": { "state": "colony", "心态": 2, "身价": 15, "follow": { "id": "aliens", "delay": 3, "ttl": 8 } },
+          "result": "前世你被卷王挤走过。这一世你立了规矩：殖民地里，谁加班谁请全员喝咖啡。" }
+      ]
+    },
+    {
+      "id": "aliens", "dir": "any", "chainOnly": true, "teaser": "殖民地外面有东西在敲门", "require": "line:starsea.colony",
+      "text": "殖民地外，一群长着三只眼睛的生物在敲门。翻译机响了：你们这里，招人吗？",
+      "choices": [
+        { "text": "招", "effect": { "人脉": 6, "身价": 30, "feud": "外星人学会的第一个词是收到" }, "result": "他们上班第一天，学会的第一个词是：收到。" },
+        { "text": "先面试", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "能力": 3, "身价": 25 }, "result": "他们的简历比你的还好看。你招了三个，其中一个比王卷卷还卷。",
+          "fail": { "effect": { "心态": -2 }, "result": "他们听不懂「五险一金」。面试失败。" } },
+        { "text": "问他们老板是谁", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "心态": 3, "身价": 20 }, "result": "他们说，他们的老板也在画饼，画了一万年。你们握了握手，同病相怜。",
+          "fail": { "effect": { "心态": -1 }, "result": "他们说：我们的老板，就是你。" } }
+      ]
+    },
+    {
+      "id": "earth_call", "dir": "any", "once": true, "weight": 12, "require": "line:starsea.orbit",
+      "text": "三十八万公里外，手机响了。是老妈：吃了没？你那边冷不冷？",
+      "choices": [
+        { "text": "说吃了", "effect": { "心态": 2, "精力": 2 }, "result": "这一次，你没撒谎。殖民地的食堂，按点开饭。" },
+        { "text": "给她看地球", "effect": { "心态": 3, "人脉": 1 }, "result": "你把镜头对着舷窗。老妈看了很久，说：咱家在哪儿？你指给她看。" }
+      ]
+    }
+  ]
+}

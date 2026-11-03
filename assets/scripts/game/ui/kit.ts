@@ -253,6 +253,15 @@ export function textHeight(str: string, w: number, size: number, lineHeight?: nu
     return estimateLines(str, w, size) * (lineHeight ?? Math.round(size * 1.5));
 }
 
+/** 文字超出高度时截断加省略号（宽度留 1.5 个字的余量，防真机标点换行比估算多一行） */
+export function clampText(str: string, w: number, size: number, lineHeight: number, h: number): string {
+    const ew = w - size * 1.5;
+    if (textHeight(str, ew, size, lineHeight) <= h) return str;
+    let t = str;
+    while (t.length > 1 && textHeight(`${t}…`, ew, size, lineHeight) > h) t = t.slice(0, -1);
+    return `${t}…`;
+}
+
 /** 小标签（如「前世：……」「传承·耐火根」） */
 export function chip(parent: Node, str: string, x: number, y: number, color: string, filled = false, size = 20): Node {
     const w = Math.ceil(estimateWidth(str, size)) + 20;

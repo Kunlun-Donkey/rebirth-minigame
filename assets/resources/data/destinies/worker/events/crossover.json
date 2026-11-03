@@ -1,0 +1,91 @@
+[
+  {
+    "id": "xo_grass_desk", "dir": "up", "layers": ["U1", "U2"], "cameo": true, "once": true, "weight": 10, "require": "xlives:desert_grass>=1",
+    "text": "你工位上有一盆快干死的小草，是前一个人留下的。它的叶子，正朝着你这边歪。",
+    "choices": [
+      { "text": "给它浇水", "effect": { "心态": 2, "精力": 1 }, "result": "你浇完水，它好像挺直了一点。你总觉得，前世你也这样渴过。" },
+      { "text": "把它挪到窗边", "effect": { "心态": 1, "能力": 1 }, "result": "太阳照在它身上。它不说话，但你知道它在长。" }
+    ]
+  },
+  {
+    "id": "xo_grass_tree", "dir": "side", "stage": [2, 99], "gold": true, "cameo": true, "once": true, "weight": 6, "require": "xend:desert_grass",
+    "text": "公司楼下新栽了一棵树，听说是从沙漠里移来的。你走过去，树叶哗啦啦响了一阵。",
+    "choices": [
+      { "text": "在树下吃午饭", "effect": { "精力": 3, "心态": 2, "身价": 8 }, "result": "树荫很凉。你迷迷糊糊听见它说：慢慢来，我在沙里也等了很久。" }
+    ]
+  },
+  {
+    "id": "xo_dog_gate", "dir": "side", "layers": ["L1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:local_dog>=1",
+    "text": "楼下有条黄土狗，每天你下班都在门口等你。没人知道它是谁家的。",
+    "choices": [
+      { "text": "分它半个包子", "effect": { "心态": 2, "人脉": 1 }, "result": "它叼着包子，送你走到了地铁口。前世，你也在村口这样等过谁。" },
+      { "text": "蹲下来摸摸它", "effect": { "心态": 1, "精力": 1 }, "result": "它把头埋进你手心。这一天，好像也没那么累了。" }
+    ]
+  },
+  {
+    "id": "xo_dog_guardian", "dir": "any", "sudden": true, "cameo": true, "once": true, "weight": 8, "require": "xend:local_dog/guardian | xend:local_dog/celestial",
+    "text": "深夜下班，一个人跟在你身后走了两条街。拐角处，一条大黄狗冲出来，冲着那人叫。",
+    "choices": [
+      { "text": "回头看", "effect": { "心态": 2, "人脉": 2, "feud": "跟踪的人被黄狗撵跑了" }, "result": "那人跑了。黄狗冲你摇了摇尾巴，消失在路灯底下。你觉得它认识你。" }
+    ]
+  },
+  {
+    "id": "xo_caterpillar_pothos", "dir": "up", "layers": ["U1"], "cameo": true, "once": true, "weight": 10, "require": "xlives:caterpillar>=1",
+    "text": "工位绿萝上爬着一条小毛毛虫。同事尖叫着要拿纸巾捏死它。",
+    "choices": [
+      { "text": "护住它", "effect": { "心态": 1, "脸皮": 1 }, "result": "你把它连叶子一起送到了楼下的花坛。前世，你也被捏起来过。" },
+      { "text": "让它待着", "effect": { "心态": 1, "人脉": 1 }, "result": "一个月后，它在你的显示器上结了个茧。全组都在等它出来。" }
+    ]
+  },
+  {
+    "id": "xo_butterfly_window", "dir": "up", "stage": [2, 99], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar",
+    "text": "会议开到一半，一只蝴蝶从窗缝飞进来，落在了老板的发言稿上。",
+    "choices": [
+      { "text": "看着它", "effect": { "心态": 2, "身价": 6 }, "result": "老板也看着它，忘了下一句要说什么。会议提前一小时结束了。" },
+      { "text": "开窗放它走", "effect": { "心态": 1, "人脉": 2 }, "result": "它在窗外绕了一圈才飞走。你觉得它在跟你道别。" }
+    ]
+  },
+  {
+    "id": "xo_shrimp_teambuild", "dir": "any", "cameo": true, "once": true, "weight": 10, "require": "xlives:mantis_shrimp>=1",
+    "text": "部门聚餐，桌上端来一大盆皮皮虾。最上面那只，好像冲你挥了一拳。",
+    "choices": [
+      { "text": "不下筷子", "effect": { "心态": 1, "精力": 1 }, "result": "你吃了一晚上青菜。同事问你是不是过敏，你说：算是吧。" },
+      { "text": "偷偷放生一只", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+        "effect": { "心态": 2, "人脉": 2 }, "result": "你借口上厕所，把它放进了饭店门口的鱼缸。它在里面挥了一整晚的拳。",
+        "fail": { "effect": { "脸皮": 1 }, "result": "服务员看见了，又把它端了回来。" } }
+    ]
+  },
+  {
+    "id": "xo_shrimp_letsgo", "dir": "side", "layers": ["L2"], "cameo": true, "once": true, "weight": 8, "require": "xend:mantis_shrimp/lets_go",
+    "text": "夜市里，一个小孩举着一只塑料皮皮虾喊：皮皮虾，我们走！整条街都笑了。",
+    "choices": [
+      { "text": "跟着喊", "effect": { "心态": 2, "脸皮": 2, "人脉": 2 }, "result": "你也喊了一嗓子。小孩把塑料虾塞给你：送你了，叔叔。" }
+    ]
+  },
+  {
+    "id": "xo_croc_news", "dir": "any", "cameo": true, "once": true, "weight": 10, "require": "xlives:crocodile>=1",
+    "text": "午休刷手机，新闻弹窗：本市下水道疑似发现鳄鱼。同事们都在笑，你笑不出来。",
+    "choices": [
+      { "text": "转发给全组", "effect": { "人脉": 2, "心态": 1 }, "result": "全组笑了一下午。只有你知道，那条鳄鱼可能只是想晒晒太阳。" },
+      { "text": "默默点了个赞", "effect": { "心态": 1 }, "result": "你给那条鳄鱼点了个赞。你也在一个看不见太阳的地方，待了很久。" }
+    ]
+  },
+  {
+    "id": "xo_croc_star", "dir": "side", "layers": ["L2"], "stage": [2, 99], "cameo": true, "once": true, "weight": 8, "require": "xend:crocodile/internet_star | xend:crocodile/sewer_king",
+    "text": "公园湖边围满了人，都在举着手机拍一条冲镜头张大嘴的鳄鱼。它看见你，嘴合上了。",
+    "choices": [
+      { "text": "冲它点头", "effect": { "心态": 2, "身价": 8 }, "result": "它也冲你点了点头，然后转身，冲着镜头张得更大了。" },
+      { "text": "也冲它张嘴", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+        "effect": { "脸皮": 3, "人脉": 3, "身价": 6 }, "result": "围观的人把镜头转向了你。第二天，热搜第三：男子与鳄鱼对视。",
+        "fail": { "effect": { "脸皮": 1 }, "result": "没人拍你。鳄鱼看了你一眼，翻了个白眼。" } }
+    ]
+  },
+  {
+    "id": "xo_all_lives", "dir": "any", "gold": true, "cameo": true, "stage": [2, 99], "once": true, "weight": 8,
+    "require": "xlives:desert_grass>=1 & xlives:local_dog>=1 & xlives:caterpillar>=1 & xlives:mantis_shrimp>=1 & xlives:crocodile>=1",
+    "text": "加班到深夜，你在落地窗的倒影里，看见了一株草、一条狗、一条虫、一只虾和一条鳄鱼。",
+    "choices": [
+      { "text": "冲倒影挥手", "effect": { "心态": 3, "身价": 20 }, "result": "它们也冲你挥了挥。远处传来天道的声音：这家伙，又换了个皮。" }
+    ]
+  }
+]

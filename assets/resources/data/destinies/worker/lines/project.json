@@ -1,0 +1,156 @@
+{
+  "id": "project",
+  "name": "年终大项目",
+  "summary": "年底的大项目落在你头上。熬夜、留痕、汇报会——前世功劳是别人的，锅是你的。这一世，反过来。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [1, 3],
+  "states": {
+    "credited": "项目功劳归了你",
+    "stolen": "项目功劳被抢了"
+  },
+  "events": [
+    {
+      "id": "kickoff", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 18,
+      "text": "年底，组长把一个大项目丢给你：做好了，明年升职。前世，项目做好了，升职的是别人。",
+      "choices": [
+        { "text": "接了，好好干", "effect": { "能力": 1, "follow": { "id": "night", "delay": 1 } },
+          "result": "你在白板上写下排期。最后一行写着：上线。" },
+        { "text": "要求写进绩效", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.07,
+          "effect": { "脸皮": 1, "身价": 5, "flag": "trail", "follow": { "id": "night", "delay": 1 } },
+          "result": "组长签了字。你把那张纸拍了照，存了三份。",
+          "easy": "你把绩效表递过去，笔帽都拔好了。组长签了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "night", "delay": 1 } }, "result": "组长笑了：年轻人，先做事。" } },
+        { "text": "第一天就留痕", "require": "legacy:paper_trail>=1",
+          "effect": { "能力": 1, "身价": 4, "flag": "trail", "follow": { "id": "night", "delay": 1 } },
+          "result": "前世你闷头干完，功劳被拿走。这一世，第一封邮件就抄送了总监。" },
+        { "text": "请组长亲自挂帅", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 6, "flag": "trail", "follow": { "id": "night", "delay": 1 } },
+          "result": "你说：这么大的项目，得您挂帅。他点了头。出了事，他是第一负责人。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "night", "delay": 1 } }, "result": "组长点点头：好，我挂帅，你干活。" } }
+      ]
+    },
+    {
+      "id": "grudge", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 16, "once": true, "require": "died:scapegoat>=2",
+      "text": "又到年底。新组长捧着一个项目，笑眯眯地走向你。这样的锅，你背过{died:scapegoat}回了。",
+      "choices": [
+        { "text": "先让他写邮件确认", "effect": { "flag": "trail", "能力": 1, "follow": { "id": "night", "delay": 1 } },
+          "result": "组长写了邮件。你回复：收到，已抄送总监。他的笑停了一下。" },
+        { "text": "把项目推回去", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "心态": 1, "身价": 8, "feud": "这一世的锅没接" },
+          "result": "你说：我手上满了。他捧着项目，去找了下一个人。",
+          "easy": "你还没开口，他就自己转身了。他认得你的眼神。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "night", "delay": 1 } }, "result": "他把项目放在你桌上：能者多劳嘛。" } },
+        { "text": "接，全程录音", "require": "item:recorder",
+          "effect": { "flag": "trail", "身价": 6, "follow": { "id": "night", "delay": 1 } },
+          "result": "你接了项目。录音笔亮着红灯，组长说的每一句都在里面。" }
+      ]
+    },
+    {
+      "id": "night", "dir": "up", "chainOnly": true, "teaser": "项目进度落后了",
+      "text": "凌晨一点，办公室只剩你一盏灯。进度落后两周，组长在群里发了一句：加油。",
+      "choices": [
+        { "text": "通宵赶", "effect": { "精力": -2, "能力": 2, "follow": { "id": "copy", "delay": 1 } },
+          "result": "天亮的时候，你写完了最难的那块。窗外的保洁阿姨冲你点了点头。" },
+        { "text": "申请延期", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "心态": 1, "follow": { "id": "copy", "delay": 1 } },
+          "result": "你把排期表发给组长：要么加人，要么延期。他选了加人。",
+          "easy": "你只发了一张图。组长看完，当晚就给你加了两个人。",
+          "fail": { "effect": { "心态": -2, "精力": -1, "follow": { "id": "copy", "delay": 1 } }, "result": "组长回了一句：别人都能做完。" } },
+        { "text": "让系统帮你写", "require": "system:any",
+          "effect": { "能力": 1, "身价": 6, "follow": { "id": "copy", "delay": 1 } },
+          "result": "【叮！】代码生成中。你睡了一觉，醒来进度条跑完了。" },
+        { "text": "再来一杯冰美式", "require": "item:coffee",
+          "effect": { "loseItem": "coffee", "能力": 2, "精力": 1, "follow": { "id": "copy", "delay": 1 } },
+          "result": "冰美式下肚，你写到了天亮，一个bug都没有。" }
+      ]
+    },
+    {
+      "id": "copy", "dir": "any", "chainOnly": true, "teaser": "有人半夜在拷你的文档",
+      "text": "项目快做完了。日志显示，有人半夜在拷你的文档，登录的是隔壁组的账号。",
+      "choices": [
+        { "text": "发邮件抄送全组", "effect": { "flag": "trail", "能力": 1, "follow": { "id": "report", "delay": 1 } },
+          "result": "每一版文档你都发了邮件，抄送总监。邮件很长，没人看，但都在。" },
+        { "text": "开会时开着录音笔", "require": "item:recorder",
+          "effect": { "flag": "trail", "脸皮": 1, "身价": 4, "follow": { "id": "report", "delay": 1 } },
+          "result": "每次开会，录音笔都开着。谁说了什么，一句不差。" },
+        { "text": "肯定是王卷卷", "showIf": "line:wang_juanjuan.rival",
+          "effect": { "flag": "trail", "心态": 1, "follow": { "id": "wang_report", "delay": 1 } },
+          "result": "你早料到是他。你把自己的名字，写进了每一页的页脚。" },
+        { "text": "当没看见", "effect": { "心态": 1, "follow": { "id": "report", "delay": 1 } },
+          "result": "你想：大家都是同事。" }
+      ]
+    },
+    {
+      "id": "report", "dir": "up", "chainOnly": true, "teaser": "年终汇报会，明天上午",
+      "text": "年终汇报会。台上讲你项目的人不是你，PPT封面上写着别人的名字。总监在点头。",
+      "choices": [
+        { "text": "站起来说清楚", "chance": 0.35, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "state": "credited", "身价": 15, "feud": "汇报会上抢回了项目", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你站起来，讲了一个PPT里没有的细节。总监转头看向了你。",
+          "easy": "你走上台，接过翻页笔：后面的，我来讲。没人拦你。",
+          "fail": { "effect": { "state": "stolen", "心态": -2, "follow": { "id": "blame", "delay": 2 } }, "result": "你刚站起来，总监抬手：坐下，会后说。会后，没人找你。" } },
+        { "text": "把抄送记录投上去", "require": "flag:trail",
+          "effect": { "state": "credited", "身价": 15, "能力": 1, "feud": "抢功的人当场下不来台", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你把抄送记录投上大屏。台上的人，话说到一半停住了。" },
+        { "text": "按下录音笔", "require": "item:recorder",
+          "effect": { "state": "credited", "身价": 18, "feud": "领功的人被录音打了脸", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你按下播放：这事我不管，你自己搞。台上那人的声音，全场都听见了。" },
+        { "text": "忍了", "effect": { "state": "stolen", "心态": -1, "follow": { "id": "blame", "delay": 2 } },
+          "result": "你在台下鼓掌。你鼓得很用力，因为那是你自己的项目。" }
+      ]
+    },
+    {
+      "id": "wang_report", "dir": "up", "chainOnly": true, "teaser": "王卷卷要替你汇报", "require": "line:wang_juanjuan.rival",
+      "text": "汇报会上，王卷卷抢先上了台，讲的是你的项目。他讲得比你还熟，连你的错别字都背了下来。",
+      "choices": [
+        { "text": "问他一个细节", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "state": "credited", "身价": 12, "feud": "王卷卷被问住了", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你问了一个只有作者才知道的问题。王卷卷张了张嘴，没答上来。",
+          "easy": "你问：第七页那个变量为啥叫这名？他答不上。那是你猫的名字。",
+          "fail": { "effect": { "state": "stolen", "心态": -2, "follow": { "id": "blame", "delay": 2 } }, "result": "他答上来了。他连你熬夜时的注释，都背了下来。" } },
+        { "text": "请大家看页脚", "require": "flag:trail",
+          "effect": { "state": "credited", "身价": 15, "feud": "王卷卷的页脚写着你的名字", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你说：请看页脚。每一页都写着你的名字。王卷卷低头看了一眼。" },
+        { "text": "功和锅一起给他", "showIf": "skill:blame_shift", "useSkill": "blame_shift",
+          "effect": { "state": "credited", "身价": 18, "feud": "王卷卷连功带锅一起接了", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你说：卷卷讲得好，那延期两周的锅也是他的吧？他沉默了。" },
+        { "text": "让他讲完", "effect": { "state": "stolen", "心态": 1, "follow": { "id": "blame", "delay": 2 } },
+          "result": "你在台下鼓掌。散会时他路过你，小声说了句：对不起。" }
+      ]
+    },
+    {
+      "id": "blame", "dir": "up", "chainOnly": true, "teaser": "项目上线出事了", "require": "line:project.stolen",
+      "text": "项目上线第三天出了故障。领功的人在群里@了你：这块一直是你负责的。",
+      "choices": [
+        { "text": "认了", "effect": { "death": "scapegoat" },
+          "result": "你背下了锅。开除通知，比年终奖先到。" },
+        { "text": "连夜修好", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "state": "credited", "能力": 2, "身价": 10, "follow": { "id": "promote", "delay": 2 } },
+          "result": "你修到天亮。总监问：这系统谁最懂？全组都看向了你。",
+          "easy": "你改了一行。故障恢复了，群里安静了五分钟。",
+          "fail": { "effect": { "death": "scapegoat" }, "result": "你修了一夜，没修好。早上九点，HR在等你。" } },
+        { "text": "甩锅", "showIf": "skill:blame_shift", "useSkill": "blame_shift",
+          "effect": { "state": "credited", "身价": 15, "feud": "锅回到了领功的人手里", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你把他的汇报PPT转进群里：功是他领的，锅也该是他的。" },
+        { "text": "甩出记录", "require": "flag:trail | item:recorder",
+          "effect": { "state": "credited", "身价": 12, "feud": "@你的那条消息被撤回了", "follow": { "id": "promote", "delay": 2 } },
+          "result": "你把记录甩进群里。三分钟后，那条@你的消息撤回了。" }
+      ]
+    },
+    {
+      "id": "promote", "dir": "up", "chainOnly": true, "teaser": "总监找你谈话", "require": "line:project.credited",
+      "text": "总监把你叫进办公室：项目做得不错，明年那个组你来带。前世，这句话是对别人说的。",
+      "choices": [
+        { "text": "接下", "effect": { "能力": 2, "身价": 12 },
+          "result": "你接下了。走出办公室，组长第一次主动跟你打了招呼。" },
+        { "text": "顺便提加薪", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 20 },
+          "result": "总监看了你一眼，笑了：可以，你是第一个敢提的。",
+          "fail": { "effect": { "身价": 6 }, "result": "总监说：先干着，明年再说。你闻到了饼的味道。" } },
+        { "text": "请他发邮件确认", "require": "legacy:pie_sense>=1",
+          "effect": { "身价": 15, "心态": 1 },
+          "result": "前世你听过这句话，然后等了十年。这一世，你请他发邮件。" }
+      ]
+    }
+  ]
+}

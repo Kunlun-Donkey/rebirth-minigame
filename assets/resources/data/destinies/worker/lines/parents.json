@@ -1,0 +1,147 @@
+{
+  "id": "parents",
+  "name": "老家爸妈",
+  "summary": "每周日晚上八点，老妈的视频准时打过来。这一世，你接了。",
+  "states": {
+    "close": "和爸妈很亲",
+    "home": "回了老家",
+    "distant": "和爸妈疏远了"
+  },
+  "events": [
+    {
+      "id": "call", "entry": true, "once": true, "dir": "any", "weight": 12,
+      "text": "周日晚上八点，老妈的视频打过来了。镜头对着她的鼻孔：吃了没？瘦了没？谈对象没？",
+      "choices": [
+        { "text": "一个一个回答", "effect": { "心态": 1, "精力": 1, "state": "close", "follow": { "id": "bacon", "delay": 2 } },
+          "result": "你说吃了、没瘦、在谈。三句里两句是假的。老妈很满意。" },
+        { "text": "说在加班，挂了", "effect": { "能力": 1, "身价": 2, "state": "distant", "follow": { "id": "new_year", "delay": 3, "ttl": 8 } },
+          "result": "你挂了。十分钟后，老妈发来一条六十秒语音，你没点开。" },
+        { "text": "前世被裁那天", "require": "legacy:resume_ready>=1", "effect": { "心态": 1, "人脉": 1, "state": "close", "follow": { "id": "bacon", "delay": 2 } },
+          "result": "前世被裁那天，第一个打来的是老妈。这一世，你先打了过去。" },
+        { "text": "教老妈开美颜", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "人脉": 2, "身价": 4, "state": "close", "follow": { "id": "bacon", "delay": 2 } },
+          "result": "老妈学会了美颜，在家族群发了二十张自拍。七大姑都来加你。",
+          "fail": { "effect": { "心态": 1, "follow": { "id": "new_year", "delay": 3, "ttl": 8 } }, "result": "老妈把自己调成了一只猫。挂电话前，她都没变回来。" } }
+      ]
+    },
+    {
+      "id": "bacon", "dir": "any", "chainOnly": true, "teaser": "老家寄来一个大纸箱", "require": "line:parents",
+      "text": "快递站打电话：你有个包裹，三十斤。拆开是腊肉、香肠、一罐辣椒酱，最底下压着一张纸：别省着。",
+      "choices": [
+        { "text": "挂在阳台上", "effect": { "item": "bacon", "心态": 1, "state": "close", "follow": { "id": "new_year", "delay": 2, "ttl": 8 } },
+          "result": "腊肉在阳台挂了一排。室友路过，咽了一下口水。" },
+        { "text": "分给同事", "effect": { "人脉": 2, "身价": 2, "follow": { "id": "new_year", "delay": 2, "ttl": 8 } },
+          "result": "整层楼都吃到了你家的腊肉。行政问能不能代购。" },
+        { "text": "打电话说别寄了", "effect": { "item": "bacon", "心态": 1, "精力": 1, "state": "close", "follow": { "id": "new_year", "delay": 2, "ttl": 8 } },
+          "result": "你说城里什么都能买到。老妈说哦。下个月，又来了一箱。" }
+      ]
+    },
+    {
+      "id": "new_year", "dir": "any", "chainOnly": true, "teaser": "过年了，回不回家？", "require": "line:parents",
+      "text": "腊月二十八，你抢到一张站票。到家第一顿饭，二姨放下筷子：工资多少？对象呢？房子呢？",
+      "choices": [
+        { "text": "埋头吃饭", "effect": { "精力": 2, "心态": 1, "state": "close", "follow": { "id": "sick", "delay": 4, "ttl": 8 } },
+          "result": "你吃了三碗。老妈一直往你碗里夹肉，夹得比二姨问得快。" },
+        { "text": "反问二姨", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "脸皮": 2, "身价": 3, "state": "close", "feud": "二姨的连环问被反杀", "follow": { "id": "sick", "delay": 4, "ttl": 8 } },
+          "result": "你问二姨：表哥考研第几年了？饭桌安静了。老爸低头偷笑。",
+          "easy": "你只说了一句：二姨，表哥的房贷还完了吗？二姨去厨房端汤了。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "sick", "delay": 4, "ttl": 8 } }, "result": "你刚开口，老爸瞪了你一眼。那顿饭，你吃得很安静。" } },
+        { "text": "今年不回了", "effect": { "身价": 6, "能力": 1, "state": "distant", "follow": { "id": "sick", "delay": 4, "ttl": 8 } },
+          "result": "你在出租屋过了年。老妈发来一张照片：桌上摆着你的碗筷。" },
+        { "text": "租个对象回家", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "人脉": 2, "身价": 5, "state": "close", "follow": { "id": "sick", "delay": 4, "ttl": 8 } },
+          "result": "你租了个对象。演到初三，老妈偷偷塞了她一个大红包。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "sick", "delay": 4, "ttl": 8 } }, "result": "对象是同事假扮的。他喝多了，喊你爸「老板」。" } }
+      ]
+    },
+    {
+      "id": "sick", "dir": "any", "chainOnly": true, "teaser": "老爸的电话，声音不对", "require": "line:parents",
+      "text": "老爸打来电话，第一句是「没什么大事」。他说没事的时候，一般都有事。老妈住院了。",
+      "choices": [
+        { "text": "请假连夜回去", "effect": { "精力": -1, "心态": 1, "state": "close", "follow": { "id": "decide", "delay": 2 } },
+          "result": "你在走廊坐了一夜。老妈醒来第一句：请假扣不扣钱？" },
+        { "text": "打钱，让他们别慌", "effect": { "身价": -3, "能力": 1, "state": "distant", "follow": { "id": "decide", "delay": 2 } },
+          "result": "你转了一笔钱。老爸回了两个字：收到。和你回老周的一模一样。" },
+        { "text": "托人挂专家号", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "人脉": 1, "心态": 1, "state": "close", "follow": { "id": "decide", "delay": 2 } },
+          "result": "你托了三个人，挂上了专家号。专家说：小毛病，多走动。",
+          "fail": { "effect": { "心态": -1, "state": "close", "follow": { "id": "decide", "delay": 2 } }, "result": "号没挂上。老妈说县医院挺好，护士是你小学同学。" } },
+        { "text": "前世是他们照顾你", "require": "legacy:wellness>=1", "effect": { "心态": 1, "精力": 1, "state": "close", "follow": { "id": "decide", "delay": 2 } },
+          "result": "前世你累垮了，是他们来城里守着你。这一世，你先带他们做了体检。" }
+      ]
+    },
+    {
+      "id": "decide", "dir": "any", "chainOnly": true, "teaser": "爸妈出院了，以后怎么办", "require": "line:parents",
+      "text": "老妈出院了，拎着一袋药站在医院门口。老爸说：你忙你的，我们好着呢。他手里的药，拿反了。",
+      "choices": [
+        { "text": "接他们来城里", "effect": { "身价": -4, "心态": 1, "state": "close", "follow": { "id": "city_life", "delay": 3, "ttl": 8 } },
+          "result": "你租了个大点的房子。老爸第一天，就和楼下大爷下上了棋。" },
+        { "text": "辞职回老家", "chance": 0.6, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "心态": 1, "state": "home", "follow": { "id": "home_town", "delay": 2, "ttl": 8 } },
+          "result": "你交了辞职信。老周说：年轻人，想清楚。你说想清楚了。",
+          "fail": { "effect": { "能力": 1, "state": "close" }, "result": "辞职信写好了，你在抽屉里放了三个月。最后还是没交。" } },
+        { "text": "每月多打点钱", "effect": { "身价": 6, "能力": 1, "state": "distant", "follow": { "id": "far_call", "delay": 4, "ttl": 8 } },
+          "result": "你每月多打一千。老妈说钱够了。电话里，她咳了两声。" }
+      ]
+    },
+    {
+      "id": "city_life", "dir": "any", "chainOnly": true, "teaser": "爸妈在城里住不惯", "require": "line:parents.close",
+      "text": "老妈把阳台种满了葱。半夜你起来喝水，看见她坐在客厅，翻手机里老家院子的照片。",
+      "choices": [
+        { "text": "周末带他们逛逛", "effect": { "心态": 1, "精力": 1, "state": "close" },
+          "result": "你带他们去了公园。老爸在湖边站了很久，说这水不如老家的河。" },
+        { "text": "一起回老家", "effect": { "心态": 1, "state": "home", "follow": { "id": "home_town", "delay": 2, "ttl": 8 } },
+          "result": "你说：要不，咱回去吧。老妈愣了一下，开始收拾东西，收得很快。" },
+        { "text": "送他们回，自己留", "effect": { "能力": 1, "身价": 4, "state": "close" },
+          "result": "你送他们上了车。老妈从车窗里塞给你一袋葱。" }
+      ]
+    },
+    {
+      "id": "home_town", "dir": "any", "chainOnly": true, "teaser": "街口空着一间铺子", "require": "line:parents.home",
+      "text": "回老家半年，你闲得发慌。街口那间铺子空着，老爸说是他老同学的，房租好商量。",
+      "choices": [
+        { "text": "盘下来开店", "require": "stage>=2 & 身价>=80 & 心态>=18", "effect": { "ending": "hometown_shop" },
+          "result": "你开了间小店。开业那天，老妈搬了张凳子坐门口，坐了一整天。" },
+        { "text": "先找个班上着", "effect": { "心态": 1, "人脉": 1, "身价": 3, "follow": { "id": "shop_again", "delay": 4, "ttl": 10 } },
+          "result": "你进了县城单位。朝九晚五，下班回家，饭是热的。" },
+        { "text": "还是回城里", "effect": { "item": "bacon", "能力": 1, "state": "close" },
+          "result": "你又买了回城的票。老妈往你包里塞了两斤腊肉。" },
+        { "text": "直播卖土特产", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 12, "人脉": 2, "follow": { "id": "shop_again", "delay": 2, "ttl": 10 } },
+          "result": "你吆喝了一晚上，卖了两百斤腊肉。老妈连夜去村里收货。",
+          "fail": { "effect": { "心态": 1, "follow": { "id": "shop_again", "delay": 4, "ttl": 10 } }, "result": "直播间来了三个人，都是你家亲戚。老妈下单了五斤。" } }
+      ]
+    },
+    {
+      "id": "shop_again", "dir": "any", "chainOnly": true, "teaser": "街口那间铺子还空着", "require": "line:parents.home",
+      "text": "周末路过街口，那间铺子还空着。老爸说，他老同学一直给你留着，没租给别人。",
+      "choices": [
+        { "text": "盘下来", "require": "stage>=2 & 身价>=70 & 心态>=16 & 人脉>=10", "effect": { "ending": "hometown_shop" },
+          "result": "招牌挂上去那天，老爸站在马路对面看了很久，说：挂歪了。" },
+        { "text": "拉老同学合伙", "require": "stage>=3 & 人脉>=12", "chance": 0.3, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "ending": "hometown_shop" },
+          "result": "老同学出了一半房租，条件是每天来店里喝茶。老爸也来。",
+          "fail": { "effect": { "心态": -1 }, "result": "老同学说考虑考虑，考虑到了年底。" } },
+        { "text": "再等等", "effect": { "心态": 1, "身价": 3 },
+          "result": "你在铺子门口站了一会，回家吃饭了。" }
+      ]
+    },
+    {
+      "id": "far_call", "dir": "any", "chainOnly": true, "teaser": "老妈的语音，你还没听", "require": "line:parents.distant",
+      "text": "你翻聊天记录，老妈的语音攒了一长串，都是六十秒。最早那条，是三个月前的。",
+      "choices": [
+        { "text": "一条一条听完", "effect": { "心态": 2, "state": "close" },
+          "result": "你听到半夜。都是小事：降温了，邻居家狗生了，你的书还留着。" },
+        { "text": "转文字扫一眼", "effect": { "能力": 1, "身价": 2, "state": "distant" },
+          "result": "转成文字两千字，一半是「吃了吗」。你回了个「嗯」。" },
+        { "text": "回个电话", "effect": { "精力": 1, "心态": 1, "state": "close" },
+          "result": "电话通了。老妈第一句是：哎呀，打电话多贵。" },
+        { "text": "突然出现在家门口", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "心态": 2, "人脉": 1, "state": "close" },
+          "result": "老妈开门愣了三秒，转身进厨房，切了一整块腊肉。",
+          "fail": { "effect": { "心态": 1 }, "result": "家里没人。邻居说你爸妈报了个夕阳红旅行团，去海边了。" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "tiandao",
+  "name": "天道真相",
+  "summary": "每一世都在吐槽你的那个天道，在地下二层有一间临时办公室。它也是个打工人。",
+  "stage": [2, 99],
+  "states": {
+    "met": "见到了天道",
+    "notebook": "拿到了天道的小本子"
+  },
+  "events": [
+    {
+      "id": "office", "entry": true, "dir": "down", "layers": ["D4"], "weight": 20,
+      "text": "机房尽头有张旧办公桌，桌上一盏台灯还亮着。有人趴在桌上睡觉，背后的牌子写着：天道（临时）。",
+      "choices": [
+        { "text": "叫醒他", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "state": "met", "心态": 2, "follow": { "id": "notebook", "delay": 1 } }, "result": "他抬起头，黑眼圈很重：又是你。坐吧，反正我也睡不着了。",
+          "easy": "你还没开口，他就醒了：又是你。我等你很久了。",
+          "fail": { "effect": { "back": "down", "精力": -2 }, "result": "他翻了个身：下班了，明天再来。你被一阵风送回了楼上。" } },
+        { "text": "给他披件外套", "effect": { "state": "met", "心态": 1, "人脉": 1, "follow": { "id": "notebook", "delay": 1 } }, "result": "他醒了，看着身上的外套，愣了很久：一亿年了，第一次有人给我披衣服。" },
+        { "text": "偷看他的屏幕", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "met", "身价": 20, "follow": { "id": "notebook", "delay": 1 } }, "result": "屏幕上是一张表：草、狗、虫、虾、鳄鱼……每一行最后都写着同一个名字。是你的。",
+          "fail": { "effect": { "death": "banned" }, "result": "天道：外挂，封了。" } }
+      ]
+    },
+    {
+      "id": "notebook", "dir": "down", "chainOnly": true, "teaser": "天道的小本子", "require": "line:tiandao.met",
+      "text": "天道从抽屉里掏出一本小本子，翻得卷了边：你每一世的事，我都记着。你要看吗？",
+      "choices": [
+        { "text": "看", "effect": { "state": "notebook", "item": "tiandao_notebook", "心态": 2, "follow": { "id": "truth", "delay": 2 } }, "result": "第一页写着：一颗草籽，被骆驼吃了。最后一页写着：一个打工人，今天来找我了。" },
+        { "text": "不看", "effect": { "心态": 2, "follow": { "id": "truth", "delay": 2 } }, "result": "天道点点头：也好。看过的人，下一世都会想太多。" },
+        { "text": "问他为什么记", "effect": { "人脉": 2, "能力": 1, "follow": { "id": "truth", "delay": 2 } }, "result": "他说：干这行，总得留痕。不然锅都是我的。" }
+      ]
+    },
+    {
+      "id": "truth", "dir": "down", "chainOnly": true, "teaser": "天道说，他也是个打工人", "require": "line:tiandao.met",
+      "text": "天道泡了两杯茶：我也是打工人。重生了一亿次，最后一次卷到了顶，就成了天道。到现在，还没下过班。",
+      "choices": [
+        { "text": "问他累不累", "effect": { "心态": 2, "follow": { "id": "choice", "delay": 2 } }, "result": "他想了很久：累。但你们每一世都在拼，我就想看看，你们能走多远。" },
+        { "text": "问他为什么一直吐槽我", "effect": { "人脉": 2, "心态": 1, "follow": { "id": "choice", "delay": 2 } }, "result": "他笑了：因为你最像当年的我。又倔，又不服，死了还来。" },
+        { "text": "前世老员工的智慧", "require": "legacy:veteran>=1", "effect": { "心态": 3, "身价": 15, "follow": { "id": "choice", "delay": 2 } },
+          "result": "前世你干到了退休。你看着他，像看着一个比你多加了一亿年班的老同事。" }
+      ]
+    },
+    {
+      "id": "choice", "dir": "down", "chainOnly": true, "teaser": "天道有件事想问你", "require": "line:tiandao.met",
+      "text": "天道把小本子推到你面前：我想退休了。这个位子，你要不要？",
+      "choices": [
+        { "text": "接班", "require": "xend:desert_grass & xend:local_dog & xend:caterpillar & xend:mantis_shrimp & xend:crocodile", "effect": { "ending": "tiandao" },
+          "result": "你接过本子。天道站起来，伸了个懒腰：一亿年，终于可以下班了。" },
+        { "text": "请他下楼喝一杯", "require": "心态>=10", "effect": { "ending": "off_with_tiandao" },
+          "result": "你们坐在楼下的烧烤摊。天道喝了一口，说：原来下班是这个味道。" },
+        { "text": "我还没准备好", "effect": { "心态": 2, "身价": 20 }, "result": "天道点点头：不急。我等了一亿年，不差这几十年。" }
+      ]
+    },
+    {
+      "id": "leave_note", "dir": "down", "layers": ["D3", "D4"], "once": true, "weight": 10, "require": "line:tiandao.met",
+      "text": "你又路过那间机房。门上贴了张便条：出去买咖啡了，十分钟回来。——天道",
+      "choices": [
+        { "text": "在下面写「收到」", "effect": { "心态": 2, "身价": 8 }, "result": "第二天，便条下面多了一行：你小子。" },
+        { "text": "替他值十分钟班", "absurd": true, "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.03,
+          "effect": { "心态": 2, "身价": 25 }, "result": "十分钟里，你批准了三个人的重生申请，驳回了一个外挂。天道回来，拍拍你：有天赋。",
+          "fail": { "effect": { "death": "banned" }, "result": "你手一抖，把自己封了。天道回来，叹了口气。" } }
+      ]
+    },
+    {
+      "id": "prev_lives", "dir": "any", "once": true, "weight": 10, "require": "line:tiandao.notebook",
+      "text": "你翻开天道的小本子。有一页折了角：第一世，一颗草籽。旁边写着一行小字：这家伙，会回来的。",
+      "choices": [
+        { "text": "合上本子", "effect": { "心态": 2, "身价": 12 }, "result": "你合上本子。原来从第一世起，就有人在等你。" },
+        { "text": "在空白页写一句", "effect": { "心态": 2, "能力": 2 }, "result": "你写：谢谢你一直看着。第二天，那一页多了一个字：嗯。" }
+      ]
+    }
+  ]
+}

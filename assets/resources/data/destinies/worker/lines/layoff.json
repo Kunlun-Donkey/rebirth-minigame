@@ -1,0 +1,132 @@
+{
+  "id": "layoff",
+  "name": "优化专员",
+  "summary": "公司来了个优化专员，名单上有你。提前跑、反过来谈，还是抱着纸箱下楼——被裁了，日子也还得过。",
+  "maps": ["city", "workshop"],
+  "stage": [1, 3],
+  "states": {
+    "listed": "上了裁员名单",
+    "laid_off": "被裁了",
+    "negotiated": "谈下了条件",
+    "jumped": "提前跳槽了"
+  },
+  "events": [
+    {
+      "id": "list", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 18,
+      "text": "公司来了个优化专员，西装笔挺，笑容标准。他手里的名单，第三个是你。前世，你最后一个知道。",
+      "choices": [
+        { "text": "假装不知道", "effect": { "state": "listed", "follow": { "id": "talk", "delay": 2 } },
+          "result": "你照常上班。专员路过你工位，多看了你一眼。" },
+        { "text": "偷偷改简历", "effect": { "state": "listed", "人脉": 1, "follow": { "id": "run", "delay": 1 } },
+          "result": "你在厕所隔间里，改了三版简历。" },
+        { "text": "前世抱过纸箱", "require": "legacy:resume_ready>=1",
+          "effect": { "state": "listed", "人脉": 2, "身价": 6, "follow": { "id": "run", "delay": 1 } },
+          "result": "前世你抱着纸箱下楼才投简历。这一世，三个面试已经约好了。" },
+        { "text": "请专员吃饭", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "state": "negotiated", "人脉": 2, "身价": 5, "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "饭吃到一半，他把名单翻了过去：你的名字写错了，我改改。",
+          "fail": { "effect": { "state": "listed", "follow": { "id": "talk", "delay": 1 } }, "result": "他吃完擦擦嘴：这顿算你的，名单也算你的。" } }
+      ]
+    },
+    {
+      "id": "rumor", "entry": true, "dir": "down", "layers": ["D1"], "weight": 14,
+      "text": "茶水间里有人小声说：听说要优化三成。说完，所有人都看向了门口。",
+      "choices": [
+        { "text": "打听名单", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "state": "listed", "follow": { "id": "run", "delay": 1 } },
+          "result": "你打听到了：你在名单上。还好，你比别人早知道一周。",
+          "fail": { "effect": { "state": "listed", "心态": -1, "follow": { "id": "talk", "delay": 2 } }, "result": "你问了一圈，大家都说自己不在名单上。" } },
+        { "text": "端着咖啡走开", "effect": { "state": "listed", "心态": 1, "follow": { "id": "talk", "delay": 3 } },
+          "result": "该来的总会来。你把咖啡喝完了。" },
+        { "text": "散布反向谣言", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "listed", "脸皮": 2, "身价": 4, "follow": { "id": "run", "delay": 1 } },
+          "result": "你说：听说这次先优化专员。谣言传开了，他一周没敢来。",
+          "fail": { "effect": { "state": "listed", "心态": -1, "follow": { "id": "talk", "delay": 1 } }, "result": "专员听说了，顺手把你挪到了名单第一个。" } }
+      ]
+    },
+    {
+      "id": "run", "dir": "any", "chainOnly": true, "teaser": "猎头回电话了",
+      "text": "猎头打来电话：有家公司要人，薪水涨三成，下周能入职。离名单公布，还有七天。",
+      "choices": [
+        { "text": "立刻跳", "effect": { "state": "jumped", "身价": 10, "人脉": 1, "feud": "专员少完成了一个指标", "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "你交了辞职信。专员划掉你的名字，有点遗憾：少了个指标。" },
+        { "text": "拿offer回去谈", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "negotiated", "身价": 12, "feud": "公司反过来求你留下", "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "领导看了offer，当天下午，你的名字从名单上消失了，工资涨了。",
+          "easy": "你把offer放上桌。领导连夜把你的名字划了，还请你吃饭。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "talk", "delay": 1 } }, "result": "领导看了offer：那你去吧。名单上的名字，没划。" } },
+        { "text": "再等等", "effect": { "心态": -1, "follow": { "id": "talk", "delay": 1 } },
+          "result": "你决定再等等。万一名单是假的呢。" },
+        { "text": "两边都去上班", "absurd": true, "chance": 0.15, "chanceAttr": "精力", "chanceStep": 0.02,
+          "effect": { "state": "jumped", "身价": 15, "脸皮": 2, "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "你上午这家，下午那家。一个月后，两边都给你转正了。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "talk", "delay": 1 } }, "result": "第三天，两家的HR出现在了同一个群里。" } }
+      ]
+    },
+    {
+      "id": "talk", "dir": "up", "chainOnly": true, "teaser": "专员约你去小会议室", "require": "line:layoff.listed",
+      "text": "小会议室里，专员推过来一份协议：公司很感谢你，签了吧。前世，你签得很快，还说了谢谢。",
+      "choices": [
+        { "text": "签字", "effect": { "state": "laid_off", "身价": 6, "follow": { "id": "monday", "delay": 1 } },
+          "result": "你签了字，抱着纸箱下楼。保安说：常回来看看。" },
+        { "text": "逐条跟他谈", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "state": "negotiated", "身价": 15, "feud": "专员第一次被反谈判", "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "你一条一条问。问到第七条，专员把协议收了回去：再研究研究。",
+          "easy": "你只问了第一条。专员擦了擦汗，把协议收了回去。",
+          "fail": { "effect": { "state": "laid_off", "心态": -2, "follow": { "id": "monday", "delay": 1 } }, "result": "专员微笑着听完：说得都对。签吧。" } },
+        { "text": "按下录音笔", "require": "item:recorder",
+          "effect": { "state": "negotiated", "身价": 18, "feud": "专员的话被录了下来", "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "他刚说完「末位淘汰」，你按了暂停：这句，和劳动法对不上。" },
+        { "text": "三年邮件都留着", "require": "legacy:paper_trail>=1",
+          "effect": { "state": "negotiated", "身价": 12, "能力": 1, "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "前世你空口无凭。这一世你的绩效邮件，专员翻了半小时。" }
+      ]
+    },
+    {
+      "id": "monday", "dir": "any", "chainOnly": true, "teaser": "被裁后的第一个周一", "require": "line:layoff.laid_off",
+      "text": "被裁后的第一个周一，你还是七点醒了。没人找你，闹钟没响，赔偿金到账了。",
+      "choices": [
+        { "text": "躺平一个月", "effect": { "心态": 2, "精力": 2, "follow": { "id": "savings", "delay": 2 } },
+          "result": "你睡到了自然醒。原来上午的太阳，长这样。" },
+        { "text": "瞒着家里装上班", "effect": { "心态": -2, "脸皮": 1, "follow": { "id": "savings", "delay": 2 } },
+          "result": "你每天穿着衬衫出门，在公园坐到六点。" },
+        { "text": "回公司面试原岗位", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "negotiated", "身价": 15, "feud": "专员又把你招了回来", "follow": { "id": "back", "delay": 4, "ttl": 8 } },
+          "result": "面试官是专员。他看着你的简历沉默很久，开了个更高的价。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "savings", "delay": 2 } }, "result": "HR说：这个岗位，我们已经优化掉了。" } }
+      ]
+    },
+    {
+      "id": "savings", "dir": "any", "chainOnly": true, "teaser": "存款只够三个月了", "require": "line:layoff.laid_off",
+      "text": "赔偿金花了一半。招聘软件上的岗位，要求一年比一年高，你的存款一月比一月少。",
+      "choices": [
+        { "text": "海投三百份", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "身价": 10, "人脉": 1, "心态": 1 },
+          "result": "第二百九十八份有了回音。新公司不大，但六点下班。",
+          "easy": "你只投了三份。三个面试官，都是你以前帮过的人。",
+          "fail": { "effect": { "death": "laid_off" }, "result": "三百份简历，三个回复，都是培训班。你回了老家。" } },
+        { "text": "先去送外卖", "effect": { "精力": -1, "身价": 6, "脸皮": 1 },
+          "result": "你骑上了电动车。导航说，这一单路过你的前公司。" },
+        { "text": "掏出最新版简历", "require": "item:resume",
+          "effect": { "loseItem": "resume", "身价": 10, "人脉": 2 },
+          "result": "简历是上周刚改的。第二天，你约到了三个面试。" },
+        { "text": "回老家歇一阵", "effect": { "death": "laid_off" },
+          "result": "你拖着行李箱上了回老家的车。这一世的职场，到此为止。" }
+      ]
+    },
+    {
+      "id": "back", "dir": "up", "chainOnly": true, "teaser": "优化专员又来了", "require": "line:layoff.negotiated | line:layoff.jumped",
+      "text": "半年后，你在电梯里碰到了优化专员。这次名单上的第一个名字，是他自己。他冲你苦笑。",
+      "choices": [
+        { "text": "请他喝杯咖啡", "effect": { "人脉": 2, "心态": 1 },
+          "result": "他说：我优化了三百个人，最后轮到了我。你没接话。" },
+        { "text": "帮他内推", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 3, "身价": 8 },
+          "result": "他去了新公司当HR。他说：以后谁裁你，我第一个不答应。",
+          "fail": { "effect": { "心态": -1 }, "result": "你推了。人家说他履历上裁的人太多，不敢要。" } },
+        { "text": "原话还给他", "effect": { "脸皮": 2, "身价": 6, "feud": "专员自己也上了名单" },
+          "result": "你说：公司很感谢你。他愣了一秒，笑出了声。" }
+      ]
+    }
+  ]
+}
