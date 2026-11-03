@@ -6,6 +6,7 @@ import type { Game } from '../game';
 import { Platform } from '../platform';
 import { box, button, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
 import { showList } from './popups';
+import { GAME_NAME } from './splash';
 import { danmaku } from '../ui/danmaku';
 
 /** settle_panel.png 的九宫格（贴图像素：上 右 下 左）与显示缩放 */
@@ -142,6 +143,14 @@ function shareText(g: Game, s: SettleResult): string {
     return `第${s.life}世，我${s.title}了。${s.epitaph}`;
 }
 
+/** 分享图：优先现画本世的墓志铭卡，失败时用命格静态分享图 */
+function shareImage(g: Game, s: SettleResult): string {
+    return Platform.renderShareCard({
+        game: GAME_NAME, destiny: g.data.meta.name, life: s.life, kind: s.kind, tianhu: s.tianhu,
+        title: s.title, epitaph: s.epitaph, stageName: s.stageName, seasons: s.seasons, feuds: s.feuds,
+    }) ?? TEX.share(g.data.meta.id);
+}
+
 function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     const w = g.W - 60;
     let cy = y;
@@ -160,7 +169,7 @@ function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     const half = (w - 16) / 2;
     button(root, 30, cy, half, {
         label: '分享墓志铭', style: 'ghost', size: 28, align: 'center',
-        onClick: () => Platform.share(shareText(g, s), `life=${s.life}`, TEX.share(g.data.meta.id)),
+        onClick: () => Platform.share(shareText(g, s), `life=${s.life}`, shareImage(g, s)),
     });
     button(root, 30 + half + 16, cy, half, {
         label: '再次重生', style: 'primary', size: 30,

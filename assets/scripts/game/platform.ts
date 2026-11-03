@@ -4,6 +4,7 @@
  */
 import { sys } from 'cc';
 import { CONFIG } from './config';
+import { CARD_H, CARD_W, drawShareCard, ShareCardData } from './sharecard';
 
 declare const wx: any;
 const isWx = () => typeof wx !== 'undefined' && !!wx.getSystemInfoSync;
@@ -75,6 +76,21 @@ export const Platform = {
             return;
         }
         wx.shareAppMessage(imageUrl ? { title, query, imageUrl } : { title, query });
+    },
+
+    /** 现画一张墓志铭分享卡，返回临时图片路径；非微信或绘制失败返回 undefined（调用方用静态分享图兜底） */
+    renderShareCard(d: ShareCardData): string | undefined {
+        if (!isWx() || !wx.createCanvas) return undefined;
+        try {
+            const canvas = wx.createCanvas();
+            canvas.width = CARD_W;
+            canvas.height = CARD_H;
+            drawShareCard(canvas.getContext('2d'), d);
+            return canvas.toTempFilePathSync({ x: 0, y: 0, width: CARD_W, height: CARD_H, destWidth: 500, destHeight: 400, fileType: 'png' });
+        } catch (e) {
+            console.warn('[platform] 分享卡绘制失败', e);
+            return undefined;
+        }
     },
 
     /** 右上角菜单的被动分享 + 朋友圈（每次分享时取当前命格的文案与分享卡） */

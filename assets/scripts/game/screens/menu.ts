@@ -6,7 +6,7 @@
  */
 import { destinyStates } from '../../core';
 import type { Game } from '../game';
-import { button, sizeOf, text, COLOR } from '../ui/kit';
+import { button, chip, onTap, sizeOf, text, COLOR } from '../ui/kit';
 import { soundToggle } from './draft';
 import { showList } from './popups';
 import { titleBase } from './splash';
@@ -58,8 +58,13 @@ export function showMenu(g: Game): void {
         }));
     }
 
+    // 声音开关 + 图鉴墙，同一行居中
     const st = soundToggle(g, root, 0, y);
-    st.setPosition((g.W - sizeOf(st).w) / 2, -y, 0);
+    const cx = chip(root, '▣ 图鉴墙', 0, y, COLOR.legacy, true, 22);
+    onTap(cx, () => g.goCodex());
+    const rowW = sizeOf(st).w + 24 + sizeOf(cx).w;
+    st.setPosition((g.W - rowW) / 2, -y, 0);
+    cx.setPosition((g.W - rowW) / 2 + sizeOf(st).w + 24, -y, 0);
     if (y + 60 > bottom) console.warn('[menu] 按钮区域超出，压到了健康游戏忠告');
     text(root, `轮回点 ${g.save.profile.points}`, 0, y + 56, g.W, { size: 22, color: COLOR.ink2, align: 'center' });
 }

@@ -476,7 +476,7 @@ export interface DestinyProfile {
     deathCount?: Record<string, number>;
     /** 最近连续同一死法：id 与连续世数（墓志铭「下次一定行」） */
     deathRun?: { id: string; n: number };
-    codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number };
+    codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number; feuds?: string[] };
     bestStage: number;
     /** 已解锁技能（技能图鉴） */
     skills: string[];
@@ -557,6 +557,8 @@ export interface RunState {
     feuds?: string[];
     /** 最近一次失败是低成功率硬选（墓志铭「死于过度自信」） */
     reckless?: boolean;
+    /** 新手手气已用（第 1 世第一次冒险必成） */
+    luck?: boolean;
 }
 
 export interface UpgradeView {
@@ -614,6 +616,16 @@ export interface EventView {
     /** 跨命格彩蛋（似曾相识） */
     cameo: boolean;
     choices: ChoiceView[];
+}
+
+/** 图鉴墙（局外）：结局 / 死法 / 跨命格彩蛋 / 恩怨，未收集的也列出（UI 显示为剪影） */
+export interface CodexView {
+    endings: { id: string; name: string; epitaph: string; got: boolean }[];
+    deaths: { id: string; name: string; epitaph: string; got: boolean; count: number; legacy?: string }[];
+    /** hint = 彩蛋条件涉及的其他命格 id（未解锁时提示「与某命格有关」） */
+    cameos: { id: string; text: string; got: boolean; hint: string[] }[];
+    feuds: { text: string; got: boolean }[];
+    tianhu: number;
 }
 
 /** 值得飘弹幕的高光时刻（按优先级取一个） */

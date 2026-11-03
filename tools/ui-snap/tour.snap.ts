@@ -11,6 +11,7 @@ import { CONFIG } from '../../assets/scripts/game/config';
 import { showSplash } from '../../assets/scripts/game/screens/splash';
 import { showUnlockReveal } from '../../assets/scripts/game/screens/destiny';
 import { showRun } from '../../assets/scripts/game/screens/run';
+import { showCodex } from '../../assets/scripts/game/screens/codex';
 import { destinyProfile, Rng } from '../../assets/scripts/core';
 import { toHtml } from './serialize';
 
@@ -68,7 +69,10 @@ it('UI 巡检快照', async () => {
             }
             await g.switchDestiny(did); await flush(6);
 
-            // 开局抽卡 3 步
+            // 第一世一键开局页 → 我要自己挑 → 开局抽卡 3 步
+            await snapIfNew();
+            const own = taps(g.screen).find(n => labels(n).includes('我要自己挑'));
+            if (own) { tap(own); await flush(); }
             for (let i = 0; i < 4; i++) {
                 await snapIfNew();
                 const c = taps(g.screen).find(n => n.name.startsWith('card_'));
@@ -114,6 +118,17 @@ it('UI 巡检快照', async () => {
                 g.engine.run.phase = 'over';
                 try { g.goSettle(); await flush(4); snap('结局结算'); } catch { /* 引擎不支持强制结局时跳过 */ }
             }
+            // 图鉴墙四个页签（收集一部分，看已收集 / 剪影两种卡）
+            const dp = g.engine.dp;
+            const v0 = g.engine.codexView();
+            dp.codex.deaths = v0.deaths.slice(0, 5).map(x => x.id);
+            dp.deathCount = Object.fromEntries(dp.codex.deaths.map((id, i) => [id, i + 1]));
+            dp.codex.feuds = v0.feuds.slice(0, 3).map(x => x.text);
+            dp.codex.events = [...dp.codex.events, ...v0.cameos.slice(0, 3).map(x => x.id)];
+            for (const tab of ['endings', 'deaths', 'cameos', 'feuds'] as const) {
+                g.reset(); showCodex(g, tab); await flush(4); snap(`图鉴墙·${tab}`);
+            }
+            g.reset(); showCodex(g, 'cameos', 9); await flush(4); snap('图鉴墙·末页');
         }
     }
     writeFileSync(join(OUT, 'index.json'), JSON.stringify(index, null, 1));

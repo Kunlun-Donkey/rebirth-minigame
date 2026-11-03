@@ -42,6 +42,18 @@ function heightOf(n: Node): number {
     return n.getComponent(UITransform)?.height ?? 0;
 }
 
+/** 本命格第一世的「天道替你选好」页：点「我要自己挑」进入正常抽卡 */
+function skipQuick(screen: Node): void {
+    const own = tappables(screen).find(n => labels(n).includes('我要自己挑'));
+    if (own) { own.emit(Node.EventType.TOUCH_START); own.emit(Node.EventType.TOUCH_END); }
+}
+
+/** 轮回殿里下一张可点的卡（第一世先跳过一键开局页） */
+function nextCard(screen: Node): Node {
+    skipQuick(screen);
+    return tappables(screen).find(n => n.name.startsWith('card_'))!;
+}
+
 function screenName(g: Game): string {
     return (g.screen.children[0]?.name ?? '?');
 }
@@ -61,6 +73,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         g.goDraft();
         if (rich === true) {
             g.save.profile.points = 100000;
+            g.engine.dp.lives = 1; // 老玩家：不走第一世一键开局页
             g.goDraft();
         }
         if (rich === 'dog') {
@@ -121,6 +134,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
                 expect(top + heightOf(n), `${n.name}（${labels(n).join('|')}）`).toBeLessThanOrEqual(g.H + 1);
             }
         };
+        skipQuick(g.screen);
         const cards = tappables(g.screen).filter(n => n.name.startsWith('card_'));
         expect(cards.length).toBe(4);
         inScreen(g.screen);
@@ -172,7 +186,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         for (let i = 0; i < 10; i++) await flush();
         expect(g.data.meta.id).toBe(id);
         for (let i = 0; i < 3; i++) {
-            const c = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+            const c = nextCard(g.screen);
             c.emit(Node.EventType.TOUCH_START); c.emit(Node.EventType.TOUCH_END);
             await flush();
         }
@@ -232,7 +246,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
 
         // 开一局：HUD 显示体力条与土狗属性
         for (let i = 0; i < 3; i++) {
-            tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+            tapNode(nextCard(g.screen));
             await flush();
         }
         tapNode(tappables(g.screen).find(n => n.children.some(c => c.getComponent(Label)?.string.includes('重   生')))!);
@@ -302,7 +316,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         // 开一局后回菜单
         g.goDraft();
         for (let i = 0; i < 3; i++) {
-            const c = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+            const c = nextCard(g.screen);
             c.emit(Node.EventType.TOUCH_START); c.emit(Node.EventType.TOUCH_END);
             await flush();
         }
@@ -350,7 +364,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         g.goDraft();
         // 依次点三张卡 + 重生
         for (let i = 0; i < 3; i++) {
-            const card = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+            const card = nextCard(g.screen);
             card.emit(Node.EventType.TOUCH_START); card.emit(Node.EventType.TOUCH_END);
             await flush();
         }
@@ -431,7 +445,7 @@ describe('音频', () => {
         expect(audioLog).toContain('bgm:bgm_main');
         g.goDraft();
         // 点一张卡 → 翻卡音效
-        const card = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+        const card = nextCard(g.screen);
         card.emit(Node.EventType.TOUCH_START); card.emit(Node.EventType.TOUCH_END);
         for (let i = 0; i < 3; i++) await flush();
         expect(audioLog).toContain('sfx:card');
@@ -439,7 +453,7 @@ describe('音频', () => {
         // 静音后点击不再出声
         g.toggleMute();
         const before = audioLog.length;
-        const next = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+        const next = nextCard(g.screen);
         next.emit(Node.EventType.TOUCH_START); next.emit(Node.EventType.TOUCH_END);
         for (let i = 0; i < 3; i++) await flush();
         expect(audioLog.length).toBe(before);
@@ -497,7 +511,7 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         expect(screenName(g)).toBe('draft');
         expect(g.data.meta.id).toBe(target);
         for (let i = 0; i < 3; i++) {
-            tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+            tapNode(nextCard(g.screen));
             await flush();
         }
         tapNode(find(g.screen, '重   生')!);
@@ -540,7 +554,7 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
             await flush();
             expect(all().some(l => l.includes('看视频'))).toBe(false);
             for (let i = 0; i < 3; i++) {
-                tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+                tapNode(nextCard(g.screen));
                 await flush();
             }
             tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('重   生')))!);
@@ -583,5 +597,34 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         } finally {
             CONFIG.adsEnabled = true;
         }
+    });
+
+    it('第一世一键开局：天道替你选好三样，点重生直接开局；主菜单图鉴墙可切页签、翻页、返回', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
+        g.goDraft();
+        await flush();
+        expect(labels(g.screen).some(l => l.includes('天道随手'))).toBe(true);
+        expect(tappables(g.screen).some(n => n.name.startsWith('card_'))).toBe(false);
+        tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('重   生')))!);
+        for (let i = 0; i < 5; i++) await flush();
+        expect(screenName(g)).toBe('run');
+
+        g.goMenu();
+        tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('图鉴墙')))!);
+        expect(screenName(g)).toBe('codex');
+        for (const t of ['deaths', 'cameos', 'feuds', 'endings']) {
+            tapNode(tappables(g.screen).find(n => n.name === `tab_${t}`)!);
+            expect(screenName(g)).toBe('codex');
+            const next = tappables(g.screen).find(n => labels(n).some(l => l.includes('下一页')));
+            if (next) tapNode(next);
+            const bad = labels(g.screen).filter(t => /undefined|NaN|\[object/.test(t));
+            expect(bad).toEqual([]);
+        }
+        tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('返回')))!);
+        expect(screenName(g)).toBe('menu');
     });
 });

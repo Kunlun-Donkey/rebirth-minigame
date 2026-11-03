@@ -31,7 +31,7 @@
   - `res.ts` 资源分包：路径在主包 `resources` 找不到就等分包 `subres`（主界面出来后后台下载，点「重生」前确保就绪）
   - `ui/kit.ts` 代码 UI 工具包（左上角坐标系、纸张卡、按钮、弹窗、缺图兜底）
   - `audio.ts` 背景音乐/音效/静音（点击音效经 `kit.setTapFeedback` 注入）
-  - `screens/` splash 启动页 · menu 主菜单（继续/开始轮回/选择命格/声音，与启动页共用标题底板） · draft 轮回殿 · destiny 命格选择（含「随缘投胎」转盘：每天首次免费、之后看视频，转出的命格本世轮回点 +30%；新命格解锁也用转盘揭晓） · run 局内 · settle 结算 · popups 弹窗
+  - `screens/` splash 启动页 · menu 主菜单（继续/开始轮回/选择命格/声音，与启动页共用标题底板） · draft 轮回殿 · destiny 命格选择（含「随缘投胎」转盘：每天首次免费、之后看视频，转出的命格本世轮回点 +30%；新命格解锁也用转盘揭晓） · run 局内 · settle 结算（分享用 `sharecard.ts` 现画墓志铭卡，微信 `wx.createCanvas` → 临时图，失败回退静态分享图） · codex 图鉴墙（主菜单进入：结局/死法/彩蛋/恩怨，未收集显示剪影） · popups 弹窗；轮回殿在本命格第一世显示「天道替你抓了三样」一键开局页
   - `TEX` 的命格层贴图按当前命格取路径（`setTexDestiny`），缺图一律文字/纸张兜底；新命格的美术需求写在 `docs/art/requests-<id>.md`
 - `assets/resources/`（主包，≈0.5MB）：`data/destinies/index.json` 命格索引 + `data/destinies/<命格>/` 剧本数据 + 首屏图（main_bg、logo_title、btn_*、panel）
 - `assets/subres/`（微信分包，bundle 名 subres）：其余 `textures/` 与全部 `audio/`，目录结构与 resources 一致；**新素材默认放这里**

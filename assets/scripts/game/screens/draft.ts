@@ -26,6 +26,14 @@ export function showDraft(g: Game): void {
     const needLoadout = e.needSkillLoadout();
     const loadout: string[] = [];
     let step = 0;
+    // 本命格第一世：天道替你挑好（每组取稀有度最高的一张），一键开局；想自己挑也可以
+    let quick = e.dp.lives === 0 && !needLoadout;
+    if (quick) {
+        const order: Rarity[] = ['legend', 'epic', 'rare', 'common'];
+        for (const s of STEPS) {
+            picks[s.key] = [...draft[s.key]].sort((a, b) => order.indexOf(poolDef(g, s.type, a).rarity) - order.indexOf(poolDef(g, s.type, b).rarity))[0];
+        }
+    }
 
     const render = () => {
         clear(g.screen);
@@ -35,7 +43,8 @@ export function showDraft(g: Game): void {
         fadeIn(root, 0.12);
         header(g, root, render);
 
-        if (step < STEPS.length) renderPool(root);
+        if (quick) renderQuick(root);
+        else if (step < STEPS.length) renderPool(root);
         else if (needLoadout && step === STEPS.length) renderLoadout(root);
         else renderConfirm(root);
     };
@@ -108,6 +117,29 @@ export function showDraft(g: Game): void {
             label: loadout.length ? '就 带 这 些' : '不带技能', style: 'primary',
             onClick: () => { step += 1; render(); },
         });
+    };
+
+    const renderQuick = (root: Node) => {
+        text(root, '第一世，天道随手给你抓了三样：', 0, 330, g.W, { size: 32, color: COLOR.ochreD, align: 'center', bold: true });
+        let y = 400;
+        for (const s of STEPS) {
+            const def = poolDef(g, s.type, picks[s.key]!);
+            const n = button(root, 40, y, g.W - 80, {
+                label: def.name, sub: def.desc, size: 30,
+                tags: [{ text: RARITY_TEXT[def.rarity], color: RARITY_COLOR[def.rarity], filled: true }],
+            });
+            y += sizeOf(n).h + 14;
+        }
+        text(root, '死了不要紧：每一种死法，都会变成下一世的本事。', 40, y + 10, g.W - 80, { size: 26, color: COLOR.memory, align: 'center', wrap: true, lineHeight: 40 });
+        button(root, 60, g.H - 260, g.W - 120, { label: '重   生', style: 'primary', size: 36, onClick: () => g.startRun({
+            talent: picks.talents!, item: picks.items!, companion: picks.companions!,
+        }) });
+        button(root, 60, g.H - 140, g.W - 120, { label: '我要自己挑', style: 'ghost', size: 26, onClick: () => {
+            quick = false;
+            step = 0;
+            for (const s of STEPS) delete picks[s.key];
+            render();
+        } });
     };
 
     const renderConfirm = (root: Node) => {

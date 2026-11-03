@@ -13,6 +13,7 @@ import { loadSave, SaveData, writeSave } from './save';
 import { box, clear, COLOR, image, rect, setTapFeedback, text } from './ui/kit';
 import { showDestinySelect, showUnlockReveal } from './screens/destiny';
 import { showMenu } from './screens/menu';
+import { showCodex } from './screens/codex';
 import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
@@ -165,6 +166,12 @@ export class Game {
     hasActiveRun(): boolean {
         const r = this.engine?.run;
         return !!r && r.phase !== 'over';
+    }
+
+    /** 图鉴墙（当前命格） */
+    goCodex(): void {
+        this.reset();
+        showCodex(this);
     }
 
     goMenu(): void {

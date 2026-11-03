@@ -19,7 +19,7 @@ import {
 import { addUnique, destinyProfile } from './profile';
 import { Rng } from './rng';
 import {
-    Choice, ChoiceView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Hype, HYPE_ORDER, Mods, Outcome, Profile,
+    Choice, ChoiceView, CodexView, Cond, Destiny, Dir, DirOption, DraftPick, Effect, EventView, GameEvent, Hype, HYPE_ORDER, Mods, Outcome, Profile,
     RARITIES, Rarity, RunState, SettleResult, SkillView, StageProgress, StepResult, UpgradeKind, UpgradeView,
 } from './types';
 
@@ -332,14 +332,18 @@ export class Engine {
         if (c.chance !== undefined && c.fail) {
             // 成功率溢出到 100%：必成（碾压），不再掷骰
             const sure = this.isSure(c);
-            step.success = sure || this.rng.chance(this.chanceOf(c));
+            // 新手手气：本命格第 1 世的第一次冒险必成且大成功（早早给一个爽点）
+            const luck = r.life === 1 && !r.luck && !sure;
+            if (luck) r.luck = true;
+            step.success = sure || luck || this.rng.chance(this.chanceOf(c));
             if (!step.success) {
                 out = c.fail;
                 r.reckless = this.chanceOf(c) < RECKLESS_CHANCE;
                 if ((r.streak ?? 0) >= STREAK_MIN) step.messages.push(fill(STREAK_BREAK, { n: r.streak! }));
                 r.streak = 0;
             } else {
-                if (Object.keys(c.success.effect.attrs).length && this.rng.chance(CRIT_CHANCE)) step.crit = true;
+                if (luck) step.messages.push('【新手手气】第一次冒险，天道没看住你。');
+                if (Object.keys(c.success.effect.attrs).length && (luck || this.rng.chance(CRIT_CHANCE))) step.crit = true;
                 if (sure) {
                     easy = c.easy;
                     const dead = prev && prev.life < r.life ? prev.dead ?? 0 : 0;
@@ -762,6 +766,36 @@ export class Engine {
 
     // ───────────── 查询 ─────────────
 
+    /** 图鉴墙：本命格的结局 / 死法 / 跨命格彩蛋 / 恩怨（含未收集的） */
+    codexView(): CodexView {
+        const d = this.data;
+        const c = this.dp.codex;
+        const seen = new Set([...c.events, ...(this.run?.seen ?? [])]);
+        const cameos: CodexView['cameos'] = [];
+        const feuds = new Set<string>();
+        for (const ev of d.events.values()) {
+            for (const ch of ev.choices) for (const o of [ch.success, ch.fail]) for (const f of o?.effect.feuds ?? []) feuds.add(f);
+            if (!ev.cameo) continue;
+            const hint = new Set<string>();
+            if (ev.require) walkCond(ev.require.ast, l => {
+                if (l.t === 'has' && l.kind === 'xend') hint.add(l.id.split('/')[0]);
+                if (l.t === 'cmp' && (l.left.kind === 'xstage' || l.left.kind === 'xlives')) hint.add(l.left.id!);
+            });
+            cameos.push({ id: ev.id, text: ev.text, got: seen.has(ev.id), hint: [...hint] });
+        }
+        const got = new Set(c.feuds ?? []);
+        return {
+            endings: [...d.endings.values()].map(e => ({ id: e.id, name: e.name, epitaph: e.epitaph, got: c.endings.includes(e.id) })),
+            deaths: [...d.deaths.values()].map(x => ({
+                id: x.id, name: x.name, epitaph: x.epitaph, got: c.deaths.includes(x.id),
+                count: this.dp.deathCount?.[x.id] ?? 0, legacy: x.legacy ? d.legacies.get(x.legacy)?.name : undefined,
+            })),
+            cameos,
+            feuds: [...feuds].map(text => ({ text, got: got.has(text) })).sort((a, b) => Number(b.got) - Number(a.got)),
+            tianhu: c.tianhu ?? 0,
+        };
+    }
+
     attrName(id: string): string { return this.data.attrNames[id] ?? id; }
     stageName(level: number): string { return this.data.stages.find(s => s.level === level)?.name ?? `境界${level}`; }
     itemName(id: string): string { return this.data.items.get(id)?.name ?? id; }
@@ -1051,6 +1085,7 @@ export class Engine {
         for (const sk of e.skills) this.grantSkill(sk, step);
         for (const f of e.feuds) {
             r.feuds = r.feuds ?? [];
+            addUnique(this.dp.codex.feuds ?? (this.dp.codex.feuds = []), f);
             if (!addUnique(r.feuds, f)) continue;
             step.messages.push(`【恩怨了结】${f}`);
             this.hype(step, 'feud');

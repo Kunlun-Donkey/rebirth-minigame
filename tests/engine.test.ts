@@ -613,16 +613,17 @@ describe('爽感：新手保护 / 最后一搏 / 突破进度 / 大成功', () =
 
     it('大成功：成功后约 15% 概率正向属性收益翻倍', () => {
         const ev: RawEvent = { id: 'luck', dir: 'down', layers: ['D1'], weight: 1000, text: '运', choices: [
-            { text: '试', chance: 1, effect: { 灵气: 4 }, result: '好', fail: { result: '坏' } },
+            { text: '试', chance: 0.9, effect: { 灵气: 4 }, result: '好', fail: { result: '坏' } },
         ] };
         let crits = 0;
         for (let seed = 1; seed <= 400; seed++) {
             const e = new Engine(buildDestiny(fixture([ev])), createProfile());
+            e.dp.lives = 1; // 第 2 世起（第 1 世第一次冒险是「新手手气」，必定大成功）
             e.startRun(pick, seed);
             e.chooseDirection('down');
             if (e.eventView().id !== 'luck') continue;
             const st = e.choose(0);
-            if (!st.success) continue; // 成功率上限 95%
+            if (!st.success) continue;
             if (st.crit) {
                 crits++;
                 expect(st.deltas.qi).toBe(8);
@@ -790,5 +791,19 @@ describe('爽感 2：宿敌记仇 / 嫌弃式前世 / 稳 / 连胜 / 恩怨 / �
         expect(v.choices[1].enabled).toBe(true);
         expect(v.choices[1].tag).toBe('前世今生');
         expect(e.choose(0).hype).toBe('cameo');
+    });
+
+    it('新手手气：第 1 世第一次冒险必成且大成功，之后正常掷骰', () => {
+        const ev: RawEvent = { id: 'risk1', dir: 'down', layers: ['D1'], weight: 1000, text: '险', choices: [
+            { text: '冲', chance: 0.05, effect: { 灵气: 3 }, result: '成', fail: { result: '败' } },
+        ] };
+        const e = new Engine(buildDestiny(fixture([ev])), createProfile());
+        e.startRun(pick, 1);
+        e.chooseDirection('down');
+        const st = e.choose(0);
+        expect(st.success).toBe(true);
+        expect(st.crit).toBe(true);
+        expect(st.messages.some(m => m.startsWith('【新手手气】'))).toBe(true);
+        expect(e.run.luck).toBe(true);
     });
 });
