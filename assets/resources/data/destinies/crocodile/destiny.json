@@ -146,7 +146,7 @@
     { "id": "internet_star", "name": "网红鳄鱼", "epitaph": "它成了城里最有名的鳄鱼。每天湖边挤满了人，它学会了对着镜头张大嘴，等人夸它牙白。" }
   ],
   "upgrades": [
-    { "id": "heaven_favor", "name": "天眷", "desc": "成为「河神眷顾」的概率 +0.5%。", "kind": "blessed", "value": 0.005, "costs": [600, 1800] },
+    { "id": "heaven_favor", "name": "天眷", "desc": "成为「河神眷顾」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },
     { "id": "thick_hide", "name": "厚鳞", "desc": "开局体温上限 +1。", "costs": [120, 360, 900], "start": { "体温上限": 1 } },
     { "id": "spirit_root", "name": "开灵", "desc": "开局龙气 +4，更早长大。", "costs": [150, 450, 1100], "start": { "龙气": 4 } },
     { "id": "fortune", "name": "福缘", "desc": "轮回点 +10%。", "kind": "pointsBonus", "value": 0.1, "costs": [250, 750, 1800] },

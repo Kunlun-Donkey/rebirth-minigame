@@ -50,7 +50,7 @@
     { "level": 3, "name": "犬妖", "require": "妖气>=30 & 灵性>=3", "lifespan": 26,
       "narration": "村里的公鸡，见了你开始绕道走。", "bonus": { "体力上限": 2, "牙口": 1 },
       "skillPool": ["howl", "talk"] },
-    { "level": 4, "name": "妖王", "require": "妖气>=100 & (牙口>=8 | 脚力>=8 | 忠义>=8)", "lifespan": 34,
+    { "level": 4, "name": "妖王", "require": "妖气>=100 & (牙口>=8 | 脚力>=8 | 忠义>=8)", "lifespan": 37,
       "narration": "山里的狐狸、黄鼠狼、野猪，开始在你面前低头。", "bonus": { "体力上限": 3, "牙口": 2 },
       "skillPool": ["dash", "fang"] },
     { "level": 5, "name": "天狗", "require": "妖气>=400 & 牙口>=14 & 脚力>=14 & 灵性>=10", "lifespan": 99,
@@ -118,7 +118,7 @@
     { "id": "wild_king", "name": "野狗王", "epitaph": "县城的野狗从此有了规矩：抢食可以，不许欺负小狗。" }
   ],
   "upgrades": [
-    { "id": "heaven_favor", "name": "天眷", "desc": "成为「天狗转世」的概率 +0.5%。", "kind": "blessed", "value": 0.005, "costs": [600, 1800] },
+    { "id": "heaven_favor", "name": "天眷", "desc": "成为「天狗转世」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },
     { "id": "vigor", "name": "壮骨", "desc": "开局体力上限 +1。", "costs": [120, 360, 900], "start": { "体力上限": 1 } },
     { "id": "spirit_root", "name": "开灵", "desc": "开局妖气 +4，更早睁眼长大。", "costs": [150, 450, 1100], "start": { "妖气": 4 } },
     { "id": "fortune", "name": "福缘", "desc": "轮回点 +10%。", "kind": "pointsBonus", "value": 0.1, "costs": [250, 750, 1800] },

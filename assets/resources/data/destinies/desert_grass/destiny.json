@@ -109,7 +109,7 @@
     { "id": "ancient_sleep", "name": "与古种同眠", "epitaph": "你们一起睡进了沙里。一万年后，会有谁来叫醒你们。" }
   ],
   "upgrades": [
-    { "id": "heaven_favor", "name": "天眷", "desc": "成为「天命之草」的概率 +0.5%。", "kind": "blessed", "value": 0.005, "costs": [600, 1800] },
+    { "id": "heaven_favor", "name": "天眷", "desc": "成为「天命之草」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },
     { "id": "vigor", "name": "固本", "desc": "开局水分上限 +1。", "costs": [120, 360, 900], "start": { "水分上限": 1 } },
     { "id": "spirit_root", "name": "灵根", "desc": "开局灵气 +4，更早破土成形。", "costs": [150, 450, 1100], "start": { "灵气": 4 } },
     { "id": "fortune", "name": "福缘", "desc": "轮回点 +10%。", "kind": "pointsBonus", "value": 0.1, "costs": [250, 750, 1800] },
