@@ -110,7 +110,7 @@
     { "id": "laid_off", "name": "被优化了", "icon": "human", "epitaph": "名单上第一个名字就是你。你抱着纸箱下楼，保安说：常回来看看。", "legacy": "resume_ready",
       "skills": [ { "id": "social_bull", "chance": 0.5 } ] },
     { "id": "scapegoat", "name": "背锅被开", "icon": "human", "epitaph": "锅是别人的，开除通知是你的。", "legacy": "paper_trail",
-      "skills": [ { "id": "paper_trail", "chance": 0.6 } ] },
+      "skills": [ { "id": "blame_shift", "chance": 0.6 }, { "id": "paper_trail", "chance": 0.6 } ] },
     { "id": "pie", "name": "吃了十年饼", "icon": "thirst", "epitaph": "老板说明年就上市。你信了十年，饼都吃出了包浆。", "legacy": "pie_sense",
       "skills": [ { "id": "pie_proof", "chance": 0.6 } ] },
     { "id": "out_rolled", "name": "被卷王挤走", "icon": "betrayal", "epitaph": "他凌晨三点还在回邮件。你在凌晨三点，收拾好了工位。", "legacy": "detour",

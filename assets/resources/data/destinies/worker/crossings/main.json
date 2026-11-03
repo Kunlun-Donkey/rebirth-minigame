@@ -395,7 +395,7 @@
     "dir": "up",
     "once": true,
     "weight": 24,
-    "require": "line:wang_juanjuan.rival & line:project.credited",
+    "require": "ever:wang_juanjuan.rival & line:project.credited & !line:wang_juanjuan.saved",
     "text": "年终汇报会上，王卷卷站起来说：这个项目，其实大部分是我做的。全场看向你。",
     "choices": [
       {
