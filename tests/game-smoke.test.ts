@@ -55,7 +55,8 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         const g = new Game(host as never);
         await g.boot();
         await flush();
-        expect(screenName(g)).toBe('draft');
+        expect(screenName(g)).toBe('menu');
+        g.goDraft();
         if (rich === true) {
             g.save.profile.points = 100000;
             g.goDraft();
@@ -82,7 +83,10 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
                 expect(top, `第 ${i} 步：${n.name} 超出屏幕顶部`).toBeGreaterThanOrEqual(0);
                 expect(top + heightOf(n), `第 ${i} 步：${screenName(g)} 的 ${n.name} 超出屏幕底部（${labels(n).join('|')}）`).toBeLessThanOrEqual(g.H + 1);
             }
-            const pick = (real.length ? real : nodes)[rng.int((real.length ? real : nodes).length)];
+            // 回主菜单 / 放弃本局的入口单独测（见「主菜单」用例），随机点击时跳过，保证能走完多次轮回
+            const nav = (n: Node) => labels(n).some(l => l === '☰ 菜单' || l === '‹ 菜单' || l === '重新投胎');
+            const pool = real.filter(n => !nav(n)).length ? real.filter(n => !nav(n)) : real.length ? real : nodes;
+            const pick = pool[rng.int(pool.length)];
             pick.emit(Node.EventType.TOUCH_START);
             pick.emit(Node.EventType.TOUCH_END);
             await flush();
@@ -187,6 +191,8 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         const g = new Game(new Node('Canvas') as never);
         await g.boot();
         await flush();
+        g.goDraft();
+        await flush();
         const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
         const openSelect = async () => {
             tapNode(tappables(g.screen).find(x => labels(x).some(l => l.includes('⇄')))!);
@@ -231,14 +237,96 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         await g2.boot();
         await flush();
         expect(g2.data.meta.id).toBe('local_dog');
-        expect(screenName(g2)).toBe('run');
+        expect(screenName(g2)).toBe('menu');
+        expect(labels(g2.screen)).toContain('继续这一世');
         writeSave({ ...g2.save, run: null });
         // 进行中的局结束后，下次启动仍停在土狗命格
         const g3 = new Game(new Node('Canvas3') as never);
         await g3.boot();
         await flush();
         expect(g3.data.meta.id).toBe('local_dog');
-        expect(screenName(g3)).toBe('draft');
+        expect(screenName(g3)).toBe('menu');
+        expect(labels(g3.screen)).toContain('开始轮回');
+    });
+
+    it('主菜单：开始轮回 → 轮回殿 ⇄ 菜单；局内回菜单可继续；重新投胎需确认并放弃本局', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        const tap = (layer: Node, label: string) => {
+            const n = tappables(layer).find(x => labels(x).some(l => l.startsWith(label)));
+            expect(n, `找不到「${label}」`).toBeTruthy();
+            n!.emit(Node.EventType.TOUCH_START); n!.emit(Node.EventType.TOUCH_END);
+        };
+        const root = g.screen.parent!;
+        const inScreen = () => {
+            for (const n of tappables(g.screen)) {
+                expect(absTop(n, root)).toBeGreaterThanOrEqual(0);
+                expect(absTop(n, root) + heightOf(n), labels(n).join('|')).toBeLessThanOrEqual(g.H + 1);
+            }
+        };
+        expect(screenName(g)).toBe('menu');
+        const ls = labels(g.screen);
+        expect(ls).toContain('开始轮回');
+        expect(ls).not.toContain('继续这一世');
+        expect(ls).toContain('健康游戏忠告');
+        expect(ls).toContain('选择命格');
+        inScreen();
+
+        tap(g.screen, '开始轮回');
+        await flush();
+        expect(screenName(g)).toBe('draft');
+        tap(g.screen, '‹ 菜单');
+        await flush();
+        expect(screenName(g)).toBe('menu');
+        tap(g.screen, '选择命格');
+        await flush();
+        expect(screenName(g)).toBe('destiny');
+        tap(g.screen, '返');
+        await flush();
+        expect(screenName(g)).toBe('menu');
+
+        // 开一局后回菜单
+        g.goDraft();
+        for (let i = 0; i < 3; i++) {
+            const c = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
+            c.emit(Node.EventType.TOUCH_START); c.emit(Node.EventType.TOUCH_END);
+            await flush();
+        }
+        tap(g.screen, '重   生');
+        for (let i = 0; i < 5; i++) await flush();
+        expect(screenName(g)).toBe('run');
+        const season = g.engine.run.season;
+        tap(g.screen, '☰ 菜单');
+        await flush();
+        expect(screenName(g)).toBe('menu');
+        expect(labels(g.screen)).toContain('继续这一世');
+        expect(labels(g.screen).some(l => l.includes('先结束或放弃这一世'))).toBe(true);
+        inScreen();
+        tap(g.screen, '继续这一世');
+        await flush();
+        expect(screenName(g)).toBe('run');
+        expect(g.engine.run.season).toBe(season);
+
+        // 重新投胎：先弹确认，「再想想」不放弃；确认后本局作废、回轮回殿
+        tap(g.screen, '☰ 菜单');
+        await flush();
+        const lives = g.engine.dp.lives;
+        tap(g.screen, '重新投胎');
+        await flush();
+        expect(labels(g.overlay)).toContain('放弃这一世？');
+        tap(g.overlay, '再想想');
+        await flush();
+        expect(g.hasActiveRun()).toBe(true);
+        tap(g.screen, '重新投胎');
+        await flush();
+        tap(g.overlay, '放弃，重新投胎');
+        for (let i = 0; i < 3; i++) await flush();
+        expect(screenName(g)).toBe('draft');
+        expect(g.hasActiveRun()).toBe(false);
+        expect(g.save.run).toBeNull();
+        expect(g.engine.dp.lives).toBe(lives);
     });
 
     it('中途存档：重启后恢复到同一局', async () => {
@@ -247,6 +335,7 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
         const g = new Game(host as never);
         await g.boot();
         await flush();
+        g.goDraft();
         // 依次点三张卡 + 重生
         for (let i = 0; i < 3; i++) {
             const card = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
@@ -262,6 +351,10 @@ describe('游戏层冒烟（假 cc 运行时）', () => {
 
         const g2 = new Game(new Node('Canvas2') as never);
         await g2.boot();
+        await flush();
+        expect(screenName(g2)).toBe('menu');
+        const cont = tappables(g2.screen).find(n => labels(n).includes('继续这一世'))!;
+        cont.emit(Node.EventType.TOUCH_START); cont.emit(Node.EventType.TOUCH_END);
         await flush();
         expect(screenName(g2)).toBe('run');
         expect(g2.engine.run.life).toBe(life);
@@ -324,6 +417,7 @@ describe('音频', () => {
         await g.boot();
         for (let i = 0; i < 5; i++) await flush();
         expect(audioLog).toContain('bgm:bgm_main');
+        g.goDraft();
         // 点一张卡 → 翻卡音效
         const card = tappables(g.screen).find(n => n.name.startsWith('card_'))!;
         card.emit(Node.EventType.TOUCH_START); card.emit(Node.EventType.TOUCH_END);

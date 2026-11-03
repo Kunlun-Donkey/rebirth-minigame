@@ -11,7 +11,8 @@ import { box, button, chip, COLOR, estimateWidth, fadeIn, image, onTap, rect, te
 const MAX_CARD_H = 240;
 const GAP = 20;
 
-export function showDestinySelect(g: Game): void {
+export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): void {
+    const back = () => (from === 'menu' ? g.goMenu() : g.goDraft());
     const root = box(g.screen, 0, 0, g.W, g.H, 'destiny');
     rect(root, { fill: COLOR.bg });
     image(root, TEX.mainBg, 0, 0, g.W, g.H, { cover: true });
@@ -60,12 +61,12 @@ export function showDestinySelect(g: Game): void {
         }
         onTap(card, () => {
             if (!st.unlocked) { Platform.toast(`解锁条件：${st.lockText ?? ''}`); return; }
-            if (isCur) { g.goDraft(); return; }
+            if (isCur) { back(); return; }
             g.audio.play('card');
-            g.switchDestiny(entry.id);
+            g.switchDestiny(entry.id, from);
         });
         y += CARD_H + GAP;
     }
 
-    button(root, 60, g.H - 140, g.W - 120, { label: '返  回', style: 'ghost', size: 28, onClick: () => g.goDraft() });
+    button(root, 60, g.H - 140, g.W - 120, { label: '返  回', style: 'ghost', size: 28, onClick: back });
 }

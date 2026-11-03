@@ -12,6 +12,7 @@ import { loadSubBundle } from './res';
 import { loadSave, SaveData, writeSave } from './save';
 import { box, clear, COLOR, image, rect, setTapFeedback, text } from './ui/kit';
 import { showDestinySelect } from './screens/destiny';
+import { showMenu } from './screens/menu';
 import { showDraft } from './screens/draft';
 import { showRun } from './screens/run';
 import { showSettle } from './screens/settle';
@@ -72,12 +73,9 @@ export class Game {
         setTapFeedback(() => this.audio.play('click'));
         Platform.setupPassiveShare(() => '我重生了，这一世我将拿回属于我的一切');
 
-        if (run && run.destiny === this.data.meta.id && run.phase !== 'over') {
-            this.engine.resume(run);
-            this.goRun();
-        } else {
-            this.goDraft();
-        }
+        // 有中途存档就恢复到引擎里，由主菜单「继续」进入
+        if (run && run.destiny === this.data.meta.id && run.phase !== 'over') this.engine.resume(run);
+        this.goMenu();
         // 主界面出来后再后台拉分包（其余贴图、音频）
         loadSubBundle().then(b => { if (b) this.subReady = true; });
     }
@@ -98,7 +96,7 @@ export class Game {
 
     /** 轮回殿切换命格（只能在开局前切换，进行中的一局不受影响） */
     private switching = false;
-    async switchDestiny(id: string): Promise<void> {
+    async switchDestiny(id: string, then: 'draft' | 'menu' = 'draft'): Promise<void> {
         if (this.switching || id === this.data.meta.id) return;
         const st = destinyStates(this.index, this.save.profile).find(s => s.entry.id === id);
         if (!st?.unlocked) return;
@@ -115,12 +113,14 @@ export class Game {
         } finally {
             this.switching = false;
         }
-        this.goDraft();
+        if (then === 'menu') this.goMenu();
+        else this.goDraft();
     }
 
-    goDestinySelect(): void {
+    /** 命格选择；from = 从哪个界面进来（返回时回到那里） */
+    goDestinySelect(from: 'draft' | 'menu' = 'draft'): void {
         this.reset();
-        showDestinySelect(this);
+        showDestinySelect(this, from);
     }
 
     /** 分包是否已就绪 */
@@ -133,6 +133,27 @@ export class Game {
     }
 
     // ───────────── 界面切换 ─────────────
+
+    /** 是否有进行中的一局（主菜单显示「继续」） */
+    hasActiveRun(): boolean {
+        const r = this.engine?.run;
+        return !!r && r.phase !== 'over';
+    }
+
+    goMenu(): void {
+        this.reset();
+        this.audio.playBgm('bgm_main');
+        showMenu(this);
+    }
+
+    /** 放弃进行中的一局（不结算），回到开局前状态 */
+    abandonRun(): void {
+        if (!this.hasActiveRun()) return;
+        Platform.report('abandon_life', { life: this.engine.run.life, season: this.engine.run.season });
+        this.engine = new Engine(this.data, this.save.profile);
+        this.save.run = null;
+        this.persist();
+    }
 
     goDraft(): void {
         this.save.run = null;

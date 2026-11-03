@@ -6,7 +6,6 @@ import type { Game } from '../game';
 import {
     box, button, ButtonOpts, chip, COLOR, image, onTap, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
-import { soundToggle } from './draft';
 import { ListEntry, showInfo, showList } from './popups';
 
 const DIR_ICON: Record<string, string> = { up: '▲', down: '▼', side: '◆' };
@@ -81,8 +80,9 @@ function hud(g: Game, root: Node): number {
         ? `${DIR_ICON[dir]} ${e.data.dirs.find(d => d.id === dir)?.name ?? ''} · ${e.layerName(dir, r.pos[dir])}`
         : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
     chip(root, loc, 30, ly, COLOR.ochreD, false, 24);
-    const st = soundToggle(g, root, 0, ly);
-    st.setPosition(g.W - 30 - sizeOf(st).w, -ly, 0);
+    const menu = chip(root, '☰ 菜单', 0, ly, COLOR.ochreD, false, 24);
+    menu.setPosition(g.W - 30 - sizeOf(menu).w, -ly, 0);
+    onTap(menu, () => { g.persist(); g.goMenu(); });
     return ly + 60;
 }
 

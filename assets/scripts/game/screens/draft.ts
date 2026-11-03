@@ -144,7 +144,8 @@ function header(g: Game, root: Node, rerender: () => void): void {
     const e = g.engine;
     const dp = e.dp;
     text(root, '轮  回  殿', 0, CONFIG.safeTop + 10, g.W, { size: 52, color: COLOR.ochreD, align: 'center', bold: true });
-    soundToggle(g, root, 30, CONFIG.safeTop + 22);
+    const menu = chip(root, '‹ 菜单', 30, CONFIG.safeTop + 22, COLOR.ochreD, false, 22);
+    onTap(menu, () => g.goMenu());
     if (e.data.upgrades.size) {
         const label = e.upgradeViews().some(v => v.affordable) ? '命盘 · 可升级' : '命盘';
         const n = chip(root, label, g.W - 30 - (estimateWidth(label, 22) + 20), CONFIG.safeTop + 22, COLOR.legacy, true, 22);

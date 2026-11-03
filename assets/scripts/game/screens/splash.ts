@@ -31,21 +31,23 @@ const AGE_DESC = (age: number) => [
     '请合理安排游戏时间，注意休息。',
 ];
 
-/** 画启动页，返回状态文字节点（加载中提示可更新） */
-export function showSplash(g: Game, status: string): Node {
-    const root = box(g.screen, 0, 0, g.W, g.H, 'splash');
+/**
+ * 标题页底板（启动页与主菜单共用）：背景、logo + 游戏名、适龄提示、健康游戏忠告。
+ * 返回根节点、游戏名下方可用区域的顶部 y、健康游戏忠告的顶部 y。
+ */
+export function titleBase(g: Game, name: string): { root: Node; top: number; bottom: number } {
+    const root = box(g.screen, 0, 0, g.W, g.H, name);
     rect(root, { fill: COLOR.bg });
     image(root, TEX.mainBg, 0, 0, g.W, g.H, { cover: true });
 
     // 游戏名称：logo 图 + 文字（logo 缺失时文字依然可见）
     const lw = g.W - 80;
-    image(root, TEX.logo, 40, g.H * 0.22, lw, lw * 0.36);
-    text(root, GAME_NAME, 30, g.H * 0.22 + lw * 0.36 + 16, g.W - 60, { size: 30, color: COLOR.ochreD, align: 'center', bold: true });
+    const ly = g.H * 0.16;
+    image(root, TEX.logo, 40, ly, lw, lw * 0.36);
+    text(root, GAME_NAME, 30, ly + lw * 0.36 + 16, g.W - 60, { size: 30, color: COLOR.ochreD, align: 'center', bold: true });
 
     // 适龄提示：左上角、胶囊按钮下方；边长 ≥ 屏幕短边 1/10（设计宽 750 → ≥75）
     ageBadge(g, root, CONFIG.ageRating, 30, CONFIG.safeTop + 10);
-
-    const st = text(root, status, 0, g.H * 0.62, g.W, { size: 28, color: COLOR.ink2, align: 'center' });
 
     // 健康游戏忠告：底部居中
     const lh = 40;
@@ -54,7 +56,13 @@ export function showSplash(g: Game, status: string): Node {
     for (let i = 0; i < HEALTH_ADVICE.length; i += 2) {
         text(root, HEALTH_ADVICE[i] + HEALTH_ADVICE[i + 1], 0, y0 + lh * (i / 2 + 1), g.W, { size: 24, color: COLOR.ink, align: 'center' });
     }
-    return st;
+    return { root, top: ly + lw * 0.36 + 70, bottom: y0 - 20 };
+}
+
+/** 画启动页，返回状态文字节点（加载中提示可更新） */
+export function showSplash(g: Game, status: string): Node {
+    const { root, top, bottom } = titleBase(g, 'splash');
+    return text(root, status, 0, (top + bottom) / 2 - 20, g.W, { size: 28, color: COLOR.ink2, align: 'center' });
 }
 
 /** 适龄提示标识（官方图优先，缺图时画兜底样式），点击查看说明 */
