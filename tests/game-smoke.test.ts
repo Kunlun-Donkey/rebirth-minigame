@@ -569,6 +569,13 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
             expect(spin === undefined || labels(spin).some(l => l.includes('明日再来'))).toBe(true);
             expect(labels(g.screen).some(l => l.includes('明日再来'))).toBe(true);
             expect(await g.rollSpin()).toBeNull();
+            // 适龄提示说明里也不提激励视频
+            g.goMenu();
+            await flush();
+            tapNode(tappables(g.screen).find(n => n.name.startsWith('age_'))!);
+            await flush();
+            expect(labels(g.overlay).some(l => l.includes('适龄提示'))).toBe(true);
+            expect(all().some(l => l.includes('视频') || l.includes('广告'))).toBe(false);
         } finally {
             CONFIG.adsEnabled = true;
         }
