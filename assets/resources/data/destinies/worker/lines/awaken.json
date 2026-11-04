@@ -127,7 +127,7 @@
     },
     {
       "id": "realm_close", "dir": "down", "layers": ["D2", "D3"], "once": true, "weight": 10, "require": "line:awaken.awakened",
-      "text": "秘境的口子在缩小。里面还有加班的同事。站台广播：下一班车，三分钟后进站。",
+      "text": "秘境的口子在缩小。里面还有没出来的人。站台广播：下一班车，三分钟后进站。",
       "choices": [
         { "text": "冲进去拉人", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.05,
           "effect": { "人脉": 3, "身价": 12 }, "result": "你把同事拽了出来。他抱着电脑：文档还没保存。",

@@ -806,4 +806,6 @@ export interface SettleResult {
     feuds: string[];
     /** 天道的评语 */
     remark: string;
+    /** 墓志铭末尾的吐槽 / 本世高光（分享文案单独用） */
+    quip?: string;
 }

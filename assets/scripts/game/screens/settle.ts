@@ -191,7 +191,7 @@ function shareText(g: Game, s: SettleResult): string {
     if (s.tianhu) return `天胡！${brand}${tail}`;
     if (s.kind === 'ending') return `${brand}${tail}，你能更快吗？`;
     // 寿终是最常见的结束方式：不说「死得离谱」，带上这一世的高光（墓志铭「——」后半句）
-    const highlight = s.epitaph.split('——')[1];
+    const highlight = s.quip;
     if (s.id === g.data.meta.rules.oldAgeDeath) return `第 ${s.life} 世，${g.data.meta.name}寿终正寝。${highlight ? `${highlight}。` : ''}你这一世，过得比我精彩吗？`;
     return `${brand}${tail}。${highlight ? `${highlight}。` : ''}你会死得更离谱吗？`;
 }

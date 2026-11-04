@@ -617,14 +617,16 @@ export class Engine {
         const mods = this.mods();
 
         let title: string, epitaph: string, legacy: SettleResult['legacy'], firstTime: boolean, skill: SettleResult['skill'];
+        let quip: string | undefined;
         if (kind === 'death') {
             const def = d.deaths.get(id)!;
             title = def.name;
             const count = dp.deathCount ?? (dp.deathCount = {});
             count[id] = (count[id] ?? 0) + 1;
             dp.deathRun = dp.deathRun?.id === id ? { id, n: dp.deathRun.n + 1 } : { id, n: 1 };
-            const quip = this.epitaphQuip(id);
-            epitaph = `享年${this.run.season}季，${def.epitaph}${quip ? `——${quip}` : ''}`;
+            quip = this.epitaphQuip(id);
+            // 墓志铭本身以破折号收尾（如「宿主——」）时不再叠一道破折号
+            epitaph = `享年${this.run.season}季，${quip ? `${def.epitaph.replace(/—+$/, '')}——${quip}` : def.epitaph}`;
             firstTime = addUnique(dp.codex.deaths, id);
             if (def.legacy) {
                 const ld = d.legacies.get(def.legacy)!;
@@ -690,7 +692,7 @@ export class Engine {
         this.profile.points += points;
 
         this.settled = {
-            kind, id, title, epitaph,
+            kind, id, title, epitaph, quip,
             life: this.run.life,
             seasons: this.run.season,
             stage: this.run.stage,
