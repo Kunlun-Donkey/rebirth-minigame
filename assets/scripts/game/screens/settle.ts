@@ -119,7 +119,7 @@ function panel(g: Game, root: Node, s: SettleResult, y: number): number {
         }
     }
 
-    const rowH = (r: typeof rows[number]) => r.kind === 'sec' ? 52 : r.kind === 'goal' ? textHeight(r.l, innerW, 22, 34) + 4 : 40;
+    const rowH = (r: typeof rows[number]) => r.kind === 'sec' ? 52 : r.kind === 'goal' ? textHeight(r.l, innerW - 33, 22, 34) + 4 : 40;
     const sum = (list: typeof rows) => list.reduce((n, r) => n + rowH(r), 0);
     const maxH = g.H - y - 360;
     const avail = Math.max(maxH, 360) - 110;

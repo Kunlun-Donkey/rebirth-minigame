@@ -119,6 +119,8 @@ it('UI 巡检快照', async () => {
             const ending = [...g.engine.data.endings.keys()][0];
             if (ending && g.engine.run) {
                 g.engine.run.feuds = ['老刀扎了满嘴刺', '偷猎的人被送到了派出所', '海鸥挨了一记直拳'];
+                // 打工人这一次按天胡结算（天胡金印、天胡标题、天胡评语）
+                if (did === 'worker') g.engine.run.blessed = true;
                 g.overlay.destroyAllChildren();
                 (g.engine.run as { over?: unknown; phase: string }).over = { kind: 'ending', id: ending };
                 g.engine.run.phase = 'over';

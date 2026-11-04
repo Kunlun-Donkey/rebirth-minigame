@@ -129,7 +129,7 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
     const root = box(parent, 0, 0, g.W, g.H, 'eventArea');
     const cardW = g.W - 60;
     const textW = cardW - 80;
-    const textH = textHeight(v.text, textW, L.size, L.lh);
+    const textH = textHeight(v.text, textW - L.size * 1.5, L.size, L.lh);
     const cardH = Math.max(L.minH, 100 + textH + 70);
     const tex = v.gold ? TEX.eventCardGold : v.sudden ? TEX.eventCardSudden : TEX.eventCard;
 
