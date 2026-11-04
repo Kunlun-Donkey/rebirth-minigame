@@ -29,7 +29,8 @@
     "prevalidate": "node tools/ensure-cocos-temp.mjs",
     "validate": "tsx tools/validate.ts",
     "persona": "tsx tools/persona.ts",
-    "share:snap": "tsx tools/share/snap.ts"
+    "share:snap": "tsx tools/share/snap.ts",
+    "story": "tsx tools/story.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
