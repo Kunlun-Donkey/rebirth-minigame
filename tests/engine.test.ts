@@ -569,7 +569,7 @@ describe('天胡通道', () => {
 describe('爽感：新手保护 / 最后一搏 / 突破进度 / 大成功', () => {
     const trap: RawEvent = { id: 'trap', dir: 'down', layers: ['D1'], weight: 1000, text: '坑', choices: [{ text: '跳', effect: { death: 'lava' }, result: '掉了' }] };
 
-    it('新手保护：第 1 世前 N 季的死亡被挡下；第 2 世不再保护', () => {
+    it('新手保护：第 1 世前 N 季的死亡被挡下；第 2 世只再挡一次；第 4 世不再保护', () => {
         const raw = fixture([trap]);
         raw.meta.settings.newbieSeasons = 8;
         const e = new Engine(buildDestiny(raw), createProfile());
@@ -580,8 +580,20 @@ describe('爽感：新手保护 / 最后一搏 / 突破进度 / 大成功', () =
         expect(st.revived).toBe(true);
         expect(st.messages.some(m => m.startsWith('命不该绝'))).toBe(true);
         expect(e.run.phase).not.toBe('dying');
-        e.run.over = { kind: 'death', id: 'lava' }; e.run.phase = 'over'; e.settle();
+        const end = () => { e.run.over = { kind: 'death', id: 'lava' }; e.run.phase = 'over'; e.settle(); };
+        end();
+        // 第 2 世：前几季挡一次，第二次就挡不住了
         e.startRun(pick, 2);
+        e.chooseDirection('down');
+        expect(e.choose(0).messages.some(m => m.startsWith('命不该绝'))).toBe(true);
+        // 引擎不会连着抽同一个事件，直接把局面摆回陷阱
+        Object.assign(e.run, { phase: 'event', event: 'trap' });
+        e.choose(0);
+        expect(e.run.phase).toBe('dying');
+        end();
+        // 第 3 世还有一次，第 4 世起不再保护
+        e.startRun(pick, 3); end();
+        e.startRun(pick, 4);
         e.chooseDirection('down');
         e.choose(0);
         expect(e.run.phase).toBe('dying');
