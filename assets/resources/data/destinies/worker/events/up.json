@@ -93,7 +93,7 @@
     ]
   },
   {
-    "id": "u4_view", "dir": "up", "layers": ["U4"], "weight": 8,
+    "id": "u4_view", "careers": ["office"], "dir": "up", "layers": ["U4"], "weight": 8,
     "text": "顶楼的落地窗能看见整座城。你想起入职第一天，在楼下仰头数到第三十层就数不清了。",
     "choices": [
       { "text": "站一会儿", "effect": { "心态": 2, "精力": 1 }, "result": "你站到天黑。城里的灯一盏一盏亮了，每一盏底下都有一个打工人。" },
