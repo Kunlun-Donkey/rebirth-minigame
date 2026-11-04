@@ -397,7 +397,7 @@ describe('贴图接入（真实素材）', () => {
         const { Sprite } = await import('./fake-cc');
         setTexDestiny('desert_grass');
         const host = new Node('host');
-        // 3:4 的结局背景用 cover：等比放大铺满 750x1334，不拉伸、居中溢出
+        // 结局背景（1080x1920）用 cover：等比缩放铺满 750x1334，不拉伸、居中溢出
         const bg = image(host as never, TEX.settleBgEnding, 0, 0, 750, 1334, { cover: true }) as unknown as Node;
         // 命格版 epitaph_card 是竖版 → 比例不合被跳过，回落到通用版（若通用版也缺则无贴图）
         const ep = image(host as never, TEX.epitaphCard, 0, 0, 690, 300, { maxAspectDiff: 0.5 }) as unknown as Node;
@@ -408,7 +408,7 @@ describe('贴图接入（真实素材）', () => {
         expect(bg.getComponent(Sprite)!.spriteFrame?.name).toBe('textures/destiny/desert_grass/settle_bg_ending');
         expect(bgT.width).toBeGreaterThanOrEqual(750);
         expect(bgT.height).toBeGreaterThanOrEqual(1334);
-        expect(Math.abs(bgT.width / bgT.height - 896 / 1200)).toBeLessThan(0.01);
+        expect(Math.abs(bgT.width / bgT.height - 1080 / 1920)).toBeLessThan(0.01);
         expect(ep.getComponent(Sprite)!.spriteFrame?.name ?? null).not.toBe('textures/destiny/desert_grass/epitaph_card');
         expect(ev.getComponent(Sprite)!.spriteFrame?.name).toBe('textures/common/ui/event_card');
     });
