@@ -612,7 +612,7 @@ export interface RunState {
     revealAll: boolean;
     dying?: string;
     over?: { kind: 'death' | 'ending'; id: string };
-    reviveUsed: { talent: boolean; ad: boolean };
+    reviveUsed: { talent: boolean; ad: boolean; /** 第 2、3 世的新手保护已用过 */ newbie?: boolean };
     log: string[];
     /** 本局可用技能 */
     skills: string[];

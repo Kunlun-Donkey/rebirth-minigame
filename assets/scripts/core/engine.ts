@@ -1151,6 +1151,13 @@ export class Engine {
             this.revive(step, `命不该绝：这是你的第一世，天道替你挡下了「${def?.name ?? deathId}」。（前 ${newbie} 季有效）`, false);
             return;
         }
+        // 第 2、3 世再护一次（前几季、每世一次），别让新手从第一世的爽直接摔到第二世秒死
+        const taper = r.life === 2 ? Math.round(newbie * 0.6) : r.life === 3 ? Math.round(newbie * 0.4) : 0;
+        if (taper && r.season <= taper && !r.reviveUsed.newbie && deathId !== this.data.meta.rules.oldAgeDeath) {
+            r.reviveUsed.newbie = true;
+            this.revive(step, `命不该绝：才第${r.life}世，天道又替你挡了一次「${def?.name ?? deathId}」。下次就没这么好说话了。`, false);
+            return;
+        }
         if (this.mods().reviveOnce && !r.reviveUsed.talent) {
             r.reviveUsed.talent = true;
             this.revive(step, this.data.meta.rules.reviveOnceText ?? '你倒下了，又挣扎着活了过来。', false);
