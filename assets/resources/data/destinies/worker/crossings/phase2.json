@@ -1,0 +1,95 @@
+[
+  {
+    "id": "x_exam_roommate", "dir": "any", "once": true, "weight": 28,
+    "require": "line:civil_exam.studying & line:roommate.friend",
+    "text": "凌晨一点，你和室友各占半张桌子刷题。他推过来一本笔记：我考了三年，这本给你。",
+    "choices": [
+      { "text": "一起考", "effect": { "能力": 2, "心态": 1, "state": "roommate.landed" }, "result": "放榜那天，你们俩的名字挨在一起。他哭了，你也差点。" },
+      { "text": "笔记还他", "effect": { "人脉": 2 }, "result": "你说：你比我更需要。他愣了一下，把笔记抱回去，熬得更晚了。" },
+      { "text": "互相出题", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+        "effect": { "能力": 3, "身价": 6 }, "result": "你们出的题，有三道考到了原题。楼下打印店开始卖你们的笔记。",
+        "fail": { "effect": { "心态": -1 }, "result": "你们为一道题的答案吵到天亮，最后发现都错了。" } }
+    ]
+  },
+  {
+    "id": "x_cat_namesake", "dir": "any", "once": true, "weight": 26,
+    "require": "line:office_cat.secret & line:namesake.friends",
+    "text": "同名的他发来照片：那只橘猫，正蹲在他的工位椅子上。他问：这猫是你们公司的吧？",
+    "choices": [
+      { "text": "恭喜你要升了", "effect": { "人脉": 3, "心态": 2 }, "result": "下个月，他真升了。他请你吃饭，猫也去了，点了一条鱼。" },
+      { "text": "把猫接回来", "effect": { "身价": 8 }, "result": "猫回到你的椅子上，蹲了一下午。第二天，你的调薪单到了。" },
+      { "text": "问猫到底选谁", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+        "effect": { "身价": 20, "人脉": 3 }, "result": "猫看了你们俩一眼，在中间趴下了。两家公司第二天宣布合并。",
+        "fail": { "effect": { "心态": -1 }, "result": "猫打了个哈欠，去隔壁第三家公司的椅子上睡了。" } }
+    ]
+  },
+  {
+    "id": "x_dance_parents", "dir": "any", "once": true, "weight": 28,
+    "require": "line:square_dance.leader & line:parents.home",
+    "text": "广场上多了一个新队员，站在最后一排，动作慢半拍。是你妈。",
+    "choices": [
+      { "text": "让她站第一排", "effect": { "心态": 2, "state": "parents.close" }, "result": "你妈跳得比谁都认真。散场后她说：你小时候，我也这么带你。" },
+      { "text": "给她单独开小灶", "effect": { "人脉": 2, "心态": 1 }, "result": "你们在阳台上练到十点。楼下邻居探出头：明天我也来。" },
+      { "text": "一起编一支新舞", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "人脉": 4, "身价": 8, "state": "parents.close" }, "result": "那支舞叫《回家》。全县的广场，那个夏天都在跳。",
+        "fail": { "effect": { "心态": -1 }, "result": "你妈把第三个动作记成了第七个，全队跟着她跳错了。也挺好看。" } }
+    ]
+  },
+  {
+    "id": "x_netcafe_live", "dir": "any", "once": true, "weight": 26,
+    "require": "line:netcafe.esports & line:livestream",
+    "text": "网吧那支队伍打进了决赛。老包问：你不是会直播吗？给咱们解说一把。",
+    "choices": [
+      { "text": "开播", "effect": { "人脉": 3, "身价": 10, "state": "livestream.viral" }, "result": "那晚直播间挤进来十万人，弹幕都在问：这网吧在哪？" },
+      { "text": "让老包来说", "effect": { "心态": 2, "人脉": 2 }, "result": "老包解说全程在报网费价格。观众说，这是最真诚的一场。" },
+      { "text": "一边打一边解说", "absurd": true, "chance": 0.2, "chanceAttr": "能力", "chanceStep": 0.03,
+        "effect": { "身价": 20, "脸皮": 2 }, "result": "你上场替补，边打边讲。赢了。剪辑视频转了一百万次。",
+        "fail": { "effect": { "心态": -1 }, "result": "你一开口就忘了按技能。队友在语音里沉默了很久。" } }
+    ]
+  },
+  {
+    "id": "x_gym_midlife", "dir": "any", "once": true, "weight": 24,
+    "stage": [3, 99],
+    "require": "line:midlife.crisis & ever:gym_coach.fit",
+    "text": "体检报告摊在桌上。你想起来，前世有一阵，你是练出过腹肌的。",
+    "choices": [
+      { "text": "重新办卡", "effect": { "精力上限": 1, "精力": 2, "心态": 1 }, "result": "第一周你只能跑五分钟。第三个月，你在跑步机上哼起了歌。" },
+      { "text": "和自己和解", "effect": { "心态": 3, "state": "midlife.accept" }, "result": "你把报告折起来夹进书里。脂肪肝而已，慢慢来。" },
+      { "text": "去当私教", "require": "ever:gym_coach.coach", "effect": { "身价": 12, "state": "midlife.restart" }, "result": "前世你教过别人。这一世你的第一个学员，是和你一样的中年人。" }
+    ]
+  },
+  {
+    "id": "x_date_xiaolin", "dir": "any", "once": true, "weight": 24,
+    "require": "line:blind_date.met & line:xiaolin.close",
+    "text": "相亲餐厅里，隔壁桌坐着小林，也在相亲。他朝你挤了挤眼睛。",
+    "choices": [
+      { "text": "互相打掩护", "effect": { "人脉": 2, "心态": 2 }, "result": "你们轮流假装接电话，一顿饭吃了四个小时。两边都觉得挺投缘。" },
+      { "text": "拼桌", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "人脉": 3, "state": "blind_date.together" }, "result": "四个人聊到了打烊。后来，你们俩的婚礼是同一天办的。",
+        "fail": { "effect": { "脸皮": 1 }, "result": "四个人一起沉默。服务员上菜都是踮着脚的。" } },
+      { "text": "装不认识", "effect": { "脸皮": 1 }, "result": "他也装不认识你。第二天在工位上，你们谁也没提。" }
+    ]
+  },
+  {
+    "id": "x_kid_jianbing", "dir": "any", "once": true, "weight": 26,
+    "require": "line:parenting.parent & line:jianbing.friend",
+    "text": "你抱着孩子路过煎饼摊。大爷看了一眼：这是你家的？来，叫爷爷，爷爷给加个蛋。",
+    "choices": [
+      { "text": "叫爷爷", "effect": { "心态": 2, "state": "parenting.proud" }, "result": "孩子含糊地叫了一声。大爷把蛋打成了双黄的，说这是缘分。" },
+      { "text": "让大爷教他摊饼", "effect": { "人脉": 2, "心态": 1 }, "result": "孩子摊坏了三张饼。大爷全买了，说要留着当纪念。" },
+      { "text": "认大爷当干爷爷", "require": "line:jianbing.shop", "effect": { "人脉": 4, "心态": 2 }, "result": "大爷的新店门口，从此多了一张小板凳，是专门给孩子写作业的。" }
+    ]
+  },
+  {
+    "id": "x_rehire_guard", "dir": "down", "once": true, "weight": 24,
+    "require": "line:rehire.rehired & line:old_guard.founder_known",
+    "text": "地下车库里，老许和老保安对着一壶茶，聊的是三十年前这栋楼的图纸。",
+    "choices": [
+      { "text": "坐下听", "effect": { "能力": 2, "心态": 2 }, "result": "你听完才知道，机房那根总闸，是他俩当年一起拉的。" },
+      { "text": "把图纸找出来", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+        "effect": { "身价": 15, "能力": 2 }, "result": "图纸在档案室最底层。两个老头看着它，谁都没说话。",
+        "fail": { "effect": { "精力": -1 }, "result": "档案室说图纸早就当废纸卖了。老保安笑了：卖了好，楼还在。" } },
+      { "text": "给他们续茶", "effect": { "人脉": 3 }, "result": "老保安说：小子懂事。老许说：随我。两人又吵了半个钟头。" }
+    ]
+  }
+]

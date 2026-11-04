@@ -1,0 +1,167 @@
+{
+  "id": "civil_exam",
+  "name": "考公",
+  "summary": "一张冲刺班传单，一摞比砖还厚的题本，一个天天问你考没考上的家族群。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [0, 3],
+  "states": {
+    "studying": "在备考",
+    "landed": "考上了",
+    "quit": "不考了"
+  },
+  "events": [
+    {
+      "id": "flyer", "entry": true, "dir": "any", "weight": 5,
+      "text": "下班路上，有人塞给你一张传单：考公冲刺班，上岸不是梦。背面一行小字：不上岸，明年免费再来。",
+      "choices": [
+        { "text": "报个冲刺班", "effect": { "身价": -2, "能力": 1, "state": "studying", "follow": { "id": "drill", "delay": 2 } },
+          "result": "你交了钱，领回一摞比砖还厚的题本。" },
+        { "text": "自己买书刷", "effect": { "心态": 1, "state": "studying", "follow": { "id": "drill", "delay": 2 } },
+          "result": "你买了一套二手题本，上一任主人的笔记写满了页边。" },
+        { "text": "前世干到退休", "require": "legacy:veteran>=1", "effect": { "心态": 1, "能力": 1, "state": "studying", "follow": { "id": "drill", "delay": 2 } },
+          "result": "前世你在格子间熬到退休。这一世你先报了名。" },
+        { "text": "在传单背面做题", "absurd": true, "chance": 0.2, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "能力": 2, "身价": 6, "state": "studying", "follow": { "id": "drill", "delay": 2 } },
+          "result": "你把背面例题全做对了。发传单的小伙说：要不你来当老师？",
+          "fail": { "effect": { "心态": -1, "state": "studying", "follow": { "id": "drill", "delay": 2 } }, "result": "第一题你就算错了。小伙说：哥，你更需要这个班。" } }
+      ]
+    },
+    {
+      "id": "drill", "dir": "any", "chainOnly": true, "teaser": "题本刷到第三本了", "require": "line:civil_exam.studying",
+      "text": "下班回家刷题，刷到凌晨一点。行测还剩四十道，申论的纸上只写了一个标题。",
+      "choices": [
+        { "text": "咬牙刷完", "effect": { "精力": -2, "能力": 2, "follow": { "id": "family", "delay": 2 } },
+          "result": "你刷完了。闭上眼，满脑子都是数字推理。" },
+        { "text": "只刷高频考点", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "能力": 2, "身价": 3, "follow": { "id": "family", "delay": 2 } },
+          "result": "你押了三类题，正确率涨了一大截。",
+          "easy": "你翻了翻目录，就知道今年考什么。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "family", "delay": 2 } }, "result": "你押的考点，题本最后一页写着：已过时。" } },
+        { "text": "拉室友一起刷", "require": "line:roommate.friend", "effect": { "能力": 2, "心态": 1, "人脉": 1, "follow": { "id": "family", "delay": 2 } },
+          "result": "室友也在考。你们互相出题，谁错谁洗碗。他洗了一个月。" },
+        { "text": "带薪刷题", "showIf": "skill:paid_break", "useSkill": "paid_break", "effect": { "能力": 3, "精力": 1, "follow": { "id": "family", "delay": 2 } },
+          "result": "你每天在公司厕所刷四十分钟题。这一季，进度翻倍。" }
+      ]
+    },
+    {
+      "id": "family", "dir": "any", "chainOnly": true, "teaser": "家族群里有人问你考没考", "require": "line:civil_exam.studying",
+      "text": "家族群里，三舅发了一条：听说你在考公？好！你表姐当年考了五年。全群开始刷大拇指。",
+      "choices": [
+        { "text": "回一句在努力", "effect": { "心态": -1, "人脉": 1, "follow": { "id": "written", "delay": 2 } },
+          "result": "全群又刷了一轮大拇指。你的压力多了三十个大拇指。" },
+        { "text": "反问三舅", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.07,
+          "effect": { "脸皮": 2, "心态": 1, "feud": "三舅不在群里点名了", "follow": { "id": "written", "delay": 2 } },
+          "result": "你问：三舅，表姐现在在哪个单位？三舅说他在开会。群里安静了。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "written", "delay": 2 } }, "result": "三舅回了一段五十九秒的语音，讲他当年。" } },
+        { "text": "说不考了", "effect": { "心态": 2, "state": "quit", "follow": { "id": "other_road", "delay": 1 } },
+          "result": "三舅回了三个问号。你关掉手机，第一次睡了个整觉。" },
+        { "text": "把难题发群里求解", "absurd": true, "chance": 0.25, "chanceAttr": "人脉", "chanceStep": 0.04,
+          "effect": { "人脉": 3, "能力": 2, "follow": { "id": "written", "delay": 2 } },
+          "result": "全家族一起刷题。退休的大伯把数量关系全做对了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "written", "delay": 2 } }, "result": "群里没人回。半夜，表姐私聊你：这题我也不会。" } }
+      ]
+    },
+    {
+      "id": "written", "dir": "any", "chainOnly": true, "teaser": "笔试那天到了", "require": "line:civil_exam.studying",
+      "text": "笔试考场。你前面坐着一个四十岁的大哥，后面是个刚毕业的姑娘。监考老师说：开始。",
+      "choices": [
+        { "text": "稳着做完", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "能力": 1, "身价": 3, "follow": { "id": "interview", "delay": 2 } },
+          "result": "成绩出来，你进了面试。名次压线，但进了。",
+          "easy": "你提前二十分钟交卷。成绩出来，岗位第一。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "adjust", "delay": 1 } }, "result": "差了一分。页面下方弹出一行字：可申请调剂。" } },
+        { "text": "交卷就去吃火锅", "effect": { "心态": 2, "精力": 1, "follow": { "id": "adjust", "delay": 1 } },
+          "result": "火锅吃完，成绩出来了：差三分，可申请调剂。" },
+        { "text": "前世凡事留痕", "require": "legacy:paper_trail>=1", "effect": { "能力": 2, "身价": 5, "follow": { "id": "interview", "delay": 2 } },
+          "result": "前世你天天写邮件抄送。这一世申论一落笔，就是一份标准汇报。" },
+        { "text": "申论写成爽文", "absurd": true, "chance": 0.15, "chanceAttr": "心态", "chanceStep": 0.03,
+          "effect": { "能力": 2, "身价": 8, "follow": { "id": "interview", "delay": 2 } },
+          "result": "阅卷老师给了高分，评语：离谱，但论点清晰。",
+          "fail": { "effect": { "心态": 1, "state": "quit", "follow": { "id": "other_road", "delay": 1 } }, "result": "阅卷老师在第三段旁边批注：建议去写小说。你觉得有道理。" } }
+      ]
+    },
+    {
+      "id": "adjust", "dir": "any", "chainOnly": true, "teaser": "调剂通知来了", "require": "line:civil_exam.studying",
+      "text": "调剂通知来了：县里一个岗位，没人报。岗位要求：能吃苦，会开车，熟悉养殖。",
+      "choices": [
+        { "text": "服从调剂", "effect": { "心态": 1, "follow": { "id": "interview", "delay": 1 } },
+          "result": "你填了服从。岗位那栏写着：畜牧站。你开始背猪的品种。" },
+        { "text": "再考一年", "effect": { "精力": -1, "能力": 1, "follow": { "id": "written", "delay": 4, "ttl": 8 } },
+          "result": "你把题本翻回第一页。三舅在群里问：今年呢？" },
+        { "text": "不考了", "effect": { "心态": 2, "state": "quit", "follow": { "id": "other_road", "delay": 1 } },
+          "result": "题本卖给了收废品的，三块二。大爷说：我孙子也在考。" },
+        { "text": "前世会算账", "require": "legacy:bookkeeping>=1", "effect": { "能力": 1, "身价": 4, "follow": { "id": "interview", "delay": 1 } },
+          "result": "前世你背过债，账算得门儿清。这一世你挑了个分最低的岗位调剂，进了。" }
+      ]
+    },
+    {
+      "id": "interview", "dir": "any", "chainOnly": true, "teaser": "面试，穿上借来的西装", "require": "line:civil_exam.studying",
+      "text": "候考室里，十二个人穿着一样的白衬衫。考官问：领导交代的事你办砸了，怎么办？",
+      "choices": [
+        { "text": "背模板", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "身价": 10, "state": "landed", "follow": { "id": "checkup", "delay": 1 } },
+          "result": "你背得一字不差。三个考官里，两个点了头。",
+          "easy": "你背得比考官手里的参考答案还顺。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "adjust", "delay": 2 } }, "result": "你背到一半，发现和上一位背的是同一套。考官也发现了。" } },
+        { "text": "先认错再补救", "effect": { "身价": 4, "心态": 1, "state": "landed", "follow": { "id": "checkup", "delay": 1 } },
+          "result": "你讲了件真事：替老板背过的锅。考官听完，在表上画了个勾。" },
+        { "text": "向上管理", "showIf": "skill:manage_up", "useSkill": "manage_up", "effect": { "身价": 10, "能力": 1, "state": "landed", "follow": { "id": "checkup", "delay": 1 } },
+          "result": "你反问：领导交代时，有没有留书面记录？主考官笑了。" },
+        { "text": "反问考官怎么办", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 12, "脸皮": 2, "state": "landed", "follow": { "id": "checkup", "delay": 1 } },
+          "result": "主考官愣了三秒：这题，我们也没标准答案。你过了。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "adjust", "delay": 2 } }, "result": "考官说：现在是我们面试你。下一位。" } }
+      ]
+    },
+    {
+      "id": "checkup", "dir": "any", "chainOnly": true, "teaser": "体检通知：空腹来", "require": "line:civil_exam.landed",
+      "text": "体检那天，你空腹排了三个小时。轮到量血压，你一紧张，一百五。",
+      "choices": [
+        { "text": "深呼吸再量", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "心态": 1, "follow": { "id": "first_day", "delay": 1 } },
+          "result": "你想了想前世的工位，又想了想这一世。血压降到了一百一。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "first_day", "delay": 2 } }, "result": "医生说明天复查。你又空腹了一天，这回过了。" } },
+        { "text": "前世累垮住过院", "require": "legacy:wellness>=1", "effect": { "精力上限": 1, "心态": 1, "follow": { "id": "first_day", "delay": 1 } },
+          "result": "前世你的体检单一片红。这一世你每天十点睡，一个箭头都没有。" },
+        { "text": "喝口枸杞水", "require": "item:goji", "effect": { "心态": 2, "follow": { "id": "first_day", "delay": 1 } },
+          "result": "你拧开保温杯。护士闻了一下：同道中人。血压正常。" },
+        { "text": "跟医生聊养生", "absurd": true, "chance": 0.3, "chanceAttr": "人脉", "chanceStep": 0.04,
+          "effect": { "人脉": 3, "follow": { "id": "first_day", "delay": 1 } },
+          "result": "你和医生聊了半小时枸杞怎么泡。医生加了你好友。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "first_day", "delay": 2 } }, "result": "医生说：下一个。你被安排到明天复查。" } }
+      ]
+    },
+    {
+      "id": "first_day", "dir": "any", "chainOnly": true, "teaser": "上岸后第一天报到", "require": "line:civil_exam.landed",
+      "text": "报到第一天，你坐进窗口。一杯茶，一台电脑，一块写着你名字的牌子。外面排着长队。",
+      "choices": [
+        { "text": "好好办事", "require": "stage>=3 & 能力>=15", "effect": { "心态": 2, "ending": "iron_bowl" },
+          "result": "第一个来办事的人拿错了表。你没让他重排，帮他填好了。" },
+        { "text": "发张照片到家族群", "effect": { "人脉": 3, "心态": 1 },
+          "result": "三舅第一个点赞：我早说过这孩子行。" },
+        { "text": "把工位绿萝搬过来", "showIf": "companion:pothos", "require": "stage>=3", "effect": { "心态": 2, "ending": "iron_bowl" },
+          "result": "绿萝放在窗口边上。来办事的大爷说：这盆养得好，你也是。" },
+        { "text": "在窗口里摸鱼", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "心态": 3, "身价": 10 },
+          "result": "你摸了一天鱼，队伍照样办完了。科长夸你效率高。",
+          "fail": { "effect": { "心态": -2 }, "result": "排队的大爷敲了敲玻璃：小伙子，我都看见了。" } }
+      ]
+    },
+    {
+      "id": "other_road", "dir": "any", "chainOnly": true, "teaser": "不考了，然后呢", "require": "line:civil_exam.quit",
+      "text": "不考了。题本垒在门口当了鞋架。你发现刷了那么久的题，本事一点没白长。",
+      "choices": [
+        { "text": "去冲刺班当老师", "effect": { "身价": 8, "能力": 2 },
+          "result": "你去冲刺班讲数量关系。学生说你讲得比书清楚。" },
+        { "text": "回工位接着干", "effect": { "心态": 2, "能力": 2 },
+          "result": "数字推理都刷过了，还怕报表？你觉得手上的活简单多了。" },
+        { "text": "前世卷不动就绕", "require": "legacy:detour>=1", "effect": { "身价": 10, "人脉": 2 },
+          "result": "前世你在独木桥上被挤下去。这一世你绕开了，转头考了个证。" },
+        { "text": "发帖讲为什么不考", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 12, "人脉": 2 },
+          "result": "帖子点赞十万。三舅也转发了，配文：我外甥。",
+          "fail": { "effect": { "心态": -1 }, "result": "两个点赞，一个是三舅。" } }
+      ]
+    }
+  ]
+}

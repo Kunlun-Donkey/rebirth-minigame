@@ -1,0 +1,148 @@
+{
+  "id": "namesake",
+  "name": "隔壁公司的同名人",
+  "summary": "隔壁公司有个人，和你同名同姓、同年同月同日生。快递、外卖、工资条老送错。他也许是没重生的那个你。",
+  "careers": ["office"],
+  "maps": ["city"],
+  "stage": [1, 3],
+  "states": {
+    "met": "认识了同名的人",
+    "swapped": "和同名的人互换了一天",
+    "friends": "和同名的人成了朋友"
+  },
+  "events": [
+    {
+      "id": "takeout", "entry": true, "dir": "up", "layers": ["U1"], "weight": 16,
+      "text": "外卖员把一份麻辣烫塞给你：收件人是你的名字，可你没点。备注写着：不要香菜，辛苦了自己。",
+      "choices": [
+        { "text": "送去隔壁公司", "effect": { "state": "met", "人脉": 1, "follow": { "id": "noodle", "delay": 2 } },
+          "result": "隔壁前台叫了一声你的名字。一个和你差不多高的人站了起来。" },
+        { "text": "先吃了再说", "effect": { "精力": 2, "follow": { "id": "payslip", "delay": 2 } },
+          "result": "不要香菜，多放醋。和你的口味一模一样。吃完你有点发毛。" },
+        { "text": "前世替人签收背过锅", "require": "legacy:paper_trail>=1",
+          "effect": { "state": "met", "能力": 1, "身价": 3, "follow": { "id": "noodle", "delay": 2 } },
+          "result": "前世你签错一份文件背了锅。这一世你先拍照留底，再亲手交给了他。" },
+        { "text": "回备注：你也辛苦", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "met", "心态": 2, "人脉": 1, "follow": { "id": "noodle", "delay": 1 } },
+          "result": "半小时后，你的外卖备注里多了一行字：谢谢，明天楼下面馆见？",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "payslip", "delay": 2 } }, "result": "外卖员看着你写完备注，默默退后了两步。" } }
+      ]
+    },
+    {
+      "id": "noodle", "dir": "side", "layers": ["L1"], "chainOnly": true, "teaser": "楼下面馆，和他拼桌",
+      "text": "面馆里，他把身份证拍在桌上。同名同姓，同一天生日。他说：我早觉得世上还有一个我。",
+      "choices": [
+        { "text": "加个微信", "effect": { "state": "met", "人脉": 1, "follow": { "id": "payslip", "delay": 2 } },
+          "result": "他的头像和你前世用过的一模一样。你没说出来。" },
+        { "text": "请他吃这碗面", "effect": { "state": "met", "心态": 1, "身价": -1, "follow": { "id": "stairs", "delay": 3, "ttl": 8 } },
+          "result": "他吃面的时候先把葱挑出来，摆在碗边。你也是。" },
+        { "text": "问他这些年过得咋样", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+          "effect": { "state": "met", "心态": 1, "flag": "heard", "follow": { "id": "stairs", "delay": 2 } },
+          "result": "他说的每一年，你都过过一遍。只是到了今年，你们走岔了。",
+          "fail": { "effect": { "follow": { "id": "payslip", "delay": 2 } }, "result": "他说：还行吧，就那样。你前世也总这么回答。" } },
+        { "text": "猜拳决定谁是本尊", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "met", "脸皮": 2, "人脉": 2, "follow": { "id": "swap", "delay": 2 } },
+          "result": "连出了七把一样的。老板娘看不下去，给你俩各加了个蛋。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "payslip", "delay": 2 } }, "result": "你出了石头，他出了布。他说：本尊请客。" } }
+      ]
+    },
+    {
+      "id": "payslip", "dir": "up", "chainOnly": true, "teaser": "HR 发错了工资条",
+      "text": "HR 把一张工资条发进了你邮箱：同名，隔壁公司的。他干一样的活，比你多拿三千。",
+      "choices": [
+        { "text": "转给他本人", "effect": { "state": "met", "人脉": 1, "follow": { "id": "swap", "delay": 2 } },
+          "result": "他回：你的我也收到过一次。比我少三千，我还替你骂过。" },
+        { "text": "拿着去谈涨薪", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 8, "脸皮": 1, "feud": "拿隔壁工资条谈下了涨薪", "follow": { "id": "elevator", "delay": 2 } },
+          "result": "你把工资条放在主管桌上：同名同岗。主管沉默了一会儿，签了。",
+          "easy": "主管只扫了一眼，说：下个月起，按这个数。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "elevator", "delay": 2 } }, "result": "主管说：隔壁好你就去隔壁。你回了工位。" } },
+        { "text": "删了，当没看见", "effect": { "心态": -1, "能力": 1 },
+          "result": "你把邮件删了。那三千块，在你脑子里转了一个礼拜。" }
+      ]
+    },
+    {
+      "id": "elevator", "dir": "up", "chainOnly": true, "teaser": "电梯里有人喊你名字",
+      "text": "电梯里，隔壁公司的主管指着你骂：方案呢？明天交不出来就滚！他认错人了。他骂的是另一个你。",
+      "choices": [
+        { "text": "替他顶回去", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "state": "met", "脸皮": 2, "身价": 4, "feud": "替同名人怼了他主管", "follow": { "id": "swap", "delay": 2 } },
+          "result": "你说：方案在你邮箱第三页，你没往下翻。主管翻了，闭嘴了。",
+          "easy": "你把他主管上周的三个错别字背了一遍。电梯门开，他快步走了。",
+          "fail": { "effect": { "state": "met", "心态": -1, "follow": { "id": "swap", "delay": 2 } }, "result": "主管骂得更凶了。电梯每层都停，你听完了全程。" } },
+        { "text": "说他认错人了", "effect": { "心态": 1, "follow": { "id": "stairs", "delay": 3, "ttl": 8 } },
+          "result": "主管愣住，看了看你的工牌，嘀咕了一句：长得也像。" },
+        { "text": "前世也被这么骂过", "require": "legacy:pie_sense>=1",
+          "effect": { "state": "met", "心态": 2, "身价": 3, "follow": { "id": "stairs", "delay": 2 } },
+          "result": "前世这套话你听了十年。这一世你给他发消息：你主管的饼，别吃。" }
+      ]
+    },
+    {
+      "id": "swap", "dir": "any", "chainOnly": true, "teaser": "他提议换一天班", "require": "line:namesake.met | line:namesake.friends",
+      "text": "他发来消息：明天我们换一天班？同名同脸，没人看得出来。我想看看你那边是啥样。",
+      "choices": [
+        { "text": "换", "effect": { "state": "swapped", "心态": 1, "follow": { "id": "swap_day", "delay": 1 } },
+          "result": "你们在楼下交换了工牌。他的工牌照片，笑得比你开心。" },
+        { "text": "不换，太离谱了", "effect": { "能力": 1, "follow": { "id": "stairs", "delay": 2 } },
+          "result": "他回了个笑脸：也是。那改天楼梯间聊。" },
+        { "text": "换了就不换回来", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "swapped", "身价": 10, "脸皮": 2, "follow": { "id": "bbq", "delay": 3 } },
+          "result": "一周后你俩都升了职。两家 HR 至今没发现。",
+          "fail": { "effect": { "state": "swapped", "心态": -1, "follow": { "id": "bbq", "delay": 2 } }, "result": "第二天他就找来了：你那边的会太多了，换回来。" } }
+      ]
+    },
+    {
+      "id": "swap_day", "dir": "up", "chainOnly": true, "teaser": "你坐在了他的工位上", "require": "line:namesake.swapped",
+      "text": "你坐进他的工位。显示器边上贴着一张便签：「要是能重来，早点下班。」是你前世的字。",
+      "choices": [
+        { "text": "帮他把活干完", "effect": { "能力": 2, "精力": -1, "follow": { "id": "stairs", "delay": 2 } },
+          "result": "你三小时干完了他一周的活。他主管路过，揉了揉眼睛。" },
+        { "text": "六点准时下班", "effect": { "心态": 2, "精力": 1, "follow": { "id": "bbq", "delay": 2 } },
+          "result": "你替他准点走出了公司。楼下的晚霞，他大概很久没看过了。" },
+        { "text": "在便签下面回一句", "effect": { "state": "swapped", "心态": 1, "人脉": 1, "follow": { "id": "stairs", "delay": 2 } },
+          "result": "你写：不用重来，现在就行。第二天，便签被他揭下来夹进了钱包。" },
+        { "text": "签到也替他签了", "showIf": "system:sys_signin",
+          "effect": { "身价": 6 },
+          "result": "【叮！】检测到两个宿主签名一致，奖励双倍。系统沉默了一下：这不对劲。" }
+      ]
+    },
+    {
+      "id": "stairs", "dir": "down", "layers": ["D2"], "chainOnly": true, "teaser": "楼梯间，他有话问你",
+      "text": "楼梯间里，他捏着罐咖啡没喝：你是不是……走过一遍了？我老梦见一个人，跟我一样，后来他重来了。",
+      "choices": [
+        { "text": "说实话", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "state": "friends", "心态": 2, "人脉": 2, "follow": { "id": "bbq", "delay": 2 } },
+          "result": "他听完，把咖啡一口喝完：那你替我活得好点。我也试试。",
+          "easy": "你没解释。你只说了他明天会遇到什么。第二天，全中了。",
+          "fail": { "effect": { "state": "met", "心态": -1, "follow": { "id": "bbq", "delay": 3 } }, "result": "你说完，他盯着你：你也做那个梦？两个人都没再说话。" } },
+        { "text": "打个哈哈", "effect": { "state": "met", "精力": 1 },
+          "result": "你说：梦都是反的。他笑了，没再追问。" },
+        { "text": "他说的你都知道", "require": "flag:heard",
+          "effect": { "state": "friends", "心态": 3, "身价": 5, "follow": { "id": "bbq", "delay": 2 } },
+          "result": "你说：下个月别签那份合同。他看了你很久，点了点头。" },
+        { "text": "把保温杯递给他", "require": "item:goji",
+          "effect": { "loseItem": "goji", "state": "friends", "心态": 2, "follow": { "id": "bbq", "delay": 2 } },
+          "result": "他喝了一口：枸杞？我前几年也想泡，一直没泡上。" }
+      ]
+    },
+    {
+      "id": "bbq", "dir": "side", "layers": ["L1"], "chainOnly": true, "teaser": "周五烧烤摊，他请客", "require": "line:namesake",
+      "text": "周五晚上，你俩坐在烧烤摊上。老板端串过来，问：双胞胎吧？两个人同时说：不是。",
+      "choices": [
+        { "text": "碰个杯", "effect": { "state": "friends", "心态": 2, "人脉": 1 },
+          "result": "他说：以后外卖送错了，就当请你。你说：行，不要香菜。" },
+        { "text": "劝他早点下班", "require": "line:namesake.friends | ever:namesake.swapped",
+          "effect": { "state": "friends", "心态": 2, "身价": 6 },
+          "result": "他说：你也是。那天晚上十点，两栋楼里少亮了两盏灯。" },
+        { "text": "约他一起跳槽", "chance": 0.35, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "friends", "人脉": 3, "身价": 10 },
+          "result": "你们一起去面了同一家公司。面试官看着两份简历，笑着全收了。",
+          "fail": { "effect": { "state": "friends", "心态": 1 }, "result": "他想了想：再等等。你知道他会等多久，但你没逼他。" } },
+        { "text": "让老板拍张合影", "absurd": true, "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "friends", "心态": 1, "人脉": 3 },
+          "result": "合影挂在烧烤摊墙上，写着：本店双胞胎。来打卡的人排到了路口。",
+          "fail": { "effect": { "心态": 1 }, "result": "照片里两个人，眨眼的时机都一样。全是闭眼的。" } }
+      ]
+    }
+  ]
+}

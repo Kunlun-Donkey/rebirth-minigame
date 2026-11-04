@@ -1,0 +1,143 @@
+{
+  "id": "gym_coach",
+  "name": "健身私教",
+  "summary": "楼下新开的健身房，金牌私教阿凯天天在路口发传单。他想卖你一套课，你想要一副不疼的腰。",
+  "maps": ["city", "workshop"],
+  "stage": [1, 3],
+  "states": {
+    "member": "办了健身卡",
+    "fit": "练出来了",
+    "coach": "自己当了私教"
+  },
+  "events": [
+    {
+      "id": "flyer", "entry": true, "dir": "side", "layers": ["L1"], "weight": 16,
+      "text": "小吃街路口，一个T恤快被撑裂的小伙拦住你：哥，免费体验一节课！胸牌上写着：金牌私教阿凯。",
+      "choices": [
+        { "text": "跟他去体验", "effect": { "精力": -1, "人脉": 1, "follow": { "id": "pitch", "delay": 1 } },
+          "result": "你在跑步机上走了二十分钟。阿凯在旁边夸了你十九分钟。" },
+        { "text": "说没时间", "effect": { "心态": 1, "follow": { "id": "pitch", "delay": 3 } },
+          "result": "阿凯塞给你一张传单：哥，我等你。他是真的会等。" },
+        { "text": "前世累垮过", "require": "legacy:wellness>=1",
+          "effect": { "精力上限": 1, "心态": 1, "follow": { "id": "pitch", "delay": 1 } },
+          "result": "前世你累垮在工位上。这一世你先开口：有没有专门护腰的课？" },
+        { "text": "跟他比俯卧撑", "absurd": true, "chance": 0.2, "chanceAttr": "精力", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 4, "follow": { "id": "pitch", "delay": 1 } },
+          "result": "你做了三十个，阿凯做了二十九个。他说：哥，你不用上课，你来上班吧。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "pitch", "delay": 1 } }, "result": "你做到第六个趴下了。阿凯蹲下来：哥，所以你需要我。" } }
+      ]
+    },
+    {
+      "id": "poster", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 14,
+      "text": "茶水间里，同事在传一张开业海报：年卡九百九，前一百名送私教。底下印着阿凯的笑脸。",
+      "choices": [
+        { "text": "拼团办张卡", "effect": { "身价": -3, "人脉": 1, "state": "member", "follow": { "id": "pitch", "delay": 1 } },
+          "result": "全组拼了八张卡。第二天，阿凯加了你们每一个人的微信。" },
+        { "text": "先去看看", "effect": { "精力": -1, "follow": { "id": "pitch", "delay": 1 } },
+          "result": "健身房很新，镜子很亮。阿凯从镜子里认出了你：哥，又见面了。" },
+        { "text": "前世被骗光过", "require": "legacy:scam_radar>=1",
+          "effect": { "心态": 2, "身价": -1, "state": "member", "follow": { "id": "run_off", "delay": 3, "ttl": 6 } },
+          "result": "前世你信过「限时优惠」。这一世你只办了月卡：老板开过七家店，关了六家。" }
+      ]
+    },
+    {
+      "id": "pitch", "dir": "any", "chainOnly": true, "teaser": "阿凯说给你做个体测", "require": "line:gym_coach",
+      "text": "体测做完，阿凯把报告一合：哥，你这久坐的腰，再不练就晚了。三十节私教一万二，今天签打八折。",
+      "choices": [
+        { "text": "签私教课", "effect": { "身价": -8, "state": "member", "follow": { "id": "leg_day", "delay": 1 } },
+          "result": "你签了字。阿凯握着你的手：哥，三个月，我还你一个新的自己。" },
+        { "text": "只办年卡自己练", "effect": { "身价": -3, "state": "member", "follow": { "id": "run_off", "delay": 3, "ttl": 6 } },
+          "result": "阿凯笑容僵了一秒：行，哥，有事随时找我。" },
+        { "text": "砍价", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": -2, "脸皮": 1, "state": "member", "follow": { "id": "join_me", "delay": 2 } },
+          "result": "你砍到三千，还送了条毛巾。阿凯服了：哥，你来卖课吧。",
+          "easy": "你只说了一句话，阿凯就把价格砍了一半：哥，别说出去。",
+          "fail": { "effect": { "心态": -1, "state": "member", "follow": { "id": "run_off", "delay": 3, "ttl": 6 } }, "result": "没砍下来，你还是办了张年卡。阿凯连发了四十条语音。" } },
+        { "text": "已读不回", "showIf": "skill:read_no_reply", "useSkill": "read_no_reply",
+          "effect": { "心态": 2, "精力": 1 }, "result": "阿凯的四十条语音，你一条没点开。前世你回了十年消息，这一世不回了。" }
+      ]
+    },
+    {
+      "id": "leg_day", "dir": "any", "chainOnly": true, "teaser": "阿凯约你今晚练腿", "require": "line:gym_coach.member",
+      "text": "阿凯给你排了课：周一练腿，周三练背，周五还是练腿。他说：腿是一切的基础，哥。",
+      "choices": [
+        { "text": "老老实实练", "effect": { "精力上限": 1, "精力": -1, "follow": { "id": "retest", "delay": 2 } },
+          "result": "你下楼梯要扶墙走了一周。第二周，你开始一步两级地上楼。" },
+        { "text": "加重量", "chance": 0.5, "chanceAttr": "精力", "chanceStep": 0.05,
+          "effect": { "精力上限": 1, "能力": 1, "follow": { "id": "retest", "delay": 2 } },
+          "result": "你加了十公斤，稳稳地蹲起来了。阿凯在旁边喊得比你还用力。",
+          "fail": { "effect": { "精力": -2, "follow": { "id": "retest", "delay": 3 } }, "result": "你扭了腰，躺了三天。阿凯天天发消息：哥，腰好了吗，续课吗。" } },
+        { "text": "在跑步机上开会", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "能力": 1, "精力上限": 1, "follow": { "id": "retest", "delay": 2 } },
+          "result": "你边走边开了一小时线上会。老板夸你今天说话特别有劲。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "retest", "delay": 2 } }, "result": "你喘得太大声，老板问你是不是在搬家。" } }
+      ]
+    },
+    {
+      "id": "retest", "dir": "any", "chainOnly": true, "teaser": "三个月了，再测一次", "require": "line:gym_coach.member",
+      "text": "三个月后再测一次。阿凯拿着报告愣了半天：哥，你这个进步，我能拿去当招牌。",
+      "choices": [
+        { "text": "拍张对比照", "effect": { "脸皮": 1, "人脉": 1, "state": "fit", "follow": { "id": "join_me", "delay": 2 } },
+          "result": "照片挂在了健身房门口。同事路过，问你是不是换了个人。" },
+        { "text": "接着练", "effect": { "精力上限": 1, "心态": 1, "state": "fit" },
+          "result": "你没拍照，也没发朋友圈。只是爬到十八楼，不喘了。" },
+        { "text": "报名健美比赛", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 10, "脸皮": 2, "state": "fit", "follow": { "id": "join_me", "delay": 2 } },
+          "result": "你拿了业余组第三名。领奖时，阿凯在台下哭得像个孩子。",
+          "fail": { "effect": { "脸皮": 1, "state": "fit" }, "result": "你上台忘了该摆什么姿势。台下给了你全场最响的掌声。" } }
+      ]
+    },
+    {
+      "id": "run_off", "dir": "any", "chainOnly": true, "teaser": "健身房门口围了一圈人", "require": "line:gym_coach.member",
+      "text": "健身房的门锁了，玻璃上贴着「装修升级」。四百个会员在群里问：老板电话怎么打不通？",
+      "choices": [
+        { "text": "带大家报警维权", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "人脉": 3, "身价": 6, "feud": "跑路老板被追回了会费" },
+          "result": "你拉群整理了四百份付款记录。一个月后，老板被找到了，钱退了回来。",
+          "easy": "你一句话，四百人各自交了材料。老板第三天就主动回来退钱了。",
+          "fail": { "effect": { "人脉": 1, "心态": 1 }, "result": "警察已经立案，让大家等消息。半年后，钱退回来一半。" } },
+        { "text": "前世背过锅", "require": "legacy:paper_trail>=1",
+          "effect": { "能力": 1, "身价": 8, "feud": "跑路老板栽在你的截图上" },
+          "result": "前世你什么都没留。这一世合同、转账、聊天截图你全存着，钱一分没少。" },
+        { "text": "拉上阿凯一起",
+          "effect": { "人脉": 2, "心态": 1, "follow": { "id": "join_me", "delay": 2 } },
+          "result": "阿凯也被欠了三个月工资。你们一起去了劳动监察，他的工资也要回来了。" },
+        { "text": "认栽", "effect": { "心态": -1 },
+          "result": "你把那张卡放进抽屉，和过期的饼干放在一起。" }
+      ]
+    },
+    {
+      "id": "join_me", "dir": "any", "chainOnly": true, "teaser": "阿凯想拉你入行", "require": "line:gym_coach.fit | line:gym_coach.member",
+      "text": "阿凯想自己开工作室，缺个搭档：哥，你会说话，又练出来了，考个证跟我干吧。",
+      "choices": [
+        { "text": "下班去考证", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "能力": 2, "身价": 6, "state": "coach", "follow": { "id": "first_client", "delay": 2 } },
+          "result": "你拿到证那天，阿凯给你买了件印着「私教」的T恤。小了一号。",
+          "fail": { "effect": { "精力": -1 }, "result": "理论课你睡着了三次。考官说：下回再来。" } },
+        { "text": "前世干到退休", "require": "legacy:veteran>=1",
+          "effect": { "人脉": 2, "身价": 6, "state": "coach", "follow": { "id": "first_client", "delay": 2 } },
+          "result": "前世你坐了一辈子工位。这一世你知道该教谁：腰不好的上班族。" },
+        { "text": "当会员就挺好", "effect": { "心态": 1, "精力上限": 1 },
+          "result": "你说你还是喜欢被人喊「哥，再来一组」。阿凯笑了。" },
+        { "text": "收阿凯为徒", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 8, "state": "coach", "follow": { "id": "first_client", "delay": 2 } },
+          "result": "阿凯愣了三秒，喊了一声：师父。工作室门口挂上了你的照片。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "阿凯笑得在垫子上打滚：哥，你先把平板支撑撑过一分钟。" } }
+      ]
+    },
+    {
+      "id": "first_client", "dir": "any", "chainOnly": true, "teaser": "你的第一个学员来了", "require": "line:gym_coach.coach",
+      "text": "第一个学员是隔壁工位的同事，腰不好，最怕被推销。她说：我只想系鞋带不用扶墙。",
+      "choices": [
+        { "text": "免费教她三招", "effect": { "人脉": 3, "心态": 1 },
+          "result": "两周后，她系鞋带不用扶墙了。第三周，她把全组都拉了过来。" },
+        { "text": "照阿凯的话术推课", "effect": { "身价": 6, "心态": -1 },
+          "result": "她签了。走的时候她看你的眼神，跟你当年看阿凯一模一样。" },
+        { "text": "开个午休工位操", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "身价": 12, "人脉": 2, "能力": 1 },
+          "result": "午休十五分钟，全楼都在你这儿扭腰。行政部给你发了张锦旗。",
+          "fail": { "effect": { "心态": -1, "人脉": 1 }, "result": "第一天来了三个人，两个是来蹭空调的。" } }
+      ]
+    }
+  ]
+}

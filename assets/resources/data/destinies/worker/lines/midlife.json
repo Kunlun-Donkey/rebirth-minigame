@@ -1,0 +1,168 @@
+{
+  "id": "midlife",
+  "name": "中年危机",
+  "summary": "体检报告、发际线、同学会、孩子的学费，一样一样找上门。辞职学门手艺，还是和自己和解——两条路都不丢人。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [3, 5],
+  "states": {
+    "crisis": "中年危机来了",
+    "restart": "辞职重新开始",
+    "accept": "和自己和解了"
+  },
+  "events": [
+    {
+      "id": "checkup", "entry": true, "dir": "any", "weight": 3,
+      "text": "体检报告出来了：轻度脂肪肝，颈椎曲度变直。医生头也没抬：少坐，多走，别熬夜。",
+      "choices": [
+        { "text": "买个颈椎按摩仪", "effect": { "state": "crisis", "精力": 1, "身价": -2, "follow": { "id": "hairline", "delay": 2 } },
+          "result": "按摩仪嗡嗡响。你闭着眼想：我什么时候开始需要这玩意了？" },
+        { "text": "明天开始晨跑", "chance": 0.45, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "state": "crisis", "精力上限": 1, "精力": 2, "follow": { "id": "reunion", "delay": 2 } },
+          "result": "你跑了一个月。复查时医生抬头看了你一眼：不错。",
+          "easy": "你跑了三个月，复查单上一个箭头都没有了。",
+          "fail": { "effect": { "state": "crisis", "心态": -1, "follow": { "id": "hairline", "delay": 2 } }, "result": "你跑了三天，第四天下雨，跑鞋就再没出过门。" } },
+        { "text": "前世累垮过一回", "require": "legacy:wellness>=1",
+          "effect": { "state": "crisis", "精力上限": 2, "心态": 1, "follow": { "id": "reunion", "delay": 2 } },
+          "result": "前世你累垮住进了医院。这一世体检单上两个小箭头，你笑着去买了双跑鞋。" },
+        { "text": "跟医生讲价改报告", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "crisis", "脸皮": 2, "心态": 2, "follow": { "id": "reunion", "delay": 2 } },
+          "result": "医生被你逗笑了，在报告背面写：心态满分，建议保持。",
+          "fail": { "effect": { "state": "crisis", "心态": -1, "follow": { "id": "hairline", "delay": 2 } }, "result": "医生又给你加开了一项：建议心理放松。" } }
+      ]
+    },
+    {
+      "id": "reunion", "dir": "side", "chainOnly": true, "teaser": "二十年同学会的邀请",
+      "text": "二十年同学会。当年的班长成了老板，敬酒敬了一圈。坐角落的老张开了间木工坊，手上全是茧。",
+      "choices": [
+        { "text": "去跟班长碰杯", "effect": { "state": "crisis", "人脉": 2, "精力": -1, "follow": { "id": "tuition", "delay": 2 } },
+          "result": "班长拍着你肩膀：有空来我公司坐坐。你知道他不会记得。" },
+        { "text": "坐到老张旁边", "effect": { "state": "crisis", "心态": 1, "flag": "craft", "follow": { "id": "crossroad", "delay": 3, "ttl": 8 } },
+          "result": "老张给你看手机里的椅子：自己做的，一把能坐三十年。他笑得像十八岁。" },
+        { "text": "当众讲讲前世", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "crisis", "脸皮": 2, "人脉": 3, "flag": "craft", "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "全桌以为你在讲段子，笑了一晚上。只有老张散场后问：真的？",
+          "fail": { "effect": { "state": "crisis", "心态": -1, "follow": { "id": "tuition", "delay": 2 } }, "result": "班长把你的酒杯收了：少喝点。" } }
+      ]
+    },
+    {
+      "id": "hairline", "dir": "down", "chainOnly": true, "teaser": "镜子里，发际线又退了",
+      "text": "洗手间镜子里，发际线又往后退了一指。实习生在隔间外面喊：叔，有纸吗？",
+      "choices": [
+        { "text": "递纸，应一声", "effect": { "state": "crisis", "心态": 1, "follow": { "id": "tuition", "delay": 2 } },
+          "result": "你递了纸。叔就叔吧，他叫得挺诚恳。" },
+        { "text": "去理个寸头", "effect": { "state": "crisis", "脸皮": 1, "心态": 1, "follow": { "id": "young_boss", "delay": 2 } },
+          "result": "推完寸头，你摸了摸后脑勺。镜子里的人精神了十岁。" },
+        { "text": "纠正：叫哥", "chance": 0.35, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "state": "crisis", "脸皮": 2, "人脉": 1, "follow": { "id": "young_boss", "delay": 2 } },
+          "result": "隔间里沉默三秒：哥，有纸吗？从此全组都管你叫哥。",
+          "fail": { "effect": { "state": "crisis", "心态": -1, "follow": { "id": "tuition", "delay": 2 } }, "result": "隔间里沉默三秒：叔，那哥有纸吗？" } }
+      ]
+    },
+    {
+      "id": "tuition", "dir": "any", "chainOnly": true, "teaser": "冰箱上贴了张缴费单",
+      "text": "孩子的学费单贴在冰箱上，下面还压着三个兴趣班的报名表。你站在冰箱前，算了很久。",
+      "choices": [
+        { "text": "全报了", "effect": { "state": "crisis", "身价": -6, "精力": -1, "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "你刷完卡，在楼道里站了一会儿才进门。" },
+        { "text": "问孩子想学啥", "effect": { "state": "crisis", "心态": 2, "身价": -2, "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "孩子划掉了两个，只留了画画。他说：爸，你也学一个。" },
+        { "text": "掏出账本算一遍", "require": "legacy:bookkeeping>=1",
+          "effect": { "state": "crisis", "身价": 4, "心态": 1, "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "前世这笔账你没算清，背了好几年。这一世你一笔一笔算完，还剩一点。" }
+      ]
+    },
+    {
+      "id": "young_boss", "dir": "up", "chainOnly": true, "teaser": "新来的领导比你小一轮",
+      "text": "新来的领导比你小十二岁，是你前些年带过的实习生。第一次开会，他点名让你写会议纪要。",
+      "choices": [
+        { "text": "写就写", "effect": { "state": "crisis", "能力": 1, "心态": -1, "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "你写得一丝不苟。他看完，小声说了句：师父，谢谢。" },
+        { "text": "当场教他开会", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "state": "crisis", "身价": 10, "能力": 1, "feud": "给小领导上了一课", "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "你三句话把会议拉回正题。散会后，他主动把纪要接了过去。",
+          "easy": "你只问了一句：这个会要定什么？他愣住，会议提前半小时结束。",
+          "fail": { "effect": { "death": "laid_off" }, "result": "他没说话。下个月的优化名单上，第一个就是你。" } },
+        { "text": "凡事留痕", "showIf": "skill:paper_trail", "useSkill": "paper_trail",
+          "effect": { "state": "crisis", "身价": 8, "人脉": 1, "follow": { "id": "crossroad", "delay": 2 } },
+          "result": "纪要里每条都写明了谁负责。三个月后，只有你那几条全部按时完成。" }
+      ]
+    },
+    {
+      "id": "crossroad", "dir": "any", "chainOnly": true, "teaser": "抽屉里那封没交的信", "require": "line:midlife.crisis",
+      "text": "深夜，你在电脑上写好了辞职信，日期空着。手边的保温杯已经凉了。",
+      "choices": [
+        { "text": "填上日期，去学手艺", "effect": { "state": "restart", "身价": -10, "心态": 2, "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "你按下发送。走出公司的时候，天还亮着。" },
+        { "text": "删掉，和自己和解", "effect": { "state": "accept", "心态": 3, "follow": { "id": "peace", "delay": 2 } },
+          "result": "你删了信，给自己续了杯热水。不辞也行，日子是自己的。" },
+        { "text": "先请个长假", "effect": { "精力": 3, "心态": 1, "follow": { "id": "leave", "delay": 1 } },
+          "result": "假条批了。你订了一张去海边的慢车票。" },
+        { "text": "去老张的木工坊", "require": "flag:craft",
+          "effect": { "state": "restart", "心态": 3, "人脉": 1, "follow": { "id": "apprentice", "delay": 1 } },
+          "result": "老张把一把刨子塞给你：来得正好，我缺个徒弟。" }
+      ]
+    },
+    {
+      "id": "leave", "dir": "side", "chainOnly": true, "teaser": "海边的慢车", "require": "line:midlife.crisis",
+      "text": "海边小镇。民宿老板以前也是坐办公室的，现在每天修船、晒鱼、看日落。他问你：想好了吗？",
+      "choices": [
+        { "text": "想好了，回去辞职", "effect": { "state": "restart", "心态": 2, "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "回程的车上，你把通讯录里的「领导」改成了「前领导」。" },
+        { "text": "想好了，回去好好过", "effect": { "state": "accept", "心态": 3, "精力": 2, "follow": { "id": "peace", "delay": 2 } },
+          "result": "你在海边坐了一下午。回去以后，你还是你，只是不再急了。" },
+        { "text": "跟他学修船", "absurd": true, "chance": 0.25, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "state": "restart", "能力": 2, "心态": 2, "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "你修好了一条漏水的小船。老板说：手是巧的，就是晚了二十年。不晚。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "crossroad", "delay": 2 } }, "result": "你修的船下水就沉了。老板安慰你：这船本来就该退休了。" } }
+      ]
+    },
+    {
+      "id": "apprentice", "dir": "any", "chainOnly": true, "teaser": "木工坊的学徒生活", "require": "line:midlife.restart",
+      "text": "四十岁，你在木工坊当学徒。师傅比你小八岁，说话不客气：榫头又歪了，重来。",
+      "choices": [
+        { "text": "重来", "effect": { "state": "restart", "能力": 2, "精力": -1, "follow": { "id": "first_chair", "delay": 2 } },
+          "result": "你重做了十七遍。第十八遍，师傅没说话，把它收进了柜子。" },
+        { "text": "按前世的经验来", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "state": "restart", "能力": 3, "身价": 4, "follow": { "id": "first_chair", "delay": 1 } },
+          "result": "你画图、算尺寸、排工序，跟做项目一个路数。师傅看傻了。",
+          "easy": "你做了张排期表贴在墙上。一周后，整个木工坊都按你的表干活。",
+          "fail": { "effect": { "state": "restart", "心态": -1, "follow": { "id": "first_chair", "delay": 3 } }, "result": "表格做得很漂亮，木头不认。师傅说：手上的事，手说了算。" } },
+        { "text": "带徒弟去吃饭", "effect": { "state": "restart", "人脉": 2, "身价": -2, "follow": { "id": "first_chair", "delay": 2 } },
+          "result": "你请师傅吃面。他说你是他带过最老的徒弟，也是最不偷懒的。" }
+      ]
+    },
+    {
+      "id": "first_chair", "dir": "any", "chainOnly": true, "teaser": "你做的第一把椅子", "require": "line:midlife.restart",
+      "text": "你做的第一把椅子摆在门口。一个路过的老太太坐上去试了试，问：多少钱？",
+      "choices": [
+        { "text": "卖给她", "require": "能力>=15", "effect": { "ending": "second_spring" },
+          "result": "老太太付了钱，坐着歇了一会儿才走。你把那张钞票，压在了工作台上。" },
+        { "text": "送给她", "require": "心态>=15", "effect": { "心态": 2, "人脉": 2, "ending": "second_spring" },
+          "result": "老太太第二天拎来一袋橘子，还带了三个要订椅子的老邻居。" },
+        { "text": "拍下来发朋友圈", "effect": { "人脉": 3, "身价": 8, "follow": { "id": "first_chair", "delay": 3, "ttl": 8 } },
+          "result": "前同事们点了一排赞。有人私信：能给我爸也做一把吗？" },
+        { "text": "开价一百万", "absurd": true, "chance": 0.1, "chanceAttr": "脸皮", "chanceStep": 0.02,
+          "effect": { "身价": 30, "ending": "second_spring" },
+          "result": "老太太点点头，掏出一张卡：我孙子开公司的，他就喜欢这种。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "first_chair", "delay": 2 } }, "result": "老太太站起来，拍拍裤子：那我再坐会儿，坐够一百万的。" } }
+      ]
+    },
+    {
+      "id": "peace", "dir": "any", "chainOnly": true, "teaser": "周末，带孩子去公园", "require": "line:midlife.accept",
+      "text": "周末，你带孩子去公园放风筝。手机响了两次，是工作群。你看了一眼，没回。",
+      "choices": [
+        { "text": "把风筝放高点", "effect": { "state": "accept", "心态": 3, "精力": 2 },
+          "result": "风筝飞得很高。孩子说：爸，你今天笑得跟照片里不一样。" },
+        { "text": "回完消息再玩", "effect": { "state": "accept", "身价": 6, "心态": 1 },
+          "result": "你回了两个字：周一。然后把手机揣回兜里。" },
+        { "text": "教孩子做个风筝", "require": "ever:midlife.restart",
+          "effect": { "state": "accept", "心态": 3, "能力": 1, "人脉": 1 },
+          "result": "前世你辞了职去学手艺。这一世没辞，那手艺也还在你手上。" },
+        { "text": "跟孩子比谁跑得快", "absurd": true, "chance": 0.3, "chanceAttr": "精力", "chanceStep": 0.03,
+          "effect": { "state": "accept", "精力上限": 1, "心态": 2 },
+          "result": "你赢了。孩子不服，约你下周再比。你已经开始期待下周了。",
+          "fail": { "effect": { "state": "accept", "心态": 2 }, "result": "你输了，坐在草地上喘气。孩子递来一瓶水：爸，慢慢来。" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "id": "office_cat",
+  "name": "公司的猫",
+  "summary": "茶水间住着一只橘猫，叫大橘。HR 要赶它走。它有个怪毛病：总蹲在快升职的人椅子上。",
+  "careers": ["office"],
+  "maps": ["city", "workshop"],
+  "stage": [0, 3],
+  "states": {
+    "fed": "喂过公司的猫",
+    "adopted": "把猫带回了家",
+    "secret": "发现猫才是真正的老板"
+  },
+  "events": [
+    {
+      "id": "meet", "entry": true, "dir": "down", "layers": ["D1"], "weight": 18,
+      "text": "茶水间的冰箱顶上趴着一只橘猫，正盯着你手里的火腿肠。工牌夹上不知谁写了两个字：大橘。",
+      "choices": [
+        { "text": "掰一半给它", "effect": { "state": "fed", "心态": 1, "follow": { "id": "hr", "delay": 2 } },
+          "result": "大橘吃完，在你裤腿上蹭了两下，走了。走得很有派头。" },
+        { "text": "不理它，接水", "effect": { "精力": 1, "follow": { "id": "hr", "delay": 3, "ttl": 6 } },
+          "result": "你接完水回头，火腿肠没了。大橘在冰箱顶上舔爪子。" },
+        { "text": "前世它蹲过你的纸箱", "require": "legacy:resume_ready>=1",
+          "effect": { "state": "fed", "心态": 2, "人脉": 1, "follow": { "id": "hr", "delay": 2 } },
+          "result": "前世你被优化那天，大橘蹲在你的纸箱里不肯走。这一世，你先给它开了罐头。" },
+        { "text": "大橘认得你", "showIf": "companion:office_cat",
+          "effect": { "state": "fed", "人脉": 2, "身价": 3, "follow": { "id": "hr", "delay": 2 } },
+          "result": "大橘跳下来，直接趴在你脚背上。路过的同事都多看了你两眼。" },
+        { "text": "学猫叫跟它谈谈", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "state": "fed", "脸皮": 2, "人脉": 2, "follow": { "id": "hr", "delay": 2 } },
+          "result": "你喵了一声。大橘回了一声。茶水间里三个同事放下杯子，加了你微信。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "hr", "delay": 3 } }, "result": "大橘没理你。进来倒水的总监理了你，看了很久。" } }
+      ]
+    },
+    {
+      "id": "hr", "dir": "any", "chainOnly": true, "teaser": "HR 发了封清理通知",
+      "text": "HR 群发邮件：本周五前清理办公区流浪动物。附件是大橘的照片，打了个红叉。",
+      "choices": [
+        { "text": "发起联名请愿", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "state": "fed", "人脉": 2, "身价": 3, "follow": { "id": "chair", "delay": 2 } },
+          "result": "请愿表签了半层楼。HR 把截止日期改成了「待定」。",
+          "easy": "你一转发，全楼签满了。HR 默默撤回了邮件。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "gone", "delay": 1 } }, "result": "签名的只有你和保洁阿姨。周五，大橘被装进了笼子。" } },
+        { "text": "带它回家", "effect": { "state": "adopted", "心态": 2, "精力": -1, "follow": { "id": "home", "delay": 2 } },
+          "result": "你用纸箱把它抱上了地铁。它一路没叫，只是一直盯着车窗。" },
+        { "text": "不关我的事", "effect": { "能力": 1, "follow": { "id": "gone", "delay": 1 } },
+          "result": "你关掉邮件，继续改表格。周五下午，茶水间安静了。" },
+        { "text": "给猫办张工牌", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "state": "fed", "脸皮": 2, "身价": 5, "follow": { "id": "chair", "delay": 2 } },
+          "result": "你给它填了入职表，岗位：情绪顾问。HR 看完，盖了章。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "gone", "delay": 1 } }, "result": "HR 把入职表退回来：试用期不通过。理由：不打卡。" } }
+      ]
+    },
+    {
+      "id": "gone", "dir": "any", "chainOnly": true, "teaser": "大橘被送去了救助站",
+      "text": "大橘被送去了城郊救助站。它的食盆还在茶水间角落里，没人敢收。",
+      "choices": [
+        { "text": "去救助站接它", "effect": { "state": "adopted", "心态": 2, "精力": -2, "follow": { "id": "home", "delay": 2 } },
+          "result": "笼子一打开，大橘自己钻进了你的包。救助站的人说：它挑人。" },
+        { "text": "把食盆收好", "effect": { "心态": -1, "能力": 1 },
+          "result": "你把食盆洗干净，塞进了自己抽屉最底下。" },
+        { "text": "去找 HR 理论", "chance": 0.35, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "state": "fed", "脸皮": 2, "feud": "HR 亲自把大橘接了回来", "follow": { "id": "chair", "delay": 2 } },
+          "result": "你说：上个季度它在的时候，全楼离职率最低。HR 第二天亲自开车去接了。",
+          "fail": { "effect": { "心态": -1 }, "result": "HR 说：你要是有意见，可以写邮件。你写了，没人回。" } }
+      ]
+    },
+    {
+      "id": "chair", "dir": "up", "layers": ["U1", "U2"], "chainOnly": true, "teaser": "大橘蹲上了你的椅子", "require": "line:office_cat.fed",
+      "text": "同事说大橘蹲过谁的椅子，谁下个月就升职，张姐和老李都是。今天早上，它蹲在你的椅子上。",
+      "choices": [
+        { "text": "站着办公一天", "effect": { "身价": 6, "能力": 1, "follow": { "id": "promo", "delay": 2 } },
+          "result": "你站了一整天。路过的总监问你在干嘛，你说：别打扰它。" },
+        { "text": "把它抱下来", "effect": { "心态": 1, "精力": 1 },
+          "result": "大橘被抱下来，转身蹲上了隔壁工位。隔壁那位下个月升了。" },
+        { "text": "大橘只认你", "showIf": "companion:office_cat",
+          "effect": { "身价": 10, "人脉": 1, "follow": { "id": "promo", "delay": 2 } },
+          "result": "它在你椅子上一连蹲了五天，谁抱都不走。全组都开始给你带早饭。" },
+        { "text": "带它去老板椅子", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 8, "follow": { "id": "board", "delay": 3, "ttl": 8 } },
+          "result": "大橘在老板椅子上蹲了一下午。第二天，老板宣布去外地分公司。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "promo", "delay": 2 } }, "result": "大橘跳下来，蹲回了你的椅子。老板看着你，眉头皱了一下。" } }
+      ]
+    },
+    {
+      "id": "promo", "dir": "up", "chainOnly": true, "teaser": "升职名单要出来了",
+      "text": "升职名单贴出来，有你的名字。可大橘这几天换了地方，天天蹲在顶楼一把没人坐的空椅子上。",
+      "choices": [
+        { "text": "去顶楼看看", "effect": { "身价": 5, "follow": { "id": "board", "delay": 2 } },
+          "result": "那把椅子落了灰，只有猫蹲的那一块是干净的。" },
+        { "text": "请全组喝奶茶", "effect": { "身价": 4, "人脉": 2 },
+          "result": "奶茶到了，大橘那杯是一盒罐头。没人觉得奇怪。" },
+        { "text": "查空椅子是谁的", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "能力": 1, "flag": "chair_owner", "follow": { "id": "board", "delay": 2 } },
+          "result": "行政说，那是公司第一任董事长的位子。他走后，一直空着。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "board", "delay": 3 } }, "result": "行政说不知道，问多了就不回消息了。" } }
+      ]
+    },
+    {
+      "id": "home", "dir": "any", "chainOnly": true, "teaser": "大橘每天早上都出门", "require": "line:office_cat.adopted",
+      "text": "大橘在你家住下了。怪的是，它每天早上八点半出门，晚上六点回来，比你还准时。",
+      "choices": [
+        { "text": "偷偷跟着它", "effect": { "精力": -1, "能力": 1, "follow": { "id": "board", "delay": 2 } },
+          "result": "它坐地铁，过闸机，进了你们公司大楼，按了顶楼的电梯。" },
+        { "text": "给它买个猫爬架", "effect": { "state": "adopted", "心态": 2, "身价": -2 },
+          "result": "它在猫爬架上趴了一晚上。第二天照样八点半出门。" },
+        { "text": "让它带你上班", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "心态": 2, "身价": 6, "follow": { "id": "board", "delay": 1 } },
+          "result": "你跟着它走了一条没走过的路，比平时早到了二十分钟。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "board", "delay": 3 } }, "result": "它带你去了楼下鱼摊，蹲着不走了。你迟到了。" } }
+      ]
+    },
+    {
+      "id": "board", "dir": "up", "chainOnly": true, "teaser": "大橘进了董事会议室",
+      "text": "季度董事会。会议室门开着，大橘蹲在主位上。几个董事站着，没人敢坐它旁边。",
+      "choices": [
+        { "text": "冲它点了点头", "effect": { "state": "secret", "心态": 2, "身价": 8, "follow": { "id": "will", "delay": 2 } },
+          "result": "大橘也冲你眨了下眼。一个董事看见了，脸色变了。" },
+        { "text": "把它抱出来", "effect": { "心态": -1, "人脉": 1 },
+          "result": "你刚伸手，董事长咳了一声：别动。它在开会。" },
+        { "text": "我查过那把椅子", "require": "flag:chair_owner",
+          "effect": { "state": "secret", "能力": 2, "身价": 12, "follow": { "id": "will", "delay": 2 } },
+          "result": "你小声说：第一任董事长的位子。门口的董事看你的眼神不一样了。" },
+        { "text": "坐它旁边", "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "state": "secret", "脸皮": 2, "身价": 15, "follow": { "id": "will", "delay": 2 } },
+          "result": "你坐下了。大橘没赶你。董事们互相看了看，也坐下了。",
+          "fail": { "effect": { "心态": -2 }, "result": "大橘冲你哈了一口气。你被请出了会议室。" } }
+      ]
+    },
+    {
+      "id": "will", "dir": "any", "chainOnly": true, "teaser": "律师来找你了", "require": "line:office_cat.secret",
+      "text": "律师找到你：老董事长遗嘱写明，最大一笔股份归大橘，由它挑一个人代管。它挑了你。",
+      "choices": [
+        { "text": "替它好好管", "effect": { "state": "secret", "身价": 20, "人脉": 3 },
+          "result": "你的第一条决定：茶水间永久留一个猫碗。全票通过。" },
+        { "text": "先给 HR 发通知", "effect": { "state": "secret", "身价": 12, "脸皮": 2, "feud": "HR 改岗当了猫的助理" },
+          "result": "通知只有一句：HR 即日起兼任大橘助理。HR 回了「收到」。" },
+        { "text": "带它回家养老", "require": "ever:office_cat.adopted",
+          "effect": { "state": "adopted", "心态": 3, "身价": 10 },
+          "result": "你签了字，把股份交给了基金会。大橘在你家阳台上晒太阳，不再出门了。" },
+        { "text": "问它要分红", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 25, "脸皮": 2 },
+          "result": "大橘把一份文件推到你面前，上面按了个爪印：年终奖翻倍。",
+          "fail": { "effect": { "心态": -1 }, "result": "大橘把你的手机推下了桌。律师说：它的意思是，不给。" } }
+      ]
+    }
+  ]
+}

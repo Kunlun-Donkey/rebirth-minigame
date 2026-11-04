@@ -1,0 +1,129 @@
+{
+  "id": "square_dance",
+  "name": "广场舞",
+  "summary": "晚饭后路过广场，你被一群阿姨拽进了队伍。从后排到领队，只隔着一台小音响。",
+  "maps": ["county", "city"],
+  "stage": [1, 4],
+  "states": {
+    "joined": "跳上了广场舞",
+    "leader": "当了广场舞领队",
+    "rival": "和隔壁舞队较上了劲"
+  },
+  "events": [
+    {
+      "id": "plaza", "entry": true, "dir": "any", "weight": 5,
+      "text": "晚饭后路过广场，音响震得地面发麻。领舞的刘阿姨一把拽住你：缺个男的，站后排！",
+      "choices": [
+        { "text": "站后排跟着跳", "effect": { "精力": 1, "心态": 1, "state": "joined", "follow": { "id": "practice", "delay": 2 } },
+          "result": "你同手同脚跳了一晚上。刘阿姨说：有天赋。" },
+        { "text": "说要加班，跑了", "effect": { "能力": 1 },
+          "result": "你跑了。第二天路过，刘阿姨隔着半个广场喊：明晚七点！" },
+        { "text": "叫上老妈一起", "require": "line:parents.home", "effect": { "人脉": 2, "心态": 2, "state": "joined", "follow": { "id": "practice", "delay": 2 } },
+          "result": "老妈站第一排，你站最后排。第二天，全队都知道她儿子回来了。" },
+        { "text": "当场来段街舞", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "人脉": 3, "state": "joined", "follow": { "id": "practice", "delay": 2 } },
+          "result": "你原地转了三圈。音响停了，阿姨们的掌声传到了隔壁小区。",
+          "fail": { "effect": { "精力": -1, "state": "joined", "follow": { "id": "practice", "delay": 2 } }, "result": "你转到一半坐在了地上。刘阿姨扶你起来：先学走步。" } }
+      ]
+    },
+    {
+      "id": "practice", "dir": "any", "chainOnly": true, "teaser": "刘阿姨说今晚加练", "require": "line:square_dance.joined",
+      "text": "跳了一个月，你成了全队唯一记得住队形的人。刘阿姨膝盖不好，把小音响塞给你：今晚你喊拍子。",
+      "choices": [
+        { "text": "接过音响", "effect": { "人脉": 2, "脸皮": 1, "state": "leader", "follow": { "id": "speaker_war", "delay": 2 } },
+          "result": "你喊了一晚上五六七八。第二天嗓子哑了，全队给你带了胖大海。" },
+        { "text": "推回去", "effect": { "心态": 1, "follow": { "id": "speaker_war", "delay": 2 } },
+          "result": "你说站后排就好。刘阿姨叹气：现在的年轻人，没担当。" },
+        { "text": "前世会吆喝", "require": "legacy:hawker>=1", "effect": { "脸皮": 2, "人脉": 2, "state": "leader", "follow": { "id": "speaker_war", "delay": 2 } },
+          "result": "前世你在夜市喊了三年。这一世一嗓子下去，三个广场都对上了拍。" },
+        { "text": "社牛", "showIf": "skill:social_bull", "useSkill": "social_bull", "effect": { "人脉": 4, "state": "leader", "follow": { "id": "speaker_war", "delay": 2 } },
+          "result": "你一晚上加了四十个阿姨的好友。第二天，队伍扩到了六十人。" }
+      ]
+    },
+    {
+      "id": "speaker_war", "dir": "any", "chainOnly": true, "teaser": "隔壁舞队换了新音响", "require": "line:square_dance",
+      "text": "隔壁王阿姨的舞队换了台新音响，比你们的大一圈。两首歌撞在一起，整个广场乱了拍子。",
+      "choices": [
+        { "text": "改成早上跳", "effect": { "心态": 2, "精力": 1, "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "你们改到早上跳。人少了点，但再也不用跟着别人的拍子走。" },
+        { "text": "音量拧到最大", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "脸皮": 2, "身价": 3, "state": "rival", "flag": "rivalry", "follow": { "id": "contest", "delay": 2 } },
+          "result": "你们的音量压过了对面。王阿姨叉着腰，看了你整整三分钟。",
+          "fail": { "effect": { "心态": -1, "state": "rival", "flag": "rivalry", "follow": { "id": "contest", "delay": 2 } }, "result": "你们的音响冒了烟。对面换了首更快的歌。" } },
+        { "text": "拎橘子去谈", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.07,
+          "effect": { "人脉": 3, "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "半小时后，两个队约好一边一首，轮着放。",
+          "fail": { "effect": { "心态": -1, "state": "rival", "flag": "rivalry", "follow": { "id": "contest", "delay": 2 } }, "result": "王阿姨收下了橘子，然后把音量又调大了一格。" } },
+        { "text": "把两台音响连上", "absurd": true, "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "人脉": 4, "身价": 6, "state": "leader", "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "一百二十个阿姨踩着同一个拍子。路过的车都停下来看。",
+          "fail": { "effect": { "心态": -1, "state": "rival", "flag": "rivalry", "follow": { "id": "contest", "delay": 2 } }, "result": "连上之后，两台音响放的还是两首歌。两个队都怪你。" } }
+      ]
+    },
+    {
+      "id": "contest", "dir": "any", "chainOnly": true, "teaser": "区里要办广场舞比赛", "require": "line:square_dance.rival",
+      "text": "区里办广场舞比赛。王阿姨的队报了名，队服是统一的亮片裙。刘阿姨看着你：咱们也报。",
+      "choices": [
+        { "text": "报名，苦练一个月", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "身价": 10, "人脉": 2, "state": "leader", "feud": "比赛赢了王阿姨的舞队", "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "你们拿了一等奖。王阿姨在台下鼓掌，鼓得很不情愿。",
+          "easy": "你们一出场，评委就坐直了。王阿姨默默收起了亮片裙。",
+          "fail": { "effect": { "心态": -1, "身价": 2, "follow": { "id": "new_dance", "delay": 2 } }, "result": "二等奖，奖品是一桶油。刘阿姨说也挺好，够吃半年。" } },
+        { "text": "就当去玩", "effect": { "心态": 2, "精力": 1, "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "你们拿了参与奖，每人一条毛巾。回来的路上，阿姨们唱了一路。" },
+        { "text": "前世退休后跳过", "require": "legacy:veteran>=1", "effect": { "身价": 12, "心态": 1, "state": "leader", "feud": "比赛赢了王阿姨的舞队", "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "前世你退休后在广场跳了二十年。这一世你一眼就看出对面队形哪里松。" },
+        { "text": "编一段工位操", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "身价": 15, "脸皮": 3, "follow": { "id": "new_dance", "delay": 2 } },
+          "result": "敲键盘、端咖啡、点头说收到，全编进了舞里。评委笑着给了特别奖。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "new_dance", "delay": 2 } }, "result": "评委问：这是在演上班吗？是的。没拿奖。" } }
+      ]
+    },
+    {
+      "id": "new_dance", "dir": "any", "chainOnly": true, "teaser": "阿姨们想学新舞", "require": "line:square_dance",
+      "text": "阿姨们跳腻了老曲子。刘阿姨把手机递给你：网上那个年轻人跳的，你教教我们。",
+      "choices": [
+        { "text": "一个动作一个动作教", "effect": { "心态": 2, "人脉": 2, "follow": { "id": "farewell", "delay": 3, "ttl": 8 } },
+          "result": "教了一个月。阿姨们学会了，跳得比视频里还齐。" },
+        { "text": "拍下来发到网上", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "身价": 10, "人脉": 3, "follow": { "id": "farewell", "delay": 3, "ttl": 8 } },
+          "result": "阿姨们跳新舞的视频播放过了百万。刘阿姨买菜被人认出来了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "farewell", "delay": 3, "ttl": 8 } }, "result": "视频没人看。阿姨们倒是把它转进了每一个群。" } },
+        { "text": "推老妈去领舞", "require": "line:parents.home", "effect": { "心态": 3, "人脉": 1, "follow": { "id": "farewell", "delay": 3, "ttl": 8 } },
+          "result": "老妈领了一晚上。回家的路上，她走路都带风。" },
+        { "text": "自己编一支新舞", "absurd": true, "chance": 0.25, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "身价": 8, "能力": 2, "follow": { "id": "farewell", "delay": 3, "ttl": 8 } },
+          "result": "你编了支舞，叫《准点下班》。三个月后，全城的广场都在跳。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "farewell", "delay": 3, "ttl": 8 } }, "result": "动作太难，刘阿姨闪了腰。她说：还是跳老的吧。" } }
+      ]
+    },
+    {
+      "id": "complaint", "dir": "any", "once": true, "weight": 10, "require": "line:square_dance.leader",
+      "text": "楼上扔下来一张纸条：九点以后能不能小点声？我家孩子明天考试。",
+      "choices": [
+        { "text": "九点准时收", "effect": { "心态": 1, "人脉": 2 },
+          "result": "九点整，你关了音响。阿姨们扛着扇子，排着队回家了。" },
+        { "text": "上楼送水果", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.07,
+          "effect": { "人脉": 3 },
+          "result": "孩子的妈妈下来看了一眼，跳了一支。第二天，她也入队了。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "门没开。第二天，纸条多了一张。" } },
+        { "text": "全队戴耳机跳", "absurd": true, "chance": 0.3, "chanceAttr": "人脉", "chanceStep": 0.04,
+          "effect": { "身价": 8, "人脉": 3 },
+          "result": "六十个阿姨戴着耳机无声地跳。路人以为在拍电影。",
+          "fail": { "effect": { "心态": -1 }, "result": "耳机连不上。阿姨们各跳各的，跳出了六十支舞。" } }
+      ]
+    },
+    {
+      "id": "farewell", "dir": "any", "chainOnly": true, "teaser": "刘阿姨要去外地带孙子", "require": "line:square_dance",
+      "text": "刘阿姨要去外地带孙子了。临走前一晚，她把那台小音响交给你，里面存着三百首歌。",
+      "choices": [
+        { "text": "收下，接着带队", "effect": { "人脉": 2, "心态": 1, "state": "leader" },
+          "result": "第二天晚上七点，音响照常响了。你站在了刘阿姨的位置上。" },
+        { "text": "全队给她录段视频", "effect": { "心态": 2 },
+          "result": "你们跳了一遍她最爱的那支。她回了一串语音，全是笑声。" },
+        { "text": "王阿姨也来送行", "require": "flag:rivalry", "effect": { "人脉": 3, "心态": 1, "feud": "和王阿姨的舞队和好了" },
+          "result": "王阿姨拎着两袋橘子来了。第二天，两个队并成了一个。" }
+      ]
+    }
+  ]
+}

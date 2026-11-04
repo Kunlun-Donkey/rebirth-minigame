@@ -1,0 +1,176 @@
+{
+  "id": "parenting",
+  "name": "带娃",
+  "summary": "辅导作业、家长群、六一汇演。上班你是牛马，下班你是一个小孩的全世界。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [2, 4],
+  "states": {
+    "babysit": "带过一个暑假的娃",
+    "parent": "当了爸妈",
+    "proud": "孩子说长大想成为你"
+  },
+  "events": [
+    {
+      "id": "summer", "entry": true, "once": true, "dir": "any", "weight": 4,
+      "text": "表姐打来电话：暑假两个月，豆豆放你那儿，就当体验生活。电话那头，一个小孩在喊：我要去城里！",
+      "choices": [
+        { "text": "答应下来", "effect": { "心态": 1, "state": "babysit", "follow": { "id": "summer_homework", "delay": 1 } },
+          "result": "第二天，豆豆背着比他还大的书包站在门口，手里抱着一本恐龙书。" },
+        { "text": "说最近要加班", "effect": { "能力": 1, "身价": 2 },
+          "result": "表姐说那送他去姨家。豆豆在电话那头喊：姨家没网！" },
+        { "text": "前世他来看过你", "require": "legacy:wellness>=1", "effect": { "心态": 2, "精力": 1, "state": "babysit", "follow": { "id": "summer_homework", "delay": 1 } },
+          "result": "前世你累垮住院，豆豆举着一张画来看你。这一世，换你来看着他。" },
+        { "text": "跟豆豆签个合同", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "能力": 1, "人脉": 1, "state": "babysit", "follow": { "id": "summer_homework", "delay": 1 } },
+          "result": "豆豆按了手印。合同第一条：每天写一页作业。他写得比你上班认真。",
+          "fail": { "effect": { "心态": -1, "state": "babysit", "follow": { "id": "summer_homework", "delay": 1 } }, "result": "豆豆要求加一条：每天两根冰棍。你签了。" } }
+      ]
+    },
+    {
+      "id": "summer_homework", "dir": "any", "chainOnly": true, "teaser": "豆豆的暑假作业还剩一本", "require": "line:parenting.babysit",
+      "text": "晚上九点，辅导暑假作业。鸡兔同笼，三十五个头。你算到第三遍，发现自己也不会。",
+      "choices": [
+        { "text": "偷偷搜答案", "effect": { "心态": 1, "follow": { "id": "summer_office", "delay": 2 } },
+          "result": "答案用的是方程。豆豆说：我们还没学方程。" },
+        { "text": "耐心讲到他会", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "能力": 2, "心态": 1, "follow": { "id": "summer_office", "delay": 2 } },
+          "result": "你画了一笼子鸡和兔。讲到第三遍，豆豆会了，你也会了。",
+          "easy": "你画了张图，豆豆一眼就懂了，还反过来给你讲了一遍。",
+          "fail": { "effect": { "心态": -2, "follow": { "id": "summer_office", "delay": 2 } }, "result": "你讲到嗓子哑。豆豆说：我们老师不是这么讲的。" } },
+        { "text": "问问系统", "require": "system:any", "effect": { "能力": 1, "心态": 1, "follow": { "id": "summer_office", "delay": 2 } },
+          "result": "【叮！】本系统不提供小学数学服务。你只好自己算，居然算出来了。" },
+        { "text": "让豆豆教你", "absurd": true, "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "能力": 1, "心态": 2, "follow": { "id": "summer_office", "delay": 2 } },
+          "result": "豆豆当起了小老师，讲得头头是道。讲完，他自己就会了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "summer_office", "delay": 2 } }, "result": "他讲完，你们俩都不会了，只好下楼去问大爷。" } }
+      ]
+    },
+    {
+      "id": "summer_office", "dir": "any", "chainOnly": true, "teaser": "豆豆说想看你上班", "require": "line:parenting.babysit",
+      "text": "表姐临时有事，你只好带豆豆去上班。开会时他举起手问你领导：叔叔，「抓手」是什么手？",
+      "choices": [
+        { "text": "赶紧捂住他的嘴", "effect": { "脸皮": 1, "follow": { "id": "farewell", "delay": 2 } },
+          "result": "领导笑着说童言无忌。散会后，他把「抓手」从材料里删了。" },
+        { "text": "让他接着问", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "人脉": 2, "心态": 1, "feud": "领导被八岁小孩问住了", "follow": { "id": "farewell", "delay": 2 } },
+          "result": "领导解释了十分钟，越说越乱，宣布散会。全组提前下了班。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "farewell", "delay": 2 } }, "result": "领导认真讲了半小时。豆豆听睡着了，你背着他回的家。" } },
+        { "text": "带他下楼吃冰棍", "effect": { "精力": 1, "心态": 1, "follow": { "id": "farewell", "delay": 2 } },
+          "result": "你们坐在台阶上，一人一根。豆豆说：上班也没那么难嘛。" },
+        { "text": "让豆豆替你汇报", "absurd": true, "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "身价": 6, "人脉": 2, "follow": { "id": "farewell", "delay": 2 } },
+          "result": "豆豆讲得比你清楚。领导问：这孩子谁带出来的？所有人都看向你。",
+          "fail": { "effect": { "心态": 1, "follow": { "id": "farewell", "delay": 2 } }, "result": "他讲到一半要上厕所。会议延期，全组都很感谢他。" } }
+      ]
+    },
+    {
+      "id": "farewell", "dir": "any", "chainOnly": true, "teaser": "暑假要结束了", "require": "line:parenting.babysit",
+      "text": "暑假最后一天，表姐来接人。豆豆抱着你的腿不撒手，书包里塞着你给他买的那本恐龙书。",
+      "choices": [
+        { "text": "送他上车", "effect": { "心态": 2, "state": "babysit" },
+          "result": "车开出去老远，车窗里还伸出一只小手，一直在摇。" },
+        { "text": "翻翻他的作文本", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "心态": 3, "人脉": 1, "state": "proud" },
+          "result": "作文题目《我长大想成为的人》，写的是你。错别字七个。",
+          "fail": { "effect": { "心态": 1, "state": "babysit" }, "result": "作文写的是霸王龙。你排第二，排在霸王龙后面。" } },
+        { "text": "回家商量要个娃", "require": "line:blind_date.together", "effect": { "心态": 2, "state": "parent", "follow": { "id": "first_word", "delay": 4, "ttl": 12 } },
+          "result": "你回家说：带孩子挺好玩的。她看了你很久：你认真的？" },
+        { "text": "给他结暑期工资", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "心态": 2, "人脉": 1, "state": "proud" },
+          "result": "你给豆豆结了二十块实习工资。他说：长大我要跟你干。",
+          "fail": { "effect": { "脸皮": 1, "state": "babysit" }, "result": "豆豆嫌少，说要找他妈仲裁。表姐判你再加一根冰棍。" } }
+      ]
+    },
+    {
+      "id": "newborn", "entry": true, "once": true, "dir": "any", "weight": 10, "require": "line:blind_date.together",
+      "text": "凌晨三点，孩子又哭了。她踢了你一脚：该你了。你摸黑冲奶粉，水温试了三遍。",
+      "choices": [
+        { "text": "抱起来哄", "effect": { "精力": -1, "心态": 2, "state": "parent", "follow": { "id": "first_word", "delay": 3, "ttl": 8 } },
+          "result": "你抱着他在客厅转了四十圈。他睡着了，你的手不敢动。" },
+        { "text": "装睡", "chance": 0.4, "chanceAttr": "脸皮", "chanceStep": 0.05,
+          "effect": { "精力": 1, "state": "parent", "follow": { "id": "first_word", "delay": 3, "ttl": 8 } },
+          "result": "她也在装睡。孩子哭了五分钟，自己睡着了。你们俩都没动。",
+          "fail": { "effect": { "心态": 1, "state": "parent", "follow": { "id": "first_word", "delay": 3, "ttl": 8 } }, "result": "她把孩子放在你胸口。你睁开眼，他正冲你笑。" } },
+        { "text": "放录好的摇篮曲", "require": "item:recorder", "effect": { "精力": 1, "心态": 1, "state": "parent", "follow": { "id": "first_word", "delay": 3, "ttl": 8 } },
+          "result": "你放出老妈唱的摇篮曲。孩子听了三句就睡了，你也是。" },
+        { "text": "给他讲 PPT", "absurd": true, "chance": 0.3, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "能力": 1, "精力": 1, "state": "parent", "follow": { "id": "first_word", "delay": 3, "ttl": 8 } },
+          "result": "你讲到第三页「赋能」，孩子睡着了。效果比开会还好。",
+          "fail": { "effect": { "精力": -1, "state": "parent", "follow": { "id": "first_word", "delay": 3, "ttl": 8 } }, "result": "他听得很精神。你讲完了，他还要听。" } }
+      ]
+    },
+    {
+      "id": "first_word", "dir": "any", "chainOnly": true, "teaser": "孩子会说话了", "require": "line:parenting.parent",
+      "text": "孩子会说话了。第一个词不是爸，也不是妈，是「收到」。你想起自己回过的几千个收到。",
+      "choices": [
+        { "text": "以后准时下班", "effect": { "心态": 2, "身价": -2, "follow": { "id": "parent_group", "delay": 3, "ttl": 8 } },
+          "result": "你开始六点关电脑。第二个词，孩子学会了「回来啦」。" },
+        { "text": "教他说「不」", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "脸皮": 1, "心态": 1, "follow": { "id": "parent_group", "delay": 3, "ttl": 8 } },
+          "result": "他学会了。从此吃青菜说不，洗澡说不，睡觉也说不。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "parent_group", "delay": 3, "ttl": 8 } }, "result": "他学会的是「好的老板」。你沉默了一晚上。" } },
+        { "text": "上一世被写进作文", "require": "ever:parenting.proud", "effect": { "心态": 2, "能力": 1, "follow": { "id": "parent_group", "delay": 3, "ttl": 8 } },
+          "result": "上一世，有个孩子把你写进了作文。这一世，你想再被写一次。" },
+        { "text": "教他喊「涨工资」", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 8, "人脉": 1, "follow": { "id": "parent_group", "delay": 3, "ttl": 8 } },
+          "result": "公司亲子日，他冲老板喊了一声涨工资。全场鼓掌，老板真涨了。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "parent_group", "delay": 3, "ttl": 8 } }, "result": "他喊成了「加班」。老板摸摸他的头，很欣慰。" } }
+      ]
+    },
+    {
+      "id": "parent_group", "dir": "any", "chainOnly": true, "teaser": "你被拉进了家长群", "require": "line:parenting.parent",
+      "text": "家长群里，老师发了条通知，下面整齐排了四十条「收到」。有位家长回了篇五百字小作文。",
+      "choices": [
+        { "text": "回个「收到」", "effect": { "心态": 1, "follow": { "id": "children_day", "delay": 2, "ttl": 8 } },
+          "result": "你是第四十一个。和上班一模一样，你很熟练。" },
+        { "text": "竞选家委会", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "人脉": 3, "身价": 2, "follow": { "id": "children_day", "delay": 2, "ttl": 8 } },
+          "result": "你当选了。第一件事，是把群规改成「通知不用回收到」。",
+          "easy": "你还没开口，其他家长就推你当了会长。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "children_day", "delay": 2, "ttl": 8 } }, "result": "你竞选演讲用了 PPT。家长们说你太卷，没选你。" } },
+        { "text": "前世背过锅", "require": "legacy:paper_trail>=1", "effect": { "能力": 1, "人脉": 2, "follow": { "id": "children_day", "delay": 2, "ttl": 8 } },
+          "result": "前世你背锅被开。这一世群里每条通知你都存了档，春游改期时只有你说得清。" },
+        { "text": "回一千字小作文", "absurd": true, "chance": 0.25, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "能力": 1, "人脉": 2, "follow": { "id": "children_day", "delay": 2, "ttl": 8 } },
+          "result": "老师在群里说：这位家长文笔很好，六一节目就交给你了。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "children_day", "delay": 2, "ttl": 8 } }, "result": "群里安静了一下午。然后老师回了一句：收到。" } }
+      ]
+    },
+    {
+      "id": "children_day", "dir": "any", "chainOnly": true, "teaser": "六一汇演，老师点了你", "require": "line:parenting.parent",
+      "text": "六一汇演，孩子班上演《拔萝卜》。老师说还缺一个萝卜，请家长来演。",
+      "choices": [
+        { "text": "穿上萝卜服", "effect": { "脸皮": 2, "心态": 1, "follow": { "id": "dream", "delay": 3, "ttl": 8 } },
+          "result": "你蹲在台上被一群小孩拔了五分钟。孩子在台下笑得最大声。" },
+        { "text": "争取演老爷爷", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "人脉": 2, "心态": 2, "follow": { "id": "dream", "delay": 3, "ttl": 8 } },
+          "result": "你演得太投入，台下家长笑得直擦眼泪。园长要了你的联系方式。",
+          "fail": { "effect": { "心态": 1, "follow": { "id": "dream", "delay": 3, "ttl": 8 } }, "result": "你忘词了。孩子站在旁边，一句一句给你提词。" } },
+        { "text": "请老妈来救场", "require": "line:parents.close", "effect": { "人脉": 1, "心态": 2, "follow": { "id": "dream", "delay": 3, "ttl": 8 } },
+          "result": "老妈演的萝卜抢了全场的戏。谢幕时，她还加了一段广场舞。" },
+        { "text": "给萝卜加段独白", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "人脉": 3, "身价": 4, "follow": { "id": "dream", "delay": 3, "ttl": 8 } },
+          "result": "萝卜的独白讲完，全场起立鼓掌。第二年，节目改名叫《萝卜》。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "dream", "delay": 3, "ttl": 8 } }, "result": "你自己把自己拔出来了。剧情演不下去，小朋友们很满意。" } }
+      ]
+    },
+    {
+      "id": "dream", "dir": "any", "chainOnly": true, "teaser": "孩子的作文贴上了墙", "require": "line:parenting.parent",
+      "text": "家长会上，孩子的作文《我长大想成为的人》贴在教室后墙。你凑近一看，写的是你。",
+      "choices": [
+        { "text": "从头看到尾", "effect": { "心态": 3, "state": "proud" },
+          "result": "「我家大人每天回来吃晚饭，还会演萝卜。我也想这样。」" },
+        { "text": "拍照发朋友圈", "effect": { "人脉": 2, "身价": 3, "state": "proud" },
+          "result": "老妈第一个转发到家族群。七大姑八大姨点了一下午的赞。" },
+        { "text": "回家问他为什么", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "心态": 2, "精力": 2, "state": "proud" },
+          "result": "他想了想：因为你下班回来，会陪我搭积木。",
+          "fail": { "effect": { "心态": 1, "state": "proud" }, "result": "他说：因为你会演萝卜。然后跑去看动画片了。" } },
+        { "text": "也写一篇回应", "absurd": true, "chance": 0.3, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "心态": 3, "人脉": 1, "state": "proud" },
+          "result": "你写了《我想成为的人》，写的是他。老师也给你贴上了墙。",
+          "fail": { "effect": { "心态": 1, "state": "proud" }, "result": "老师用红笔批了两个字：跑题。孩子笑了一晚上。" } }
+      ]
+    }
+  ]
+}

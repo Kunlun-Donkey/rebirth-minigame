@@ -1,0 +1,161 @@
+{
+  "id": "netcafe",
+  "name": "楼下网吧老板",
+  "summary": "楼下那家网吧开了二十年，老板老包每天都在柜台后打瞌睡。前世你路过了十年，一次没进去过。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [0, 3],
+  "states": {
+    "regular": "成了网吧常客",
+    "partner": "和网吧老板合伙",
+    "esports": "组了一支电竞队"
+  },
+  "events": [
+    {
+      "id": "wifi_down", "entry": true, "dir": "any", "stage": [0, 1], "weight": 14,
+      "text": "出租屋断网三天了。楼下网吧的灯牌缺了个字，老板老包在柜台后打瞌睡，口水快滴到键盘上。",
+      "choices": [
+        { "text": "开台机器加班", "effect": { "能力": 1, "精力": -1, "state": "regular", "follow": { "id": "late_kid", "delay": 2 } },
+          "result": "你在网吧写完了方案。老包醒来，给你免了一瓶水的钱。" },
+        { "text": "叫醒他问网", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.08,
+          "effect": { "人脉": 1, "state": "regular", "follow": { "id": "late_kid", "delay": 2 } }, "result": "老包揉揉眼，把密码写给你：以后断网就下来，别客气。",
+          "easy": "你还没开口，老包就把密码递了过来：你一看就是来蹭网的。",
+          "fail": { "effect": { "心态": -1 }, "result": "老包翻了个身：明天再说。他接着睡了。" } },
+        { "text": "蹲门口蹭网", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "脸皮": 1, "身价": 3, "state": "regular", "follow": { "id": "late_kid", "delay": 2 } }, "result": "你蹭到凌晨。密码改了，新密码是：进来坐吧。",
+          "fail": { "effect": { "精力": -1 }, "result": "信号只有一格，网页转了一夜。你蹲着睡着了。" } }
+      ]
+    },
+    {
+      "id": "first_visit", "entry": true, "dir": "side", "layers": ["L1"], "weight": 16,
+      "text": "小吃街尽头，一家开了二十年的网吧。老包叼着牙签：机器随便挑，饮料自己拿，钱回头再说。",
+      "choices": [
+        { "text": "挑台机器坐下", "effect": { "心态": 1, "state": "regular", "follow": { "id": "late_kid", "delay": 2 } },
+          "result": "椅子有点塌，空调很足。你在这儿坐了一整个周末。" },
+        { "text": "帮他扫码收钱", "effect": { "人脉": 1, "state": "regular", "follow": { "id": "late_kid", "delay": 2 } },
+          "result": "你帮他收了一晚上钱，发现他三个月没对过账。" },
+        { "text": "前世背过债", "require": "legacy:bookkeeping>=1",
+          "effect": { "能力": 1, "人脉": 2, "state": "regular", "follow": { "id": "for_rent", "delay": 2, "ttl": 8 } },
+          "result": "前世你算不清自己的账。这一世你瞄了一眼，就知道老包亏在哪。" },
+        { "text": "跟老包比打瞌睡", "absurd": true, "chance": 0.2, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "心态": 2, "人脉": 1, "state": "regular", "follow": { "id": "for_rent", "delay": 2, "ttl": 8 } },
+          "result": "你们俩在柜台后睡了一下午。老包醒来：你小子，是个人才。",
+          "fail": { "effect": { "精力": 1 }, "result": "你睡着了，老包醒了。他给你盖了件外套，收了你五块钱。" } }
+      ]
+    },
+    {
+      "id": "late_kid", "dir": "any", "chainOnly": true, "teaser": "半夜网吧溜进来个孩子", "require": "line:netcafe",
+      "text": "凌晨一点，一个背书包的初中生溜进网吧，想开通宵。老包又睡着了。",
+      "choices": [
+        { "text": "送他回家", "effect": { "人脉": 2, "心态": 1, "state": "regular", "follow": { "id": "for_rent", "delay": 2, "ttl": 8 } },
+          "result": "你陪他走到小区门口，他妈妈在楼下找了一晚上。老包说：谢了。" },
+        { "text": "叫醒老包", "effect": { "人脉": 1, "state": "regular", "follow": { "id": "corner_five", "delay": 2 } },
+          "result": "老包把孩子劝回了家，第二天在门口贴了张大字：未成年人禁止入内。" },
+        { "text": "给他讲道数学题", "absurd": true, "chance": 0.25, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "能力": 1, "人脉": 1, "state": "regular", "follow": { "id": "for_rent", "delay": 2, "ttl": 8 } },
+          "result": "你讲完一道函数题，他听懂了，自己跑回家写作业去了。",
+          "fail": { "effect": { "精力": -1 }, "result": "他听睡着了。你只好背着他，把他送回了家。" } },
+        { "text": "装没看见", "effect": { "心态": -2 },
+          "result": "第二天检查的人来了，网吧停业整顿一周。老包没怪你，叹了口气。" }
+      ]
+    },
+    {
+      "id": "for_rent", "dir": "side", "chainOnly": true, "teaser": "网吧门口贴了「转让」", "require": "line:netcafe",
+      "text": "网吧门口贴了张纸：转让。老包说房租涨了，机器老了，干了二十年，干不动了。",
+      "choices": [
+        { "text": "出钱合伙接下", "require": "身价>=12",
+          "effect": { "身价": -10, "人脉": 2, "state": "partner", "flag": "co", "follow": { "id": "corner_five", "delay": 2 } },
+          "result": "你们把「转让」撕了，换上一张：老板二号，正在上岗。" },
+        { "text": "帮他算账", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "能力": 1, "身价": 4, "state": "partner", "flag": "co", "follow": { "id": "corner_five", "delay": 2 } },
+          "result": "你找出三处白交的钱。老包看完账本，拉你入了股。",
+          "easy": "你翻了五分钟账本，老包就把转让告示撕了：你来，咱俩干。",
+          "fail": { "effect": { "心态": -1 }, "result": "算到最后，确实亏。老包说：算了，你常来坐坐就行。" } },
+        { "text": "前世摆摊亏光", "require": "legacy:hawker>=1",
+          "effect": { "脸皮": 1, "身价": 6, "state": "partner", "flag": "co", "follow": { "id": "corner_five", "delay": 2 } },
+          "result": "前世你吆喝没人理。这一世你在门口喊了一嗓子，半条街都进来了。" },
+        { "text": "帮他发帖转让", "effect": { "人脉": 1, "心态": 1 },
+          "result": "新老板把这里改成了自习室。老包回老家钓鱼去了，朋友圈天天晒鱼。" }
+      ]
+    },
+    {
+      "id": "night_shift", "dir": "side", "layers": ["L1"], "once": true, "weight": 10, "require": "line:netcafe.regular",
+      "text": "老包要回老家吃喜酒，把钥匙塞给你：帮我看两天店，冰柜里的随便喝。",
+      "choices": [
+        { "text": "认真看店", "effect": { "人脉": 2, "身价": 3, "follow": { "id": "for_rent", "delay": 2, "ttl": 8 } },
+          "result": "你把每台机器都擦了一遍。老包回来，说店里第一次这么亮。" },
+        { "text": "看店顺便加班", "chance": 0.5, "chanceAttr": "精力", "chanceStep": 0.05,
+          "effect": { "能力": 2, "身价": 4 }, "result": "两天，你把一周的活干完了。老包回来看见你：你比我还像老板。",
+          "fail": { "effect": { "精力": -2 }, "result": "你两天没合眼。老包回来，你在柜台后睡得比他还香。" } },
+        { "text": "把冰柜喝空", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "精力": 3, "人脉": 1 }, "result": "老包回来看着空冰柜，笑了：说随便喝，你还真随便。",
+          "fail": { "effect": { "精力": -1, "身价": -2 }, "result": "你喝撑了，第二天请了病假。冰柜钱自己补的。" } }
+      ]
+    },
+    {
+      "id": "corner_five", "dir": "any", "chainOnly": true, "teaser": "角落那五台机器又满了", "require": "line:netcafe",
+      "text": "每晚十点，角落那五台机器准坐满。送外卖的、修车的、刷碗的，打那款五人对战游戏打到全区第一。",
+      "choices": [
+        { "text": "给他们组个队", "effect": { "人脉": 2, "state": "esports", "follow": { "id": "poach", "delay": 2 } },
+          "result": "你给队伍起了名：楼下网吧队。队服是老包批发来的白T恤。" },
+        { "text": "帮他们报城市赛", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "身价": 5, "state": "esports", "follow": { "id": "city_cup", "delay": 2 } },
+          "result": "你找了三个熟人，搞定了报名。五个人看着报名表，半天没说话。",
+          "fail": { "effect": { "心态": -1 }, "result": "报名截止了。五个人说：没事，明年还有。" } },
+        { "text": "自己上场当第五人", "absurd": true, "chance": 0.2, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "能力": 2, "脸皮": 2, "state": "esports", "follow": { "id": "city_cup", "delay": 2 } },
+          "result": "你打出了人生第一个五杀。四个队友站起来鼓掌。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "开局三十秒你就倒了。他们说：哥，你还是去买饮料吧。" } },
+        { "text": "不管闲事", "effect": { "心态": 1 }, "result": "你戴上耳机，加你的班。他们的欢呼声，你隔着耳机都听见了。" }
+      ]
+    },
+    {
+      "id": "poach", "dir": "any", "chainOnly": true, "teaser": "有人来挖你的队员", "require": "line:netcafe.esports",
+      "text": "大俱乐部的经理找上门，要挖走队里最强的那个：月薪三万，包吃住，明年进职业联赛。",
+      "choices": [
+        { "text": "让他自己选", "effect": { "心态": 2, "人脉": 1, "follow": { "id": "city_cup", "delay": 2 } },
+          "result": "他想了一晚上，留下了：我想跟兄弟们一起打。" },
+        { "text": "先看看合同", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "能力": 1, "身价": 4, "feud": "挖人经理的合同被看穿", "follow": { "id": "city_cup", "delay": 2 } },
+          "result": "合同里藏着十年违约金。经理脸一红，收起合同走了。",
+          "fail": { "effect": { "心态": -1, "人脉": -1 }, "result": "你没看出毛病。他签了，走的那天，四个人送到了路口。" } },
+        { "text": "画饼免疫", "showIf": "skill:pie_proof", "useSkill": "pie_proof",
+          "effect": { "心态": 1, "身价": 6, "feud": "挖人经理的饼被当场戳破", "follow": { "id": "city_cup", "delay": 2 } },
+          "result": "他画的饼，你一眼看出是冷的。队员们跟着笑了，经理自己走了。" }
+      ]
+    },
+    {
+      "id": "city_cup", "dir": "any", "chainOnly": true, "teaser": "城市赛决赛开打了", "require": "line:netcafe.esports",
+      "text": "城市赛决赛。对面是大俱乐部的青训队，队服是定制的。你们穿着网吧的拖鞋上台。",
+      "choices": [
+        { "text": "台下喊加油", "effect": { "人脉": 2, "心态": 1, "follow": { "id": "arena", "delay": 2, "ttl": 10 } },
+          "result": "输了一分。下台时，对面的教练走过来，跟每个人握了手。" },
+        { "text": "拿出战术板", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "身价": 10, "人脉": 2, "flag": "champion", "feud": "青训队输给了拖鞋队", "follow": { "id": "arena", "delay": 2, "ttl": 10 } },
+          "result": "你把对面的套路画在白板上。三局两胜，奖杯被拖鞋队抱走了。",
+          "easy": "你只画了三条线。对面教练看完回放，来问你收不收徒。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "arena", "delay": 2, "ttl": 10 } }, "result": "白板上的线画乱了。第三局，差一点。" } },
+        { "text": "让老包上场", "absurd": true, "chance": 0.15, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "身价": 12, "脸皮": 2, "flag": "champion", "feud": "老包把青训队打懵了", "follow": { "id": "arena", "delay": 2, "ttl": 10 } },
+          "result": "老包睡醒上场，打得对面一脸懵。原来二十年前，他就是这片区的第一。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "arena", "delay": 2, "ttl": 10 } }, "result": "老包上场坐下，又睡着了。" } }
+      ]
+    },
+    {
+      "id": "arena", "dir": "side", "chainOnly": true, "teaser": "老包想把网吧改一改", "stage": [2, 99],
+      "require": "line:netcafe.partner | line:netcafe.esports",
+      "text": "老包把你叫到柜台：隔壁铺子空出来了。打通了能放五十台机器，挂个电竞馆的牌子。",
+      "choices": [
+        { "text": "改成电竞馆", "require": "flag:co", "effect": { "ending": "esports_boss" },
+          "result": "牌子挂上那天，老包在门口剪彩，剪完回柜台后面，接着睡了。" },
+        { "text": "抱着奖杯去谈", "require": "flag:champion", "effect": { "state": "partner", "ending": "esports_boss" },
+          "result": "你把奖杯往柜台上一放。老包看了半天：挂牌，就叫拖鞋电竞馆。" },
+        { "text": "拉老包一起干", "chance": 0.25, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "state": "partner", "ending": "esports_boss" },
+          "result": "老包说：行，你当馆主，我管冰柜。第二天，牌子就挂上了。",
+          "fail": { "effect": { "心态": -1 }, "result": "老包想了想：要不，还是算了吧。他又睡着了。" } },
+        { "text": "网吧就挺好", "effect": { "心态": 2, "state": "regular" },
+          "result": "老包说：也是。网吧还是网吧，你还是常客。" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "id": "rehire",
+  "name": "退休返聘",
+  "summary": "退休又被请回来的老工程师老许，一把算盘，一本手写笔记。很多年后，被请回来的人换成了你。",
+  "careers": ["office"],
+  "maps": ["city", "workshop", "county"],
+  "stage": [3, 5],
+  "states": {
+    "rehired": "被返聘回公司",
+    "mentored": "带出了一个徒弟"
+  },
+  "events": [
+    {
+      "id": "old_xu", "entry": true, "dir": "up", "weight": 16,
+      "text": "部门来了个返聘的老工程师，老许，六十三了。工位上摆着一把算盘和一本手写笔记。",
+      "choices": [
+        { "text": "帮他装电脑", "effect": { "人脉": 1, "心态": 1, "follow": { "id": "manual", "delay": 2 } },
+          "result": "你帮他装好电脑。他戴上老花镜，第一件事是把字号调到最大。" },
+        { "text": "忙自己的", "effect": { "能力": 1, "follow": { "id": "manual", "delay": 3, "ttl": 8 } },
+          "result": "你忙你的。他在旁边拨了一下午算盘，账一分没错。" },
+        { "text": "前世也退休过", "require": "legacy:veteran>=1", "effect": { "人脉": 2, "心态": 1, "follow": { "id": "manual", "delay": 2 } },
+          "result": "前世你也退休过，知道被请回来的滋味。这一世你先给他倒了杯茶。" },
+        { "text": "跟他比算账", "absurd": true, "chance": 0.2, "chanceAttr": "能力", "chanceStep": 0.02,
+          "effect": { "能力": 2, "身价": 10, "follow": { "id": "manual", "delay": 2 } },
+          "result": "你用表格，他用算盘。你赢了两秒。老许说：后生可畏，明天再来。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "manual", "delay": 2 } }, "result": "你公式还没输完，他已经报出了数：再练练。" } }
+      ]
+    },
+    {
+      "id": "manual", "dir": "any", "chainOnly": true, "teaser": "老许翻开了他的笔记本", "require": "line:rehire",
+      "text": "老系统出了故障，全组查了两天没找到。老许翻开笔记第四十七页：二十年前，这毛病我见过。",
+      "choices": [
+        { "text": "请他教你", "effect": { "能力": 3, "flag": "learned", "follow": { "id": "crisis", "delay": 2 } },
+          "result": "他讲了一下午。你记了五页，比任何培训都明白。" },
+        { "text": "自己硬查", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "能力": 2, "身价": 12, "follow": { "id": "crisis", "delay": 2 } },
+          "result": "你查到了根上。老许看了一眼，点头：路子对。",
+          "easy": "你看了一眼日志就找到了。老许把笔记合上：我老了。",
+          "fail": { "effect": { "精力": -2, "follow": { "id": "crisis", "delay": 2 } }, "result": "你查了一夜。早上来，老许已经修好了，在泡茶。" } },
+        { "text": "把笔记整理成文档", "showIf": "skill:paper_trail", "useSkill": "paper_trail", "effect": { "能力": 2, "人脉": 3, "flag": "learned", "follow": { "id": "crisis", "delay": 2 } },
+          "result": "你把二十年的笔记录成文档，抄送全公司。老许的名字第一次进了系统。" },
+        { "text": "把他讲的录下来", "require": "item:recorder", "effect": { "能力": 2, "身价": 6, "flag": "learned", "follow": { "id": "crisis", "delay": 2 } },
+          "result": "你录了三个小时。回家一听，一半是他讲当年的故事。另一半全是干货。" }
+      ]
+    },
+    {
+      "id": "crisis", "dir": "up", "chainOnly": true, "teaser": "新总监在拟一份名单", "require": "line:rehire",
+      "text": "新总监要降本增效。名单上第一个名字：老许。理由：年纪大，不会用新系统。",
+      "choices": [
+        { "text": "替他说话", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.05,
+          "effect": { "人脉": 2, "flag": "kept", "feud": "总监收回了老许的名单", "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "你把老许修过的故障列了一页纸。总监看完，把他的名字划了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "farewell", "delay": 4, "ttl": 8 } }, "result": "总监说考虑考虑。第二周，老许的工位空了。" } },
+        { "text": "让他修那台老机器", "require": "flag:learned", "effect": { "身价": 15, "flag": "kept", "feud": "总监当场撕了名单", "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "那台没人敢碰的老机器，老许五分钟修好。总监把名单撕了。" },
+        { "text": "不掺和", "effect": { "能力": 2, "flag": "notebook", "follow": { "id": "farewell", "delay": 4, "ttl": 8 } },
+          "result": "你没吭声。老许走那天，把笔记本放在了你桌上。" },
+        { "text": "让老许直播修机器", "absurd": true, "chance": 0.15, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 18, "人脉": 3, "flag": "kept", "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "十万人看老许拨算盘修机器。总监打来电话：许老师，您留下。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "farewell", "delay": 4, "ttl": 8 } }, "result": "直播间只有三个人，其中一个是总监。" } }
+      ]
+    },
+    {
+      "id": "farewell", "dir": "any", "chainOnly": true, "teaser": "老系统又犯了老毛病", "require": "line:rehire",
+      "text": "老许走后半年，老系统又犯了同一个毛病。全组查了三天，总监站在了你的工位后面。",
+      "choices": [
+        { "text": "翻开老许的笔记", "require": "flag:notebook", "effect": { "能力": 3, "身价": 15 },
+          "result": "第四十七页。你照着改了一行，系统好了。总监问：这谁写的？" },
+        { "text": "给老许打电话", "effect": { "人脉": 2, "身价": 6, "flag": "kept", "follow": { "id": "apprentice", "delay": 2 } },
+          "result": "老许在电话里笑：就知道你们会打来。第二天，他拎着算盘回来了。" },
+        { "text": "硬着头皮查", "chance": 0.4, "chanceAttr": "能力", "chanceStep": 0.04,
+          "effect": { "能力": 2, "身价": 12 },
+          "result": "你查了三天，找到了。你突然看懂了老许那本笔记为什么那么厚。",
+          "fail": { "effect": { "精力": -2, "心态": -1 }, "result": "没查出来。外包修好了，账单比老许一年的工资还多。" } }
+      ]
+    },
+    {
+      "id": "apprentice", "dir": "any", "chainOnly": true, "teaser": "老许说要收个徒弟", "require": "flag:kept",
+      "text": "老许说：我干不了几年了，想收个徒弟。他看了看你，又看了看隔壁刚来的实习生小方。",
+      "choices": [
+        { "text": "喊他一声师父", "effect": { "能力": 3, "心态": 1, "flag": "disciple", "follow": { "id": "retire_day", "delay": 4, "ttl": 10 } },
+          "result": "老许从抽屉里拿出一本新笔记，第一页写着你的名字。" },
+        { "text": "推荐小方", "effect": { "人脉": 2, "能力": 1, "follow": { "id": "retire_day", "delay": 4, "ttl": 10 } },
+          "result": "小方高兴坏了。老许教他，你在旁边听，一样学到了。" },
+        { "text": "格局打开", "showIf": "skill:big_picture", "useSkill": "big_picture", "effect": { "能力": 2, "人脉": 4, "flag": "disciple", "follow": { "id": "retire_day", "delay": 4, "ttl": 10 } },
+          "result": "你说：别收一个，开个班。老许愣了：那我得返聘到八十。" },
+        { "text": "请他教你打算盘", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "能力": 2, "心态": 3, "flag": "disciple", "follow": { "id": "retire_day", "delay": 4, "ttl": 10 } },
+          "result": "你学会了算盘。开会时你拨两下，全场都安静了。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "retire_day", "delay": 4, "ttl": 10 } }, "result": "你拨了一个月，账越算越多。老许说：你还是用电脑吧。" } }
+      ]
+    },
+    {
+      "id": "retire_day", "dir": "any", "chainOnly": true, "teaser": "你也到了退休的年纪", "require": "line:rehire",
+      "text": "很多年后，你也退休了。欢送会刚散，人事追到电梯口：系统又出问题了，您能不能……",
+      "choices": [
+        { "text": "签返聘合同", "effect": { "身价": 15, "心态": 1, "state": "rehired", "follow": { "id": "teach", "delay": 2 } },
+          "result": "你签了字。第二天回到工位，桌上多了一把老许留下的算盘。" },
+        { "text": "回家钓鱼", "effect": { "心态": 3, "精力": 2 },
+          "result": "你进了电梯。钓到第三条鱼，手机响了：师父，修好了。" },
+        { "text": "前世被优化过", "require": "legacy:resume_ready>=1", "effect": { "身价": 30, "脸皮": 1, "state": "rehired", "feud": "公司三倍价把你请回去", "follow": { "id": "teach", "delay": 2 } },
+          "result": "前世你抱着纸箱下楼。这一世公司求你回来，你谈了三倍的价。" },
+        { "text": "只修不坐班", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "身价": 20, "心态": 1, "state": "rehired", "follow": { "id": "teach", "delay": 2 } },
+          "result": "你说：远程，按次收费。人事咬了咬牙，答应了。",
+          "fail": { "effect": { "心态": 1 }, "result": "人事说那算了。第二天，他们又去请了老许。老许八十了。" } }
+      ]
+    },
+    {
+      "id": "teach", "dir": "any", "chainOnly": true, "teaser": "返聘第一天，来了个新人", "require": "line:rehire.rehired",
+      "text": "返聘第一天，一个新人蹲在机房里发愁。你从包里掏出一本旧笔记，翻到第四十七页。",
+      "choices": [
+        { "text": "手把手教他", "effect": { "人脉": 3, "心态": 2, "state": "mentored" },
+          "result": "你教了他一年。他出师那天，送了你一把新算盘。" },
+        { "text": "让他自己先查", "chance": 0.5, "chanceAttr": "心态", "chanceStep": 0.06,
+          "effect": { "能力": 2, "人脉": 2, "state": "mentored" },
+          "result": "他查了三天，查到了。你把笔记给他：四十七页往后，你接着写。",
+          "fail": { "effect": { "心态": -1 }, "result": "他查了三天，转岗了。你把笔记放回了包里。" } },
+        { "text": "带完这一个就真退", "require": "flag:disciple | 心态>=10", "effect": { "state": "mentored", "ending": "retire_well" },
+          "result": "你带出了徒弟，交了工牌。蛋糕上写着：师父，常回来。" },
+        { "text": "笔记复印一百份", "absurd": true, "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "effect": { "人脉": 5, "身价": 15, "state": "mentored" },
+          "result": "全楼的新人都来借笔记。人事给你开了间教室：老许讲堂。",
+          "fail": { "effect": { "人脉": 1 }, "result": "复印机卡纸了。一百份，印出来一份。" } }
+      ]
+    },
+    {
+      "id": "visit_xu", "dir": "any", "once": true, "weight": 10, "require": "line:rehire.mentored",
+      "text": "周末，徒弟拎着两斤橘子来找你：师父，带我去看看师爷吧。老许八十多了，还在拨算盘。",
+      "choices": [
+        { "text": "一起去", "effect": { "心态": 2, "人脉": 2 },
+          "result": "老许翻出那本旧笔记，在最后一页添了一行：徒孙，可以。" },
+        { "text": "让徒弟自己去", "effect": { "能力": 1, "心态": 1 },
+          "result": "徒弟回来说，师爷问了你三遍：他还拨算盘吗？" },
+        { "text": "三代人比算账", "absurd": true, "chance": 0.3, "chanceAttr": "能力", "chanceStep": 0.03,
+          "effect": { "能力": 2, "身价": 12 },
+          "result": "老许第一，你第二，徒弟用电脑，第三。老许笑得假牙都松了。",
+          "fail": { "effect": { "心态": 1 }, "result": "三个人算出三个数。最后发现，题是老许出错了。" } }
+      ]
+    }
+  ]
+}

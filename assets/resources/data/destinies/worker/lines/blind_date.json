@@ -1,0 +1,180 @@
+{
+  "id": "blind_date",
+  "name": "相亲",
+  "summary": "老妈手里有一沓照片，每张背面都写着身高、工作和「人老实」。这一世，你一张一张地见。",
+  "maps": ["city", "workshop", "county"],
+  "stage": [1, 3],
+  "states": {
+    "met": "被安排了相亲",
+    "together": "和相亲对象在一起了",
+    "single_happy": "决定一个人也挺好"
+  },
+  "events": [
+    {
+      "id": "arranged", "entry": true, "once": true, "dir": "any", "weight": 6,
+      "text": "老妈打来电话：周六下午三点，茶楼二楼，人我给你约好了。穿那件格子衬衫，显得老实。",
+      "choices": [
+        { "text": "穿上格子衬衫去", "effect": { "心态": 1, "state": "met", "follow": { "id": "first_date", "delay": 1 } },
+          "result": "你把衬衫熨了三遍。照镜子的时候，你觉得自己像一块桌布。" },
+        { "text": "说要加班，推了", "effect": { "能力": 1, "身价": 2, "state": "met", "follow": { "id": "weird_dates", "delay": 3, "ttl": 8 } },
+          "result": "老妈说行。三个月后，她直接把人约到了你公司楼下。" },
+        { "text": "让老妈先面一轮", "require": "line:parents.close", "effect": { "心态": 2, "人脉": 1, "state": "met", "follow": { "id": "crossroads", "delay": 3, "ttl": 8 } },
+          "result": "老妈替你见了十个。第十一个，她只发来两个字：这个行。" },
+        { "text": "带着简历去相亲", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "人脉": 2, "身价": 4, "state": "met", "follow": { "id": "weird_dates", "delay": 2 } },
+          "result": "对方是做人事的。她看完简历，给你内推了一个岗位。",
+          "fail": { "effect": { "心态": -1, "state": "met", "follow": { "id": "weird_dates", "delay": 2 } }, "result": "她认真看完，指出你的工作经历有一段断档。" } }
+      ]
+    },
+    {
+      "id": "first_date", "dir": "any", "chainOnly": true, "teaser": "周六三点，茶楼二楼", "require": "line:blind_date.met",
+      "text": "对方坐下第一句：有房吗？有车吗？年终奖多少？我妈让问的，她就在隔壁桌。",
+      "choices": [
+        { "text": "老实说都没有", "effect": { "脸皮": 1, "follow": { "id": "weird_dates", "delay": 2 } },
+          "result": "隔壁桌的阿姨起身结账，走得比她女儿还快。" },
+        { "text": "认真聊聊", "chance": 0.45, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "人脉": 1, "心态": 1, "follow": { "id": "weird_dates", "delay": 2 } },
+          "result": "聊开了才知道，她也是被押来的。你们互相帮对方编了个交差的理由。",
+          "easy": "你三句话把隔壁桌的阿姨也聊过来了。临走，阿姨塞给你一袋橘子。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "weird_dates", "delay": 2 } }, "result": "她全程在回工作消息。你也是。茶凉了两回。" } },
+        { "text": "AA 后礼貌告辞", "effect": { "心态": 1, "身价": -1, "follow": { "id": "weird_dates", "delay": 2 } },
+          "result": "一壶茶八十八，你转了四十四。她说你挺讲究的，听不出是不是夸。" },
+        { "text": "把我妈也叫来", "absurd": true, "chance": 0.25, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "人脉": 2, "心态": 1, "follow": { "id": "weird_dates", "delay": 2 } },
+          "result": "两个妈一见如故，聊了两小时。你们俩坐在旁边，各玩各的手机。",
+          "fail": { "effect": { "脸皮": 1, "follow": { "id": "weird_dates", "delay": 2 } }, "result": "你打过去，老妈在跳广场舞：自己的事自己办。挂了。" } }
+      ]
+    },
+    {
+      "id": "weird_dates", "dir": "any", "chainOnly": true, "teaser": "老妈又发来一张照片", "require": "line:blind_date.met",
+      "text": "第五个相亲对象聊了十分钟，掏出平板：我这有个理财，年化百分之三十，只给自己人。",
+      "choices": [
+        { "text": "起身就走", "effect": { "心态": 1, "follow": { "id": "crossroads", "delay": 2 } },
+          "result": "你走得很快。回家跟老妈说：这个不行。老妈问为什么，你说：太热情。" },
+        { "text": "前世听过这句话", "require": "legacy:scam_radar>=1",
+          "effect": { "心态": 2, "身价": 4, "feud": "相亲理财局被当场掀了", "follow": { "id": "crossroads", "delay": 2 } },
+          "result": "前世你就是听着「只给自己人」交出了积蓄。这一世，你当场报了警。" },
+        { "text": "打开反诈 App", "require": "item:anti_scam_app",
+          "effect": { "人脉": 1, "身价": 3, "follow": { "id": "crossroads", "delay": 2 } },
+          "result": "你输了一下他的产品名，手机响起警报。他收起平板，说去趟洗手间。" },
+        { "text": "反向给他推销", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "脸皮": 2, "身价": 6, "follow": { "id": "crossroads", "delay": 2 } },
+          "result": "你给他推了老家的腊肉，他买了五斤。理财的事，他再没提。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "crossroads", "delay": 2 } }, "result": "他听完说：腊肉可以，加入我们团队，一起卖。" } }
+      ]
+    },
+    {
+      "id": "crossroads", "dir": "any", "chainOnly": true, "teaser": "第十一个，约在菜市场", "require": "line:blind_date.met",
+      "text": "相亲第十一个。她约在菜市场门口，手里拎着一把葱：刚下班，顺路买个菜，你不介意吧？",
+      "choices": [
+        { "text": "接过来帮她拎", "effect": { "心态": 1, "state": "met", "follow": { "id": "scallion", "delay": 2 } },
+          "result": "你拎着葱跟她逛了一圈。她砍价的样子，比相亲的时候好看。" },
+        { "text": "跟她比砍价", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+          "effect": { "脸皮": 2, "人脉": 1, "state": "met", "follow": { "id": "scallion", "delay": 2 } },
+          "result": "你们比谁砍得狠。她赢了，请你吃了碗面，加了个蛋。",
+          "fail": { "effect": { "脸皮": 1, "state": "met", "follow": { "id": "scallion", "delay": 2 } }, "result": "你砍价被摊主请了出去。她在门口笑得蹲下了。" } },
+        { "text": "一个人也挺好", "effect": { "心态": 2, "精力": 1, "state": "single_happy", "follow": { "id": "solo_life", "delay": 2 } },
+          "result": "你们聊得不错，但你想明白了：这阵子，你想先陪陪自己。她说懂。" },
+        { "text": "还是回去加班", "effect": { "能力": 1, "身价": 4 },
+          "result": "你说公司有急事。她点点头，拎着葱走了。你的报表，做得很顺。" }
+      ]
+    },
+    {
+      "id": "scallion", "dir": "any", "chainOnly": true, "teaser": "她说你买的葱不对", "require": "line:blind_date.met",
+      "text": "第三次见面，你们在菜市场为一把葱吵起来：她要小葱，你买了大葱。摊主大爷看得很开心。",
+      "choices": [
+        { "text": "认错，再买一把", "effect": { "心态": 2, "state": "together", "follow": { "id": "first_home", "delay": 3, "ttl": 8 } },
+          "result": "你又买了一把小葱。她说下次记住。你记住了，记了一辈子。" },
+        { "text": "大葱炒蛋更香", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "能力": 1, "心态": 1, "state": "together", "follow": { "id": "first_home", "delay": 3, "ttl": 8 } },
+          "result": "回家各炒一盘。她把你那盘吃光了，嘴上还说一般。",
+          "easy": "你炒了一盘。她尝了一口，第二天自己去买了大葱。",
+          "fail": { "effect": { "心态": -1, "state": "together", "follow": { "id": "first_home", "delay": 3, "ttl": 8 } }, "result": "蛋炒糊了。她接过锅重炒，边炒边数落你。你听着挺高兴。" } },
+        { "text": "两种都买", "effect": { "身价": -1, "人脉": 1, "state": "together", "follow": { "id": "first_home", "delay": 3, "ttl": 8 } },
+          "result": "你两把都买了。她说你这人没原则，嘴角是往上的。" },
+        { "text": "请大爷当裁判", "absurd": true, "chance": 0.25, "chanceAttr": "人脉", "chanceStep": 0.04,
+          "effect": { "人脉": 2, "心态": 2, "state": "together", "follow": { "id": "first_home", "delay": 3, "ttl": 8 } },
+          "result": "大爷判平局，送了你们一人一把葱：小两口别吵了。你们都没反驳。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "大爷判你输，还说你这样的找不着对象。她扭头走了。" } }
+      ]
+    },
+    {
+      "id": "first_home", "dir": "any", "chainOnly": true, "teaser": "见家长，老妈大扫除三天", "require": "line:blind_date.together",
+      "text": "带她回家见爸妈。老妈提前三天大扫除，老爸翻出珍藏的好酒，倒出来一闻，是醋。",
+      "choices": [
+        { "text": "让老妈主场发挥", "effect": { "人脉": 1, "心态": 1, "follow": { "id": "small_days", "delay": 2, "ttl": 8 } },
+          "result": "老妈拉着她看你小时候的照片，看了三个小时。你想走，没走成。" },
+        { "text": "亲自下厨露一手", "chance": 0.45, "chanceAttr": "能力", "chanceStep": 0.05,
+          "effect": { "心态": 2, "人脉": 1, "follow": { "id": "small_days", "delay": 2, "ttl": 8 } },
+          "result": "四菜一汤。老爸说比你妈做得好，被你妈瞪了一眼。",
+          "fail": { "effect": { "心态": 1, "follow": { "id": "small_days", "delay": 2, "ttl": 8 } }, "result": "鱼糊了。她接过锅，三分钟救了回来。老妈当场站到了她那边。" } },
+        { "text": "先给老妈打预防针", "require": "line:parents.close", "effect": { "心态": 2, "精力": 1, "follow": { "id": "small_days", "delay": 2, "ttl": 8 } },
+          "result": "老妈答应不问工资。她忍到第二道菜才问。" },
+        { "text": "前世一个人退休", "require": "legacy:veteran>=1", "effect": { "心态": 3, "follow": { "id": "small_days", "delay": 2, "ttl": 8 } },
+          "result": "前世你干到退休，饭桌上只摆一副碗筷。这一世，老妈多摆了一副。" }
+      ]
+    },
+    {
+      "id": "small_days", "dir": "any", "chainOnly": true, "teaser": "她问：以后怎么打算？", "require": "line:blind_date.together",
+      "text": "下班回家，她在厨房切葱，小葱。她头也不回：周末去看看房？不用大，有个阳台就行。",
+      "choices": [
+        { "text": "好，一起过日子", "require": "stage>=3 & 心态>=12", "effect": { "ending": "two_person_life" },
+          "result": "你们看中一套带阳台的小房子。搬进去第一天，阳台上种了一盆葱。" },
+        { "text": "先各自攒攒钱", "effect": { "身价": 6, "能力": 1, "follow": { "id": "anniversary", "delay": 3, "ttl": 10 } },
+          "result": "你们开了个共同账户，每月往里存一点。她给账户起名叫：葱。" },
+        { "text": "用小葱求婚", "absurd": true, "chance": 0.25, "chanceAttr": "心态", "chanceStep": 0.04,
+          "effect": { "心态": 3, "人脉": 1, "follow": { "id": "anniversary", "delay": 2, "ttl": 10 } },
+          "result": "你把戒指套在一根小葱上。她愣了三秒，接过葱：这回买对了。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "anniversary", "delay": 3, "ttl": 10 } }, "result": "她以为你让她切葱。切到一半，刀碰到了戒指。" } }
+      ]
+    },
+    {
+      "id": "anniversary", "dir": "any", "chainOnly": true, "teaser": "你们认识一周年了", "require": "line:blind_date.together",
+      "text": "认识一周年。她翻出相亲那天的照片：你这件格子衬衫，我妈当时说像桌布。",
+      "choices": [
+        { "text": "搬到一起住", "require": "stage>=3 & 心态>=10", "effect": { "ending": "two_person_life" },
+          "result": "搬家那天，你把格子衬衫叠好放进柜子。她说：留着，下回铺桌子。" },
+        { "text": "买件新衬衫", "effect": { "心态": 1, "身价": -2 },
+          "result": "你买了件纯色的。她看了半天：还是格子的顺眼。" },
+        { "text": "约个饭庆祝", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+          "effect": { "心态": 2, "精力": 1 },
+          "result": "你订到了那家排队的店。她吃得很开心，回家路上一直哼歌。",
+          "fail": { "effect": { "心态": 1 }, "result": "店没订上。你们在楼下吃了碗面，她说也挺好。" } },
+        { "text": "把衬衫裱起来", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+          "effect": { "心态": 2, "人脉": 2 },
+          "result": "衬衫挂上了客厅墙。来家里的朋友都问，你们说：定情信物。",
+          "fail": { "effect": { "脸皮": 1 }, "result": "裱好的那天，老妈来了，说正好缺块桌布，拿走了。" } }
+      ]
+    },
+    {
+      "id": "solo_life", "dir": "any", "chainOnly": true, "teaser": "老妈又打来电话", "require": "line:blind_date.single_happy",
+      "text": "你跟老妈说不相了。老妈沉默五秒：那你周末干嘛？你说：学做饭，爬山，睡到中午。",
+      "choices": [
+        { "text": "认真过好自己", "effect": { "心态": 2, "精力": 1, "state": "single_happy", "follow": { "id": "solo_trip", "delay": 2 } },
+          "result": "你买了口好锅，办了张健身卡。冰箱里第一次有了绿色的东西。" },
+        { "text": "报个烹饪班", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+          "effect": { "能力": 2, "心态": 1, "state": "single_happy", "follow": { "id": "solo_trip", "delay": 2 } },
+          "result": "三个月后，你做的红烧肉被全班评为第一。老师让你别来了，太卷。",
+          "fail": { "effect": { "心态": -1, "follow": { "id": "solo_trip", "delay": 2 } }, "result": "第一节课你炒糊了锅。老师说你很有勇气。" } },
+        { "text": "带老妈去爬山", "require": "line:parents.close", "effect": { "心态": 2, "人脉": 1, "state": "single_happy", "follow": { "id": "solo_trip", "delay": 2 } },
+          "result": "老妈爬到半山腰，发了九十张照片到家族群。从那以后，再没提相亲。" },
+        { "text": "前世没过过周末", "require": "legacy:veteran>=1", "effect": { "心态": 3, "精力": 1, "state": "single_happy", "follow": { "id": "solo_trip", "delay": 2 } },
+          "result": "前世你忙到退休才学会过周末。这一世，你从二十几岁就开始过了。" }
+      ]
+    },
+    {
+      "id": "solo_trip", "dir": "any", "chainOnly": true, "teaser": "周末一个人去爬山", "require": "line:blind_date.single_happy",
+      "text": "你一个人爬上了山顶。卖茶叶蛋的大爷问：一个人？你说一个人。他多给了你一个。",
+      "choices": [
+        { "text": "坐着看完日落", "effect": { "心态": 2, "精力": 2, "state": "single_happy" },
+          "result": "太阳落下去，你剥完了两个蛋。下山的路，你走得很慢。" },
+        { "text": "发条朋友圈", "effect": { "人脉": 2, "身价": 2, "state": "single_happy" },
+          "result": "老妈第一个点赞，评论：玩得开心，蛋别吃太多。" },
+        { "text": "跟大爷合伙卖蛋", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+          "effect": { "身价": 8, "脸皮": 2, "state": "single_happy" },
+          "result": "你吆喝了一下午，蛋卖空了。大爷分你一半，说下周还来。",
+          "fail": { "effect": { "脸皮": 1, "state": "single_happy" }, "result": "你吆喝了一下午，卖出三个。都是大爷自己买的。" } }
+      ]
+    }
+  ]
+}
