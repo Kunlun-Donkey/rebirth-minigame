@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <title>opus_5.5_zhangyu_ridebike</title>
   <defs>
+    <!-- 圆形遮罩 -->
     <mask id="circleMask">
       <rect width="512" height="512" fill="#000"/>
       <circle cx="256" cy="256" r="240" fill="#fff"/>
@@ -9,52 +10,32 @@
       <stop offset="0" stop-color="#bfe6f5"/>
       <stop offset="1" stop-color="#f7f1dc"/>
     </linearGradient>
-    <radialGradient id="mantleGrad" cx="0.4" cy="0.35" r="0.7">
+    <radialGradient id="mantle" cx="0.4" cy="0.35" r="0.7">
       <stop offset="0" stop-color="#ff9e8a"/>
       <stop offset="1" stop-color="#e2574c"/>
     </radialGradient>
   </defs>
 
   <g mask="url(#circleMask)">
-    <!-- 背景 -->
+    <!-- 背景与地面 -->
     <rect width="512" height="512" fill="url(#sky)"/>
     <path d="M0 440 Q128 420 256 440 T512 440 L512 512 L0 512 Z" fill="#e8d6a8" stroke="#5a3d22" stroke-width="3"/>
-    <!-- 地面纹理向后滚动 -->
     <path d="M-40 470 L-10 470 M60 485 L100 485 M170 468 L200 468 M280 490 L320 490 M390 472 L420 472 M500 486 L540 486" stroke="#b89b62" stroke-width="4" stroke-linecap="round">
       <animateTransform attributeName="transform" type="translate" from="0 0" to="-110 0" dur="0.9s" repeatCount="indefinite"/>
     </path>
 
     <g transform="translate(28 0)">
       <g transform="skewX(-5)">
-        <!-- 地面阴影 -->
         <ellipse cx="262" cy="448" rx="200" ry="10" fill="#5a3d22" opacity="0.18"/>
 
-        <!-- 远侧触手：踩后侧踏板（在车架后面，随曲柄转动） -->
+        <!-- ===== 远侧（车架后面）：触手踩远侧踏板 ===== -->
         <path d="M215 252 Q190 290 210 313 T225 350" fill="none" stroke="#3a1f1f" stroke-width="20" stroke-linecap="round">
-          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="
-            M215 252 Q190 290 210 313 T225 350;
-            M215 252 Q190 290 222.5 308 T250 340;
-            M215 252 Q190 290 235 313 T275 350;
-            M215 252 Q190 290 240 325.5 T285 375;
-            M215 252 Q190 290 235 338 T275 400;
-            M215 252 Q190 290 222.5 343 T250 410;
-            M215 252 Q190 290 210 338 T225 400;
-            M215 252 Q190 290 205 325.5 T215 375;
-            M215 252 Q190 290 210 313 T225 350"/>
+          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="M215 252 Q190 290 210 313 T225 350;M215 252 Q190 290 222.5 308 T250 340;M215 252 Q190 290 235 313 T275 350;M215 252 Q190 290 240 325.5 T285 375;M215 252 Q190 290 235 338 T275 400;M215 252 Q190 290 222.5 343 T250 410;M215 252 Q190 290 210 338 T225 400;M215 252 Q190 290 205 325.5 T215 375;M215 252 Q190 290 210 313 T225 350"/>
         </path>
         <path d="M215 252 Q190 290 210 313 T225 350" fill="none" stroke="#c9443b" stroke-width="13" stroke-linecap="round">
-          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="
-            M215 252 Q190 290 210 313 T225 350;
-            M215 252 Q190 290 222.5 308 T250 340;
-            M215 252 Q190 290 235 313 T275 350;
-            M215 252 Q190 290 240 325.5 T285 375;
-            M215 252 Q190 290 235 338 T275 400;
-            M215 252 Q190 290 222.5 343 T250 410;
-            M215 252 Q190 290 210 338 T225 400;
-            M215 252 Q190 290 205 325.5 T215 375;
-            M215 252 Q190 290 210 313 T225 350"/>
+          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="M215 252 Q190 290 210 313 T225 350;M215 252 Q190 290 222.5 308 T250 340;M215 252 Q190 290 235 313 T275 350;M215 252 Q190 290 240 325.5 T285 375;M215 252 Q190 290 235 338 T275 400;M215 252 Q190 290 222.5 343 T250 410;M215 252 Q190 290 210 338 T225 400;M215 252 Q190 290 205 325.5 T215 375;M215 252 Q190 290 210 313 T225 350"/>
         </path>
-        <!-- 远侧踏板（保持水平，沿曲柄圆周移动） -->
+        <!-- 远侧踏板：保持水平沿圆周走（起点 225°） -->
         <g>
           <rect x="-14" y="-4.5" width="28" height="9" rx="3" fill="#555" stroke="#1d1d1d" stroke-width="3"/>
           <animateMotion dur="1.2s" repeatCount="indefinite" path="M225.25 350.25 A35 35 0 0 1 274.75 399.75 A35 35 0 0 1 225.25 350.25"/>
@@ -66,6 +47,7 @@
           <animateTransform attributeName="transform" type="rotate" from="0 250 375" to="360 250 375" dur="1.2s" repeatCount="indefinite"/>
         </g>
 
+        <!-- ===== 自行车 ===== -->
         <!-- 后轮 -->
         <circle cx="150" cy="370" r="75" fill="none" stroke="#1d1d1d" stroke-width="12"/>
         <circle cx="150" cy="370" r="66" fill="none" stroke="#9aa3ad" stroke-width="3"/>
@@ -75,7 +57,6 @@
           <animateTransform attributeName="transform" type="rotate" from="0 150 370" to="360 150 370" dur="0.9s" repeatCount="indefinite"/>
         </g>
         <circle cx="150" cy="370" r="7" fill="#9aa3ad" stroke="#1d1d1d" stroke-width="3"/>
-
         <!-- 前轮 -->
         <circle cx="370" cy="370" r="75" fill="none" stroke="#1d1d1d" stroke-width="12"/>
         <circle cx="370" cy="370" r="66" fill="none" stroke="#9aa3ad" stroke-width="3"/>
@@ -86,7 +67,7 @@
         </g>
         <circle cx="370" cy="370" r="7" fill="#9aa3ad" stroke="#1d1d1d" stroke-width="3"/>
 
-        <!-- 车架：描边层 -->
+        <!-- 车架：后下叉/立管/后上叉、上管/下管、头管/前叉、座杆、车把立管 -->
         <g fill="none" stroke="#1d1d1d" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
           <path d="M150 370 L250 375 L228 282 Z"/>
           <path d="M228 282 L340 278 L250 375"/>
@@ -94,7 +75,6 @@
           <path d="M228 282 L222 262"/>
           <path d="M340 278 L343 248"/>
         </g>
-        <!-- 车架：颜色层 -->
         <g fill="none" stroke="#2f8f83" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M150 370 L250 375 L228 282 Z"/>
           <path d="M228 282 L340 278 L250 375"/>
@@ -106,28 +86,24 @@
         <!-- 车座 -->
         <path d="M196 262 Q222 252 248 260 Q244 270 222 268 Q205 269 196 262 Z" fill="#3b2a20" stroke="#1d1d1d" stroke-width="3"/>
 
-        <!-- 车把 -->
+        <!-- 车把与握套 -->
         <path d="M330 250 Q345 244 360 240 T384 244 L390 258" fill="none" stroke="#1d1d1d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M330 250 Q345 244 360 240 T384 244 L390 258" fill="none" stroke="#9aa3ad" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- 车把握套 -->
         <line x1="385" y1="246" x2="390" y2="258" stroke="#1d1d1d" stroke-width="11" stroke-linecap="round"/>
 
-        <!-- 铃铛（隔一会儿响一下） -->
+        <!-- 铃铛：每 3 秒晃一下 -->
         <line x1="364" y1="240" x2="364" y2="232" stroke="#1d1d1d" stroke-width="3"/>
         <g>
           <path d="M355 233 Q355 220 364 220 Q373 220 373 233 Z" fill="#f2c230" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
           <path d="M352 233 L376 233" stroke="#1d1d1d" stroke-width="3" stroke-linecap="round"/>
           <path d="M359 226 Q361 223 364 223" fill="none" stroke="#fff6c8" stroke-width="2" stroke-linecap="round"/>
-          <animateTransform attributeName="transform" type="rotate" dur="3s" repeatCount="indefinite"
-            values="0 364 233;0 364 233;-14 364 233;14 364 233;-10 364 233;8 364 233;0 364 233"
-            keyTimes="0;0.7;0.75;0.8;0.85;0.9;1"/>
+          <animateTransform attributeName="transform" type="rotate" dur="3s" repeatCount="indefinite" values="0 364 233;0 364 233;-14 364 233;14 364 233;-10 364 233;8 364 233;0 364 233" keyTimes="0;0.7;0.75;0.8;0.85;0.9;1"/>
         </g>
-        <!-- 铃声波纹 -->
         <path d="M380 218 Q386 226 380 234 M388 212 Q397 226 388 240" fill="none" stroke="#5a3d22" stroke-width="2.5" stroke-linecap="round" opacity="0">
           <animate attributeName="opacity" dur="3s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.7;0.75;0.9;1"/>
         </path>
 
-        <!-- 链条（滚动）与链轮（转动） -->
+        <!-- 链条与链轮 -->
         <path d="M150 362 L250 357 M150 378 L250 393" stroke="#4a4a4a" stroke-width="2.5" stroke-dasharray="4 3">
           <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="0.3s" repeatCount="indefinite"/>
         </path>
@@ -138,22 +114,21 @@
         </g>
         <circle cx="250" cy="375" r="6" fill="#1d1d1d"/>
 
-        <!-- 后侧触手：挥舞 -->
+        <!-- ===== 章鱼 ===== -->
+        <!-- 身后触手：挥舞 -->
         <path d="M185 228 Q140 222 135 190 T108 158" fill="none" stroke="#3a1f1f" stroke-width="22" stroke-linecap="round">
           <animate attributeName="d" dur="1.6s" repeatCount="indefinite" values="M185 228 Q140 222 135 190 T108 158;M185 228 Q138 232 126 204 T94 182;M185 228 Q140 222 135 190 T108 158"/>
         </path>
         <path d="M185 228 Q140 222 135 190 T108 158" fill="none" stroke="#e2574c" stroke-width="15" stroke-linecap="round">
           <animate attributeName="d" dur="1.6s" repeatCount="indefinite" values="M185 228 Q140 222 135 190 T108 158;M185 228 Q138 232 126 204 T94 182;M185 228 Q140 222 135 190 T108 158"/>
         </path>
-
-        <!-- 后侧触手：随风飘 -->
+        <!-- 身后触手：飘动 ×2 -->
         <path d="M195 250 Q165 282 145 268 T112 284" fill="none" stroke="#3a1f1f" stroke-width="20" stroke-linecap="round">
           <animate attributeName="d" dur="0.8s" repeatCount="indefinite" values="M195 250 Q165 282 145 268 T112 284;M195 250 Q165 276 143 274 T110 276;M195 250 Q165 282 145 268 T112 284"/>
         </path>
         <path d="M195 250 Q165 282 145 268 T112 284" fill="none" stroke="#e2574c" stroke-width="13" stroke-linecap="round">
           <animate attributeName="d" dur="0.8s" repeatCount="indefinite" values="M195 250 Q165 282 145 268 T112 284;M195 250 Q165 276 143 274 T110 276;M195 250 Q165 282 145 268 T112 284"/>
         </path>
-
         <path d="M205 256 Q192 286 172 280 T150 290" fill="none" stroke="#3a1f1f" stroke-width="18" stroke-linecap="round">
           <animate attributeName="d" dur="0.7s" repeatCount="indefinite" values="M205 256 Q192 286 172 280 T150 290;M205 256 Q192 282 170 284 T148 284;M205 256 Q192 286 172 280 T150 290"/>
         </path>
@@ -161,28 +136,25 @@
           <animate attributeName="d" dur="0.7s" repeatCount="indefinite" values="M205 256 Q192 286 172 280 T150 290;M205 256 Q192 282 170 284 T148 284;M205 256 Q192 286 172 280 T150 290"/>
         </path>
 
-        <!-- 章鱼头（外套膜） -->
-        <path d="M168 200 Q160 120 225 115 Q292 118 285 200 Q282 245 250 258 Q225 266 200 258 Q170 245 168 200 Z" fill="url(#mantleGrad)" stroke="#3a1f1f" stroke-width="5" stroke-linejoin="round"/>
+        <!-- 外套膜（头），坐在车座上 -->
+        <path d="M168 200 Q160 120 225 115 Q292 118 285 200 Q282 245 250 258 Q225 266 200 258 Q170 245 168 200 Z" fill="url(#mantle)" stroke="#3a1f1f" stroke-width="5" stroke-linejoin="round"/>
         <path d="M188 160 Q200 135 225 130" fill="none" stroke="#ffd2c4" stroke-width="5" stroke-linecap="round"/>
 
-        <!-- 眼罩系带 -->
-        <path d="M172 168 Q215 196 282 168" fill="none" stroke="#1d1d1d" stroke-width="4"/>
         <!-- 眼罩 -->
+        <path d="M172 168 Q215 196 282 168" fill="none" stroke="#1d1d1d" stroke-width="4"/>
         <path d="M190 180 Q206 174 220 182 Q222 200 206 204 Q190 202 190 180 Z" fill="#1d1d1d" stroke="#1d1d1d" stroke-width="2" stroke-linejoin="round"/>
-        <!-- 眼睛（会眨） -->
+        <!-- 眼睛：每 4 秒眨一次（translate 在前、scale 在后，以 y=190 为中心压扁） -->
         <g>
           <ellipse cx="250" cy="190" rx="13" ry="15" fill="#fff" stroke="#3a1f1f" stroke-width="4"/>
           <ellipse cx="254" cy="192" rx="6" ry="8" fill="#1d1d1d"/>
           <circle cx="256" cy="189" r="2" fill="#fff"/>
-          <animateTransform attributeName="transform" type="translate" additive="sum" dur="4s" repeatCount="indefinite"
-            values="0 0;0 0;0 171;0 0" keyTimes="0;0.9;0.95;1"/>
-          <animateTransform attributeName="transform" type="scale" additive="sum" dur="4s" repeatCount="indefinite"
-            values="1 1;1 1;1 0.1;1 1" keyTimes="0;0.9;0.95;1"/>
+          <animateTransform attributeName="transform" type="translate" additive="sum" dur="4s" repeatCount="indefinite" values="0 0;0 0;0 171;0 0" keyTimes="0;0.9;0.95;1"/>
+          <animateTransform attributeName="transform" type="scale" additive="sum" dur="4s" repeatCount="indefinite" values="1 1;1 1;1 0.1;1 1" keyTimes="0;0.9;0.95;1"/>
         </g>
         <!-- 嘴 -->
         <path d="M222 224 Q232 234 244 224" fill="none" stroke="#3a1f1f" stroke-width="4" stroke-linecap="round"/>
 
-        <!-- 海盗帽（迎风轻晃） -->
+        <!-- 海盗帽：轻晃 -->
         <g>
           <path d="M160 140 Q178 98 225 92 Q272 98 292 140 Q262 128 225 132 Q188 128 160 140 Z" fill="#232028" stroke="#0e0d10" stroke-width="4" stroke-linejoin="round"/>
           <path d="M150 142 Q190 120 225 126 Q262 120 302 142 Q262 136 225 140 Q188 136 150 142 Z" fill="#2f2b36" stroke="#0e0d10" stroke-width="4" stroke-linejoin="round"/>
@@ -193,30 +165,12 @@
           <animateTransform attributeName="transform" type="rotate" dur="1.2s" repeatCount="indefinite" values="0 225 135;-3 225 135;0 225 135"/>
         </g>
 
-        <!-- 近侧触手：踩前侧踏板（随曲柄转动） -->
+        <!-- ===== 近侧（车架前面）：触手踩近侧踏板 ===== -->
         <path d="M235 254 Q270 290 255 330 T275 400" fill="none" stroke="#3a1f1f" stroke-width="22" stroke-linecap="round">
-          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="
-            M235 254 Q270 290 255 330 T275 400;
-            M235 254 Q270 290 242.5 335 T250 410;
-            M235 254 Q270 290 230 330 T225 400;
-            M235 254 Q270 290 225 317.5 T215 375;
-            M235 254 Q270 290 230 305 T225 350;
-            M235 254 Q270 290 242.5 300 T250 340;
-            M235 254 Q270 290 255 305 T275 350;
-            M235 254 Q270 290 260 317.5 T285 375;
-            M235 254 Q270 290 255 330 T275 400"/>
+          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="M235 254 Q270 290 255 330 T275 400;M235 254 Q270 290 242.5 335 T250 410;M235 254 Q270 290 230 330 T225 400;M235 254 Q270 290 225 317.5 T215 375;M235 254 Q270 290 230 305 T225 350;M235 254 Q270 290 242.5 300 T250 340;M235 254 Q270 290 255 305 T275 350;M235 254 Q270 290 260 317.5 T285 375;M235 254 Q270 290 255 330 T275 400"/>
         </path>
         <path d="M235 254 Q270 290 255 330 T275 400" fill="none" stroke="#f0675a" stroke-width="15" stroke-linecap="round">
-          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="
-            M235 254 Q270 290 255 330 T275 400;
-            M235 254 Q270 290 242.5 335 T250 410;
-            M235 254 Q270 290 230 330 T225 400;
-            M235 254 Q270 290 225 317.5 T215 375;
-            M235 254 Q270 290 230 305 T225 350;
-            M235 254 Q270 290 242.5 300 T250 340;
-            M235 254 Q270 290 255 305 T275 350;
-            M235 254 Q270 290 260 317.5 T285 375;
-            M235 254 Q270 290 255 330 T275 400"/>
+          <animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="M235 254 Q270 290 255 330 T275 400;M235 254 Q270 290 242.5 335 T250 410;M235 254 Q270 290 230 330 T225 400;M235 254 Q270 290 225 317.5 T215 375;M235 254 Q270 290 230 305 T225 350;M235 254 Q270 290 242.5 300 T250 340;M235 254 Q270 290 255 305 T275 350;M235 254 Q270 290 260 317.5 T285 375;M235 254 Q270 290 255 330 T275 400"/>
         </path>
         <!-- 近侧曲柄 -->
         <g>
@@ -224,7 +178,7 @@
           <line x1="250" y1="375" x2="274.75" y2="399.75" stroke="#c7ced6" stroke-width="4" stroke-linecap="round"/>
           <animateTransform attributeName="transform" type="rotate" from="0 250 375" to="360 250 375" dur="1.2s" repeatCount="indefinite"/>
         </g>
-        <!-- 近侧踏板 + 卷住踏板的触手尖 -->
+        <!-- 近侧踏板 + 卷住踏板的触手尖（起点 45°） -->
         <g>
           <rect x="-15" y="-4.5" width="30" height="9" rx="3" fill="#777" stroke="#1d1d1d" stroke-width="3"/>
           <path d="M-7 -6 Q-13 2 -5 6 T9 0" fill="none" stroke="#3a1f1f" stroke-width="12" stroke-linecap="round"/>
@@ -232,13 +186,13 @@
           <animateMotion dur="1.2s" repeatCount="indefinite" path="M274.75 399.75 A35 35 0 0 1 225.25 350.25 A35 35 0 0 1 274.75 399.75"/>
         </g>
 
-        <!-- 近侧触手：抓车把中段 -->
+        <!-- 触手握车把中段 -->
         <path d="M245 238 Q282 258 300 240 T340 246" fill="none" stroke="#3a1f1f" stroke-width="20" stroke-linecap="round"/>
         <path d="M245 238 Q282 258 300 240 T340 246" fill="none" stroke="#f0675a" stroke-width="13" stroke-linecap="round"/>
         <path d="M334 238 Q344 246 336 254" fill="none" stroke="#3a1f1f" stroke-width="10" stroke-linecap="round"/>
         <path d="M334 238 Q344 246 336 254" fill="none" stroke="#f0675a" stroke-width="5" stroke-linecap="round"/>
 
-        <!-- 近侧触手：抓车把握套 -->
+        <!-- 触手握车把握套（虚线=吸盘） -->
         <path d="M262 222 Q310 205 335 225 T380 246" fill="none" stroke="#3a1f1f" stroke-width="20" stroke-linecap="round"/>
         <path d="M262 222 Q310 205 335 225 T380 246" fill="none" stroke="#f0675a" stroke-width="13" stroke-linecap="round"/>
         <path d="M268 216 Q310 202 333 220 T374 240" fill="none" stroke="#ffd2c4" stroke-width="3" stroke-dasharray="1 7" stroke-linecap="round"/>
