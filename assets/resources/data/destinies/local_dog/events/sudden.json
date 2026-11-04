@@ -108,5 +108,6 @@
       { "text": "分他一半", "effect": { "follow": { "id": "f_goushen_plan", "delay": 2 }, "体力": 2, "忠义": 2 }, "result": "你们一人一半。那是他最开心的一天。" },
       { "text": "大口吃", "effect": { "体力": 4 }, "result": "狗剩看你吃，笑得比你还香。" }
     ]
-  }
+  },
+  {"id": "x_bone_moon", "dir": "any", "sudden": true, "gold": true, "stage": [0, 99], "weight": 1, "once": true, "text": "月亮特别圆的那晚，你在柴堆底下刨出一根发白光的骨头。", "choices": [{"text": "叼回窝里啃", "effect": {"妖气": 6, "牙口": 1}, "result": "骨头越啃越香。你啃完一抬头，月亮好像冲你眨了下眼。"}, {"text": "冲月亮叫一声", "effect": {"灵性": 2, "体力": 2}, "result": "你叫了一声，全村的狗都没敢接。那一晚你睡得特别香。"}]}
 ]

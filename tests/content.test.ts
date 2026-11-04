@@ -96,3 +96,29 @@ describe.each(listDestinies())('命格剧本 %s', id => {
         expect(cameo).toBeGreaterThan(0);
     });
 });
+
+describe('第一世高光', () => {
+    it.each(listDestinies())('%s：本命格第一世活到第 4 季前一定遇到一次金色奇遇', id => {
+        const d = buildDestiny(loadRawDestiny(id).raw);
+        for (let seed = 1; seed <= 20; seed++) {
+            const e = new Engine(d, createProfile());
+            const draft = e.rollDraft(seed);
+            e.startRun({ talent: draft.talents[0], item: draft.items[0], companion: draft.companions[0] }, seed);
+            const rng = new Rng({ rng: seed });
+            let gold = false;
+            for (let guard = 0; guard < 200 && e.run.season <= 4 && !gold; guard++) {
+                e.run.attrs[d.meta.rules.life] = 99;
+                if (e.run.phase === 'direction') {
+                    const opts = e.directionOptions().filter(o => o.enabled);
+                    e.chooseDirection(opts[rng.int(opts.length)].dir);
+                } else if (e.run.phase === 'event') {
+                    if (e.eventView().gold) gold = true;
+                    const ok = e.eventView().choices.filter(c => c.enabled);
+                    e.choose(ok[rng.int(ok.length)].index);
+                } else break;
+            }
+            if (e.run.phase === 'event' && e.eventView().gold) gold = true;
+            if (e.run.phase === 'event' || e.run.phase === 'direction') expect(gold, `种子 ${seed}`).toBe(true);
+        }
+    });
+});

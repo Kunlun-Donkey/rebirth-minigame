@@ -29,6 +29,8 @@ const MEMORY_TEXT_MAX = 18;
 export const DAILY_FIRST_BONUS = 0.5;
 /** 随缘投胎（转盘选命格）结算轮回点加成 */
 export const SPIN_BONUS = 0.3;
+/** 本命格第一世：到这一季还没遇到过金色奇遇，就保底来一次（给第一世一个高光） */
+export const FIRST_GOLD_SEASON = 4;
 const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [], states: [] };
 /** 连胜几次起「势如破竹」，以及单次奖励上限 */
 const STREAK_MIN = 3;
@@ -886,6 +888,15 @@ export class Engine {
         if (ce && !this.run.career && this.run.season === 1 && this.data.events.has(ce)) {
             this.enterEvent(ce);
             return;
+        }
+        const r = this.run;
+        if (r.life === 1 && r.season === FIRST_GOLD_SEASON && !r.seen.some(id => this.data.events.get(id)?.gold)) {
+            // 天胡链不参与保底（仍按 1% 量级随缘）
+            const ev = this.drawEvent(e => !!e.gold && (!!e.sudden || e.dir === 'any') && !e.id.includes('tianhu'));
+            if (ev) {
+                this.enterEvent(ev.id);
+                return;
+            }
         }
         const chance = this.data.meta.settings.suddenChance * (this.mods().suddenMul ?? 1);
         if (this.run.season > 1 && this.rng.chance(chance)) {

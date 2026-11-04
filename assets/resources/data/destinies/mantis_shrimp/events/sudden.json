@@ -93,5 +93,6 @@
       { "text": "抱住它", "effect": { "item": "dragon_scale" }, "result": "鳞片是温的。你听见很深很深的地方，有谁叹了口气。" },
       { "text": "让它漂走", "effect": { "灵性": 4 }, "result": "它漂走了。你觉得以后还会见到它的主人。" }
     ]
-  }
+  },
+  {"id": "x_glow_shell", "dir": "any", "sudden": true, "gold": true, "stage": [0, 99], "weight": 1, "once": true, "text": "潮水退下去，石缝里留下一枚会发光的小贝壳，一闪一闪，像在叫你。", "choices": [{"text": "一拳敲开", "effect": {"拳力": 1, "海灵": 6}, "result": "贝壳裂开，一股暖流顺着你的钳子钻进了身体。"}, {"text": "背回洞里", "effect": {"灵性": 2, "体力": 2}, "result": "你把它摆在洞口。往后的夜里，洞里都是亮的。"}]}
 ]
