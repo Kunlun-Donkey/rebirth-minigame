@@ -10,6 +10,8 @@ import { button, chip, onTap, sizeOf, text, COLOR } from '../ui/kit';
 import { soundToggle } from './draft';
 import { showList } from './popups';
 import { titleBase } from './splash';
+import { showRank } from './rank';
+import { CONFIG } from '../config';
 
 const SEASONS = ['春', '夏', '秋', '冬'];
 
@@ -62,9 +64,12 @@ export function showMenu(g: Game): void {
     const st = soundToggle(g, root, 0, y);
     const cx = chip(root, '▣ 图鉴墙', 0, y, COLOR.legacy, true, 22);
     onTap(cx, () => g.goCodex());
-    const rowW = sizeOf(st).w + 24 + sizeOf(cx).w;
+    const rk = CONFIG.rankEnabled ? chip(root, '♛ 好友榜', 0, y, COLOR.legacy, true, 22) : null;
+    if (rk) onTap(rk, () => showRank(g));
+    const rowW = sizeOf(st).w + 24 + sizeOf(cx).w + (rk ? 24 + sizeOf(rk).w : 0);
     st.setPosition((g.W - rowW) / 2, -y, 0);
     cx.setPosition((g.W - rowW) / 2 + sizeOf(st).w + 24, -y, 0);
+    rk?.setPosition((g.W - rowW) / 2 + sizeOf(st).w + 24 + sizeOf(cx).w + 24, -y, 0);
     if (y + 60 > bottom) console.warn('[menu] 按钮区域超出，压到了健康游戏忠告');
     text(root, `轮回点 ${g.save.profile.points}`, 0, y + 56, g.W, { size: 22, color: COLOR.ink2, align: 'center' });
 }

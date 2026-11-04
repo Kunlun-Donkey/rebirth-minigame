@@ -691,4 +691,27 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         await start();
         expect(labels(g.overlay).some(l => l.includes('【怎么玩】'))).toBe(false);
     });
+
+    it('好友榜：开关打开后主菜单出现入口，弹窗可打开关闭；默认关闭不显示', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        expect(labels(g.screen).some(l => l.includes('好友榜'))).toBe(false);
+        CONFIG.rankEnabled = true;
+        try {
+            g.goMenu();
+            const root = g.screen.parent!;
+            const rk = tappables(g.screen).find(n => labels(n).some(l => l.includes('好友榜')))!;
+            expect(rk).toBeTruthy();
+            expect(absTop(rk, root) + heightOf(rk)).toBeLessThanOrEqual(g.H);
+            rk.emit(Node.EventType.TOUCH_START); rk.emit(Node.EventType.TOUCH_END);
+            expect(labels(g.overlay).some(l => l.includes('好友轮回榜'))).toBe(true);
+            const c = tappables(g.overlay).find(n => labels(n).some(l => l.includes('关')))!;
+            c.emit(Node.EventType.TOUCH_START); c.emit(Node.EventType.TOUCH_END);
+            expect(g.overlay.children.filter(n => n.isValid).length).toBe(0);
+        } finally {
+            CONFIG.rankEnabled = false;
+        }
+    });
 });

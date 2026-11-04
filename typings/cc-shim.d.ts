@@ -76,6 +76,8 @@ declare module 'cc' {
     }
     export const director: Director;
     export class BlockInputEvents extends Component {}
+    /** 显示开放数据域 sharedCanvas（微信好友排行榜） */
+    export class SubContextView extends Component {}
 
     export class Label extends Component {
         static Overflow: { NONE: number; CLAMP: number; SHRINK: number; RESIZE_HEIGHT: number };

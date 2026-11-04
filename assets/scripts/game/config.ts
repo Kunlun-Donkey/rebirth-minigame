@@ -21,6 +21,11 @@ export const CONFIG = {
     safeTop: 96,
     /** 适龄提示（须与公众平台「基础设置 → 适龄提示」一致） */
     ageRating: 16,
+    /**
+     * 好友排行榜（开放数据域）。构建面板配好「开放数据域代码目录 = openDataContext」、
+     * 在微信开发者工具里验证能显示后改为 true（步骤见 docs/dev/rank-setup.md）。
+     */
+    rankEnabled: false,
     /** 启动页（健康游戏忠告 + 适龄提示）最短显示毫秒数 */
     splashMs: 2000,
 };

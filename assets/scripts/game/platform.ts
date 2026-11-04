@@ -117,6 +117,12 @@ export const Platform = {
         });
     },
 
+    /** 给开放数据域发消息（好友排行榜：{ type: 'rank' } 显示 / { type: 'close' } 清空） */
+    postToRank(msg: { type: 'rank' | 'close' }): void {
+        if (!isWx() || !wx.getOpenDataContext) return;
+        try { wx.getOpenDataContext().postMessage(msg); } catch (e) { console.warn('[platform] 开放数据域不可用', e); }
+    },
+
     /** 右上角菜单的被动分享 + 朋友圈（每次分享时取当前命格的文案与分享卡） */
     setupPassiveShare(get: () => { title: string; imageUrl?: string }): void {
         if (!isWx()) return;

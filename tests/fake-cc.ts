@@ -87,6 +87,7 @@ export class Director {
 }
 export const director = new Director();
 export class BlockInputEvents extends Component {}
+export class SubContextView extends Component {}
 export class Label extends Component {
     static Overflow = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     static HorizontalAlign = { LEFT: 0, CENTER: 1, RIGHT: 2 };
