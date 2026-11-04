@@ -29,10 +29,10 @@
     },
     {
       "id": "poster", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 14,
-      "text": "茶水间里，同事在传一张开业海报：年卡九百九，前一百名送私教。底下印着阿凯的笑脸。",
+      "text": "楼下新开了家健身房，门口贴着海报：年卡九百九，前一百名送私教。底下印着阿凯的笑脸。",
       "choices": [
         { "text": "拼团办张卡", "effect": { "身价": -3, "人脉": 1, "state": "member", "follow": { "id": "pitch", "delay": 1 } },
-          "result": "全组拼了八张卡。第二天，阿凯加了你们每一个人的微信。" },
+          "result": "你拉着几个熟人拼了八张卡。第二天，阿凯加了你们每一个人的微信。" },
         { "text": "先去看看", "effect": { "精力": -1, "follow": { "id": "pitch", "delay": 1 } },
           "result": "健身房很新，镜子很亮。阿凯从镜子里认出了你：哥，又见面了。" },
         { "text": "前世被骗光过", "require": "legacy:scam_radar>=1",
@@ -110,7 +110,7 @@
       "id": "join_me", "dir": "any", "chainOnly": true, "teaser": "阿凯想拉你入行", "require": "line:gym_coach.fit | line:gym_coach.member",
       "text": "阿凯想自己开工作室，缺个搭档：哥，你会说话，又练出来了，考个证跟我干吧。",
       "choices": [
-        { "text": "下班去考证", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+        { "text": "抽空去考证", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
           "effect": { "能力": 2, "身价": 6, "state": "coach", "follow": { "id": "first_client", "delay": 2 } },
           "result": "你拿到证那天，阿凯给你买了件印着「私教」的T恤。小了一号。",
           "fail": { "effect": { "精力": -1 }, "result": "理论课你睡着了三次。考官说：下回再来。" } },
@@ -127,15 +127,15 @@
     },
     {
       "id": "first_client", "dir": "any", "chainOnly": true, "teaser": "你的第一个学员来了", "require": "line:gym_coach.coach",
-      "text": "第一个学员是隔壁工位的同事，腰不好，最怕被推销。她说：我只想系鞋带不用扶墙。",
+      "text": "第一个学员是你的老熟人，腰不好，最怕被推销。她说：我只想系鞋带不用扶墙。",
       "choices": [
         { "text": "免费教她三招", "effect": { "人脉": 3, "心态": 1 },
-          "result": "两周后，她系鞋带不用扶墙了。第三周，她把全组都拉了过来。" },
+          "result": "两周后，她系鞋带不用扶墙了。第三周，她把一帮朋友都拉了过来。" },
         { "text": "照阿凯的话术推课", "effect": { "身价": 6, "心态": -1 },
           "result": "她签了。走的时候她看你的眼神，跟你当年看阿凯一模一样。" },
-        { "text": "开个午休工位操", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+        { "text": "开个午间腰椎操", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
           "effect": { "身价": 12, "人脉": 2, "能力": 1 },
-          "result": "午休十五分钟，全楼都在你这儿扭腰。行政部给你发了张锦旗。",
+          "result": "午间十五分钟，半条街的人都在你这儿扭腰。街道办给你送了张锦旗。",
           "fail": { "effect": { "心态": -1, "人脉": 1 }, "result": "第一天来了三个人，两个是来蹭空调的。" } }
       ]
     }

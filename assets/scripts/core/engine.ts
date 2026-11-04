@@ -745,7 +745,7 @@ export class Engine {
         const r = this.run;
         const out: string[] = [];
         // 恩怨在结算页和分享卡上单独列出，这里不重复
-        for (const l of this.lineViews()) if (l.state) out.push(`${l.name}那段，${l.state}`);
+        for (const l of this.lineViews()) if (l.state) out.push(`${l.name}这条路，走到了「${l.state}」`);
         const dirs = (['up', 'down', 'side'] as Dir[]).filter(d => r.maxPos[d] > 0).sort((a, b) => r.maxPos[b] - r.maxPos[a]);
         if (dirs.length) out.push(`去过最远的地方，是${this.layerName(dirs[0], r.maxPos[dirs[0]])}`);
         const item = r.items[r.items.length - 1];

@@ -47,20 +47,20 @@
     },
     {
       "id": "summer_office", "dir": "any", "chainOnly": true, "teaser": "豆豆说想看你上班", "require": "line:parenting.babysit",
-      "text": "表姐临时有事，你只好带豆豆去上班。开会时他举起手问你领导：叔叔，「抓手」是什么手？",
+      "text": "表姐临时有事，你只好带豆豆一起去干活。来了个谈生意的，豆豆举手问：叔叔，「抓手」是什么手？",
       "choices": [
         { "text": "赶紧捂住他的嘴", "effect": { "脸皮": 1, "follow": { "id": "farewell", "delay": 2 } },
-          "result": "领导笑着说童言无忌。散会后，他把「抓手」从材料里删了。" },
+          "result": "那人笑着说童言无忌。后来再见你，他再也没说过「抓手」。" },
         { "text": "让他接着问", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.06,
           "effect": { "人脉": 2, "心态": 1, "feud": "领导被八岁小孩问住了", "follow": { "id": "farewell", "delay": 2 } },
-          "result": "领导解释了十分钟，越说越乱，宣布散会。全组提前下了班。",
-          "fail": { "effect": { "精力": -1, "follow": { "id": "farewell", "delay": 2 } }, "result": "领导认真讲了半小时。豆豆听睡着了，你背着他回的家。" } },
+          "result": "那人解释了十分钟，越说越乱，干脆把单子签了。你提前收了工。",
+          "fail": { "effect": { "精力": -1, "follow": { "id": "farewell", "delay": 2 } }, "result": "那人认真讲了半小时。豆豆听睡着了，你背着他回的家。" } },
         { "text": "带他下楼吃冰棍", "effect": { "精力": 1, "心态": 1, "follow": { "id": "farewell", "delay": 2 } },
-          "result": "你们坐在台阶上，一人一根。豆豆说：上班也没那么难嘛。" },
-        { "text": "让豆豆替你汇报", "absurd": true, "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
+          "result": "你们坐在台阶上，一人一根。豆豆说：干活也没那么难嘛。" },
+        { "text": "让豆豆替你谈", "absurd": true, "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
           "effect": { "身价": 6, "人脉": 2, "follow": { "id": "farewell", "delay": 2 } },
-          "result": "豆豆讲得比你清楚。领导问：这孩子谁带出来的？所有人都看向你。",
-          "fail": { "effect": { "心态": 1, "follow": { "id": "farewell", "delay": 2 } }, "result": "他讲到一半要上厕所。会议延期，全组都很感谢他。" } }
+          "result": "豆豆讲得比你清楚。那人问：这孩子谁带出来的？旁边的人都看向你。",
+          "fail": { "effect": { "心态": 1, "follow": { "id": "farewell", "delay": 2 } }, "result": "他讲到一半要上厕所。那人笑着说：改天再谈，孩子要紧。" } }
       ]
     },
     {

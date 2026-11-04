@@ -19,7 +19,7 @@
     },
     {
       "id": "noon", "dir": "any", "chainOnly": true, "teaser": "阿强又来送外卖了", "require": "line:rider_aqiang",
-      "text": "又是阿强。他把外卖递给你，压低声音：哥，你们公司楼下那家快餐，后厨不太干净，换一家吧。",
+      "text": "又是阿强。他把外卖递给你，压低声音：哥，你楼下那家快餐，后厨不太干净，换一家吧。",
       "choices": [
         { "text": "听他的", "effect": { "state": "friend", "精力": 2, "follow": { "id": "rainstorm", "delay": 2, "ttl": 6 } }, "result": "你换了家小馆子。从那以后，你再没拉过肚子。" },
         { "text": "问他还知道啥", "effect": { "state": "friend", "人脉": 2, "follow": { "id": "rainstorm", "delay": 2, "ttl": 6 } }, "result": "他知道哪个老板拖欠工资，哪个前台人好，哪栋楼要拆。他是这座城的地图。" },
@@ -30,7 +30,7 @@
     },
     {
       "id": "rainstorm", "dir": "any", "chainOnly": true, "teaser": "暴雨，阿强摔了一跤", "require": "line:rider_aqiang.friend",
-      "text": "暴雨天。阿强在你们公司门口摔了一跤，电动车倒在水里，餐洒了一地。他一边捡一边说：没事，没事。",
+      "text": "暴雨天。阿强在你门口摔了一跤，电动车倒在水里，餐洒了一地。他一边捡一边说：没事，没事。",
       "choices": [
         { "text": "冲下去扶他", "effect": { "人脉": 2, "心态": 1, "精力": -1, "follow": { "id": "ride_along", "delay": 3, "ttl": 8 } }, "result": "你帮他把车推到了屋檐下。他的膝盖破了，他先看的是餐盒。" },
         { "text": "帮他把这单赔了", "effect": { "身价": -2, "人脉": 3, "follow": { "id": "ride_along", "delay": 3, "ttl": 8 } }, "result": "你给客人打了电话，说明情况，自己付了钱。阿强红着眼睛说：哥，这个我记一辈子。" },
