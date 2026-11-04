@@ -48,6 +48,8 @@ const REPEAT_WEIGHT = 0.12;
 /** 新鲜感：任何一世都没见过的事件加权；上一世刚见过的降权（避免连着两世剧情雷同） */
 export const NOVEL_WEIGHT = 2.5;
 export const RECENT_WEIGHT = 0.5;
+/** 事件里的恩怨都已了结过：权重系数 */
+export const SETTLED_WEIGHT = 0.3;
 /** 天胡保底：本命格连续这么多世没成为天命之子后，每世概率再加 BLESSED_PITY_STEP */
 export const BLESSED_PITY_AFTER = 12;
 export const BLESSED_PITY_STEP = 0.004;
@@ -1069,8 +1071,22 @@ export class Engine {
         // 同一世已经遇到过的事件降权，减少重复；从没见过的加权、上一世刚见过的降权，每一世都有新东西
         const ever = new Set(this.dp.codex.events);
         const recent = new Set(this.dp.recent ?? []);
-        return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1)
+        // 恩怨已经了结过的事件（如宿敌再遇）少出现：账算清了，就别天天来
+        const settled = new Set(this.dp.codex.feuds ?? []);
+        const done = (e: GameEvent) => { const f = this.eventFeuds(e); return f.length > 0 && f.every(x => settled.has(x)); };
+        return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1) * (done(e) ? SETTLED_WEIGHT : 1)
             * (r.seen.includes(e.id) ? REPEAT_WEIGHT : !ever.has(e.id) ? NOVEL_WEIGHT : recent.has(e.id) ? RECENT_WEIGHT : 1));
+    }
+
+    /** 事件里能了结的恩怨（缓存） */
+    private feudCache = new Map<string, string[]>();
+    private eventFeuds(e: GameEvent): string[] {
+        let f = this.feudCache.get(e.id);
+        if (!f) {
+            f = [...new Set(e.choices.flatMap(c => [c.success, c.fail].flatMap(o => o?.effect.feuds ?? [])))];
+            this.feudCache.set(e.id, f);
+        }
+        return f;
     }
 
     /** 事件限定的职业与本世职业相符（未限定 = 都行） */
