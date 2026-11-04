@@ -55,6 +55,8 @@ export const SETTLED_WEIGHT = 0.3;
 /** 天胡保底：本命格连续这么多世没成为天命之子后，每世概率再加 BLESSED_PITY_STEP */
 export const BLESSED_PITY_AFTER = 12;
 export const BLESSED_PITY_STEP = 0.004;
+/** 头一回天胡：本命格还从没当过天命之子时，按已轮回世数抬高概率，第 10 世之前必定尝到一次 */
+export const BLESSED_FIRST_TASTE: Record<number, number> = { 4: 0.08, 5: 0.12, 6: 0.18, 7: 0.25, 8: 0.4, 9: 1 };
 
 export class Engine {
     run!: RunState;
@@ -228,8 +230,11 @@ export class Engine {
         const add = [...this.data.upgrades.values()].filter(u => u.kind === 'blessed')
             .reduce((n, u) => n + this.upgradeLevel(u.id) * (u.value ?? 0.005), 0);
         // 保底：久不天胡，天道也会心软
-        const pity = Math.max(0, (this.dp.blessedDry ?? 0) - BLESSED_PITY_AFTER) * BLESSED_PITY_STEP;
-        return Math.min(1, B.chance * (this.mods().blessedMul ?? 1) + add + pity);
+        const dry = this.dp.blessedDry ?? 0;
+        const pity = Math.max(0, dry - BLESSED_PITY_AFTER) * BLESSED_PITY_STEP;
+        // blessedDry 从第一世起每世 +1、当上即清零：等于已轮回世数说明这个命格还没天胡过
+        const first = B.chance > 0 && dry === this.dp.lives ? BLESSED_FIRST_TASTE[this.dp.lives] ?? 0 : 0;
+        return Math.min(1, Math.max(first, B.chance * (this.mods().blessedMul ?? 1) + add + pity));
     }
 
     /** 从中途存档恢复（run 来自 JSON.parse(JSON.stringify(engine.run))） */

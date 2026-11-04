@@ -550,6 +550,17 @@ describe('天胡通道', () => {
         expect(e.dp.codex.tianhu).toBe(1);
     });
 
+    it('头一回天胡：本命格从没当过天命之子，第 10 世之前必定当一次；当过之后回到正常概率', () => {
+        const e = new Engine(buildDestiny(blessedFixture(0.01)), createProfile());
+        e.startRun(pick, 1);
+        e.dp.lives = 9; e.dp.blessedDry = 9;
+        expect(e.blessedChance()).toBe(1);
+        e.dp.blessedDry = 3;
+        expect(e.blessedChance()).toBeCloseTo(0.01);
+        e.dp.lives = 2; e.dp.blessedDry = 2;
+        expect(e.blessedChance()).toBeCloseTo(0.01);
+    });
+
     it('概率为 0 时不会触发；寿元按 lifespanMul 加倍', () => {
         const e = new Engine(buildDestiny(blessedFixture(0)), createProfile());
         e.startRun(pick, 1);
