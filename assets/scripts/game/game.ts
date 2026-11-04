@@ -174,6 +174,22 @@ export class Game {
         return !!c && c.d === id && !c.done;
     }
 
+    /** 新手引导：整个存档的第一世，开局弹窗末尾讲三句怎么玩（只讲一次） */
+    private guideLines(): string[] {
+        if (this.save.guided) return [];
+        this.save.guided = true;
+        this.persist();
+        const R = this.data.meta.rules;
+        const life = this.data.attrNames[R.life] ?? R.life;
+        const dirs = this.data.dirs.map(d => `「${d.name}」`).join('');
+        return [
+            '', '【怎么玩】',
+            `· 每一季选一个方向：${dirs}，走得越远遇到的事越大。`,
+            `· ${life}归零就会死。怎么死的，决定下一世带着什么传承。`,
+            '· 选项旁标着「前世」的，是你上辈子走过的路。死了不亏，下一世更强。',
+        ];
+    }
+
     /** 随缘投胎：今天的免费次数还在吗 */
     canFreeSpin(): boolean {
         return this.save.spinDay !== todayKey();
@@ -315,7 +331,7 @@ export class Game {
         const remark = this.engine.startRemark();
         // 认主的系统开局自动绑定：跟在开局说明后面提一句
         const sys = this.data.companions.get(this.engine.systemId() ?? '');
-        const sysLine = sys ? ['', `【叮！】${sys.name}已自动绑定，继续为宿主服务。`] : [];
+        const sysLine = [...(sys ? ['', `【叮！】${sys.name}已自动绑定，继续为宿主服务。`] : []), ...this.guideLines()];
         if (this.engine.run.blessed && B) {
             // 天命之子：金色开局（天胡通道）
             Platform.report('blessed', { life: this.engine.run.life });

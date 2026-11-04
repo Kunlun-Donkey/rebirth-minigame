@@ -31,6 +31,8 @@ export const DAILY_FIRST_BONUS = 0.5;
 export const SPIN_BONUS = 0.3;
 /** 本命格第一世：到这一季还没遇到过金色奇遇，就保底来一次（给第一世一个高光） */
 export const FIRST_GOLD_SEASON = 4;
+/** 世数里程碑：本命格第 N 世开局，天道赏成长货币（开局弹窗里随天道台词一起说） */
+export const MILESTONE_GIFT: Record<number, number> = { 10: 8, 30: 15, 66: 30, 99: 50 };
 const EMPTY_EFFECT: Effect = { attrs: {}, flags: [], unflags: [], items: [], loseItems: [], skills: [], follows: [], feuds: [], states: [] };
 /** 连胜几次起「势如破竹」，以及单次奖励上限 */
 const STREAK_MIN = 3;
@@ -182,6 +184,11 @@ export class Engine {
         const R = d.meta.rules;
         this.run.attrs[R.life] = this.run.attrs[R.lifeMax];
         this.run.log.push(`第${this.run.life}世，${map?.startLog ?? R.startLog}`);
+        const gift = MILESTONE_GIFT[this.run.life];
+        if (gift) {
+            this.run.attrs[R.growth] = (this.run.attrs[R.growth] ?? 0) + gift;
+            this.run.log.push(`第${this.run.life}世，天道赏了 ${gift} 点${d.attrNames[R.growth] ?? R.growth}。`);
+        }
         this.startSeason();
     }
 
@@ -402,7 +409,10 @@ export class Engine {
     /** 开局天道（只在特定世数说话） */
     startRemark(): string | undefined {
         const t = TIANDAO_START[this.run.life];
-        return t ? fill(t, { name: this.data.meta.name }) : undefined;
+        if (!t) return undefined;
+        const gift = MILESTONE_GIFT[this.run.life];
+        const R = this.data.meta.rules;
+        return fill(t, { name: this.data.meta.name }) + (gift ? `（赏：${this.data.attrNames[R.growth] ?? R.growth} +${gift}）` : '');
     }
 
     /** 弹幕池（{name} 已替换） */

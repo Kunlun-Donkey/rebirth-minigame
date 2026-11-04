@@ -667,4 +667,28 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         expect(g.data.meta.id).not.toBe('crocodile');
         expect(screenName(g)).toBe('draft');
     });
+
+    it('新手引导：整个存档第一世开局讲一次怎么玩，之后不再出现', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
+        const start = async () => {
+            g.goDraft();
+            await flush();
+            for (let i = 0; i < 3 && !tappables(g.screen).some(n => labels(n).some(l => l.includes('重   生'))); i++) {
+                tapNode(tappables(g.screen).find(n => n.name.startsWith('card_'))!);
+                await flush();
+            }
+            tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('重   生')))!);
+            for (let i = 0; i < 5; i++) await flush();
+        };
+        await start();
+        expect(labels(g.overlay).some(l => l.includes('【怎么玩】'))).toBe(true);
+        g.overlay.destroyAllChildren();
+        g.abandonRun();
+        await start();
+        expect(labels(g.overlay).some(l => l.includes('【怎么玩】'))).toBe(false);
+    });
 });

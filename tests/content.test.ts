@@ -122,3 +122,23 @@ describe('第一世高光', () => {
         }
     });
 });
+
+describe('世数里程碑', () => {
+    it('第 10 世开局：天道赏成长货币，开局台词里写明', () => {
+        const d = buildDestiny(loadRawDestiny('desert_grass').raw);
+        const run = (lives: number) => {
+            const p = createProfile();
+            destinyProfile(p, 'desert_grass').lives = lives;
+            const e = new Engine(d, p);
+            const dr = e.rollDraft(1);
+            e.startRun({ talent: dr.talents[0], item: dr.items[0], companion: dr.companions[0] }, 1);
+            return e;
+        };
+        const g = d.meta.rules.growth;
+        const e9 = run(8), e10 = run(9);
+        expect(e10.run.life).toBe(10);
+        expect(e10.run.attrs[g] - e9.run.attrs[g]).toBe(8);
+        expect(e10.startRemark()).toContain('+8');
+        expect(e9.startRemark()).toBeUndefined();
+    });
+});

@@ -22,8 +22,8 @@ export interface SaveData {
     spinBonus: string | null;
     /** 好友分享过来的挑战（点「我也投一次胎」后记下，结算时对比） */
     challenge: (ShareLife & { done?: boolean; at?: number }) | null;
-    /** 上次领分享奖励的日期（每天首次分享奖励轮回点） */
-    shareDay: string;
+    /** 新手引导已讲过 */
+    guided: boolean;
 }
 
 export function loadSave(): SaveData {
@@ -41,13 +41,14 @@ export function loadSave(): SaveData {
                 spinDay: d.spinDay ?? '',
                 spinBonus: d.spinBonus ?? null,
                 challenge: d.challenge ?? null,
-                shareDay: d.shareDay ?? '',
+                // 老存档（已玩过）视为讲过
+                guided: d.guided ?? !!d.profile?.lives,
             };
         } catch (e) {
             console.warn('[save] 存档损坏，已重置', e);
         }
     }
-    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false, spinDay: '', spinBonus: null, challenge: null, shareDay: '' };
+    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false, spinDay: '', spinBonus: null, challenge: null, guided: false };
 }
 
 export function writeSave(d: SaveData): void {
