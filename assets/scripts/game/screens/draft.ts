@@ -3,7 +3,7 @@
  * 顶部：命盘（花轮回点永久升级）、今日天命（可看视频换一次）
  */
 import { Label, Node } from 'cc';
-import { destinyStates, DraftPick, randomSeed, Rarity } from '../../core';
+import { BLESSED_PITY_AFTER, destinyStates, DraftPick, randomSeed, Rarity } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
@@ -197,20 +197,25 @@ function header(g: Game, root: Node, rerender: () => void): void {
     if (multi) onTap(nameN, () => g.goDestinySelect());
     const legacies = Object.entries(dp.legacy).map(([id, lv]) => `${e.data.legacies.get(id)?.name ?? id} Lv${lv}`);
     const kept = dp.keptSystem ? e.data.companions.get(dp.keptSystem) : undefined;
+    // 天胡保底起效后提示一句（让玩家知道「快轮到我了」）
+    const B = e.data.meta.blessed;
+    const lucky = !!B && (dp.blessedDry ?? 0) > BLESSED_PITY_AFTER;
     const line2 = [
         legacies.length ? `传承 ${legacies.length}` : '尚无传承',
         `技能 ${dp.skills.length}/${e.data.skills.size}`,
         kept ? `系统·${kept.name}` : '',
+        lucky ? '天道心软·天胡↑' : '',
         dp.sealed.length ? `封存：${dp.sealed.map(i => e.itemName(i)).join('、')}` : '',
     ].filter(Boolean).join('  ·  ');
-    const info = text(root, clampText(line2, g.W - 60, 24, 34, 34), 30, CONFIG.safeTop + 140, g.W - 60, { size: 24, color: COLOR.ochre, align: 'center' });
-    if (legacies.length || kept) {
+    const info = text(root, clampText(line2, g.W - 60, 24, 34, 34), 30, CONFIG.safeTop + 140, g.W - 60, { size: 24, color: lucky ? COLOR.legacy : COLOR.ochre, align: 'center' });
+    if (legacies.length || kept || lucky) {
         onTap(info, () => showInfo(g, '带进这一世的', [
             ...Object.entries(dp.legacy).map(([id, lv]) => {
                 const l = e.data.legacies.get(id);
                 return `${l?.name ?? id}  Lv${lv}/${l?.max ?? '?'}\n${l?.desc ?? ''}`;
             }),
             ...(kept ? [`【系统·${kept.name}】已认主，每一世开局自动绑定\n${kept.desc}`] : []),
+            ...(lucky ? [`【天道心软】你已经 ${dp.blessedDry} 世没当上${B!.name}了。这一世开局成为${B!.name}的概率：${(e.blessedChance() * 100).toFixed(1)}%，每多等一世还会再高一点。`] : []),
         ]), false);
     }
 }
