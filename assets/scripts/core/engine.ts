@@ -763,7 +763,8 @@ export class Engine {
         // 恩怨在结算页和分享卡上单独列出，这里不重复
         for (const l of this.lineViews()) if (l.state) out.push(`${l.name}这条路，走到了「${l.state}」`);
         const dirs = (['up', 'down', 'side'] as Dir[]).filter(d => r.maxPos[d] > 0).sort((a, b) => r.maxPos[b] - r.maxPos[a]);
-        if (dirs.length) out.push(`去过最远的地方，是${this.layerName(dirs[0], r.maxPos[dirs[0]])}`);
+        // 只走了一层不算「远」（第 5 季饿死在农家小院，说「最远是农家小院」反而像挖苦）
+        if (dirs.length && r.maxPos[dirs[0]] >= 2) out.push(`去过最远的地方，是${this.layerName(dirs[0], r.maxPos[dirs[0]])}`);
         const item = r.items[r.items.length - 1];
         if (item) out.push(`陪到最后的，是${this.itemName(item)}`);
         const mate = r.companions.map(id => this.data.companions.get(id)).find(c => c && !c.system);
