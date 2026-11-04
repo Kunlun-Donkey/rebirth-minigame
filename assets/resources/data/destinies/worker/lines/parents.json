@@ -108,18 +108,18 @@
         { "text": "还是回城里", "effect": { "item": "bacon", "能力": 1, "state": "close" },
           "result": "你又买了回城的票。老妈往你包里塞了两斤腊肉。" },
         { "text": "直播卖土特产", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
-          "effect": { "身价": 12, "人脉": 2, "follow": { "id": "shop_again", "delay": 2, "ttl": 10 } },
+          "effect": { "身价": 12, "人脉": 2 },
           "result": "你吆喝了一晚上，卖了两百斤腊肉。老妈连夜去村里收货。",
-          "fail": { "effect": { "心态": 1, "follow": { "id": "shop_again", "delay": 4, "ttl": 10 } }, "result": "直播间来了三个人，都是你家亲戚。老妈下单了五斤。" } }
+          "fail": { "effect": { "心态": 1 }, "result": "直播间来了三个人，都是你家亲戚。老妈下单了五斤。" } }
       ]
     },
     {
       "id": "shop_again", "dir": "any", "chainOnly": true, "teaser": "街口那间铺子还空着", "require": "line:parents.home",
       "text": "周末路过街口，那间铺子还空着。老爸说，他老同学一直给你留着，没租给别人。",
       "choices": [
-        { "text": "盘下来", "require": "stage>=3 & 心态>=30 & 人脉>=30", "effect": { "ending": "hometown_shop" },
+        { "text": "盘下来", "require": "stage>=4 & 心态>=30 & 人脉>=30", "effect": { "ending": "hometown_shop" },
           "result": "招牌挂上去那天，老爸站在马路对面看了很久，说：挂歪了。" },
-        { "text": "拉老同学合伙", "require": "stage>=3 & 人脉>=20", "chance": 0.2, "chanceAttr": "人脉", "chanceStep": 0.03,
+        { "text": "拉老同学合伙", "require": "stage>=4 & 人脉>=20", "chance": 0.12, "chanceAttr": "人脉", "chanceStep": 0.03,
           "effect": { "ending": "hometown_shop" },
           "result": "老同学出了一半房租，条件是每天来店里喝茶。老爸也来。",
           "fail": { "effect": { "心态": -1 }, "result": "老同学说考虑考虑，考虑到了年底。" } },

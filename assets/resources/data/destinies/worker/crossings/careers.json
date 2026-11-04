@@ -233,7 +233,7 @@
     "id": "x_shop_parents",
     "dir": "any",
     "once": true,
-    "weight": 14,
+    "weight": 6,
     "stage": [
       2,
       99
@@ -243,7 +243,7 @@
     "choices": [
       {
         "text": "回老家开",
-        "require": "stage>=3 & 心态>=20 & 人脉>=12",
+        "require": "stage>=4 & 心态>=20 & 人脉>=12",
         "effect": {
           "ending": "hometown_shop"
         },
