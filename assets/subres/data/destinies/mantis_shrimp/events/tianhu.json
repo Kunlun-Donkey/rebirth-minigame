@@ -15,7 +15,7 @@
     "choices": [
       {
         "text": "一拳收下",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -31,7 +31,12 @@
         "result": "珠子嵌进了你的钳子里，拳头沉了一倍。",
         "fail": {
           "effect": {
-            "海灵": 5
+            "海灵": 5,
+            "follow": {
+              "id": "g_tianhu_1",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "你一拳把它打碎了。可惜。"
         }
@@ -54,7 +59,7 @@
     "choices": [
       {
         "text": "跟它去",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -70,7 +75,12 @@
         "result": "你在龙宫喝了一口海神酿，全身的壳都在发烫。",
         "fail": {
           "effect": {
-            "海灵": 5
+            "海灵": 5,
+            "follow": {
+              "id": "g_tianhu_2",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "你半路被一群小鱼冲散了，没找着龙宫。"
         }
@@ -93,7 +103,7 @@
     "choices": [
       {
         "text": "全力出拳",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -105,7 +115,12 @@
         "result": "你一拳打出去，海面炸开一圈白浪。海神大笑。",
         "fail": {
           "effect": {
-            "海灵": 5
+            "海灵": 5,
+            "follow": {
+              "id": "g_tianhu_3",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "你一拳打空，被浪拍回了洞里。"
         }

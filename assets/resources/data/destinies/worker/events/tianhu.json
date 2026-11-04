@@ -1,35 +1,138 @@
 [
   {
-    "id": "g_tianhu_1", "dir": "any", "teaser": "路口有人掉了一张工牌", "sudden": true, "gold": true, "stage": [1, 2], "weight": 0.15, "once": true,
+    "id": "g_tianhu_1",
+    "dir": "any",
+    "teaser": "路口有人掉了一张工牌",
+    "sudden": true,
+    "gold": true,
+    "stage": [
+      1,
+      2
+    ],
+    "weight": 0.15,
+    "once": true,
     "text": "路口，一个穿旧夹克的老头掉了一张工牌。你捡起来，上面印着两个字：董事长。",
     "choices": [
-      { "text": "追上去还给他", "chance": 0.7, "chanceAttr": "心态", "chanceStep": 0.05,
-        "effect": { "stageUp": 1, "身价": 10, "人脉": 3, "follow": { "id": "g_tianhu_2", "delay": 1, "ttl": 6 } },
+      {
+        "text": "追上去还给他",
+        "chance": 0.8,
+        "chanceAttr": "心态",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "身价": 10,
+          "人脉": 3,
+          "follow": {
+            "id": "g_tianhu_2",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
         "result": "老头接过工牌，上下打量你：小伙子，干哪行的？",
-        "fail": { "effect": { "身价": 5 }, "result": "绿灯亮了，人潮一冲，你只来得及看见他的背影。" } },
-      { "text": "交给路边的保安", "effect": { "人脉": 1 }, "result": "保安看了一眼工牌，手抖了，敬了个礼。" }
+        "fail": {
+          "effect": {
+            "身价": 5,
+            "follow": {
+              "id": "g_tianhu_1",
+              "delay": 2,
+              "ttl": 6
+            }
+          },
+          "result": "绿灯亮了，人潮一冲，你只来得及看见他的背影。"
+        }
+      },
+      {
+        "text": "交给路边的保安",
+        "effect": {
+          "人脉": 1
+        },
+        "result": "保安看了一眼工牌，手抖了，敬了个礼。"
+      }
     ]
   },
   {
-    "id": "g_tianhu_2", "dir": "any", "teaser": "一个陌生号码打来", "chainOnly": true,
+    "id": "g_tianhu_2",
+    "dir": "any",
+    "teaser": "一个陌生号码打来",
+    "chainOnly": true,
     "text": "第二天，一个陌生号码打来：董事长请你去他公司顶楼喝茶。",
     "choices": [
-      { "text": "上去", "chance": 0.7, "chanceAttr": "心态", "chanceStep": 0.05,
-        "effect": { "stageUp": 1, "身价": 15, "能力": 3, "follow": { "id": "g_tianhu_3", "delay": 1, "ttl": 6 } },
+      {
+        "text": "上去",
+        "chance": 0.8,
+        "chanceAttr": "心态",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "身价": 15,
+          "能力": 3,
+          "follow": {
+            "id": "g_tianhu_3",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
         "result": "董事长问了你三个问题。你把前世十年想明白的事，说给了他听。",
-        "fail": { "effect": { "身价": 5 }, "result": "你紧张得说错了话。董事长笑了笑，让你先回去。" } },
-      { "text": "说自己在忙", "effect": { "能力": 1 }, "result": "你说你手上有活。董事长说：那下次吧。" }
+        "fail": {
+          "effect": {
+            "身价": 5,
+            "follow": {
+              "id": "g_tianhu_2",
+              "delay": 2,
+              "ttl": 6
+            }
+          },
+          "result": "你紧张得说错了话。董事长笑了笑，让你先回去。"
+        }
+      },
+      {
+        "text": "说自己在忙",
+        "effect": {
+          "能力": 1
+        },
+        "result": "你说你手上有活。董事长说：那下次吧。"
+      }
     ]
   },
   {
-    "id": "g_tianhu_3", "dir": "any", "teaser": "全员大会，董事长要宣布一件事", "chainOnly": true,
+    "id": "g_tianhu_3",
+    "dir": "any",
+    "teaser": "全员大会，董事长要宣布一件事",
+    "chainOnly": true,
     "text": "董事长请你去他公司的全员大会。他站在台上：我要宣布一个新的任命。全场的目光，都落在了你身上。",
     "choices": [
-      { "text": "站起来", "chance": 0.7, "chanceAttr": "心态", "chanceStep": 0.05,
-        "effect": { "stageUp": 2, "身价": 30, "人脉": 5, "flag": "tianhu", "feud": "老周在台下给你鼓掌" },
+      {
+        "text": "站起来",
+        "chance": 0.8,
+        "chanceAttr": "心态",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 2,
+          "身价": 30,
+          "人脉": 5,
+          "flag": "tianhu",
+          "feud": "老周在台下给你鼓掌"
+        },
         "result": "董事长念出了你的名字。台下，老周鼓掌鼓得最响。",
-        "fail": { "effect": { "身价": 8 }, "result": "董事长念的不是你。是他的孙子。你鼓了掌。" } },
-      { "text": "低头", "effect": { "心态": 1 }, "result": "你低下了头。有些位置，你还没准备好坐上去。" }
+        "fail": {
+          "effect": {
+            "身价": 8,
+            "follow": {
+              "id": "g_tianhu_3",
+              "delay": 2,
+              "ttl": 6
+            }
+          },
+          "result": "董事长念的不是你。是他的孙子。你鼓了掌。"
+        }
+      },
+      {
+        "text": "低头",
+        "effect": {
+          "心态": 1
+        },
+        "result": "你低下了头。有些位置，你还没准备好坐上去。"
+      }
     ]
   }
 ]

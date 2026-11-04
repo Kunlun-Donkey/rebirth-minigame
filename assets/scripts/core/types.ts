@@ -555,6 +555,10 @@ export interface DestinyProfile {
     keptSystem?: string;
     /** 之前各世干过的职业（条件 pastcareer:x） */
     careers?: string[];
+    /** 上一世遇到过的事件（抽事件时降权，避免连着两世雷同） */
+    recent?: string[];
+    /** 连续多少世没成为天命之子（天胡保底） */
+    blessedDry?: number;
     codex: { deaths: string[]; endings: string[]; items: string[]; events: string[]; tianhu?: number; feuds?: string[] };
     bestStage: number;
     /** 已解锁技能（技能图鉴） */

@@ -15,7 +15,7 @@
     "choices": [
       {
         "text": "喝下它",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -31,7 +31,12 @@
         "result": "甜得你打了个哆嗦。你的毛尖泛起了金光。",
         "fail": {
           "effect": {
-            "蜕变": 5
+            "蜕变": 5,
+            "follow": {
+              "id": "g_tianhu_1",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "露珠滚下了叶子，摔成了八瓣。"
         }
@@ -54,7 +59,7 @@
     "choices": [
       {
         "text": "顺着梦爬",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -70,7 +75,12 @@
         "result": "你闭着眼爬了一夜，醒来时在最高的那根枝上。",
         "fail": {
           "effect": {
-            "蜕变": 5
+            "蜕变": 5,
+            "follow": {
+              "id": "g_tianhu_2",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "你在梦里迷了路，醒来还在原地。"
         }
@@ -93,7 +103,7 @@
     "choices": [
       {
         "text": "结金茧",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -105,7 +115,12 @@
         "result": "茧里很暖。你听见自己在长翅膀。",
         "fail": {
           "effect": {
-            "蜕变": 5
+            "蜕变": 5,
+            "follow": {
+              "id": "g_tianhu_3",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "丝断了。蝶仙叹了口气，飞走了。"
         }

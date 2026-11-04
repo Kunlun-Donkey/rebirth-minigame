@@ -15,7 +15,7 @@
     "choices": [
       {
         "text": "叼起它",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -31,7 +31,12 @@
         "result": "你把月亮碎片叼回了窝。一夜没合眼。",
         "fail": {
           "effect": {
-            "妖气": 5
+            "妖气": 5,
+            "follow": {
+              "id": "g_tianhu_1",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "碎片化成了水，从你牙缝里流走了。"
         }
@@ -54,7 +59,7 @@
     "choices": [
       {
         "text": "跟它学吐纳",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -70,7 +75,12 @@
         "result": "它张嘴，你也张嘴。月光一口一口进了你的肚子。",
         "fail": {
           "effect": {
-            "妖气": 5
+            "妖气": 5,
+            "follow": {
+              "id": "g_tianhu_2",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "你学岔了气，咳了一宿。"
         }
@@ -93,7 +103,7 @@
     "choices": [
       {
         "text": "对月长啸回应",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -105,7 +115,12 @@
         "result": "你一声长啸，天上的狗应了你三声。",
         "fail": {
           "effect": {
-            "妖气": 5
+            "妖气": 5,
+            "follow": {
+              "id": "g_tianhu_3",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "你叫哑了嗓子，天上没有回音。"
         }

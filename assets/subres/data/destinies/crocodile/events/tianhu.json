@@ -1,35 +1,137 @@
 [
   {
-    "id": "g_tianhu_1", "dir": "any", "teaser": "河里漂来一颗发光的珠子", "sudden": true, "gold": true, "stage": [1, 2], "weight": 0.25, "once": true,
+    "id": "g_tianhu_1",
+    "dir": "any",
+    "teaser": "河里漂来一颗发光的珠子",
+    "sudden": true,
+    "gold": true,
+    "stage": [
+      1,
+      2
+    ],
+    "weight": 0.25,
+    "once": true,
     "text": "河里漂来一颗发光的珠子，不偏不倚，停在你嘴边。",
     "choices": [
-      { "text": "一口吞下", "chance": 0.7, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "stageUp": 1, "龙气": 10, "潜水": 3, "follow": { "id": "g_tianhu_2", "delay": 1, "ttl": 6 } },
+      {
+        "text": "一口吞下",
+        "chance": 0.8,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "龙气": 10,
+          "潜水": 3,
+          "follow": {
+            "id": "g_tianhu_2",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
         "result": "珠子滑进了肚子。你的鳞一片一片，亮了起来。",
-        "fail": { "effect": { "龙气": 5 }, "result": "珠子从你牙缝里溜了。可惜。" } },
-      { "text": "不贪", "effect": { "灵性": 1 }, "result": "你没动。有些东西，不是你的。" }
+        "fail": {
+          "effect": {
+            "龙气": 5,
+            "follow": {
+              "id": "g_tianhu_1",
+              "delay": 2,
+              "ttl": 6
+            }
+          },
+          "result": "珠子从你牙缝里溜了。可惜。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
     ]
   },
   {
-    "id": "g_tianhu_2", "dir": "any", "teaser": "老鳖在找你", "chainOnly": true,
+    "id": "g_tianhu_2",
+    "dir": "any",
+    "teaser": "老鳖在找你",
+    "chainOnly": true,
     "text": "一只老鳖游来，背上驮着一块石碑：河神请你走一趟。",
     "choices": [
-      { "text": "跟它去", "chance": 0.7, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "stageUp": 1, "龙气": 10, "晒背": 3, "follow": { "id": "g_tianhu_3", "delay": 1, "ttl": 6 } },
+      {
+        "text": "跟它去",
+        "chance": 0.8,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 1,
+          "龙气": 10,
+          "晒背": 3,
+          "follow": {
+            "id": "g_tianhu_3",
+            "delay": 1,
+            "ttl": 6
+          }
+        },
         "result": "河神请你喝了一口江心泉。你全身的鳞都在发烫。",
-        "fail": { "effect": { "龙气": 5 }, "result": "你半路被一群鱼冲散了，没找着河神。" } },
-      { "text": "不贪", "effect": { "灵性": 1 }, "result": "你没动。有些东西，不是你的。" }
+        "fail": {
+          "effect": {
+            "龙气": 5,
+            "follow": {
+              "id": "g_tianhu_2",
+              "delay": 2,
+              "ttl": 6
+            }
+          },
+          "result": "你半路被一群鱼冲散了，没找着河神。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
     ]
   },
   {
-    "id": "g_tianhu_3", "dir": "any", "teaser": "河神在江心石上等你", "chainOnly": true,
+    "id": "g_tianhu_3",
+    "dir": "any",
+    "teaser": "河神在江心石上等你",
+    "chainOnly": true,
     "text": "河神坐在江心石上：听说有条鳄鱼想化龙？来，冲我张一次嘴。",
     "choices": [
-      { "text": "张开大嘴", "chance": 0.7, "chanceAttr": "灵性", "chanceStep": 0.05,
-        "effect": { "stageUp": 2, "龙气": 20, "咬合": 3, "flag": "tianhu" },
+      {
+        "text": "张开大嘴",
+        "chance": 0.8,
+        "chanceAttr": "灵性",
+        "chanceStep": 0.05,
+        "effect": {
+          "stageUp": 2,
+          "龙气": 20,
+          "咬合": 3,
+          "flag": "tianhu"
+        },
         "result": "你张开嘴，江面裂开一道白浪。河神大笑：好一张龙口。",
-        "fail": { "effect": { "龙气": 5 }, "result": "你一张嘴，打了个哈欠。河神叹了口气。" } },
-      { "text": "不贪", "effect": { "灵性": 1 }, "result": "你没动。有些东西，不是你的。" }
+        "fail": {
+          "effect": {
+            "龙气": 5,
+            "follow": {
+              "id": "g_tianhu_3",
+              "delay": 2,
+              "ttl": 6
+            }
+          },
+          "result": "你一张嘴，打了个哈欠。河神叹了口气。"
+        }
+      },
+      {
+        "text": "不贪",
+        "effect": {
+          "灵性": 1
+        },
+        "result": "你没动。有些东西，不是你的。"
+      }
     ]
   }
 ]

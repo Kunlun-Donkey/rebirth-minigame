@@ -44,7 +44,13 @@ const TIANDAO_BREAK_CHANCE = 0.5;
 /** 有成功率的选项成功后，再判定一次大成功（属性收益翻倍） */
 export const CRIT_CHANCE = 0.15;
 /** 同一世已遇到过的（非 once）事件再次抽中的权重系数 */
-const REPEAT_WEIGHT = 0.25;
+const REPEAT_WEIGHT = 0.12;
+/** 新鲜感：任何一世都没见过的事件加权；上一世刚见过的降权（避免连着两世剧情雷同） */
+export const NOVEL_WEIGHT = 2.5;
+export const RECENT_WEIGHT = 0.5;
+/** 天胡保底：本命格连续这么多世没成为天命之子后，每世概率再加 BLESSED_PITY_STEP */
+export const BLESSED_PITY_AFTER = 12;
+export const BLESSED_PITY_STEP = 0.004;
 
 export class Engine {
     run!: RunState;
@@ -217,7 +223,9 @@ export class Engine {
         if (!B) return 0;
         const add = [...this.data.upgrades.values()].filter(u => u.kind === 'blessed')
             .reduce((n, u) => n + this.upgradeLevel(u.id) * (u.value ?? 0.005), 0);
-        return Math.min(1, B.chance * (this.mods().blessedMul ?? 1) + add);
+        // 保底：久不天胡，天道也会心软
+        const pity = Math.max(0, (this.dp.blessedDry ?? 0) - BLESSED_PITY_AFTER) * BLESSED_PITY_STEP;
+        return Math.min(1, B.chance * (this.mods().blessedMul ?? 1) + add + pity);
     }
 
     /** 从中途存档恢复（run 来自 JSON.parse(JSON.stringify(engine.run))） */
@@ -635,6 +643,8 @@ export class Engine {
         for (const it of this.run.found) addUnique(dp.codex.items, it);
         for (const c of this.run.careers ?? []) addUnique(dp.careers ?? (dp.careers = []), c);
         for (const ev of this.run.seen) addUnique(dp.codex.events, ev);
+        dp.recent = [...this.run.seen];
+        dp.blessedDry = this.run.blessed ? 0 : (dp.blessedDry ?? 0) + 1;
 
         const r = this.run;
         const posSum = r.maxPos.up + r.maxPos.down + r.maxPos.side;
@@ -724,7 +734,20 @@ export class Engine {
         }
         const n = dp.deathCount?.[id] ?? 0;
         if (n >= 5) return `老熟人了，第${n}回`;
-        return undefined;
+        return this.lifeHighlight();
+    }
+
+    /** 这一世的一个高光（墓志铭随机挑一条，同一种结束方式每一世读起来也不一样） */
+    private lifeHighlight(): string | undefined {
+        const r = this.run;
+        const out: string[] = [];
+        for (const f of r.feuds ?? []) out.push(`这辈子出过一口气：${f}`);
+        for (const l of this.lineViews()) if (l.state) out.push(`${l.name}那段，${l.state}`);
+        const dirs = (['up', 'down', 'side'] as Dir[]).filter(d => r.maxPos[d] > 0).sort((a, b) => r.maxPos[b] - r.maxPos[a]);
+        if (dirs.length) out.push(`去过最远的地方，是${this.layerName(dirs[0], r.maxPos[dirs[0]])}`);
+        const item = r.items[r.items.length - 1];
+        if (item) out.push(`陪到最后的，是${this.itemName(item)}`);
+        return out.length ? out[this.rng.int(out.length)] : undefined;
     }
 
     /** 广告「双倍轮回点」 */
@@ -1042,8 +1065,11 @@ export class Engine {
             e.id !== r.lastEvent &&
             this.check(e.require),
         );
-        // 同一世已经遇到过的事件降权，减少重复
-        return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1) * (r.seen.includes(e.id) ? REPEAT_WEIGHT : 1));
+        // 同一世已经遇到过的事件降权，减少重复；从没见过的加权、上一世刚见过的降权，每一世都有新东西
+        const ever = new Set(this.dp.codex.events);
+        const recent = new Set(this.dp.recent ?? []);
+        return this.rng.weighted(cands, e => e.weight * (e.gold ? goldMul : 1)
+            * (r.seen.includes(e.id) ? REPEAT_WEIGHT : !ever.has(e.id) ? NOVEL_WEIGHT : recent.has(e.id) ? RECENT_WEIGHT : 1));
     }
 
     /** 事件限定的职业与本世职业相符（未限定 = 都行） */

@@ -15,7 +15,7 @@
     "choices": [
       {
         "text": "把根伸过去",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -31,7 +31,12 @@
         "result": "你摸到了一块还在跳的石头。",
         "fail": {
           "effect": {
-            "灵气": 5
+            "灵气": 5,
+            "follow": {
+              "id": "g_tianhu_1",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "它太烫了，你缩回了根。"
         }
@@ -54,7 +59,7 @@
     "choices": [
       {
         "text": "吞下这团光",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -70,7 +75,12 @@
         "result": "光顺着根往上爬，你整株草都亮了。",
         "fail": {
           "effect": {
-            "灵气": 5
+            "灵气": 5,
+            "follow": {
+              "id": "g_tianhu_2",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "光散了一半。你只吞下了一点。"
         }
@@ -93,7 +103,7 @@
     "choices": [
       {
         "text": "请他点化",
-        "chance": 0.7,
+        "chance": 0.8,
         "chanceAttr": "灵性",
         "chanceStep": 0.05,
         "effect": {
@@ -105,7 +115,12 @@
         "result": "他屈指一弹。你听见自己的叶子在长。",
         "fail": {
           "effect": {
-            "灵气": 5
+            "灵气": 5,
+            "follow": {
+              "id": "g_tianhu_3",
+              "delay": 2,
+              "ttl": 6
+            }
           },
           "result": "他摇摇头，走了。"
         }
