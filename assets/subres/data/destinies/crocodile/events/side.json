@@ -6,7 +6,7 @@
   },
 
   {
-    "id": "l1_bend", "dir": "side", "layers": ["L1"], "weight": 12,
+    "id": "l1_bend", "maps": ["river", "swamp"], "dir": "side", "layers": ["L1"], "weight": 12,
     "text": "河湾的水很缓，岸边一大片泥滩，晒太阳正好。",
     "choices": [
       { "text": "占个好位置", "effect": { "晒背": 2, "follow": "f_bend_otter" }, "result": "你找了块向阳的泥滩趴下。邻居们看了你一眼，没说话。" },

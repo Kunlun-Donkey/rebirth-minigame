@@ -33,7 +33,7 @@
   },
 
   {
-    "id": "u2_surface", "dir": "up", "layers": ["U2"], "weight": 12,
+    "id": "u2_surface", "maps": ["tidal", "reef"], "dir": "up", "layers": ["U2"], "weight": 12,
     "text": "你把脑袋探出水面。一只海鸥在头顶转圈，眼睛往下看。",
     "choices": [
       { "text": "马上沉下去", "effect": { "灵性": 1, "follow": "f_gull_wait" }, "result": "你沉了下去。海鸥在上面叫了两声，像在骂人。" },

@@ -55,7 +55,7 @@
     ]
   },
   {
-    "id": "xo_caterpillar_fairy", "dir": "any", "sudden": true, "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:caterpillar/fairy",
+    "id": "xo_caterpillar_fairy", "maps": ["tidal", "reef"], "dir": "any", "sudden": true, "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:caterpillar/fairy",
     "text": "海上飘来一只发光的大蝴蝶，翅膀一扇，浪就平了。",
     "choices": [
       { "text": "挥拳致意", "effect": { "海灵": 18, "灵性": 3 }, "result": "蝶仙笑了：一拳就是一声你好？你们虾，真有意思。" }

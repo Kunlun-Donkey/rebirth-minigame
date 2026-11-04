@@ -367,7 +367,7 @@
   },
 
   {
-    "id": "m_l1_fiddler", "dir": "side", "layers": ["L1"], "weight": 10,
+    "id": "m_l1_fiddler", "maps": ["tidal", "reef"], "dir": "side", "layers": ["L1"], "weight": 10,
     "text": "一只招潮蟹举着一只特大的钳子，冲整片滩挥来挥去。它在比谁的钳子帅。",
     "choices": [
       { "text": "也挥两下", "effect": { "灵性": 1, "拳力": 1 }, "result": "你举起两只钳子挥。它看了看，把大钳子背到了身后。" },
@@ -380,7 +380,7 @@
     ]
   },
   {
-    "id": "m_l1_jelly", "dir": "side", "layers": ["L1"], "weight": 10,
+    "id": "m_l1_jelly", "maps": ["tidal", "reef"], "dir": "side", "layers": ["L1"], "weight": 10,
     "text": "退潮的滩上搁着一只水母，晒得只剩一张薄饼，还在一缩一缩。",
     "choices": [
       { "text": "推它回水里", "chance": 0.6, "chanceAttr": "拳力", "chanceStep": 0.08,

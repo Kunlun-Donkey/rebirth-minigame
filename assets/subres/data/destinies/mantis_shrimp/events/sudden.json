@@ -38,7 +38,7 @@
     ]
   },
   {
-    "id": "x_storm", "dir": "any", "sudden": true, "weight": 10,
+    "id": "x_storm", "maps": ["tidal", "reef"], "dir": "any", "sudden": true, "weight": 10,
     "text": "台风来了。海水翻了个底朝天，沙子、海草、小鱼全搅在一起。",
     "choices": [
       { "text": "死死扒住礁石", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.08,
@@ -50,7 +50,7 @@
     ]
   },
   {
-    "id": "x_feast", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 99],
+    "id": "x_feast", "maps": ["tidal", "reef"], "dir": "any", "sudden": true, "weight": 8, "stage": [1, 99],
     "text": "一条死鱼沉到了海底。附近的螃蟹、海星、小鱼全来了。",
     "choices": [
       { "text": "挤进去抢", "chance": 0.5, "chanceAttr": "拳力", "chanceStep": 0.08,
@@ -94,5 +94,5 @@
       { "text": "让它漂走", "effect": { "灵性": 4 }, "result": "它漂走了。你觉得以后还会见到它的主人。" }
     ]
   },
-  {"id": "x_glow_shell", "dir": "any", "sudden": true, "gold": true, "stage": [0, 99], "weight": 1, "once": true, "text": "潮水退下去，石缝里留下一枚会发光的小贝壳，一闪一闪，像在叫你。", "choices": [{"text": "一拳敲开", "effect": {"拳力": 1, "海灵": 6}, "result": "贝壳裂开，一股暖流顺着你的钳子钻进了身体。"}, {"text": "背回洞里", "effect": {"灵性": 2, "体力": 2}, "result": "你把它摆在洞口。往后的夜里，洞里都是亮的。"}]}
+  {"id": "x_glow_shell", "dir": "any", "sudden": true, "gold": true, "stage": [0, 99], "weight": 1, "once": true, "text": "身边的沙子里冒出一枚会发光的小贝壳，一闪一闪，像在叫你。", "choices": [{"text": "一拳敲开", "effect": {"拳力": 1, "海灵": 6}, "result": "贝壳裂开，一股暖流顺着你的钳子钻进了身体。"}, {"text": "背回洞里", "effect": {"灵性": 2, "体力": 2}, "result": "你把它摆在洞口。往后的夜里，洞里都是亮的。"}]}
 ]

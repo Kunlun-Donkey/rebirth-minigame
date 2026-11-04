@@ -59,7 +59,7 @@
   },
   {
     "id": "xo_caterpillar_valley", "dir": "any", "gold": true, "cameo": true, "stage": [1, 99], "once": true, "weight": 6, "require": "xend:caterpillar/valley_queen",
-    "text": "一大群蝴蝶从上游飞来，在河面上排成一行字：谢谢你那一世。",
+    "text": "一大群蝴蝶飞过来，在水面上排成一行字：谢谢你那一世。",
     "choices": [
       { "text": "看完", "effect": { "灵性": 3, "龙气": 12 }, "result": "字散了。你不知道是哪一世，只觉得心里热乎乎的。" },
       { "text": "张嘴接一只", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
@@ -68,7 +68,7 @@
     ]
   },
   {
-    "id": "xo_caterpillar_cicada", "dir": "down", "layers": ["D2"], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar/cicada_king",
+    "id": "xo_caterpillar_cicada", "maps": ["river", "swamp"], "dir": "down", "layers": ["D2"], "cameo": true, "once": true, "weight": 8, "require": "xend:caterpillar/cicada_king",
     "text": "河底淤泥里传来一阵歌声，闷闷的，很好听。",
     "choices": [
       { "text": "跟着哼", "effect": { "灵性": 3, "潜水": 2 }, "result": "你哼得很难听。歌声停了一下，然后唱得更大声了，像在带你。" },

@@ -41,7 +41,7 @@
   },
   {
     "id": "s0_sand", "dir": "down", "stage": [0, 0], "weight": 14,
-    "text": "海底的沙又细又软，你忍不住想挖个洞。",
+    "text": "身下的沙又细又软，你忍不住想挖个洞。",
     "choices": [
       { "text": "挖个深洞", "effect": { "打洞": 2, "follow": { "id": "f_sand_neighbor", "delay": 2 } }, "result": "你挖出了一个 U 形洞，两头都有门。很专业。" },
       { "text": "挖着玩", "effect": { "体力": 1, "灵性": 1, "follow": { "id": "f_buried_shell", "delay": 2 } }, "result": "你挖出一个贝壳，又埋回去了。挺好玩。" }

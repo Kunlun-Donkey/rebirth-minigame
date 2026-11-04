@@ -47,7 +47,7 @@
   },
   {
     "id": "s0_mud", "dir": "down", "stage": [0, 0], "weight": 14,
-    "text": "河底的泥又软又暖，你忍不住往里拱。",
+    "text": "身下的泥又软又暖，你忍不住往里拱。",
     "choices": [
       { "text": "拱个窝", "effect": { "潜水": 2, "follow": { "id": "f_mud_neighbor", "delay": 2 } }, "result": "你拱出了一个窝，刚好够你转个身。很满意。" },
       { "text": "打个滚", "effect": { "体温": 1, "灵性": 1, "follow": { "id": "f_mud_shell", "delay": 2 } }, "result": "你在泥里滚了三圈，滚出来一身泥，和一个硬东西。" }
@@ -55,7 +55,7 @@
   },
   {
     "id": "s0_sun", "dir": "up", "stage": [0, 0], "weight": 12,
-    "text": "太阳出来了。河滩上的石头，一块比一块暖。",
+    "text": "太阳出来了。能晒到的地方，一块比一块暖。",
     "choices": [
       { "text": "抢最热那块", "chance": 0.6, "chanceAttr": "咬合", "chanceStep": 0.1,
         "effect": { "晒背": 2, "体温": 1, "follow": { "id": "f_rock_fight", "delay": 2 } }, "result": "你挤上了最热的那块石头，四条腿一摊，舒服得直眯眼。",

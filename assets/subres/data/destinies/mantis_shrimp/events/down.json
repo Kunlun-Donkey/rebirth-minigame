@@ -37,7 +37,7 @@
   },
 
   {
-    "id": "d2_crack", "dir": "down", "layers": ["D2"], "weight": 12,
+    "id": "d2_crack", "maps": ["tidal", "reef"], "dir": "down", "layers": ["D2"], "weight": 12,
     "text": "礁石缝里又黑又窄，一转身就碰壁。你觉得很安心。",
     "choices": [
       { "text": "往深里挖", "effect": { "打洞": 2, "follow": "f_crack_cave" }, "result": "你挖出了一个带拐角的洞。大鱼的嘴伸不进来。" },

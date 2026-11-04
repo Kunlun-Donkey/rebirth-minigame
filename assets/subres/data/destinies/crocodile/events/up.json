@@ -6,7 +6,7 @@
   },
 
   {
-    "id": "u1_rock", "dir": "up", "layers": ["U1"], "weight": 14,
+    "id": "u1_rock", "maps": ["river", "swamp"], "dir": "up", "layers": ["U1"], "weight": 14,
     "text": "河滩上有块大黑石头，晒了一上午，烫得冒烟。",
     "choices": [
       { "text": "趴上去", "effect": { "晒背": 2, "体温": 2, "follow": "f_rock_fight" }, "result": "石头烫得你直哈气。可是暖，从肚皮一直暖到尾巴尖。" },
@@ -55,7 +55,7 @@
   },
 
   {
-    "id": "u2_reed", "dir": "up", "layers": ["U2"], "weight": 12,
+    "id": "u2_reed", "maps": ["river", "swamp"], "dir": "up", "layers": ["U2"], "weight": 12,
     "text": "芦苇荡里又暖又静，到处是鸟窝，风一吹哗哗地响。",
     "choices": [
       { "text": "钻进去晒", "effect": { "晒背": 2, "体温": 1, "follow": "f_reed_nest" }, "result": "你找了块空地，把自己摊成了一张饼。" },
@@ -85,7 +85,7 @@
     ]
   },
   {
-    "id": "u2_snake", "dir": "up", "layers": ["U2"], "stage": [1, 4], "weight": 10,
+    "id": "u2_snake", "maps": ["river", "swamp"], "dir": "up", "layers": ["U2"], "stage": [1, 4], "weight": 10,
     "text": "一条水蛇缠在芦苇上，吐着信子，打量你的尾巴。",
     "choices": [
       { "text": "咬它", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08,

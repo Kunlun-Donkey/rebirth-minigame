@@ -61,7 +61,7 @@
     ]
   },
   {
-    "id": "xs_sea_glow", "dir": "any", "sudden": true, "weight": 6, "stage": [2, 5],
+    "id": "xs_sea_glow", "maps": ["tidal", "reef"], "dir": "any", "sudden": true, "weight": 6, "stage": [2, 5],
     "text": "夜里，整片海底的沙子一起亮了一下，又一起暗了。所有的鱼都停在原地。",
     "choices": [
       { "text": "趴着不动", "effect": { "灵性": 2 }, "result": "什么也没发生。只是从那天起，你总觉得沙子底下有东西在喘气。" },

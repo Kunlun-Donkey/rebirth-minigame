@@ -45,7 +45,7 @@
   },
 
   {
-    "id": "d2_den", "dir": "down", "layers": ["D2"], "weight": 12,
+    "id": "d2_den", "maps": ["river", "swamp"], "dir": "down", "layers": ["D2"], "weight": 12,
     "text": "河底的淤泥厚得能把你埋住。你挖了个窝，只露出两只眼睛。",
     "choices": [
       { "text": "再挖深一点", "effect": { "潜水": 2, "follow": "f_den_cave" }, "result": "你越挖越深。泥底下，好像是空的。" },

@@ -51,7 +51,7 @@
   },
   {
     "id": "x_cold_snap", "dir": "any", "sudden": true, "weight": 10,
-    "text": "寒潮来了。一夜之间，河面结了一层薄冰。",
+    "text": "寒潮来了。一夜之间，水面结了一层薄冰。",
     "choices": [
       { "text": "钻进泥里", "effect": { "体温": -1, "潜水": 1 }, "result": "泥里比冰面暖一点点。你一动不动地熬了一季。" },
       { "text": "找太阳", "chance": 0.5, "chanceAttr": "晒背", "chanceStep": 0.06,

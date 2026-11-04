@@ -1,12 +1,12 @@
 [
   {
     "id": "side_fallback", "dir": "side", "weight": 3,
-    "text": "你随着潮水漂了一季，漂到哪儿算哪儿。",
+    "text": "你随着水流漂了一季，漂到哪儿算哪儿。",
     "choices": [ { "text": "接着漂", "effect": { "游速": 1, "灵性": 1 }, "result": "海比你想的大。" } ]
   },
 
   {
-    "id": "l1_low_tide", "dir": "side", "layers": ["L1"], "weight": 12,
+    "id": "l1_low_tide", "maps": ["tidal", "reef"], "dir": "side", "layers": ["L1"], "weight": 12,
     "text": "潮水退了。泥滩上留下一个个小水洼，太阳越来越毒。",
     "choices": [
       { "text": "钻进泥里", "chance": 0.6, "chanceAttr": "打洞", "chanceStep": 0.1,
