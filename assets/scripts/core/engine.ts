@@ -1036,7 +1036,10 @@ export class Engine {
             r.log.push(`第${r.season}季，抵达${t.name}。`);
             if (next.enterEvent) r.pending.push(next.enterEvent);
         } else {
-            step.messages.push(`${this.layerText(next).blockedText}（需要：${this.describe(next.cond)}）`);
+            // 第一次被挡：完整旁白；之后每 3 季才提醒一次，免得每季都看同一句
+            const over = r.push[dir] - cur.span;
+            if (over === 0) step.messages.push(`${this.layerText(next).blockedText}（需要：${this.describe(next.cond)}）`);
+            else if (over % 3 === 0) step.messages.push(`还是过不去「${this.layerText(next).name}」（需要：${this.describe(next.cond)}）`);
         }
     }
 
