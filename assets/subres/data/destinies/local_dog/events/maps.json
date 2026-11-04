@@ -1,0 +1,223 @@
+[
+  {
+    "id": "mp_mk_scraps", "dir": "down", "layers": ["D1"], "maps": ["market"], "weight": 11,
+    "text": "肉铺老板娘剁肉时，掉下来一块肥边。她瞅了你一眼，没捡。",
+    "choices": [
+      { "text": "叼起来就跑", "effect": { "体力": 2 }, "result": "你钻进案板底下吃完了。她骂了一句，没追。" },
+      { "text": "蹲坐着等她点头", "effect": { "体力": 1, "忠义": 1, "follow": { "id": "mp_mk_f_aunt", "delay": 2, "ttl": 6 } },
+        "result": "她笑了：还挺懂规矩。肥边扔到了你面前。" },
+      { "text": "满地碎肉全舔了", "require": "legacy:iron_gut>=1", "effect": { "体力": 3, "体力上限": 1 },
+        "result": "前世一块肉要了你的命。这一世满地肉渣，你吃得肚皮滚圆。" },
+      { "text": "用尾巴帮她赶苍蝇", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "忠义": 3, "妖气": 4, "follow": { "id": "mp_mk_f_aunt", "delay": 2, "ttl": 6 } }, "result": "苍蝇真被你赶跑了。整条街的摊主都过来看。",
+        "fail": { "effect": { "体力": -1 }, "result": "你甩了半天，苍蝇全落在了你身上。" } }
+    ]
+  },
+  {
+    "id": "mp_mk_f_aunt", "dir": "down", "layers": ["D1", "D2"], "maps": ["market"], "chainOnly": true, "teaser": "肉铺老板娘在喊你",
+    "text": "老板娘在案板底下给你铺了个纸箱，用粉笔在上面写了两个字：看摊。",
+    "choices": [
+      { "text": "老老实实看摊", "effect": { "忠义": 3, "体力": 2 }, "result": "你守了一季。有人想顺块肉，被你一嗓子叫了回去。" },
+      { "text": "跟她收摊回家", "effect": { "忠义": 2, "item": "old_collar" }, "result": "她翻出一个旧项圈给你套上：以后你就是肉铺的狗。" },
+      { "text": "扑那个顺肉的", "chance": 0.45, "chanceAttr": "牙口", "chanceStep": 0.06,
+        "effect": { "牙口": 2, "妖气": 4, "忠义": 1 }, "result": "你咬住他的裤腿不撒口。他把肉放下，裤子也不要了。",
+        "fail": { "effect": { "体力": -2 }, "result": "他一脚把你拨开，揣着肉跑了。老板娘拍了拍你：尽力了。" } }
+    ]
+  },
+  {
+    "id": "mp_mk_fishcat", "dir": "down", "layers": ["D1", "D2"], "maps": ["market"], "weight": 11,
+    "text": "鱼摊的大花猫叼着条鱼跑过，把鱼往你面前一扔，跳上了房梁。鱼摊老板拎着扫帚来了。",
+    "choices": [
+      { "text": "跑", "effect": { "脚力": 1 }, "result": "你跑了。鱼摊老板从此看你不顺眼。" },
+      { "text": "叼着鱼还回去", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.08,
+        "effect": { "忠义": 3, "体力": 1 }, "result": "老板愣了一下，切了半条鱼给你。大花猫在房梁上看着。",
+        "fail": { "effect": { "体力": -2 }, "result": "扫帚先到了。你还没来得及解释。" } },
+      { "text": "把鱼塞回猫窝", "require": "legacy:grudge>=1", "effect": { "牙口": 1, "妖气": 4, "feud": "大花猫替你挨了扫帚" },
+        "result": "前世你被冤枉赶出过村。这一世你把鱼塞进猫窝，老板顺着找了过去。" },
+      { "text": "当着他面吃了", "absurd": true, "chance": 0.2, "chanceAttr": "牙口", "chanceStep": 0.03,
+        "effect": { "体力": 3, "妖气": 6 }, "result": "你三口吃完。老板看看你，看看地，以为自己眼花了。",
+        "fail": { "effect": { "体力": -2 }, "result": "吃到一半扫帚到了。鱼很香，值。" } }
+    ]
+  },
+  {
+    "id": "mp_mk_liu", "dir": "down", "layers": ["D1"], "maps": ["market"], "stage": [1, 99], "weight": 10,
+    "text": "刘拐子的板车停在菜市场门口。他蹲在肉铺边上，跟老板娘打听哪儿有野狗。",
+    "choices": [
+      { "text": "缩在案板底下", "effect": { "灵性": 1 }, "result": "你一动不动。老板娘说：没见过。" },
+      { "text": "去咬开车上的笼子", "chance": 0.35, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "忠义": 2, "妖气": 4, "flag": "trader_foiled" }, "result": "你咬开了插销。笼子里的狗冲进人堆，一条也没抓回去。",
+        "fail": { "effect": { "death": "dogcatcher" }, "result": "一张网兜头罩了下来。" } },
+      { "text": "前世闻过这辆车", "require": "legacy:wary>=1", "effect": { "脚力": 1, "妖气": 4, "flag": "trader_foiled" },
+        "result": "前世这辆车拉走了你。这一世你先把满街的狗都叫散了。" },
+      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2, "忠义": 1, "flag": "trader_foiled" },
+        "result": "你引着他绕了菜市场三圈。他一脚踩进了鱼摊的水盆。" }
+    ]
+  },
+  {
+    "id": "mp_mk_yard", "dir": "down", "layers": ["D2"], "maps": ["market"], "weight": 11,
+    "text": "后院的骨头堆旁，拴着链子的老狼狗冲你低吼。它在这儿拴了很多年了。",
+    "choices": [
+      { "text": "趴下等它吃完", "effect": { "体力": 1, "忠义": 1 }, "result": "它吃完，把一根骨头拨给了你。老狗有老狗的规矩。" },
+      { "text": "抢骨头", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.06,
+        "effect": { "牙口": 1, "item": "bone" }, "result": "你叼起最大那根就跑。它扑到链子尽头，停住了。",
+        "fail": { "effect": { "体力": -3 }, "result": "链子比你想的长。" } },
+      { "text": "跟它聊聊", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 2, "妖气": 4 },
+        "result": "它说它在这儿拴了十二年。你陪它聊到天黑，它教了你两招。" },
+      { "text": "帮它咬开链子", "absurd": true, "chance": 0.15, "chanceAttr": "牙口", "chanceStep": 0.03,
+        "effect": { "灵性": 3, "妖气": 6 }, "result": "链子开了。它没跑，原地转了一圈，又趴下了。",
+        "fail": { "effect": { "体力": -1 }, "result": "你啃了半天，牙酸了。它看你的眼神像看傻子。" } }
+    ]
+  },
+  {
+    "id": "mp_mk_station", "dir": "side", "layers": ["L1"], "maps": ["market"], "weight": 11,
+    "text": "镇口汽车站，去县城的大巴正在上客。售票员靠着车门嗑瓜子。",
+    "choices": [
+      { "text": "看着车开走", "effect": { "灵性": 1 }, "result": "车开走了。你记住了它去的方向。" },
+      { "text": "混上车", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "脚力": 2, "妖气": 4 }, "result": "你钻到座位底下晃到了县城边，又跟着菜车回来了。",
+        "fail": { "effect": { "体力": -2 }, "result": "售票员揪住你的后颈，把你放回了站台。" } },
+      { "text": "蹲她脚边讨瓜子", "showIf": "skill:beg", "useSkill": "beg", "effect": { "体力": 2, "忠义": 1 },
+        "result": "她剥一颗给你一颗。车晚点了半个钟头。" },
+      { "text": "前世看了一辈子车", "require": "legacy:old_dog>=1", "effect": { "灵性": 2, "妖气": 4 },
+        "result": "前世你在村口看了一辈子车。这一世你看懂了站牌。" }
+    ]
+  },
+  {
+    "id": "mp_mk_slope", "dir": "up", "layers": ["U1"], "maps": ["market"], "weight": 11,
+    "text": "镇后土坡上是个废品站。收废品的老头在门口挂了一串铜铃铛。",
+    "choices": [
+      { "text": "帮老头看废品", "effect": { "忠义": 2 }, "result": "他收摊时给了你半个烧饼，说你比他那锁还管用。" },
+      { "text": "叼走铃铛", "chance": 0.4, "chanceAttr": "脚力", "chanceStep": 0.06,
+        "effect": { "item": "bell" }, "result": "你叼着铃铛跑下土坡，一路叮当响。",
+        "fail": { "effect": { "体力": -2 }, "result": "铃铛一响，老头就出来了。" } },
+      { "text": "绕开地上的铁丝", "require": "legacy:nimble>=1", "effect": { "脚力": 1, "体力": 2, "妖气": 3 },
+        "result": "前世你踩进过兽夹。这一世满地铁丝，你一根没碰，先翻到了骨头。" }
+    ]
+  },
+  {
+    "id": "mp_mk_tricycle", "dir": "any", "sudden": true, "maps": ["market"], "stage": [1, 99], "weight": 10,
+    "text": "一辆拉菜的三轮车刹不住了，直冲你打盹的地方。",
+    "choices": [
+      { "text": "往案板底下钻", "effect": { "体力": -1 }, "result": "车撞翻了案板。你在底下，毛都没少一根。" },
+      { "text": "往前蹿", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.06,
+        "effect": { "脚力": 2, "妖气": 4 }, "result": "你一跃蹿过了马路。对面卖菜的大婶喊了声好。",
+        "fail": { "effect": { "体力": -3 }, "result": "你慢了半步，被车把蹭了一下。在纸箱里躺了一季。" } },
+      { "text": "撒腿跑", "showIf": "skill:dash", "useSkill": "dash", "effect": { "脚力": 2, "妖气": 4 },
+        "result": "车停下时，你已经在对街舔爪子了。" },
+      { "text": "冲它狂叫", "absurd": true, "chance": 0.2, "chanceAttr": "牙口", "chanceStep": 0.03,
+        "effect": { "忠义": 3, "妖气": 6 }, "result": "车夫吓得一把捏住闸。车停了，一车白菜滚了一地。",
+        "fail": { "effect": { "体力": -2 }, "result": "车夫听见了，但车没听见。" } }
+    ]
+  },
+
+  {
+    "id": "mp_fr_door", "dir": "down", "layers": ["D1"], "maps": ["forest"], "weight": 11,
+    "text": "老林头蹲在门口磨柴刀，瞅了你半天：哪来的小东西，就叫你黑豆吧。",
+    "choices": [
+      { "text": "摇着尾巴凑过去", "effect": { "忠义": 2, "follow": { "id": "mp_fr_f_patrol", "delay": 2, "ttl": 6 } },
+        "result": "他放下柴刀，摸了摸你的头。从此你有名字了。" },
+      { "text": "守在门口不动", "effect": { "牙口": 1 }, "result": "你冲每个路过的东西都叫。他说：嗯，看门的料。" },
+      { "text": "叼走他的鞋", "absurd": true, "chance": 0.25, "chanceAttr": "脚力", "chanceStep": 0.04,
+        "effect": { "脚力": 2, "忠义": 2, "follow": { "id": "mp_fr_f_patrol", "delay": 2, "ttl": 6 } }, "result": "他光着一只脚追了你半里地：腿脚还行，以后带你巡山。",
+        "fail": { "effect": { "体力": -1 }, "result": "你叼着鞋绊了一跤。他把鞋穿回去，顺手把你也拎回去了。" } }
+    ]
+  },
+  {
+    "id": "mp_fr_f_patrol", "dir": "up", "layers": ["U1", "U2"], "maps": ["forest"], "chainOnly": true, "teaser": "老林头要带你巡山",
+    "text": "老林头背上水壶，喊了一声黑豆。你跟着他进了林子，他走一步，你跑三步。",
+    "choices": [
+      { "text": "跟紧他", "effect": { "脚力": 2, "忠义": 2, "flag": "mp_ranger_trust" }, "result": "他教你认哪棵树是界碑。回来路上，分了你半个馍。" },
+      { "text": "跑前面探路", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.06,
+        "effect": { "脚力": 2, "灵性": 1, "妖气": 4, "flag": "mp_ranger_trust" }, "result": "你在前面找到一窝刚出生的小鹿。他记在了本子上。",
+        "fail": { "effect": { "体力": -2 }, "result": "你跑丢了。天黑摸回小屋，他坐在门口等你。" } },
+      { "text": "嗅出生人味", "showIf": "skill:sniff", "useSkill": "sniff", "effect": { "灵性": 2, "妖气": 4, "flag": "mp_ranger_trust" },
+        "result": "你闻到了生人。他顺着找过去，拆了一排铁丝套。" }
+    ]
+  },
+  {
+    "id": "mp_fr_snare", "dir": "up", "layers": ["U1", "U2"], "maps": ["forest"], "stage": [1, 99], "weight": 10,
+    "text": "林子里多了一排铁丝套。下套的瘦猴隔三天来收一回，见了狗就踢。",
+    "choices": [
+      { "text": "绕着走", "effect": { "脚力": 1 }, "result": "你记住了每个套子的位置，绕了一大圈。" },
+      { "text": "把套子刨出来", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 2, "妖气": 4 }, "result": "你刨出七个套子，全拖进了溪里。",
+        "fail": { "effect": { "death": "trap" }, "result": "第八个埋得最深。你闻到的时候，已经晚了。" } },
+      { "text": "前世踩过这东西", "require": "legacy:nimble>=1", "effect": { "灵性": 2, "妖气": 4, "feud": "瘦猴的套子挂满他家门" },
+        "result": "前世你死在这种东西上。这一世你把套子全叼下山，挂上了他家门。" },
+      { "text": "去叫老林头", "showIf": "flag:mp_ranger_trust", "effect": { "忠义": 3, "妖气": 4, "feud": "瘦猴被请下了山" },
+        "result": "老林头顺着你找到了他。瘦猴被领下山，再没上来过。" }
+    ]
+  },
+  {
+    "id": "mp_fr_boar", "dir": "up", "layers": ["U2"], "maps": ["forest"], "stage": [1, 99], "weight": 11,
+    "text": "一头野猪拱翻了老林头种的一垄土豆，回头冲你哼了一声。",
+    "choices": [
+      { "text": "冲它叫", "effect": { "牙口": 1 }, "result": "它哼了一声，慢悠悠走了。土豆剩了一半。" },
+      { "text": "咬它屁股", "chance": 0.3, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "牙口": 2, "妖气": 6 }, "result": "它嗷一嗓子，蹿出去两里地。",
+        "fail": { "effect": { "体力": -3 }, "result": "它回头拱了你一下。你在土豆垄里躺到了天黑。" } },
+      { "text": "专咬后腿", "require": "legacy:wolf_blood>=1", "effect": { "牙口": 2, "脚力": 1, "妖气": 4 },
+        "result": "前世狼群教过你。这一世你绕到它身后，咬一口就撤，它跑了。" },
+      { "text": "骑上去", "absurd": true, "chance": 0.15, "chanceAttr": "脚力", "chanceStep": 0.03,
+        "effect": { "脚力": 3, "妖气": 7 }, "result": "它驮着你跑了半座山。山里的东西全看见了。",
+        "fail": { "effect": { "体力": -2 }, "result": "你在它背上坐了一眨眼，然后在地上坐了很久。" } }
+    ]
+  },
+  {
+    "id": "mp_fr_creek", "dir": "up", "layers": ["U1"], "maps": ["forest"], "weight": 11,
+    "text": "林子边的小溪里，一只老乌龟蹲在石头上，看了你一下午。",
+    "choices": [
+      { "text": "喝口水走", "effect": { "体力": 1 }, "result": "水很凉。它还在看你。" },
+      { "text": "下水抓鱼", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.06,
+        "effect": { "体力": 3 }, "result": "你按住了一条鱼。乌龟慢慢点了下头。",
+        "fail": { "effect": { "体力": -1 }, "result": "鱼没抓着，你喝了一肚子水。" } },
+      { "text": "跟它搭话", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 3, "妖气": 6 },
+        "result": "它说上回见到会说话的狗，是三百年前的事了。" },
+      { "text": "冲它磕个头", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵性": 3, "妖气": 7 }, "result": "它缩回壳里，壳上的纹路亮了一下。你懂了点什么。",
+        "fail": { "effect": { "体力": -1 }, "result": "它看了你一眼，接着看了一下午。" } }
+    ]
+  },
+  {
+    "id": "mp_fr_snow", "dir": "down", "layers": ["D2"], "maps": ["forest"], "weight": 11,
+    "text": "下雪的夜里，老林头一个人喝酒，对着墙上一张旧照片说话。",
+    "choices": [
+      { "text": "趴在他脚边", "effect": { "忠义": 2, "体力": 1 }, "result": "他说了很多，你一句没听懂。炉子很暖。" },
+      { "text": "叼来他的棉袄", "chance": 0.6, "chanceAttr": "忠义", "chanceStep": 0.06,
+        "effect": { "忠义": 3, "灵性": 1 }, "result": "他披上棉袄，摸着你的头，不说话了。",
+        "fail": { "effect": { "体力": -1 }, "result": "你把棉袄拖进了雪里。他叹了口气，笑了。" } },
+      { "text": "把他的脚焐热", "require": "legacy:thick_fur>=1", "effect": { "体力上限": 1, "忠义": 2 },
+        "result": "前世你冻死在这样的夜里。这一世你趴在炉边，把他的脚也焐热了。" }
+    ]
+  },
+  {
+    "id": "mp_fr_birder", "dir": "down", "layers": ["D1"], "maps": ["forest"], "weight": 11,
+    "text": "林场来了个城里人，扛着长镜头蹲了三天，一只鸟也没拍到。",
+    "choices": [
+      { "text": "替他看着包", "effect": { "忠义": 1 }, "result": "你替他看了三天包。他走时说：这狗比鸟懂事。" },
+      { "text": "把鸟赶出来", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 2, "妖气": 4 }, "result": "你钻进灌木一叫，飞出一只红尾巴的。他拍了二十张。",
+        "fail": { "effect": { "体力": -1 }, "result": "鸟全飞了。他看着你，很久没说话。" } },
+      { "text": "歪头讨火腿肠", "showIf": "skill:beg", "useSkill": "beg", "effect": { "体力": 3 },
+        "result": "你歪了一下头。他把整根火腿肠都给了你。" },
+      { "text": "在镜头前坐好", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "忠义": 2, "妖气": 6 }, "result": "他拍了你一下午。后来那张照片得了个奖。",
+        "fail": { "result": "他说：让一让。" } }
+    ]
+  },
+  {
+    "id": "mp_fr_smoke", "dir": "any", "sudden": true, "maps": ["forest"], "stage": [1, 99], "weight": 10,
+    "text": "半夜，林子那头冒起了烟。老林头睡得正沉，鼾声比风还大。",
+    "choices": [
+      { "text": "躲到溪边", "effect": { "体力": -1 }, "result": "你在溪里泡了一夜。天亮时火自己灭了，没烧过来。" },
+      { "text": "扒门把他叫醒", "chance": 0.6, "chanceAttr": "忠义", "chanceStep": 0.06,
+        "effect": { "忠义": 3, "妖气": 4 }, "result": "他提着水桶冲出去。火苗还没长大，就被摁灭了。",
+        "fail": { "effect": { "体力": -2 }, "result": "他醒得晚了一点。火灭了，柴房没了。" } },
+      { "text": "自己去刨土盖火", "chance": 0.35, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 2, "妖气": 6 }, "result": "天亮老林头只看见一圈黑土，和一条黑狗。",
+        "fail": { "effect": { "体力": -3 }, "result": "烟太呛。你被熏了回来，毛焦了一撮。" } },
+      { "text": "对山长啸", "showIf": "skill:howl", "useSkill": "howl", "effect": { "灵性": 2, "忠义": 3 },
+        "result": "你一声长啸，半座山的狗都醒了。山下的人全上来了。" }
+    ]
+  }
+]
