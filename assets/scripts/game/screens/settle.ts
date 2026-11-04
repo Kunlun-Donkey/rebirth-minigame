@@ -190,7 +190,10 @@ function shareText(g: Game, s: SettleResult): string {
     if (vs?.win) return `我接了好友的挑战，${vs.short}！${brand}。不服来比？`;
     if (s.tianhu) return `天胡！${brand}${tail}`;
     if (s.kind === 'ending') return `${brand}${tail}，你能更快吗？`;
-    return `${brand}${tail}。你会死得更离谱吗？`;
+    // 寿终是最常见的结束方式：不说「死得离谱」，带上这一世的高光（墓志铭「——」后半句）
+    const highlight = s.epitaph.split('——')[1];
+    if (s.id === g.data.meta.rules.oldAgeDeath) return `第 ${s.life} 世，${g.data.meta.name}寿终正寝。${highlight ? `${highlight}。` : ''}你这一世，过得比我精彩吗？`;
+    return `${brand}${tail}。${highlight ? `${highlight}。` : ''}你会死得更离谱吗？`;
 }
 
 /** 好友挑战对比：仅当本世是接挑战的那个命格、且还没对比过 */
