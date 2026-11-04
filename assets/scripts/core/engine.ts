@@ -1162,25 +1162,25 @@ export class Engine {
         const guard = r.items.find(id => this.data.items.get(id)?.saveFromDeath);
         if (guard) {
             this.loseItem(guard, step);
-            this.revive(step, `${this.itemName(guard)}碎了。它替你挡下了「${def?.name ?? deathId}」。`, false);
+            this.revive(step, `${this.itemName(guard)}碎了。它替你挡下了「${def?.name ?? deathId}」。`, false, deathId);
             return;
         }
         // 新手保护：本命格第 1 世的前几季命不该绝
         const newbie = this.data.meta.settings.newbieSeasons ?? 0;
         if (r.life === 1 && r.season <= newbie && deathId !== this.data.meta.rules.oldAgeDeath) {
-            this.revive(step, `命不该绝：这是你的第一世，天道替你挡下了「${def?.name ?? deathId}」。（前 ${newbie} 季有效）`, false);
+            this.revive(step, `命不该绝：这是你的第一世，天道替你挡下了「${def?.name ?? deathId}」。（前 ${newbie} 季有效）`, false, deathId);
             return;
         }
         // 第 2、3 世再护一次（前几季、每世一次），别让新手从第一世的爽直接摔到第二世秒死
         const taper = r.life === 2 ? Math.round(newbie * 0.6) : r.life === 3 ? Math.round(newbie * 0.4) : 0;
         if (taper && r.season <= taper && !r.reviveUsed.newbie && deathId !== this.data.meta.rules.oldAgeDeath) {
             r.reviveUsed.newbie = true;
-            this.revive(step, `命不该绝：才第${r.life}世，天道又替你挡了一次「${def?.name ?? deathId}」。下次就没这么好说话了。`, false);
+            this.revive(step, `命不该绝：才第${r.life}世，天道又替你挡了一次「${def?.name ?? deathId}」。下次就没这么好说话了。`, false, deathId);
             return;
         }
         if (this.mods().reviveOnce && !r.reviveUsed.talent) {
             r.reviveUsed.talent = true;
-            this.revive(step, this.data.meta.rules.reviveOnceText ?? '你倒下了，又挣扎着活了过来。', false);
+            this.revive(step, this.data.meta.rules.reviveOnceText ?? '你倒下了，又挣扎着活了过来。', false, deathId);
             return;
         }
         r.dying = deathId;
@@ -1190,9 +1190,12 @@ export class Engine {
         r.log.push(`第${r.season}季，${def?.name ?? deathId}。`);
     }
 
-    private revive(step: StepResult, text: string, fromDying = true): void {
+    private revive(step: StepResult, text: string, fromDying = true, deathId?: string): void {
         const r = this.run;
         step.messages.push(text);
+        // 死法可以写一句「被救下来之后」的交代（如困在园区被救回国），否则剧情停在半空
+        const rescued = this.data.deaths.get((fromDying ? r.dying : deathId) ?? '')?.rescued;
+        if (rescued) step.messages.push(rescued);
         step.revived = true;
         const R = this.data.meta.rules;
         r.attrs[R.life] = Math.max(r.attrs[R.life], Math.ceil(r.attrs[R.lifeMax] / 2));

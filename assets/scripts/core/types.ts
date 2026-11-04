@@ -170,6 +170,8 @@ export interface DeathDef {
     skills?: SkillChance[];
     /** 结算时按条件换说法（取第一条满足的）：同一种死法，活成什么样读起来不一样。图鉴仍用 name / epitaph */
     variants?: { require?: string; name?: string; epitaph?: string }[];
+    /** 被道具 / 天赋 / 新手保护 / 看视频挡下后补一句交代（如困在园区被救回国） */
+    rescued?: string;
 }
 
 /**
