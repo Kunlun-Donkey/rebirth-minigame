@@ -1,0 +1,175 @@
+[
+  {
+    "id": "xs_hail", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8,
+    "text": "冰雹砸下来，噼里啪啦打在瓦上。院里晒的玉米还没收。",
+    "choices": [
+      { "text": "钻进窝里", "effect": { "体力": -1, "灵性": 1 }, "result": "你缩在窝里听了一下午响。窝顶塌了一个角。" },
+      { "text": "帮着拖玉米", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "忠义": 3, "体力": 1 }, "result": "你叼着麻袋角跑了八趟。晚饭，那家人多给你盛了一勺。",
+        "fail": { "effect": { "体力": -3 }, "result": "冰雹专挑你脑门砸。玉米收完了，你也晕了。" } },
+      { "text": "顶着冰雹干活", "require": "legacy:thick_fur>=1", "effect": { "忠义": 2, "妖气": 5 },
+        "result": "前世你冻死在雪夜。这一世毛厚，冰雹砸上来像挠痒。" }
+    ]
+  },
+  {
+    "id": "xs_new_year_fair", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 7,
+    "text": "腊月里，镇上赶年集。糖人、炸糕、舞狮子，香味顺着风飘了十里。",
+    "choices": [
+      { "text": "守着炸糕摊", "effect": { "体力": 2 }, "result": "你在摊子底下守了一上午，捡到三块掉地上的。" },
+      { "text": "冲卤味摊摇尾巴", "chance": 0.45, "chanceAttr": "忠义", "chanceStep": 0.05,
+        "effect": { "体力": 3, "牙口": 1 }, "result": "摊主扔给你一根大骨头：这狗有眼力见。",
+        "fail": { "effect": { "体力": -1 }, "result": "摊主瞪了你一眼，抄起扫帚。你夹着尾巴跑了。" } },
+      { "text": "钻进舞狮底下", "absurd": true, "chance": 0.2, "chanceAttr": "脚力", "chanceStep": 0.03,
+        "effect": { "妖气": 8, "灵性": 2, "忠义": 1 }, "result": "全镇都说今年的狮子多了条腿，吉利。",
+        "fail": { "effect": { "体力": -1 }, "result": "你绊倒了狮子头。舞狮的追了你半条街。" } }
+    ]
+  },
+  {
+    "id": "xs_fog", "dir": "any", "sudden": true, "stage": [0, 2], "weight": 8,
+    "text": "起大雾了，三步外啥也看不见。雾里有个声音在叫你，像你娘。",
+    "choices": [
+      { "text": "趴着不动", "effect": { "灵性": 1 }, "result": "雾散了。柴堆前的泥地上，有一串不是狗的脚印。" },
+      { "text": "循着声音去", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 3, "妖气": 6 }, "result": "雾里是只白狐狸，学你娘学得很像。它说：小家伙，胆子不小。",
+        "fail": { "effect": { "体力": -3 }, "result": "你走了很远。雾散时，你已经在山里了。" } },
+      { "text": "一眼看穿", "require": "legacy:yin_eye>=1", "effect": { "灵性": 2, "妖气": 8 },
+        "result": "前世古墓的阴气冲过你。这一世你看得清：雾里是只爱开玩笑的狐狸。" }
+    ]
+  },
+  {
+    "id": "xs_wedding", "dir": "any", "sudden": true, "stage": [1, 3], "weight": 7,
+    "text": "村里办喜事，唢呐吹了一整天。流水席的桌子底下，全是好东西。",
+    "choices": [
+      { "text": "钻桌底捡骨头", "effect": { "体力": 2 }, "result": "你在桌子底下吃了三轮席。新郎踩到你两回。" },
+      { "text": "叼红绸送亲", "chance": 0.4, "chanceAttr": "忠义", "chanceStep": 0.05,
+        "effect": { "忠义": 3, "灵性": 1 }, "result": "大家说狗都来送亲，好兆头。新娘偷偷塞给你一块喜糕。",
+        "fail": { "effect": { "忠义": -1, "体力": -1 }, "result": "红绸缠住了你的腿。你把抬轿的绊了一跤。" } },
+      { "text": "让阿痒去闹洞房", "showIf": "companion:flea", "effect": { "体力": 3, "灵性": 1 },
+        "result": "新郎挠了一晚上。管事的拿两块肉，把你请了出去。" }
+    ]
+  },
+  {
+    "id": "xs_kite", "dir": "any", "sudden": true, "stage": [0, 1], "weight": 8,
+    "text": "孩子们的风筝断了线，挂在你窝边的树杈上。一群孩子仰头看你。",
+    "choices": [
+      { "text": "装没看见", "effect": { "灵性": 1 }, "result": "孩子们拿竹竿捅了半天。风筝下来时，你已经睡着了。" },
+      { "text": "爬树去够", "chance": 0.35, "chanceAttr": "脚力", "chanceStep": 0.06,
+        "effect": { "忠义": 3, "脚力": 1 }, "result": "你叼着风筝跳下来。孩子们欢呼，说这是他们的狗。",
+        "fail": { "effect": { "体力": -2 }, "result": "爬到一半你就掉了。孩子们笑得比风筝还高。" } },
+      { "text": "叫叽喳去叼", "showIf": "companion:sparrow", "effect": { "忠义": 2, "灵性": 2 },
+        "result": "叽喳衔着线头飞下来。孩子们看傻了：这狗会使唤鸟。" }
+    ]
+  },
+  {
+    "id": "xs_lost_traveler", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 7,
+    "text": "一个挑担子的过路人在村外岔口转圈，嘴里念叨着走错了。",
+    "choices": [
+      { "text": "看看就回窝", "effect": { "灵性": 1 }, "result": "你看了他一会儿。后来，他自己找着了路。" },
+      { "text": "领他上大路", "chance": 0.55, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "follow": { "id": "xs_traveler_back", "delay": 2, "ttl": 6 }, "脚力": 2, "忠义": 1 },
+        "result": "你在前头颠颠地走，他在后头跟。到了大路，他摸了摸你的头。",
+        "fail": { "effect": { "体力": -2 }, "result": "你领错了方向。你们俩在山里绕到了天黑。" } },
+      { "text": "冲东边汪三声", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵性": 3, "妖气": 6 }, "result": "他愣了愣：你是说往东？他往东走了，真走对了。",
+        "fail": { "effect": { "体力": 1 }, "result": "他以为你要咬他，扔下半块饼跑了。" } }
+    ]
+  },
+  {
+    "id": "xs_traveler_back", "dir": "any", "chainOnly": true, "teaser": "那个过路人说还会再来",
+    "text": "那个过路人又经过村口，担子上多了个布包。他蹲下来，四处找你。",
+    "choices": [
+      { "text": "凑过去", "effect": { "item": "bone", "体力": 1 }, "result": "他掏出一根肉骨头：上回多亏你了。" },
+      { "text": "远远看着", "effect": { "item": "bun", "灵性": 1 }, "result": "他把半个馒头放在石头上，冲你这边点点头，走了。" },
+      { "text": "送他一段路", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 2, "妖气": 5 }, "result": "你送他到了镇口。镇上的狗都出来看你这条外村狗。",
+        "fail": { "effect": { "体力": -2 }, "result": "送过了头。你回到村里，天都黑透了。" } }
+    ]
+  },
+  {
+    "id": "xs_rooster", "dir": "any", "sudden": true, "stage": [0, 2], "weight": 8,
+    "text": "村东头的大公鸡又来了。专啄你的饭碗，啄完还冲你打鸣。",
+    "choices": [
+      { "text": "让它吃", "effect": { "体力": -1, "灵性": 1 }, "result": "它吃完扬长而去。你记住了它的冠子。" },
+      { "text": "扑过去吓它", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.06,
+        "effect": { "feud": "大公鸡再不敢进院子", "牙口": 1, "体力": 1 }, "result": "它扑腾上了墙，掉了两根尾毛。从此路过都绕着走。",
+        "easy": "你刚站起来，它就自己飞上了墙。",
+        "fail": { "effect": { "忠义": -2 }, "result": "鸡没吓着。它主人看见了，骂了你一下午。" } },
+      { "text": "天天蹲它窝门口", "require": "legacy:grudge>=1", "effect": { "灵性": 2, "妖气": 4 },
+        "result": "前世你忍了一辈子。这一世你蹲在它窝门口，它先熬不住了。" }
+    ]
+  },
+  {
+    "id": "xs_harvest", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 7,
+    "text": "秋收了。场院上堆满了谷子，全村人起早贪黑，没人顾得上喂你。",
+    "choices": [
+      { "text": "守着场院", "effect": { "忠义": 2, "体力": -1 }, "result": "你守了三夜场院。第四天，老会计给你留了一碗饭。" },
+      { "text": "下地抓田鼠", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "体力": 3, "牙口": 1 }, "result": "田鼠偷谷子，你逮田鼠。村里人说这狗比猫顶用。",
+        "fail": { "effect": { "体力": -2 }, "result": "田鼠钻了洞。你刨了一下午，刨出一窝蚂蚁。" } },
+      { "text": "和花婆分工", "showIf": "companion:old_cat", "effect": { "忠义": 2, "灵性": 2, "体力": 2 },
+        "result": "花婆管仓房，你管场院。这一季，谷子一粒没少。" }
+    ]
+  },
+  {
+    "id": "xs_well_mist", "dir": "any", "sudden": true, "stage": [2, 99], "weight": 6,
+    "text": "半夜，村口老井里冒出一股白气，直直飘到了月亮底下。",
+    "choices": [
+      { "text": "离井远点", "effect": { "灵性": 1 }, "result": "你绕开了井。第二天，村里人说井水变甜了。" },
+      { "text": "凑过去嗅", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "妖气": 10, "灵性": 2 }, "result": "白气钻进鼻子，凉丝丝的。你打了个喷嚏，眼睛亮了。",
+        "fail": { "effect": { "体力": -2, "灵性": -1 }, "result": "白气呛得你直打喷嚏，打了三天。" } },
+      { "text": "跳下去看看", "absurd": true, "chance": 0.15, "chanceAttr": "脚力", "chanceStep": 0.02,
+        "effect": { "妖气": 25 }, "result": "井底有块发光的石头。你把它舔干净，扒着井绳爬了上来。",
+        "fail": { "effect": { "体力": -3 }, "result": "你在井里泡了一宿。天亮，挑水的把你和水一起拎了上来。" } }
+    ]
+  },
+  {
+    "id": "xs_hornets", "dir": "any", "sudden": true, "stage": [1, 3], "weight": 8,
+    "text": "你在草垛里扒拉，扒出来一个马蜂窝。",
+    "choices": [
+      { "text": "夹着尾巴跑", "effect": { "脚力": 1, "体力": -1 }, "result": "你跑过了三块田。马蜂追过了两块。" },
+      { "text": "跳进河里", "chance": 0.55, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 2 }, "result": "你一头扎进河里。马蜂在水面上转了半天，散了。",
+        "fail": { "effect": { "体力": -3 }, "result": "河有点远。你的脸肿成了一个馒头。" } },
+      { "text": "回头咬一口窝", "absurd": true, "chance": 0.15, "chanceAttr": "牙口", "chanceStep": 0.02,
+        "effect": { "牙口": 2, "妖气": 12 }, "result": "你叼走了半个窝，里面全是蜜。马蜂们看傻了。",
+        "fail": { "effect": { "体力": -3 }, "result": "你咬了一口。然后你就成了一只圆脸狗。" } }
+    ]
+  },
+  {
+    "id": "xs_firecrackers", "dir": "any", "sudden": true, "stage": [0, 99], "weight": 7,
+    "text": "过年了。鞭炮从早响到晚，你两只耳朵嗡嗡的。",
+    "choices": [
+      { "text": "躲进柴房", "effect": { "体力": 1 }, "result": "你在柴房过了个年。半夜有人从门缝塞进来一块肉。" },
+      { "text": "挨家门口拜年", "chance": 0.5, "chanceAttr": "忠义", "chanceStep": 0.05,
+        "effect": { "体力": 3, "忠义": 1 }, "result": "你在每家门口摇尾巴。到晚上，肚子圆得走不动道。",
+        "fail": { "effect": { "体力": -1 }, "result": "第三家门口正点炮。你一路跑回了村口。" } },
+      { "text": "先去最早开门的", "require": "legacy:old_dog>=1", "effect": { "体力": 3, "灵性": 2 },
+        "result": "前世你在村里过了十几个年。这一世你知道，三十晚上谁家门先开。" }
+    ]
+  },
+  {
+    "id": "xs_stray", "dir": "any", "sudden": true, "stage": [3, 99], "weight": 6,
+    "text": "下雨天，一只外村的小母狗瘸着腿，躲在村口的草堆里发抖。",
+    "choices": [
+      { "text": "把窝让给她", "effect": { "忠义": 2, "体力": -1 }, "result": "你在外面淋了一夜。早上她舔了舔你的鼻子，走了。" },
+      { "text": "叼吃的给她", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "follow": { "id": "xs_stray_back", "delay": 2, "ttl": 6 }, "忠义": 2, "灵性": 1 },
+        "result": "你跑了三家，叼回半个窝头。她吃完，在你窝边睡了。",
+        "fail": { "effect": { "体力": -2 }, "result": "窝头没叼到，倒被人家的狗追了半条街。" } },
+      { "text": "给她半个馒头", "showIf": "item:bun", "effect": { "loseItem": "bun", "follow": { "id": "xs_stray_back", "delay": 2, "ttl": 6 }, "忠义": 3, "灵性": 1 },
+        "result": "你把馒头推到她面前。她看了你很久，才低头吃。" }
+    ]
+  },
+  {
+    "id": "xs_stray_back", "dir": "any", "chainOnly": true, "teaser": "那只瘸腿小狗会回来的",
+    "text": "那只外村的小母狗回来了，腿好了。身后跟着她们村一群狗，个个冲你点头。",
+    "choices": [
+      { "text": "带它们巡夜", "effect": { "忠义": 3, "妖气": 6 }, "result": "两个村的狗一起巡夜。那一季，没一个贼敢进村。" },
+      { "text": "趴着受礼", "effect": { "灵性": 1, "妖气": 4 }, "result": "你没动，尾巴摇了一下。她们说你有派头。" },
+      { "text": "跟去她的村子", "chance": 0.5, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "脚力": 2, "灵性": 2 }, "result": "那个村的狗给你让了上座。你在那边也有了名号。",
+        "fail": { "effect": { "体力": -2 }, "result": "那个村的大黑狗不认你。你们对着叫了一下午。" } }
+    ]
+  }
+]

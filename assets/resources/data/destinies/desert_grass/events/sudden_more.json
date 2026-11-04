@@ -1,0 +1,176 @@
+[
+  {
+    "id": "xs_hail", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8,
+    "text": "大晴天里砸下一阵冰雹，颗颗有指甲盖大。",
+    "choices": [
+      { "text": "缩成一团", "effect": { "茎叶": -1, "水分": 2 }, "result": "叶子破了两片。冰雹化了，倒是送来一口水。" },
+      { "text": "张开叶子接冰", "chance": 0.45, "chanceAttr": "韧性", "chanceStep": 0.05,
+        "effect": { "水分": 4, "韧性": 1 }, "result": "你接了满怀的冰。化开以后，够喝半季。",
+        "easy": "冰雹砸在你叶子上，弹都弹不起来。你接了一季的水。",
+        "fail": { "effect": { "茎叶": -3 }, "result": "冰雹没打算客气。你只剩一把碎叶子。" } },
+      { "text": "硬皮顶着", "require": "legacy:hard_bark>=1", "effect": { "水分": 3, "韧性": 2, "灵气": 5 },
+        "result": "前世塌方压过你。这一世冰雹砸上来，只听见咚咚响。" }
+    ]
+  },
+  {
+    "id": "xs_mirage", "dir": "any", "sudden": true, "stage": [2, 99], "weight": 7,
+    "text": "远处浮起一片湖，湖边有树有屋，还有一株和你一模一样的草。",
+    "choices": [
+      { "text": "不看它", "effect": { "灵性": 1 }, "result": "你低头喝自己的露水。湖慢慢散了。" },
+      { "text": "往那边伸根", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "根系": 1, "灵气": 8 }, "result": "根伸出去三尺，碰到一条真的水脉。湖是假的，水是真的。",
+        "fail": { "effect": { "水分": -3 }, "result": "伸到一半，湖没了。你的根晾在了太阳底下。" } },
+      { "text": "冲那株草挥叶子", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵气": 20, "灵性": 2 }, "result": "它也冲你挥了挥。第二天醒来，你身上多了一缕外来的灵气。",
+        "fail": { "effect": { "灵性": -1 }, "result": "它没理你。旁边的蜥蜴盯着你看了很久。" } }
+    ]
+  },
+  {
+    "id": "xs_tumbleweed", "dir": "any", "sudden": true, "stage": [1, 3], "weight": 8,
+    "text": "一团风滚草滚过来，卡在你身上不走了。它说它在环游荒漠。",
+    "choices": [
+      { "text": "帮它脱身", "effect": { "茎叶": -1, "灵性": 1 }, "result": "你松开叶子。它滚出去十丈，回头喊了声谢谢。" },
+      { "text": "留它讲讲路上的事", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "follow": { "id": "xs_tumbleweed_back", "delay": 2, "ttl": 6 }, "灵性": 2, "水分": -1 },
+        "result": "它讲了一整夜：北边有井，东边有蝎子窝。临走说下回带特产。",
+        "fail": { "effect": { "茎叶": -1 }, "result": "它讲到一半睡着了，压了你一宿。" } },
+      { "text": "跟它一起滚", "absurd": true, "chance": 0.15, "chanceAttr": "根系", "chanceStep": 0.02,
+        "effect": { "灵气": 18, "韧性": 1 }, "result": "你连根带沙滚了半里，又被它滚了回来。灌了一肚子风里的灵气。",
+        "fail": { "effect": { "根系": -2, "茎叶": -1 }, "result": "你滚了一圈就散了架。风滚草说：你不行。" } }
+    ]
+  },
+  {
+    "id": "xs_tumbleweed_back", "dir": "any", "chainOnly": true, "teaser": "风滚草说要带特产回来",
+    "text": "那团风滚草又滚回来了，大了一圈，身上缠满了远方的东西。",
+    "choices": [
+      { "text": "翻翻它身上", "effect": { "item": "dew", "灵性": 1 }, "result": "一片羽毛、半截绳子，还有一滴裹在叶子里的露水。归你了。" },
+      { "text": "让它在你这歇歇", "effect": { "根系": 1, "茎叶": 1 }, "result": "它在你身边停了一季，替你挡了不少风沙。" },
+      { "text": "托它捎一粒种子", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵气": 25, "灵性": 3 }, "result": "它把你的种子捎到了北边的井旁。从此你在两个地方活着。",
+        "fail": { "effect": { "茎叶": -1 }, "result": "它试着把你卷起来。你们俩在原地转了一下午。" } }
+    ]
+  },
+  {
+    "id": "xs_pigeon", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 7,
+    "text": "一只信鸽摔在你脚边，腿上绑着小竹筒，翅膀耷拉着。",
+    "choices": [
+      { "text": "给它遮阴", "effect": { "灵性": 1, "水分": -1 }, "result": "你把影子让给它。傍晚，它扑棱两下飞走了。" },
+      { "text": "喂它露水", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "follow": { "id": "xs_pigeon_back", "delay": 2, "ttl": 6 }, "水分": -2, "灵性": 2 },
+        "result": "它喝了三口，抖抖翅膀站起来，绕着你飞了一圈才走。",
+        "fail": { "effect": { "水分": -3 }, "result": "露水还没递过去，就被太阳收走了。鸽子自己挣着飞了。" } },
+      { "text": "让蜜蜂带路", "showIf": "companion:lost_bee", "effect": { "灵性": 3, "灵气": 6 },
+        "result": "蜜蜂绕了两圈，领着鸽子往东去了。它们都认得花的方向。" }
+    ]
+  },
+  {
+    "id": "xs_pigeon_back", "dir": "any", "chainOnly": true, "teaser": "那只信鸽还会飞回来",
+    "text": "那只信鸽回来了。它把一粒绿洲边的种子放在你根旁，歪头看你。",
+    "choices": [
+      { "text": "收下种子的灵气", "effect": { "灵气": 8, "根系": 1 }, "result": "种子里存着绿洲的水汽。你一口一口，吸了一季。" },
+      { "text": "托它送回绿洲", "effect": { "灵性": 3 }, "result": "鸽子叼起种子走了。后来风里总有一点湿润的味道。" },
+      { "text": "问它竹筒里写了啥", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "灵气": 12 }, "result": "竹筒里是一张地图。东边三里，沙下有水。",
+        "fail": { "effect": { "灵性": -1 }, "result": "它咕咕了半天。你只听懂了咕咕。" } }
+    ]
+  },
+  {
+    "id": "xs_singing_sand", "dir": "any", "sudden": true, "stage": [0, 2], "weight": 8,
+    "text": "沙丘忽然嗡嗡地响，像有谁在地底下哼歌。",
+    "choices": [
+      { "text": "一动不动", "effect": { "韧性": 1 }, "result": "响了一个时辰才停。沙丘还在原地，你也是。" },
+      { "text": "跟着哼", "chance": 0.45, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "灵性": 2, "灵气": 6 }, "result": "你跟上了调子。沙子底下有个东西，轻轻应了你一声。",
+        "fail": { "effect": { "水分": -2 }, "result": "你哼跑了调。沙丘一抖，倒了你一身沙。" } },
+      { "text": "听出是古谣", "require": "legacy:ancient_tongue>=1", "effect": { "灵性": 3, "灵气": 10 },
+        "result": "前世遗迹的字害过你。这一世你听懂了，沙子在唱一首古谣。" }
+    ]
+  },
+  {
+    "id": "xs_eclipse", "dir": "any", "sudden": true, "stage": [3, 99], "weight": 6,
+    "text": "正午，太阳被啃掉了一块。荒漠一下凉了，虫子全闭了嘴。",
+    "choices": [
+      { "text": "趁凉喝水", "effect": { "水分": 2 }, "result": "难得的凉快。能喝的，你都喝了。" },
+      { "text": "盯着那块黑", "chance": 0.35, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵气": 15, "灵性": 2 }, "result": "黑影边上漏下一圈光，全落在了你身上。",
+        "fail": { "effect": { "灵性": -1, "水分": -1 }, "result": "看久了，叶子上烫出两个白点。" } },
+      { "text": "举高叶子帮它补", "absurd": true, "chance": 0.15, "chanceAttr": "茎叶", "chanceStep": 0.02,
+        "effect": { "灵气": 30 }, "result": "太阳慢慢回来了。你很确定，是你补上的。",
+        "fail": { "effect": { "灵性": -1 }, "result": "太阳自己回来了，没跟你打招呼。" } }
+    ]
+  },
+  {
+    "id": "xs_goats", "dir": "any", "sudden": true, "stage": [1, 3], "weight": 8,
+    "text": "牧羊人赶着一群山羊翻过沙丘。领头那只，直勾勾地盯着你。",
+    "choices": [
+      { "text": "把叶子缩紧", "effect": { "茎叶": -1 }, "result": "它啃了一口边，嫌扎嘴，走了。" },
+      { "text": "冲它竖起刺", "chance": 0.45, "chanceAttr": "韧性", "chanceStep": 0.05,
+        "effect": { "feud": "领头羊被扎得直蹦", "韧性": 1, "灵气": 6 }, "result": "它一口下去，蹦起老高。整群羊绕开了你。",
+        "easy": "领头羊看了看你的刺，自己让开了道。",
+        "fail": { "effect": { "death": "eaten_beast" }, "result": "它嚼得很香。牧羊人在远处吹了声口哨。" } },
+      { "text": "苦它一嘴", "require": "legacy:bitter_sap>=1", "effect": { "灵气": 6, "灵性": 1 },
+        "result": "前世你被啃过。这一世你苦得像药，它舔一口就吐了。" }
+    ]
+  },
+  {
+    "id": "xs_eagle_fish", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 6,
+    "text": "一只鹰从头顶飞过，爪子一松，一条鱼掉在了你旁边。",
+    "choices": [
+      { "text": "用根把它包起来", "effect": { "根系": 1, "水分": 2 }, "result": "荒漠里头一回有鱼。它慢慢成了你的肥料。" },
+      { "text": "守着等鹰回来", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 3, "灵气": 8 }, "result": "鹰落下来找鱼，看见你守着，冲你点了点头。",
+        "fail": { "effect": { "茎叶": -2 }, "result": "鹰落下来找鱼，顺脚踩扁了你半边叶子。" } },
+      { "text": "叫小狐狸来吃", "showIf": "companion:fox_cub", "effect": { "灵性": 2, "茎叶": 1 },
+        "result": "小狐狸吃得满嘴腥，在你影子里睡了一下午。" }
+    ]
+  },
+  {
+    "id": "xs_caravan_moon", "dir": "any", "sudden": true, "stage": [2, 99], "weight": 6,
+    "text": "商队在沙丘下扎营过节，篝火边有人分饼，说今晚月亮最圆。",
+    "choices": [
+      { "text": "远远看着", "effect": { "灵性": 1 }, "result": "火光照到了你这里一点。你觉得自己也在过节。" },
+      { "text": "往火边伸叶子", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "灵气": 6 }, "result": "一个孩子看见你，把饼渣埋在你根边：你也吃。",
+        "fail": { "effect": { "茎叶": -2 }, "result": "伸得太近，叶尖燎了一下。你缩了回来。" } },
+      { "text": "跟着歌声打拍子", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03,
+        "effect": { "灵气": 15, "水分": 3, "灵性": 1 }, "result": "老人说草在打拍子是吉兆，给你浇了半壶水。",
+        "fail": { "effect": { "水分": -1 }, "result": "没人看见。你自己点了一晚上头，累了。" } }
+    ]
+  },
+  {
+    "id": "xs_jerboa", "dir": "any", "sudden": true, "stage": [0, 1], "weight": 8,
+    "text": "一只跳鼠在你头顶的沙上蹦个没完，把这儿当成了跳床。",
+    "choices": [
+      { "text": "忍着", "effect": { "根系": 1 }, "result": "它蹦累了就走了。沙被踩实了，你扎得更稳。" },
+      { "text": "猛地顶它一下", "chance": 0.4, "chanceAttr": "韧性", "chanceStep": 0.06,
+        "effect": { "灵气": 6, "韧性": 1 }, "result": "跳鼠蹦出了它这辈子最高的一跳，再没回来。",
+        "fail": { "effect": { "水分": -2 }, "result": "你没顶动。它蹦得更起劲了。" } },
+      { "text": "让小直吓它", "showIf": "companion:earthworm", "effect": { "根系": 1, "灵性": 1, "灵气": 4 },
+        "result": "小直从沙里探出半截。跳鼠以为是蛇，一蹦三丈远。" }
+    ]
+  },
+  {
+    "id": "xs_spring_thunder", "dir": "any", "sudden": true, "stage": [0, 2], "weight": 7,
+    "text": "第一声春雷滚过荒漠。沙子底下，睡着的东西全醒了。",
+    "choices": [
+      { "text": "跟着伸个懒腰", "effect": { "根系": 1, "灵气": 3 }, "result": "你伸了个懒腰，根比去年多走了一寸。" },
+      { "text": "抢在虫子前吸水", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "水分": 3, "根系": 1 }, "result": "你抢到了第一口潮气。虫子们来晚了。",
+        "fail": { "effect": { "根系": -1 }, "result": "一只刚醒的甲虫啃了你一口，当早饭。" } },
+      { "text": "雷纹跟着亮", "require": "legacy:thunder_mark>=1", "effect": { "灵气": 12, "韧性": 1 },
+        "result": "前世雷劈过你。这一世春雷一响，你身上的纹路跟着亮了。" }
+    ]
+  },
+  {
+    "id": "xs_crow", "dir": "any", "sudden": true, "stage": [3, 99], "weight": 6,
+    "text": "一只乌鸦落在你枝头，叫了三声，不吃也不走。",
+    "choices": [
+      { "text": "抖枝赶它走", "effect": { "韧性": 1 }, "result": "它飞走前，又回头看了你一眼。" },
+      { "text": "问它看见了什么", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "根系": 1, "灵气": 8 }, "result": "它说南边要起沙暴。你提前把根扎深了一尺。",
+        "fail": { "effect": { "灵性": -1 }, "result": "它又叫了三声。你一个字也没听懂。" } },
+      { "text": "给它看指南针", "showIf": "item:compass", "effect": { "灵气": 8, "灵性": 2 },
+        "result": "乌鸦盯着那根针看了很久，叼来一粒亮石子放在你根边。" }
+    ]
+  }
+]

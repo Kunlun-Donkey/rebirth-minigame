@@ -1,0 +1,176 @@
+[
+  {
+    "id": "xs_typhoon", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8, "maps": ["city", "workshop", "county"],
+    "text": "台风登陆，全城停工停课。窗户被吹得哐哐响，楼下的招牌飞走了一块。",
+    "choices": [
+      { "text": "在家睡一天", "effect": { "精力": 2 }, "result": "你睡到下午，起来泡了碗面。今年第一个不用干活的工作日。" },
+      { "text": "帮邻居钉窗户", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+        "effect": { "人脉": 3, "心态": 1 }, "result": "你钉好了三户的窗。第二天，门把手上挂了一袋橘子。",
+        "fail": { "effect": { "精力": -1, "心态": -1 }, "result": "刚上梯子，锤子就被风刮跑了。邻居们把你劝回了家。" } },
+      { "text": "对着窗外许愿涨薪", "absurd": true, "chance": 0.2, "chanceAttr": "心态", "chanceStep": 0.03,
+        "effect": { "身价": 8, "心态": 1 }, "result": "第二天，通知发台风补贴。你决定以后多许愿。",
+        "fail": { "effect": { "心态": -1 }, "result": "风把你的愿望和楼下的招牌一起吹走了。" } }
+    ]
+  },
+  {
+    "id": "xs_lost_kid", "dir": "any", "sudden": true, "stage": [0, 2], "weight": 7,
+    "text": "商场门口，一个小男孩攥着气球在哭，说找不到妈妈了。",
+    "choices": [
+      { "text": "带他找保安", "effect": { "心态": 1, "人脉": 1 }, "result": "广播响了三遍，他妈妈跑过来，一个劲说谢谢。" },
+      { "text": "陪他原地等", "chance": 0.55, "chanceAttr": "心态", "chanceStep": 0.05,
+        "effect": { "follow": { "id": "xs_lost_kid_thanks", "delay": 2, "ttl": 6 }, "心态": 2 },
+        "result": "你陪他数了四十个路人，第四十一个是他妈妈。她留了你的电话。",
+        "fail": { "effect": { "精力": -1 }, "result": "等了一个钟头。最后是他妈妈先找到保安，再找到你们。" } },
+      { "text": "给他变个魔术", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+        "effect": { "脸皮": 2, "人脉": 2 }, "result": "硬币变没了。他不哭了，旁边还围了一圈人鼓掌。",
+        "fail": { "effect": { "脸皮": 1, "心态": -1 }, "result": "硬币掉地上滚远了。他哭得更大声了。" } }
+    ]
+  },
+  {
+    "id": "xs_lost_kid_thanks", "dir": "any", "chainOnly": true, "teaser": "那位妈妈说要好好谢你",
+    "text": "走丢孩子的妈妈打来电话。她在一家公司管招聘，问你想不想来聊聊。",
+    "choices": [
+      { "text": "去聊聊", "effect": { "身价": 6, "人脉": 2 }, "result": "聊了一个钟头。她说：有好位置，第一个告诉你。" },
+      { "text": "说不用谢", "effect": { "心态": 2 }, "result": "你说举手之劳。她还是寄来一箱水果和一张手写卡片。" },
+      { "text": "顺便问问行情", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "能力": 2, "身价": 4 }, "result": "她把行业里的门道讲了个透。你记了满满两页。",
+        "fail": { "effect": { "脸皮": 1 }, "result": "你问得太直，她在电话那头笑了半天。" } }
+    ]
+  },
+  {
+    "id": "xs_power_cut", "dir": "any", "sudden": true, "stage": [0, 2], "weight": 8,
+    "text": "半夜，整栋楼突然停电。冰箱停了，手机只剩百分之八的电。",
+    "choices": [
+      { "text": "早点睡", "effect": { "精力": 2 }, "result": "没网没电，你九点就睡了。醒来神清气爽。" },
+      { "text": "下楼找物业", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "人脉": 3 }, "result": "你在楼道里拉了个停电群。第二天来电，你成了楼长。",
+        "fail": { "effect": { "精力": -1, "心态": -1 }, "result": "物业值班室也黑着。你爬回了十八楼。" } },
+      { "text": "切老家的腊肉", "showIf": "item:bacon", "effect": { "人脉": 4, "心态": 2 },
+        "result": "邻居凑来几根蜡烛，你切了一盘腊肉。楼道成了夜宵摊。" }
+    ]
+  },
+  {
+    "id": "xs_mid_autumn", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 7,
+    "text": "中秋节。楼下超市的月饼打五折，只剩五仁的。家里群在晒团圆饭。",
+    "choices": [
+      { "text": "视频打给家里", "effect": { "心态": 2 }, "result": "老妈举着手机绕饭桌一圈，挨个让亲戚跟你打招呼。" },
+      { "text": "拎月饼敲对门", "chance": 0.45, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "人脉": 3, "心态": 1 }, "result": "对门大爷拿莲蓉换了你的五仁，还留你喝了两杯茶。",
+        "fail": { "effect": { "脸皮": 1, "心态": -1 }, "result": "对门开门一看，手里也拎着一盒五仁。" } },
+      { "text": "请假回家", "require": "legacy:veteran>=1", "effect": { "心态": 3, "精力": 2 },
+        "result": "前世你在工位上过了三十个中秋。这一世你买了张回家的票。" }
+    ]
+  },
+  {
+    "id": "xs_wallet", "dir": "any", "sudden": true, "stage": [0, 1], "weight": 7,
+    "text": "路边捡到一个钱包，里面有身份证、两千块现金，和一张全家福。",
+    "choices": [
+      { "text": "交给派出所", "effect": { "心态": 2, "人脉": 1 }, "result": "失主是开小饭馆的大叔，非要请你吃了一顿。" },
+      { "text": "照地址送上门", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+        "effect": { "人脉": 3, "身价": 4 }, "result": "大叔开门愣住了，塞给你一张卡：以后来吃饭打对折。",
+        "fail": { "effect": { "精力": -2 }, "result": "地址是十年前的。你转了一下午，最后还是去了派出所。" } },
+      { "text": "当街喊谁的钱包", "absurd": true, "chance": 0.3, "chanceAttr": "脸皮", "chanceStep": 0.04,
+        "effect": { "脸皮": 2, "人脉": 2 }, "result": "失主从奶茶店里冲出来，给你买了一杯全糖的。",
+        "fail": { "effect": { "脸皮": 1 }, "result": "五个人说是自己的。你还是去了派出所。" } }
+    ]
+  },
+  {
+    "id": "xs_old_man", "dir": "any", "sudden": true, "stage": [3, 99], "weight": 6,
+    "text": "路口一个戴墨镜的老头拦住你：年轻人，这辈子不是头一回过了吧。",
+    "choices": [
+      { "text": "绕开走", "effect": { "心态": 1 }, "result": "走出十米，你回头看。路口空空的。" },
+      { "text": "问他怎么知道", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+        "effect": { "心态": 2, "能力": 1 }, "result": "他说：上辈子这时候你在熬夜，这辈子早点睡。说完收摊走了。",
+        "fail": { "effect": { "身价": -3 }, "result": "他说聊一句五十。你付完钱，他说：天机不可泄露。" } },
+      { "text": "【叮！】检测到同行", "showIf": "system:any", "effect": { "身价": 8, "心态": 1 },
+        "result": "老头的墨镜反了一下光。他冲你点点头，转身没进了人群。" }
+    ]
+  },
+  {
+    "id": "xs_pigeon", "dir": "any", "sudden": true, "stage": [0, 99], "weight": 8,
+    "text": "一只鸽子从你头顶飞过，精准投弹。路人说：要走运了。",
+    "choices": [
+      { "text": "擦擦算了", "effect": { "心态": 1 }, "result": "你去便利店买了包纸巾。店员多送了你一包。" },
+      { "text": "拍下来发朋友圈", "chance": 0.5, "chanceAttr": "脸皮", "chanceStep": 0.06,
+        "effect": { "人脉": 3, "脸皮": 1 }, "result": "点赞两百。好几个多年没联系的人来问你最近咋样。",
+        "fail": { "effect": { "心态": -1 }, "result": "唯一的评论来自你妈：赶紧回家洗头。" } },
+      { "text": "顺手买张彩票", "absurd": true, "chance": 0.2, "chanceAttr": "心态", "chanceStep": 0.03,
+        "effect": { "身价": 12 }, "result": "中了五百。你朝天上鞠了一躬。",
+        "fail": { "effect": { "身价": -1 }, "result": "没中。鸽子又飞回来了一趟。" } }
+    ]
+  },
+  {
+    "id": "xs_leak", "dir": "any", "sudden": true, "stage": [1, 3], "weight": 8,
+    "text": "楼上第三次漏水。你上去敲门，对方隔着门说：老房子都这样。",
+    "choices": [
+      { "text": "拿盆接着", "effect": { "心态": -1, "精力": 1 }, "result": "你接了一夜，对滴水声有了节奏感。" },
+      { "text": "叫上房东和物业", "chance": 0.5, "chanceAttr": "人脉", "chanceStep": 0.06,
+        "effect": { "feud": "楼上终于修了水管", "身价": 3, "心态": 1 }, "result": "三个人堵在门口。当天下午，楼上请了师傅。",
+        "fail": { "effect": { "心态": -2 }, "result": "房东说找物业，物业说找房东。水还在滴。" } },
+      { "text": "三次都拍了照", "require": "legacy:paper_trail>=1", "effect": { "身价": 4, "心态": 1 },
+        "result": "前世你背过别人的锅。这一世三次漏水都有照片，楼上当天就赔了。" }
+    ]
+  },
+  {
+    "id": "xs_wedding", "dir": "any", "sudden": true, "stage": [1, 3], "weight": 7,
+    "text": "大学室友结婚，喜帖发到你手上。份子钱的数，你心里算了三遍。",
+    "choices": [
+      { "text": "转个份子不去", "effect": { "身价": -2, "精力": 1 }, "result": "你转了账，睡了个懒觉。他回了个抱拳。" },
+      { "text": "去喝喜酒", "chance": 0.55, "chanceAttr": "人脉", "chanceStep": 0.05,
+        "effect": { "人脉": 3, "心态": 1 }, "result": "同桌三个老同学。散场时有人把你拉进了一个做生意的群。",
+        "fail": { "effect": { "精力": -1, "身价": -2 }, "result": "你被安排在小孩那桌，抢了一晚上饮料。" } },
+      { "text": "上台抢捧花", "absurd": true, "chance": 0.2, "chanceAttr": "脸皮", "chanceStep": 0.03,
+        "effect": { "脸皮": 3, "人脉": 3, "心态": 1 }, "result": "你一跃而起，接住了。全场起哄，伴娘加了你好友。",
+        "fail": { "effect": { "脸皮": 2, "心态": -1 }, "result": "捧花落进你身后那人手里。你举着空手在台上站了三秒。" } }
+    ]
+  },
+  {
+    "id": "xs_old_phone", "dir": "any", "sudden": true, "stage": [2, 99], "weight": 6,
+    "text": "半夜，抽屉里的旧手机自己亮了，弹出一条十年后的日程提醒。",
+    "choices": [
+      { "text": "关机睡觉", "effect": { "精力": 1 }, "result": "第二天再开机，那条提醒不见了。" },
+      { "text": "点开看", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+        "effect": { "能力": 1, "身价": 8 }, "result": "上面写：周三，别签那份合同。周三，真有人递来一份合同。",
+        "fail": { "effect": { "心态": -2 }, "result": "上面只有三个字：要加班。" } },
+      { "text": "这条提醒我记得", "showIf": "talent:reborn_memory", "effect": { "身价": 10, "能力": 1 },
+        "result": "前世这条提醒你没当回事。这一世你提前一周，把事办了。" }
+    ]
+  },
+  {
+    "id": "xs_first_snow", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 7,
+    "text": "今年第一场雪。路边有个大爷在堆雪人，堆到一半，腰闪了。",
+    "choices": [
+      { "text": "扶他到路边坐下", "effect": { "follow": { "id": "xs_snow_grandpa", "delay": 2, "ttl": 6 }, "心态": 1, "人脉": 1 },
+        "result": "大爷坐着指挥，你替他把雪人堆完。他说他就住你对门。" },
+      { "text": "背他去诊所", "chance": 0.5, "chanceAttr": "精力", "chanceStep": 0.05,
+        "effect": { "人脉": 3, "心态": 2 }, "result": "医生说没大事。他儿子赶来，非要留你电话。",
+        "fail": { "effect": { "精力": -3 }, "result": "背了两条街，你也闪了腰。俩人并排坐在诊所里。" } },
+      { "text": "躺下印个雪人形", "absurd": true, "chance": 0.3, "chanceAttr": "心态", "chanceStep": 0.04,
+        "effect": { "心态": 3, "精力": 1 }, "result": "路过的小孩排着队，在你旁边印了一排。",
+        "fail": { "effect": { "精力": -2 }, "result": "躺下去才发现，雪底下是个水坑。" } }
+    ]
+  },
+  {
+    "id": "xs_snow_grandpa", "dir": "any", "chainOnly": true, "teaser": "对门大爷说要请你吃饭",
+    "text": "堆雪人的大爷敲开你家门，端来一锅饺子：我儿子说，得谢谢你。",
+    "choices": [
+      { "text": "收下", "effect": { "精力": 2, "心态": 2 }, "result": "酸菜馅的。你吃了半锅，剩下的冻进了冰箱。" },
+      { "text": "留他一起吃", "effect": { "人脉": 3, "心态": 1 }, "result": "大爷边吃边说，他退休前管工地，认识半个城的人。" },
+      { "text": "回他一盘菜", "chance": 0.5, "chanceAttr": "能力", "chanceStep": 0.06,
+        "effect": { "人脉": 2, "心态": 2 }, "result": "大爷尝了一口，说比他儿子做得强。从此常来串门。",
+        "fail": { "effect": { "脸皮": 1 }, "result": "菜炒糊了。大爷吃完，说了句：年轻人，慢慢练。" } }
+    ]
+  },
+  {
+    "id": "xs_spirit_rain", "dir": "any", "sudden": true, "stage": [1, 99], "weight": 8, "maps": ["awaken"],
+    "text": "下了一场带光的雨。淋到的人，有的打喷嚏，有的头发变绿，有的会飞了。",
+    "choices": [
+      { "text": "打伞回家", "effect": { "精力": 1 }, "result": "路过二楼窗户时，有人从里面飘出来冲你挥手。" },
+      { "text": "站进雨里", "chance": 0.4, "chanceAttr": "心态", "chanceStep": 0.05,
+        "effect": { "能力": 2, "身价": 8 }, "result": "雨水顺着头顶流进骨头里。第二天，你看文件一目十行。",
+        "fail": { "effect": { "心态": -1 }, "result": "你的头发绿了三天。别的什么也没变。" } },
+      { "text": "把绿萝端出去淋", "showIf": "companion:pothos", "effect": { "身价": 6, "心态": 1 },
+        "result": "绿萝喝饱了雨，一夜爬满了窗台，还开了一朵花。" }
+    ]
+  }
+]
