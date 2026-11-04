@@ -41,6 +41,29 @@
     { "id": "L3", "dir": "side", "name": "枯萎绿洲", "require": "stage>=3 & 根系>=6", "span": 3,
       "enterText": "古道尽头，是一片死掉的绿洲。", "blockedText": "古道很长。你的根还不够长" }
   ],
+  "maps": [
+    { "id": "dune", "name": "沙丘", "weight": 4,
+      "desc": "风把你吹到一座沙丘脚下。沙子软，水少，骆驼常来。",
+      "startLog": "一颗草籽落在了沙丘脚下。" },
+    { "id": "gobi", "name": "戈壁石缝", "weight": 3,
+      "desc": "你卡进了戈壁的一道石缝。石头挡风，也挡水，根得往石头里钻。",
+      "startLog": "一颗草籽卡进了戈壁的石缝里。",
+      "start": { "韧性": 2, "水分": -1 },
+      "layers": {
+        "U1": { "name": "石缝口" }, "U2": { "name": "石头顶", "enterText": "你的叶尖探出了石头顶。风很大，但没有沙子。" },
+        "D1": { "name": "碎石层" }, "D2": { "name": "岩缝", "enterText": "根尖挤进了岩缝。石头里渗着一丝凉。", "blockedText": "根太嫩，挤不进石头缝" },
+        "L1": { "name": "乱石滩" }
+      } },
+    { "id": "well", "name": "废弃驿站", "weight": 3,
+      "desc": "你落在一座废弃驿站的旧井边。井里还剩点水，人和骆驼都记得这里。",
+      "startLog": "一颗草籽落在了废弃驿站的井台边。",
+      "start": { "水分上限": 1, "灵性": 1 },
+      "layers": {
+        "U1": { "name": "井台" }, "U2": { "name": "驿站土墙", "enterText": "你的叶尖越过了土墙。墙那边，是一条旧路。" },
+        "D1": { "name": "井沿土" }, "D2": { "name": "井壁", "enterText": "根尖摸到了井壁的砖缝。砖缝里是湿的。", "blockedText": "根太嫩，钻不进井壁的砖缝" },
+        "L1": { "name": "驿站院子" }
+      } }
+  ],
   "stages": [
     { "level": 0, "name": "草籽", "narration": "", "lifespan": 14 },
     { "level": 1, "name": "嫩芽", "require": "season>=2", "lifespan": 14,
@@ -120,7 +143,7 @@
     { "id": "vision", "name": "慧眼", "desc": "开局天赋、道具、伙伴改为 4 选 1。", "kind": "draftSize", "costs": [2000] }
   ],
   "fates": [
-    { "id": "heaven_sign", "name": "紫气东来", "desc": "天边有紫气。今天成为「天命之草」的概率 ×3。", "mods": { "blessedMul": 3 } },
+    { "id": "heaven_sign", "name": "祥云罩顶", "desc": "天边有紫气。今天成为「天命之草」的概率 ×3。", "mods": { "blessedMul": 3 } },
     { "id": "rain", "name": "甘霖", "desc": "荒漠今天下雨了。每 2 季才消耗一次水分。", "mods": { "waterCostEvery": 2 } },
     { "id": "purple_qi", "name": "紫气东来", "desc": "天上的灵气往下漏。灵气获取 ×1.5。", "mods": { "qiMul": 1.5 } },
     { "id": "turbulent", "name": "多事之秋", "desc": "突发事件更多，轮回点 ×1.3。", "mods": { "suddenMul": 1.8, "pointsMul": 1.3 } },

@@ -1,0 +1,156 @@
+[
+  {
+    "id": "mp_gb_u1_shade", "dir": "up", "layers": ["U1"], "maps": ["gobi"], "stage": [1, 99], "weight": 12,
+    "text": "石缝口一天只有半天阴凉。石头的影子挪到哪儿，你就想往哪儿歪。",
+    "choices": [
+      { "text": "跟着影子长", "effect": { "水分": 1, "茎叶": 1 }, "result": "你长歪了，但一滴水没浪费。" },
+      { "text": "迎着太阳伸叶", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.06, "effect": { "茎叶": 2, "灵气": 4 }, "result": "叶子晒成了深绿色。石头都没你硬气。", "easy": "太阳晒了一整天。你一片叶子都没卷。", "fail": { "effect": { "水分": -2 }, "result": "叶子卷成了筒。你缩回影子里，喘了一季。" } },
+      { "text": "前世渴死过", "require": "legacy:water_cells>=1", "effect": { "水分": 2, "茎叶": 2 }, "result": "前世你渴死在太阳底下。这一世你踩着影子长，晒一会儿躲一会儿。" },
+      { "text": "把石头推过来点", "absurd": true, "chance": 0.15, "chanceAttr": "韧性", "chanceStep": 0.03, "effect": { "韧性": 3, "灵气": 8 }, "result": "石头挪了半寸。不知道是你推的，还是它自己想挪。", "fail": { "effect": { "水分": -1 }, "result": "石头没动。你动了，往后仰了一季。" } }
+    ]
+  },
+  {
+    "id": "mp_gb_u2_eagle", "dir": "up", "layers": ["U2"], "maps": ["gobi"], "stage": [1, 99], "weight": 12,
+    "text": "一只鹰落在石头顶，爪子就在你旁边。它盯着下面一个沙鼠洞，一动不动。",
+    "choices": [
+      { "text": "也一动不动", "effect": { "韧性": 1, "灵性": 1 }, "result": "鹰等了一下午，沙鼠没出来。它飞走时，你才敢晃一下。" },
+      { "text": "晃叶子给沙鼠报信", "effect": { "灵性": 2, "灵气": 3 }, "result": "洞口的沙鼠缩了回去。鹰扭头看了你很久。" },
+      { "text": "借它起飞的风", "chance": 0.45, "chanceAttr": "茎叶", "chanceStep": 0.05, "effect": { "茎叶": 2, "灵气": 4 }, "result": "翅膀一扇，你顺势往上蹿了一截。", "fail": { "effect": { "水分": -1, "茎叶": -1 }, "result": "翅膀一扇，石头顶的沙全扑在你脸上。" } },
+      { "text": "冒充它的羽毛", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "灵气": 10 }, "result": "鹰梳羽毛时顺手把你也理了理。从此石头顶有鹰罩着。", "fail": { "effect": { "茎叶": -1 }, "result": "鹰啄了一口，确认你不是羽毛，呸掉了。" } }
+    ]
+  },
+  {
+    "id": "mp_gb_d1_gravel", "dir": "down", "layers": ["D1"], "maps": ["gobi"], "stage": [1, 99], "weight": 12,
+    "text": "根尖前面全是碎石，缝隙窄得只够过一根须。",
+    "choices": [
+      { "text": "绕着走", "effect": { "根系": 1, "水分": -1 }, "result": "你绕了三块石头，多走了一季的路。" },
+      { "text": "硬挤过去", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.06, "effect": { "根系": 3 }, "result": "碎石被你一颗颗顶开。根后面留下了一条路。", "easy": "碎石自己让开了。它们也知道谁更硬。", "fail": { "effect": { "水分": -2 }, "result": "缝合上了。根须夹在里面，抽了一季才抽回来。" } },
+      { "text": "前世被埋过", "require": "legacy:hard_bark>=1", "effect": { "根系": 2, "韧性": 1 }, "result": "前世一整条古河压过你。这一世几块碎石，你眼皮都不抬。" },
+      { "text": "给石子浇水", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "根系": 4, "灵气": 6 }, "result": "石子没发芽。但湿了的土松了，你一路扎了下去。", "fail": { "effect": { "水分": -2 }, "result": "你浇了一季。石子还是石子，你瘪了一圈。" } }
+    ]
+  },
+  {
+    "id": "mp_gb_d2_seep", "dir": "down", "layers": ["D2"], "maps": ["gobi"], "weight": 12,
+    "text": "岩缝深处渗出一滴水。一滴，要攒一整天。",
+    "choices": [
+      { "text": "守着慢慢喝", "effect": { "水分": 2 }, "result": "你喝一滴，等一天。石头比你还有耐心。" },
+      { "text": "往缝里再扎深", "chance": 0.45, "chanceAttr": "根系", "chanceStep": 0.05, "effect": { "根系": 2, "水分上限": 1 }, "result": "根钻到了渗水的源头。原来石头里藏着一小汪水。", "fail": { "effect": { "death": "collapse" }, "result": "石头翻了个身。你在下面。" } },
+      { "text": "让蚯蚓开道", "showIf": "companion:earthworm", "effect": { "根系": 2, "水分": 2 }, "result": "蚯蚓顺着缝拱了一夜。早上，那一滴变成了一小股。" }
+    ]
+  },
+  {
+    "id": "mp_gb_l1_sheep", "dir": "side", "layers": ["L1"], "maps": ["gobi"], "stage": [1, 4], "weight": 12,
+    "text": "一只岩羊在乱石滩上找草吃。它啃一口，抬头看你一眼，再啃一口。",
+    "choices": [
+      { "text": "缩到石头后面", "effect": { "灵性": 1, "follow": { "id": "mp_gb_sheep_back", "delay": 2, "ttl": 6 } }, "result": "它啃完了附近的草，记住了石头后面还有一株。" },
+      { "text": "前世长过刺", "require": "legacy:thorn>=1", "effect": { "韧性": 1, "灵气": 5, "follow": { "id": "mp_gb_sheep_back", "delay": 2, "ttl": 6 } }, "result": "前世蝎子剪过你的根。这一世你长了刺，岩羊舔一下，嘴肿了。" },
+      { "text": "舍它一片叶子", "effect": { "茎叶": -1, "灵性": 2, "follow": { "id": "mp_gb_sheep_back", "delay": 2, "ttl": 6 } }, "result": "它吃了，冲你眨眨眼。你觉得它在算账。" },
+      { "text": "装成一块石头", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.04, "effect": { "灵性": 3, "灵气": 6 }, "result": "岩羊在你身上蹭了蹭痒，走了。当石头也有当石头的好。", "fail": { "effect": { "death": "eaten_beast" }, "result": "它很少见到绿色的石头。它尝了尝。" } }
+    ]
+  },
+  {
+    "id": "mp_gb_sheep_back", "dir": "side", "layers": ["L1"], "maps": ["gobi"], "chainOnly": true, "teaser": "岩羊说它还会带家里人来",
+    "text": "岩羊又来了，身后跟着两只小的。它站上石头，冲小岩羊点点头：就是这株。",
+    "choices": [
+      { "text": "缩根装枯", "effect": { "水分": -1, "灵性": 1 }, "result": "一家三口绕着你转了一圈，嫌你干，走了。" },
+      { "text": "竖起全身硬叶", "chance": 0.4, "chanceAttr": "韧性", "chanceStep": 0.06, "effect": { "韧性": 2, "灵气": 8, "feud": "岩羊一家被扎下了石头" }, "result": "小岩羊一口扎了个满嘴，大岩羊领着它们跳下石头跑了。", "easy": "小岩羊刚凑过来就被扎得一蹦。大岩羊叹口气，领着走了。", "fail": { "effect": { "death": "eaten_beast" }, "result": "一家三口，一人一口。" } },
+      { "text": "毒刺", "showIf": "skill:thorn_burst", "useSkill": "thorn_burst", "effect": { "灵气": 10, "韧性": 1, "feud": "岩羊一家被扎下了石头" }, "result": "岩羊一家站在石头上，谁也不敢下来。乱石滩归你了。" }
+    ]
+  },
+  {
+    "id": "mp_gb_l1_quail", "dir": "side", "layers": ["L1"], "maps": ["gobi"], "stage": [1, 99], "weight": 12,
+    "text": "一只石鸡在你旁边的石窝里下了个蛋，扒了两下沙，走了。",
+    "choices": [
+      { "text": "给蛋遮阴", "effect": { "灵性": 2, "水分": -1 }, "result": "小石鸡出壳那天，第一眼看见的是你。它冲你叫了一声。" },
+      { "text": "绕开蛋找水", "effect": { "根系": 1, "水分": 1 }, "result": "你绕过石窝，摸到一片潮沙。各过各的。" },
+      { "text": "问石鸡哪儿有水", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "水分上限": 1, "灵性": 2 }, "result": "石鸡说往东三块石头底下有个小水洼。它没骗你。" },
+      { "text": "替它孵蛋", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "灵气": 8 }, "result": "你用叶子把蛋裹了一季。蛋孵出来了，你也悟了点什么。", "fail": { "effect": { "水分": -2 }, "result": "石鸡回来，看见一株草抱着它的蛋。它很久没说话。" } }
+    ]
+  },
+  {
+    "id": "mp_gb_x_rain", "dir": "any", "sudden": true, "maps": ["gobi"], "stage": [1, 99], "weight": 10,
+    "text": "戈壁下了一场急雨。水顺着石头往下淌，一眨眼就要渗没了。",
+    "choices": [
+      { "text": "能喝多少喝多少", "effect": { "水分": 2 }, "result": "你喝了几口。剩下的流进石缝，不见了。" },
+      { "text": "根须全张开", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05, "effect": { "水分": 3, "水分上限": 1 }, "result": "你把整片石缝的水都兜住了。这一场雨，够喝一阵。", "fail": { "effect": { "水分": -1, "根系": -1 }, "result": "水太急，冲走了两根须。你一口没喝着。" } },
+      { "text": "前世渴死过", "require": "legacy:water_cells>=1", "effect": { "水分": 2, "水分上限": 2 }, "result": "前世你渴死过。这一世一场急雨，你存下了三个月的水。" }
+    ]
+  },
+
+  {
+    "id": "mp_wl_u1_bucket", "dir": "up", "layers": ["U1"], "maps": ["well"], "stage": [1, 99], "weight": 12,
+    "text": "井台上搁着半只破木桶，桶底还有一指水。一只麻雀先到了。",
+    "choices": [
+      { "text": "等它喝完", "effect": { "水分": 1, "灵性": 1 }, "result": "麻雀喝完冲你点点头：剩下的归你。剩下一口。" },
+      { "text": "伸叶子去抢", "chance": 0.5, "chanceAttr": "茎叶", "chanceStep": 0.06, "effect": { "水分": 3 }, "result": "你一片叶子盖住桶口。麻雀气得在井台上跳了三圈。", "fail": { "effect": { "茎叶": -1 }, "result": "麻雀啄了你一口。叶子缺了个角。" } },
+      { "text": "前世信错过谁", "require": "legacy:judge_heart>=1", "effect": { "水分": 2, "灵性": 2 }, "result": "前世你看错过伙伴。这一世你看出来了：麻雀渴，但不饿。你们分着喝。" },
+      { "text": "把根伸进桶里", "absurd": true, "chance": 0.2, "chanceAttr": "韧性", "chanceStep": 0.03, "effect": { "水分上限": 2, "灵气": 6 }, "result": "你的根缠住了桶底。从此每场雨，桶都替你接着。", "fail": { "effect": { "水分": -1 }, "result": "桶翻了。水洒了，桶也滚远了。" } }
+    ]
+  },
+  {
+    "id": "mp_wl_u2_wall", "dir": "up", "layers": ["U2"], "maps": ["well"], "weight": 12,
+    "text": "土墙上有人刻了一行字：至此，水尽。底下又刻了一行，字小一些：井里有水。",
+    "choices": [
+      { "text": "接着往下看", "effect": { "灵性": 2, "灵气": 3 }, "result": "最底下，刻着一个歪歪扭扭的笑脸。" },
+      { "text": "顺着墙往上长", "chance": 0.5, "chanceAttr": "茎叶", "chanceStep": 0.06, "effect": { "茎叶": 3, "灵气": 4 }, "result": "你爬上了墙头。旧路一直通到天边。", "fail": { "effect": { "茎叶": -1, "水分": -1 }, "result": "土墙掉了一块，连你带土落回了墙根。" } },
+      { "text": "前世认得古字", "require": "legacy:ancient_tongue>=1", "effect": { "水分上限": 2, "灵性": 1 }, "result": "前世你被古字咒过。这一世你认出墙角那行小字：水在井东三步。" }
+    ]
+  },
+  {
+    "id": "mp_wl_d1_rope", "dir": "down", "layers": ["D1"], "maps": ["well"], "stage": [1, 99], "weight": 12,
+    "text": "根须碰到一截埋在土里的井绳。麻的，烂了一半，还带着井水的味儿。",
+    "choices": [
+      { "text": "缠住绳子扎稳", "effect": { "根系": 1, "韧性": 1 }, "result": "绳子烂了，但还撑得住一株草。" },
+      { "text": "顺着绳往井里长", "chance": 0.45, "chanceAttr": "根系", "chanceStep": 0.05, "effect": { "根系": 2, "水分": 2 }, "result": "绳子把你领到了井口下面。凉气扑了你一身。", "fail": { "effect": { "death": "collapse" }, "result": "井沿的土一松。你跟着半截绳子掉进了黑里。" } },
+      { "text": "前世被风拔过", "require": "legacy:grip_root>=1", "effect": { "根系": 2, "韧性": 2 }, "result": "前世沙暴把你拔上了天。这一世你把绳子缠了三圈，打了个死结。" }
+    ]
+  },
+  {
+    "id": "mp_wl_d2_toad", "dir": "down", "layers": ["D2"], "maps": ["well"], "weight": 12,
+    "text": "井壁的砖缝里蹲着一只蟾蜍。它说它从没出过井，问你上面什么样。",
+    "choices": [
+      { "text": "说天很大", "effect": { "灵性": 2 }, "result": "它问：有井口那么大吗？你想了想，说差不多。" },
+      { "text": "挤过去喝砖缝水", "effect": { "水分": 2 }, "result": "砖缝很湿。蟾蜍挪了挪屁股，给你让了个位置。" },
+      { "text": "问它水从哪来", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "根系": 2, "水分上限": 1 }, "result": "它说井底有个泉眼，夜里会唱歌。你顺着歌声扎了下去。" },
+      { "text": "劝它出去看看", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "灵气": 8 }, "result": "它顺着你的根爬上井台，看了一眼天，跳回去了。它说：比井口大。", "fail": { "effect": { "水分": -1 }, "result": "它说上面太干，不去。然后在你根上坐了一季。" } }
+    ]
+  },
+  {
+    "id": "mp_wl_l1_caravan", "dir": "side", "layers": ["L1"], "maps": ["well"], "stage": [1, 4], "weight": 12,
+    "text": "一支小驼队在驿站歇脚。一个赶驼的孩子蹲下来，盯着你看。",
+    "choices": [
+      { "text": "装成杂草", "effect": { "灵性": 1 }, "result": "孩子看了一会儿，被大人喊走了。" },
+      { "text": "把叶子挺直", "effect": { "水分": 1, "灵性": 1, "follow": { "id": "mp_wl_kid_back", "delay": 3, "ttl": 8 } }, "result": "孩子笑了，把壶底最后一口水倒在你根上。" },
+      { "text": "前世被人拔过", "require": "legacy:wariness>=1", "effect": { "灵性": 2, "灵气": 4 }, "result": "前世你被人拔走过。这一世你把叶子耷拉下来，像株快死的草，没人动你。" },
+      { "text": "向他讨口水", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.04, "effect": { "水分": 3, "灵性": 2, "follow": { "id": "mp_wl_kid_back", "delay": 3, "ttl": 8 } }, "result": "你冲他晃了晃叶子。他愣了愣，把整壶水都给了你。", "fail": { "effect": { "death": "plucked" }, "result": "孩子喊：这草会动！你被装进了他的小布袋。" } }
+    ]
+  },
+  {
+    "id": "mp_wl_kid_back", "dir": "side", "layers": ["L1"], "maps": ["well"], "chainOnly": true, "teaser": "那个孩子说下回还来",
+    "text": "驼队又来了。那孩子高了一截，跳下骆驼就跑到你跟前，手里捧着一壶水。",
+    "choices": [
+      { "text": "安心喝下", "effect": { "水分": 3, "水分上限": 1 }, "result": "他看着你喝完，说：我叫阿木，明年还来。" },
+      { "text": "把叶子递给他", "effect": { "灵性": 3, "灵气": 6 }, "result": "他把你的一片叶子夹进本子。他走得很远，也算带你去了。" },
+      { "text": "把水引给小草", "effect": { "根系": 1, "灵性": 2 }, "result": "你把水往旁边的小草那儿引了引。阿木说：你还挺大方。" }
+    ]
+  },
+  {
+    "id": "mp_wl_l1_goat", "dir": "side", "layers": ["L1"], "maps": ["well"], "stage": [1, 99], "weight": 12,
+    "text": "院子里拴着一只山羊，绳子刚好够到你。它每天都要伸脖子量一量。",
+    "choices": [
+      { "text": "往墙根挪", "effect": { "根系": 1 }, "result": "你挪到了绳子够不着的地方，差半寸。山羊叹了口气。" },
+      { "text": "让它尝尝苦", "require": "legacy:bitter_sap>=1 | talent:bitter", "effect": { "灵气": 6, "韧性": 1, "feud": "驿站山羊苦得去啃墙" }, "result": "前世你被啃过。这一世山羊一口下去，苦得去啃了一下午墙。" },
+      { "text": "装死", "showIf": "skill:play_dead", "useSkill": "play_dead", "effect": { "灵气": 8, "feud": "驿站山羊被一株草骗了" }, "result": "山羊闻了闻：死的。它转身去啃自己的绳子，把自己放跑了。" },
+      { "text": "挺住", "chance": 0.5, "chanceAttr": "韧性", "chanceStep": 0.06, "effect": { "韧性": 2, "灵气": 4 }, "result": "它扯了一下午，你一根须都没松。山羊服了。", "fail": { "effect": { "death": "eaten_beast" }, "result": "山羊又量了一次。这回够着了。" } }
+    ]
+  },
+  {
+    "id": "mp_wl_x_sandfill", "dir": "any", "sudden": true, "maps": ["well"], "stage": [1, 99], "weight": 10,
+    "text": "一场风沙过后，旧井被埋了一半。井底的水声，小了。",
+    "choices": [
+      { "text": "趁着还有，喝饱", "effect": { "水分": 3 }, "result": "你喝了个饱。井水一天比一天浅了。" },
+      { "text": "把根扎进井里兜住", "chance": 0.45, "chanceAttr": "根系", "chanceStep": 0.05, "effect": { "根系": 2, "水分上限": 2 }, "result": "你的根在井里织了张网。沙子漏下去，水留住了。", "fail": { "effect": { "水分": -2 }, "result": "沙太多。你的根被埋在里面，一季没喘过气。" } },
+      { "text": "喊驼队来挖", "absurd": true, "chance": 0.15, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "水分": 2, "灵性": 3, "灵气": 10 }, "result": "第二天真来了一支驼队，把井挖开了。他们以为是自己运气好。", "fail": { "effect": { "水分": -1 }, "result": "你喊了一季。风沙听见了，又来了一场。" } }
+    ]
+  }
+]
