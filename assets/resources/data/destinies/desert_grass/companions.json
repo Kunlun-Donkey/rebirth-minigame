@@ -9,5 +9,10 @@
   { "id": "lizard", "name": "小蜥蜴", "rarity": "rare", "desc": "每 3 季灵气 +2。它看你的眼神有点怪。",
     "every": { "n": 3, "effect": { "灵气": 2 }, "text": "小蜥蜴吃掉了啃你叶子的虫子。" } },
   { "id": "fungus", "name": "共生真菌", "rarity": "epic", "desc": "每 2 季水分 +1。",
-    "every": { "n": 2, "effect": { "水分": 1 }, "text": "菌丝从远处偷来了一点水。" } }
+    "every": { "n": 2, "effect": { "水分": 1 }, "text": "菌丝从远处偷来了一点水。" } },
+
+  { "id": "sand_kitten", "name": "沙猫·团子", "rarity": "common", "desc": "每 4 季水分 +1。它刨坑从来不填，坑底是湿的。",
+    "every": { "n": 4, "effect": { "水分": 1 }, "text": "团子刨了个坑就跑了。坑底是湿的，你偷偷喝了一口。" } },
+  { "id": "tumbleweed", "name": "风滚草·老飘", "rarity": "rare", "desc": "灵性 +1，每 4 季茎叶 +1。滚遍了整片荒漠，总记得回来。", "start": { "灵性": 1 },
+    "every": { "n": 4, "effect": { "茎叶": 1 }, "text": "老飘滚回来一趟，讲了一圈外面的风。你听着听着，长高了一截。" } }
 ]

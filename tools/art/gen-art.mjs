@@ -1101,6 +1101,74 @@ job('../../../docs/filing/app_icon', 1024, 1024, `${coverBg(1024, 1024, rng(9))}
       <text x="128" y="52" font-size="22" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="${c}">【叮！】</text>`, c);
   });
 
+  // ---------- 15. 伙伴第二批：每个命格 +2 ----------
+  // 荒漠：沙猫幼崽（大耳朵、蹲在湿坑边）/ 风滚草（一团枯枝球 + 风线）
+  comp('desert_grass', 'sand_kitten', `<ellipse cx="128" cy="204" rx="70" ry="12" fill="#c99556" opacity=".7"/><ellipse cx="128" cy="204" rx="34" ry="6" fill="#8a6a4a" opacity=".6"/>
+    <ellipse cx="128" cy="168" rx="52" ry="38" fill="#e2c08a"/><circle cx="128" cy="116" r="44" fill="#e2c08a"/>
+    <path d="M90 100 L72 44 L118 84Z M166 100 L184 44 L138 84Z" fill="#e2c08a"/><path d="M92 92 L82 58 L110 84Z M164 92 L174 58 L146 84Z" fill="#f6d8c0"/>
+    ${eyes(110, 146, 114, 7)}<circle cx="112" cy="111" r="2" fill="#fff"/><circle cx="148" cy="111" r="2" fill="#fff"/><path d="M122 130 l6 5 l6 -5" stroke="#a8603a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M84 126 h-26 M84 134 l-22 6 M172 126 h26 M172 134 l22 6" stroke="#a8804a" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M100 98 l4 8 M156 98 l-4 8" stroke="#c09a5a" stroke-width="4" stroke-linecap="round"/><path d="M176 186 q36 -6 30 -40" stroke="#e2c08a" stroke-width="12" fill="none" stroke-linecap="round"/>`);
+  comp('desert_grass', 'tumbleweed', `<path d="M40 96 h46 M30 120 h40 M44 144 h30" stroke="#d9ad6e" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+    <circle cx="146" cy="134" r="64" fill="#c9a060" opacity=".35"/>
+    <g stroke="#8a6a3a" stroke-width="5" fill="none" stroke-linecap="round">${Array.from({ length: 9 }, (_, i) => { const a = i / 9 * Math.PI; return `<path d="M${f(146 + 62 * Math.cos(a))} ${f(134 + 62 * Math.sin(a))} Q146 134 ${f(146 - 62 * Math.cos(a + 0.5))} ${f(134 - 62 * Math.sin(a + 0.5))}"/>`; }).join('')}</g>
+    <circle cx="146" cy="134" r="60" fill="none" stroke="#a8804a" stroke-width="4"/>${eyes(134, 162, 126, 6)}<path d="M138 146 q10 8 20 0" stroke="#2a1a10" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+
+  // 打工人：修车师傅（扳手 + 车轮）/ 早餐摊阿姨（围裙、锅铲、冒热气的包子）
+  comp('worker', 'bike_fixer', `<circle cx="178" cy="176" r="40" fill="none" stroke="#3a3a4a" stroke-width="9"/><circle cx="178" cy="176" r="6" fill="#3a3a4a"/>
+    ${[0, 60, 120].map((a) => `<path d="M${f(178 + 36 * Math.cos(a * Math.PI / 180))} ${f(176 + 36 * Math.sin(a * Math.PI / 180))} L${f(178 - 36 * Math.cos(a * Math.PI / 180))} ${f(176 - 36 * Math.sin(a * Math.PI / 180))}" stroke="#8a8a9a" stroke-width="2.5"/>`).join('')}
+    ${worker(100, 228, 1.2, '#3a6a9a', '#e8c49a', false)}<rect x="74" y="54" width="52" height="12" rx="6" fill="#3a6a9a"/>
+    <g transform="rotate(-35 150 104)"><rect x="134" y="98" width="46" height="12" rx="5" fill="#9aa4b0"/><path d="M180 92 a14 14 0 1 1 0 24 l-8 -6 v-12Z" fill="#9aa4b0"/></g>`);
+  comp('worker', 'breakfast_auntie', `${worker(102, 230, 1.25, '#c0574a', '#f2d2b0', false)}<rect x="80" y="104" width="44" height="54" rx="8" fill="#f6f0e0"/>
+    <path d="M72 66 Q74 40 102 40 Q130 40 132 66 Q118 52 102 54 Q86 52 72 66Z" fill="#3a2a22"/><circle cx="102" cy="40" r="10" fill="#3a2a22"/>
+    <ellipse cx="176" cy="178" rx="34" ry="26" fill="#fbf6ea" stroke="#d9c8a8" stroke-width="3"/><path d="M162 166 q14 -14 28 0" stroke="#d9c8a8" stroke-width="3" fill="none"/>
+    <path d="M166 140 q-8 -12 0 -24 q8 -12 0 -24 M186 140 q-8 -12 0 -24 q8 -12 0 -24" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>`);
+
+  // 土狗：小猪（拱红薯）/ 大白鹅（伸长脖子、橙嘴）
+  comp('local_dog', 'piglet', `<ellipse cx="128" cy="150" rx="68" ry="52" fill="#f2b0b0"/><path d="M80 112 l-6 -30 l28 18Z M176 112 l6 -30 l-28 18Z" fill="#e89a9a"/>
+    <ellipse cx="128" cy="158" rx="28" ry="20" fill="#e88a8a"/><ellipse cx="118" cy="158" rx="5" ry="7" fill="#b55a5a"/><ellipse cx="138" cy="158" rx="5" ry="7" fill="#b55a5a"/>
+    ${eyes(104, 152, 128, 6)}<path d="M76 196 v14 M104 200 v14 M152 200 v14 M180 196 v14" stroke="#e89a9a" stroke-width="12" stroke-linecap="round"/>
+    <path d="M176 206 Q206 196 214 210 Q206 226 180 218Z" fill="#b5523b"/><path d="M212 206 q10 -8 8 -18" stroke="#5a8a3a" stroke-width="4" fill="none"/>`);
+  comp('local_dog', 'goose', `<ellipse cx="116" cy="170" rx="62" ry="40" fill="#fafafa"/><path d="M64 160 Q100 150 128 172 Q96 190 64 160Z" fill="#e8e8e8"/>
+    <path d="M158 160 Q176 120 160 76" stroke="#fafafa" stroke-width="26" fill="none" stroke-linecap="round"/><circle cx="162" cy="70" r="20" fill="#fafafa"/>
+    <path d="M178 62 L214 72 L180 84Z" fill="#f2943a"/><circle cx="182" cy="62" r="6" fill="#f2943a"/><circle cx="160" cy="64" r="4" fill="#2a1a10"/>
+    <path d="M150 56 l10 4" stroke="#2a1a10" stroke-width="3" stroke-linecap="round"/><path d="M100 206 v14 M128 206 v14" stroke="#f2943a" stroke-width="7" stroke-linecap="round"/>`);
+
+  // 毛毛虫：萤火虫（发光尾灯）/ 蚕宝宝（白胖分节 + 桑叶）
+  comp('caterpillar', 'firefly', `<circle cx="150" cy="170" r="54" fill="#fff3a0" opacity=".55" filter="url(#soft)"/>
+    <ellipse cx="96" cy="100" rx="30" ry="18" fill="#fff" opacity=".8" transform="rotate(-25 96 100)"/><ellipse cx="150" cy="92" rx="30" ry="18" fill="#fff" opacity=".8" transform="rotate(20 150 92)"/>
+    <ellipse cx="124" cy="128" rx="30" ry="24" fill="#4a3a2a"/><circle cx="96" cy="112" r="18" fill="#c9483b"/>${eyes(90, 102, 110, 3.5, '#fff')}
+    <ellipse cx="152" cy="160" rx="30" ry="26" fill="#ffe96a"/><path d="M90 96 q-10 -26 -26 -30 M100 94 q0 -28 10 -36" stroke="#4a3a2a" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+  comp('caterpillar', 'silkworm', `<path d="M40 196 Q60 140 128 150 Q196 160 216 196 Q128 220 40 196Z" fill="#6ab04a"/><path d="M50 194 Q128 176 206 194" stroke="#4a8a3a" stroke-width="3" fill="none"/>
+    ${[[70, 150, 24], [108, 140, 28], [148, 136, 30]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#f8f4ea" stroke="#e2dccc" stroke-width="3"/>`).join('')}
+    <circle cx="186" cy="124" r="30" fill="#fbf8f0" stroke="#e2dccc" stroke-width="3"/>${eyes(178, 198, 120, 5)}<path d="M180 136 q8 6 16 0" stroke="#2a1a10" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M186 96 q-4 -26 -24 -34" stroke="#f0ece0" stroke-width="3" fill="none" opacity=".9"/><path d="M60 110 q30 -40 70 -20" stroke="#fff" stroke-width="2" fill="none" opacity=".9" stroke-dasharray="4 4"/>`);
+
+  // 皮皮虾：清洁虾（红白条纹 + 长须）/ 章鱼（八条卷腿）
+  comp('mantis_shrimp', 'cleaner_shrimp', `<path d="M70 150 Q90 100 150 104 Q196 108 200 140 Q170 150 150 170 Q110 190 70 150Z" fill="#e8584a"/>
+    <path d="M150 104 Q140 140 150 170 M120 108 Q108 140 116 182" stroke="#fff" stroke-width="10" fill="none"/>
+    <path d="M70 150 l-26 -8 l8 18 l-12 14 l26 -4Z" fill="#e8584a"/><circle cx="182" cy="122" r="6" fill="#2a1a10"/>
+    <path d="M194 116 Q226 70 196 40 M188 112 Q210 60 170 34" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M128 174 l-6 22 M148 168 l2 22 M106 176 l-12 18" stroke="#c0392b" stroke-width="4" stroke-linecap="round"/>
+    ${[[208, 168], [220, 150], [214, 188]].map(([x, y]) => `<path d="${star(x, y, 8, 3, 4, 0)}" fill="#fff"/>`).join('')}`);
+  comp('mantis_shrimp', 'octopus', `<g stroke="#c26a8a" stroke-width="14" fill="none" stroke-linecap="round">
+    <path d="M90 140 Q60 170 70 200 Q80 214 92 204"/><path d="M106 150 Q90 190 106 214"/><path d="M128 154 Q124 196 140 216"/><path d="M150 150 Q170 190 158 214"/><path d="M166 140 Q200 170 190 200 Q180 214 168 204"/></g>
+    <ellipse cx="128" cy="104" rx="56" ry="58" fill="#d97a9a"/><ellipse cx="110" cy="80" rx="14" ry="10" fill="#f0a8c0" opacity=".7"/>
+    ${eyes(108, 148, 118, 7)}<circle cx="110" cy="115" r="2" fill="#fff"/><circle cx="150" cy="115" r="2" fill="#fff"/>
+    <path d="M118 136 q10 8 20 0" stroke="#7a3a5a" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="96" cy="162" r="4" fill="#f0a8c0"/><circle cx="162" cy="162" r="4" fill="#f0a8c0"/>`);
+
+  // 鳄鱼：翠鸟（蓝背橙腹长嘴叼鱼）/ 河马（半身浮出水面打哈欠）
+  comp('crocodile', 'kingfisher', `<ellipse cx="118" cy="146" rx="46" ry="38" fill="#2f8fc8"/><ellipse cx="124" cy="164" rx="32" ry="22" fill="#f2943a"/>
+    <circle cx="128" cy="98" r="30" fill="#2f8fc8"/><path d="M118 104 q12 -8 24 0" stroke="#fff" stroke-width="6" fill="none"/><circle cx="134" cy="94" r="5" fill="#2a1a10"/>
+    <path d="M154 92 L214 102 L154 108Z" fill="#3a2a22"/><path d="M178 104 q10 -8 22 0 l8 -6 v14 l-8 -6 q-12 8 -22 -2Z" fill="#c9d4e0"/>
+    <path d="M76 160 L40 186 L84 176Z" fill="#1e6a9a"/><path d="M112 184 v16 M128 184 v16" stroke="#e86a3a" stroke-width="5" stroke-linecap="round"/>`);
+  comp('crocodile', 'hippo', `<circle cx="88" cy="74" r="12" fill="#8a7a98"/><circle cx="168" cy="74" r="12" fill="#8a7a98"/><circle cx="88" cy="74" r="5" fill="#c08aa0"/><circle cx="168" cy="74" r="5" fill="#c08aa0"/>
+    <ellipse cx="128" cy="124" rx="62" ry="50" fill="#9a8aa8"/><circle cx="102" cy="88" r="16" fill="#9a8aa8"/><circle cx="154" cy="88" r="16" fill="#9a8aa8"/>${eyes(102, 154, 88, 6)}
+    <ellipse cx="128" cy="158" rx="78" ry="40" fill="#a898b4"/><ellipse cx="104" cy="148" rx="7" ry="5" fill="#6a5a78"/><ellipse cx="152" cy="148" rx="7" ry="5" fill="#6a5a78"/>
+    <path d="M90 172 q38 18 76 0" stroke="#6a5a78" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M104 176 v10 M152 176 v10" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M35 190 Q128 176 221 190 A112 112 0 0 1 35 190Z" fill="#7ac0c8" opacity=".75"/>
+    <path d="M56 202 q12 -7 24 0 q12 7 24 0 M152 202 q12 -7 24 0 q12 7 24 0" stroke="#fff" stroke-width="3" fill="none" opacity=".85"/>`);
+
 }
 
 // 锁定图标（选命格界面未解锁时叠加）
