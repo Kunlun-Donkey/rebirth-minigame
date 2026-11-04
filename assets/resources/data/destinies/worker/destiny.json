@@ -182,7 +182,17 @@
   "deaths": [
     { "id": "exhausted", "name": "累垮住院", "icon": "exhaust", "epitaph": "医生说：再这么熬下去，下一世都不够你熬的。", "legacy": "wellness",
       "skills": [ { "id": "paid_break", "chance": 0.5 } ] },
-    { "id": "old_age", "name": "退休", "icon": "old_age", "epitaph": "歇下来那天，你在老地方坐了很久，最后把那盆绿萝带回了家。", "legacy": "veteran",
+    { "id": "old_age",
+      "variants": [
+        {"require": "career:rider", "name": "最后一单", "epitaph": "送完最后一单，你把电动车停在楼下，头盔挂在把手上。这座城的路，你都跑过了。"},
+        {"require": "career:driver", "name": "收车", "epitaph": "最后一趟，你把车停回停车场。里程表上的数字，够绕地球好几圈。"},
+        {"require": "career:stall", "name": "收摊", "epitaph": "最后一晚，你把炉子擦得锃亮。老顾客问明天还出不出摊，你笑了笑。"},
+        {"require": "career:shop", "name": "关店", "epitaph": "卷帘门拉下来那天，街坊们在门口站了一排。你把钥匙交给了下一个年轻人。"},
+        {"require": "career:media", "name": "停更", "epitaph": "最后一条视频只有十秒：你对着镜头挥了挥手。评论区刷了一万条「下次见」。"},
+        {"require": "career:office & stage>=3", "name": "光荣退休", "epitaph": "退休那天，公司发了一块奖牌。你没带走奖牌，带走了那盆绿萝。"},
+        {"require": "stage<=1", "name": "平平无奇", "epitaph": "没升过职，没发过财，也没欠过谁。这一世，就这么过去了。"}
+      ],
+      "name": "退休", "icon": "old_age", "epitaph": "歇下来那天，你在老地方坐了很久，最后把那盆绿萝带回了家。", "legacy": "veteran",
       "skills": [ { "id": "big_picture", "chance": 0.5 } ] },
     { "id": "laid_off", "name": "被优化了", "icon": "human", "epitaph": "名单上第一个名字就是你。你抱着纸箱下楼，保安说：常回来看看。", "legacy": "resume_ready",
       "skills": [ { "id": "social_bull", "chance": 0.5 } ] },

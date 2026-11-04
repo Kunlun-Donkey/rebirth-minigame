@@ -208,6 +208,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
         deaths: new Map(meta.deaths.map(d => [d.id, {
             ...d,
             skillConds: (d.skills ?? []).map(sc => ({ id: sc.id, chance: sc.chance ?? 1, cond: cond(sc.require, `死法 ${d.id}.skills`) })),
+            variantConds: (d.variants ?? []).map((v, i) => ({ name: v.name, epitaph: v.epitaph, cond: cond(v.require, `死法 ${d.id}.variants[${i}]`) })),
         }])),
         skills: new Map((raw.skills ?? []).map(s => [s.id, { ...s, useEffect: s.effect ? effect(s.effect, `技能 ${s.id}`) : undefined }])),
         legacies: new Map(meta.legacies.map(l => [l.id, { ...l, levelEffects: (l.levels ?? []).map((e, i) => effect(e, `传承 ${l.id}[${i}]`)) }])),

@@ -85,7 +85,14 @@
   "deaths": [
     { "id": "starve", "name": "饿死", "icon": "thirst", "epitaph": "死于对一根骨头的思念。", "legacy": "hunger_proof",
       "skills": [ { "id": "beg", "chance": 0.5 } ] },
-    { "id": "old_age", "name": "寿终", "icon": "old_age", "epitaph": "在村口晒了一辈子太阳。", "legacy": "old_dog",
+    { "id": "old_age",
+      "variants": [
+        {"require": "忠义>=30", "name": "守到最后", "epitaph": "主人家的门，你守了一辈子。最后一晚，你还是趴在门槛上。"},
+        {"require": "脚力>=15", "name": "跑遍了", "epitaph": "这附近十里八乡的路，你都跑过。最后一趟，你跑回了出生的柴堆。"},
+        {"require": "牙口>=18", "name": "看家护院", "epitaph": "黄鼠狼、野猫、偷鸡贼，都在你嘴下吃过亏。最后一晚，院子里很安静。"},
+        {"require": "stage>=3", "name": "老狗成精", "epitaph": "村里的狗都叫你一声老祖。你趴在村口的石磨上，看完了最后一场日落。"}
+      ],
+      "name": "寿终", "icon": "old_age", "epitaph": "在村口晒了一辈子太阳。", "legacy": "old_dog",
       "skills": [ { "id": "nap", "chance": 0.6 } ] },
     { "id": "driven_out", "name": "被赶出村子", "icon": "human", "epitaph": "村口那扇门，再也没为它开过。", "legacy": "grudge",
       "skills": [ { "id": "bark", "chance": 0.5 } ] },

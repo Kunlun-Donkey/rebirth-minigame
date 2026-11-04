@@ -84,7 +84,14 @@
   ],
   "deaths": [
     { "id": "thirst", "icon": "thirst", "name": "渴死", "epitaph": "死于对水的思念。", "legacy": "water_cells", "skills": [ { "id": "dormancy", "chance": 0.5 } ] },
-    { "id": "old_age", "icon": "old_age", "name": "寿终", "epitaph": "平平淡淡才是真。", "legacy": "old_wisdom", "skills": [ { "id": "root_net", "chance": 0.6 } ] },
+    { "id": "old_age",
+      "variants": [
+        {"require": "韧性>=22", "name": "站着枯的", "epitaph": "一株成了精的草，最后站着枯了。来年风一吹，那一片都是你的种子。"},
+        {"require": "根系>=22", "name": "根比命长", "epitaph": "地面上的你早就枯了，地底下的根还在往深处走。"},
+        {"require": "灵性>=40", "name": "灵气散了", "epitaph": "你枯的那天，方圆一里的沙子都亮了一下。"},
+        {"require": "stage<=2", "name": "一个夏天", "epitaph": "绿过一整个夏天。荒漠里，这已经算长寿了。"}
+      ],
+      "icon": "old_age", "name": "寿终", "epitaph": "平平淡淡才是真。", "legacy": "old_wisdom", "skills": [ { "id": "root_net", "chance": 0.6 } ] },
     { "id": "ant", "icon": "beast", "name": "被蚂蚁搬走", "epitaph": "成为了蚁后的晚饭。", "legacy": "hard_shell", "skills": [ { "id": "play_dead", "chance": 0.5 } ] },
     { "id": "eaten_camel", "icon": "beast", "name": "被骆驼吃掉", "epitaph": "成为了骆驼的一顿早饭。", "legacy": "bitter_sap", "skills": [ { "id": "play_dead", "chance": 0.6 } ] },
     { "id": "eaten_beast", "icon": "beast", "name": "被啃了", "epitaph": "有只羚羊夸你嫩。", "legacy": "bitter_sap", "skills": [ { "id": "play_dead", "chance": 0.6 } ] },

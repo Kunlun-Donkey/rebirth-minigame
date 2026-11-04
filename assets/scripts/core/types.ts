@@ -168,6 +168,8 @@ export interface DeathDef {
     epitaph: string;
     legacy?: string;
     skills?: SkillChance[];
+    /** 结算时按条件换说法（取第一条满足的）：同一种死法，活成什么样读起来不一样。图鉴仍用 name / epitaph */
+    variants?: { require?: string; name?: string; epitaph?: string }[];
 }
 
 /**
@@ -525,7 +527,7 @@ export interface Destiny {
     stages: (StageDef & { cond?: Cond; bonusEffect?: Effect; endingConds?: { id: string; cond?: Cond }[]; oldAgeEndingConds?: { id: string; cond?: Cond }[] })[];
     /** 线路（导出状态表） */
     lines: Map<string, { id: string; name: string; summary?: string; states: Record<string, string> }>;
-    deaths: Map<string, DeathDef & { skillConds: { id: string; chance: number; cond?: Cond }[] }>;
+    deaths: Map<string, DeathDef & { skillConds: { id: string; chance: number; cond?: Cond }[]; variantConds: { name?: string; epitaph?: string; cond?: Cond }[] }>;
     skills: Map<string, SkillDef & { useEffect?: Effect }>;
     legacies: Map<string, LegacyDef & { levelEffects: Effect[] }>;
     endings: Map<string, EndingDef>;

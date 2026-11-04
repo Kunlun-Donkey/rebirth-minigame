@@ -158,6 +158,7 @@ export function validateDestiny(raw: RawDestiny, world?: World): Report {
             addSource(sc.id, `死法 ${death.id}`);
             checkCond(sc.cond, `死法 ${death.id}.skills`);
         }
+        death.variantConds.forEach((v, i) => checkCond(v.cond, `死法 ${death.id}.variants[${i}]`));
     }
     for (const dir of ['up', 'down', 'side'] as const) if (!d.layersByDir[dir].length) errors.push(`方向 ${dir} 没有任何层`);
     for (const l of d.layers.values()) {

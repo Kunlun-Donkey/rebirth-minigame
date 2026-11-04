@@ -87,7 +87,14 @@
   "deaths": [
     { "id": "cold", "name": "冻僵了", "icon": "exhaust", "epitaph": "太阳一直没出来。它等着等着，就睡着了。", "legacy": "warm_heart",
       "skills": [ { "id": "sunbathe", "chance": 0.5 } ] },
-    { "id": "old_age", "name": "寿终", "icon": "old_age", "epitaph": "在河滩上晒了一辈子太阳，背上长了青苔。", "legacy": "old_croc",
+    { "id": "old_age",
+      "variants": [
+        {"require": "潜水>=22", "name": "沉进了深潭", "epitaph": "最后一次潜下去，你没再浮上来。深潭底下很安静，很凉快。"},
+        {"require": "晒背>=12", "name": "晒了一辈子", "epitaph": "趴在最热的那块石头上晒了一辈子，到最后，背比石头还烫。"},
+        {"require": "咬合>=16", "name": "牙口还在", "epitaph": "到老牙都没掉一颗。只是后来，你懒得再张嘴了。"},
+        {"require": "stage>=3", "name": "老祖宗", "epitaph": "河湾里的鳄鱼，一半是你的后代。你趴在最好的那块石头上，没再下水。"}
+      ],
+      "name": "寿终", "icon": "old_age", "epitaph": "在河滩上晒了一辈子太阳，背上长了青苔。", "legacy": "old_croc",
       "skills": [ { "id": "hibernate", "chance": 0.6 } ] },
     { "id": "one_eye", "name": "被独眼撞翻了", "icon": "beast", "epitaph": "它没看清独眼从哪边来。独眼那只瞎眼，正对着它。", "legacy": "iron_head",
       "skills": [ { "id": "roll", "chance": 0.5 } ] },

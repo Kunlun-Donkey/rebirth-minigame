@@ -86,7 +86,14 @@
   "deaths": [
     { "id": "exhaust", "name": "力竭", "icon": "exhaust", "epitaph": "它游到最后一口气，也没停下来。", "legacy": "endurance",
       "skills": [ { "id": "dig", "chance": 0.5 } ] },
-    { "id": "old_age", "name": "寿终", "icon": "old_age", "epitaph": "在洞口晒了一辈子太阳，壳都晒褪色了。", "legacy": "old_shrimp",
+    { "id": "old_age",
+      "variants": [
+        {"require": "拳力>=16", "name": "最后一拳", "epitaph": "打碎了一辈子的贝壳。最后一拳，你打在了水里，听了听那声响。"},
+        {"require": "游速>=19", "name": "游到了远方", "epitaph": "你一直往深处游，游到了没有虾去过的地方。"},
+        {"require": "灵性>=38", "name": "听见了海", "epitaph": "最后那一季，你总觉得海在跟你说话。你听懂了一半。"},
+        {"require": "stage>=3", "name": "老礁石", "epitaph": "这片海底，没有谁不认识你那对拳头。你缩回洞里，把洞口留给了下一只虾。"}
+      ],
+      "name": "寿终", "icon": "old_age", "epitaph": "在洞口晒了一辈子太阳，壳都晒褪色了。", "legacy": "old_shrimp",
       "skills": [ { "id": "shell_nap", "chance": 0.6 } ] },
     { "id": "grouper", "name": "被石斑鱼吞了", "icon": "beast", "epitaph": "石斑鱼吞下它，打了一个带拳头的嗝。", "legacy": "hard_shell",
       "skills": [ { "id": "punch", "chance": 0.5 } ] },
