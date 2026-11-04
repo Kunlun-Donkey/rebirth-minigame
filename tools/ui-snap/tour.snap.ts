@@ -10,6 +10,7 @@ import { Game } from '../../assets/scripts/game/game';
 import { CONFIG } from '../../assets/scripts/game/config';
 import { showSplash } from '../../assets/scripts/game/screens/splash';
 import { showUnlockReveal } from '../../assets/scripts/game/screens/destiny';
+import { showRank } from '../../assets/scripts/game/screens/rank';
 import { showRun } from '../../assets/scripts/game/screens/run';
 import { showCodex } from '../../assets/scripts/game/screens/codex';
 import { destinyProfile, Rng } from '../../assets/scripts/core';
@@ -66,6 +67,8 @@ it('UI 巡检快照', async () => {
                 tap(taps(g.screen).find(n => labels(n).some(l => l.startsWith('随缘投胎')))!); await flush(8); snap('随缘投胎');
                 g.reset(); g.save.spinBonus = null; g.save.spinDay = '';
                 showUnlockReveal(g, ['local_dog']); await flush(8); snap('新命格解锁'); g.reset();
+                await g.openChallenge({ d: 'crocodile', l: 8, k: 'ending', id: 'mars_ancestor', t: true }); await flush(8); snap('好友挑战'); g.reset();
+                CONFIG.rankEnabled = true; g.goMenu(); await flush(); snap('主菜单·好友榜'); showRank(g); await flush(4); snap('好友榜'); CONFIG.rankEnabled = false; g.reset();
             }
             // 已是当前命格时 switchDestiny 不动作，要自己进轮回殿
             if (g.data.meta.id === did) g.goDraft();
