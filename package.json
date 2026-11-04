@@ -28,7 +28,8 @@
     "typecheck": "tsc -p tsconfig.tools.json && tsc -p tsconfig.game.json",
     "prevalidate": "node tools/ensure-cocos-temp.mjs",
     "validate": "tsx tools/validate.ts",
-    "persona": "tsx tools/persona.ts"
+    "persona": "tsx tools/persona.ts",
+    "share:snap": "tsx tools/share/snap.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
