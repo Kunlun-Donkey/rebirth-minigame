@@ -231,6 +231,7 @@ export class Engine {
     // ───────────── 方向阶段 ─────────────
 
     directionOptions(): DirOption[] {
+        const pv = this.previewEvents();
         return this.data.dirs.map(dd => {
             const layers = this.data.layersByDir[dd.id];
             const cur = layers[this.run.pos[dd.id]];
@@ -244,8 +245,34 @@ export class Engine {
                 layerName: cur ? this.layerText(cur).name : '',
                 nextLayer: next ? { name: this.layerText(next).name, lockText: this.check(next.cond) ? undefined : this.describe(next.cond) } : undefined,
                 thread: ((t?: string) => t && this.fmt(t))(this.dueThread(dd.id)?.teaser),
+                preview: ((id?: string) => {
+                    const ev = id ? this.data.events.get(id) : undefined;
+                    if (!ev) return undefined;
+                    const t = this.fmt(ev.teaser ?? ev.text);
+                    return t.length > 20 ? t.slice(0, 19) + '…' : t;
+                })(pv?.[dd.id]),
             };
         });
+    }
+
+    /** 探路道具：本季第一次看方向时为每个方向预抽一个事件，选方向时就用它（预告与实际一致） */
+    private previewEvents(): Partial<Record<Dir, string>> | undefined {
+        const r = this.run;
+        if (!this.mods().previewDirs) return undefined;
+        if (r.preview?.season === r.season) return r.preview.ev;
+        const ev: Partial<Record<Dir, string>> = {};
+        for (const dd of this.data.dirs) {
+            if (!this.check(dd.cond) || this.dueThread(dd.id)) continue;
+            const id = this.drawForDir(dd.id)?.id;
+            if (id) ev[dd.id] = id;
+        }
+        r.preview = { season: r.season, ev };
+        return ev;
+    }
+
+    private drawForDir(dir: Dir): GameEvent | undefined {
+        const layer = this.data.layersByDir[dir][this.run.pos[dir]];
+        return this.drawEvent(e => (e.dir === dir || e.dir === 'any') && !e.sudden && (!e.layers || e.layers.includes(layer.id)));
     }
 
     chooseDirection(dir: Dir): void {
@@ -260,9 +287,11 @@ export class Engine {
             this.enterEvent(thread.id);
             return;
         }
-        const layer = this.data.layersByDir[dir][this.run.pos[dir]];
-        const ev = this.drawEvent(e => (e.dir === dir || e.dir === 'any') && !e.sudden && (!e.layers || e.layers.includes(layer.id)));
-        if (!ev) throw new Error(`没有可抽取的事件：方向 ${dir} 层 ${layer.id}（请补充兜底事件）`);
+        // 探路道具预抽过的事件：条件仍满足就用它
+        const pre = this.run.preview?.season === this.run.season ? this.run.preview.ev[dir] : undefined;
+        const preEv = pre ? this.data.events.get(pre) : undefined;
+        const ev = preEv && this.check(preEv.require) ? preEv : this.drawForDir(dir);
+        if (!ev) throw new Error(`没有可抽取的事件：方向 ${dir} 层 ${this.data.layersByDir[dir][this.run.pos[dir]].id}（请补充兜底事件）`);
         this.enterEvent(ev.id);
     }
 

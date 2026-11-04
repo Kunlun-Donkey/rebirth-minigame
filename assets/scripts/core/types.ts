@@ -596,6 +596,8 @@ export interface RunState {
     companions: string[];
     seen: string[];
     lastEvent?: string;
+    /** 探路道具（mods.previewDirs）：本季各方向预先抽好的事件 */
+    preview?: { season: number; ev: Partial<Record<Dir, string>> };
     phase: Phase;
     event?: string;
     dir?: Dir;
@@ -674,6 +676,8 @@ export interface DirOption {
     nextLayer?: { name: string; lockText?: string };
     /** 这个方向上有待续的剧情（显示预告） */
     thread?: string;
+    /** 探路道具：这个方向本季会遇到什么（预告文字） */
+    preview?: string;
 }
 
 export interface ChoiceView {

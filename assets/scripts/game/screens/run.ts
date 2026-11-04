@@ -244,8 +244,8 @@ function dirOpts(g: Game, o: DirOption): ButtonOpts {
         tags: o.thread
             ? [{ text: '后续', color: COLOR.legacy, filled: true }, { text: o.layerName, color: COLOR.ochreD }]
             : [{ text: o.layerName, color: COLOR.ochreD }],
-        sub: o.thread ? `后续：${o.thread}` : next,
-        subColor: o.thread ? COLOR.legacy : undefined,
+        sub: o.thread ? `后续：${o.thread}` : o.preview ? `探路：${o.preview}` : next,
+        subColor: o.thread ? COLOR.legacy : o.preview ? COLOR.skill : undefined,
         onClick: () => {
             g.engine.chooseDirection(o.dir);
             g.persist();

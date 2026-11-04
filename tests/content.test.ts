@@ -142,3 +142,26 @@ describe('世数里程碑', () => {
         expect(e9.startRemark()).toBeUndefined();
     });
 });
+
+describe('探路道具（previewDirs）', () => {
+    it('带着探路道具：方向上显示本季预告，选这个方向遇到的就是它', () => {
+        const d = buildDestiny(loadRawDestiny('desert_grass').raw);
+        const id = [...d.items.values()].find(i => i.mods?.previewDirs)!.id;
+        let hits = 0;
+        for (let seed = 1; seed <= 10; seed++) {
+            const e = new Engine(d, createProfile());
+            const dr = e.rollDraft(seed);
+            e.startRun({ talent: dr.talents[0], item: dr.items[0], companion: dr.companions[0] }, seed);
+            e.run.items.push(id);
+            for (let i = 0; i < 6 && e.run.phase === 'event'; i++) e.choose(e.eventView().choices.find(c => c.enabled)!.index);
+            if (e.run.phase !== 'direction') continue;
+            const opt = e.directionOptions().find(o => o.enabled && o.preview && !o.thread);
+            if (!opt) continue;
+            const expected = e.run.preview!.ev[opt.dir]!;
+            e.chooseDirection(opt.dir);
+            expect(e.eventView().id).toBe(expected);
+            hits++;
+        }
+        expect(hits).toBeGreaterThan(3);
+    });
+});
