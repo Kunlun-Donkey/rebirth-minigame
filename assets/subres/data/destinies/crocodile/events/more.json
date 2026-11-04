@@ -1,0 +1,190 @@
+[
+  {
+    "id": "m_u1_turtle", "dir": "up", "layers": ["U1"], "maps": ["river", "swamp"], "weight": 14,
+    "text": "沙滩上一只母龟在下蛋，下完拿后腿刨沙盖好，回头看了你一眼。",
+    "choices": [
+      { "text": "趴在旁边守着", "effect": { "灵性": 2, "晒背": 1, "follow": { "id": "m_f_turtle_hatch", "delay": 2, "ttl": 6 } }, "result": "母龟爬回了水里。你在那片沙上趴下，晒了一季太阳。" },
+      { "text": "把沙刨开看看", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08, "effect": { "体温": 2, "咬合": 1 }, "result": "母龟一口咬在你鼻子上，你松了爪。它说：看什么看。", "fail": { "effect": { "体温": -2 }, "result": "母龟追着你咬了半个河滩。你没想到龟能跑这么快。" } },
+      { "text": "装没看见", "effect": { "体温": 1 }, "result": "你翻了个身，背对着那片沙。母龟松了口气。" }
+    ]
+  },
+  {
+    "id": "m_f_turtle_hatch", "dir": "up", "chainOnly": true, "teaser": "沙里那窝龟蛋快破壳了",
+    "text": "沙滩上冒出几十个小脑袋，一齐往水里爬。天上有只鹰在转圈，越转越低。",
+    "choices": [
+      { "text": "让它们从你背上过", "effect": { "灵性": 3, "龙气": 4 }, "result": "小龟一只只爬过你的背，爬进了河。鹰在天上看了半天，走了。" },
+      { "text": "冲鹰张嘴", "chance": 0.45, "chanceAttr": "咬合", "chanceStep": 0.06, "effect": { "咬合": 2, "龙气": 8, "feud": "鹰被你吓得空爪飞走" }, "result": "鹰扎下来，看见一张大嘴，在半空硬拐了个弯。", "easy": "你一张嘴，鹰在天上就改了主意。", "fail": { "effect": { "体温": -2 }, "result": "鹰绕开你，叼走了一只。你在沙上趴到天黑。" } },
+      { "text": "前世被鹰叼过", "require": "legacy:mud_color>=1", "effect": { "灵性": 3, "龙气": 8 }, "result": "前世鹰叼走过你。这一世它只看见一片泥，和一群跑掉的小龟。" }
+    ]
+  },
+  {
+    "id": "m_u1_hopscotch", "dir": "up", "layers": ["U1"], "maps": ["sewer"], "weight": 14,
+    "text": "井盖上面有小孩在跳房子，一下，两下，粉笔灰从缝里落下来。",
+    "choices": [
+      { "text": "数着他们跳", "effect": { "灵性": 2 }, "result": "你数到了一百零七。有个小孩在第八格摔了，又爬起来接着跳。" },
+      { "text": "趴在光底下睡", "effect": { "体温": 2, "晒背": 1 }, "result": "缝里漏下来一道太阳。你把背对准它，睡了一下午。" },
+      { "text": "顶一下井盖", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 8 }, "result": "井盖动了一下。外面安静了，然后有人喊：再来一次！", "fail": { "effect": { "体温": -1 }, "result": "井盖没动。你的脑袋动了，晕了半天。" } }
+    ]
+  },
+  {
+    "id": "m_u2_monkey", "dir": "up", "layers": ["U2"], "maps": ["swamp"], "weight": 14,
+    "text": "红树林上蹲着一群猴子，冲你龇牙，一个接一个往你头上扔果子。",
+    "choices": [
+      { "text": "张嘴接住", "chance": 0.55, "chanceAttr": "咬合", "chanceStep": 0.08, "effect": { "体温": 2, "咬合": 1, "龙气": 3 }, "result": "你一口一个，全接住了。猴子们看看手里的果子，不扔了。", "fail": { "effect": { "体温": -1 }, "result": "一颗果子正中你的眼皮。树上笑成一片。" } },
+      { "text": "沉下去不理", "effect": { "潜水": 1, "灵性": 1 }, "result": "你沉进水里。果子扑通扑通落了一圈，都成了鱼的。" },
+      { "text": "爬树追上去", "absurd": true, "chance": 0.1, "chanceAttr": "晒背", "chanceStep": 0.02, "effect": { "晒背": 2, "灵性": 3, "龙气": 12 }, "result": "你爬上了第一根树枝。整片红树林的猴子都安静了。", "fail": { "effect": { "体温": -1 }, "result": "你没爬上去。猴子笑得从树上掉下来一只。" } }
+    ]
+  },
+  {
+    "id": "m_u2_angler", "dir": "up", "layers": ["U2"], "maps": ["sewer"], "weight": 14,
+    "text": "排水口外的湖边，有个老头天天来钓鱼。听旁边人说，他钓了三年，一条没上过。",
+    "choices": [
+      { "text": "往他钩上挂条鱼", "chance": 0.5, "chanceAttr": "咬合", "chanceStep": 0.08, "effect": { "灵性": 2, "龙气": 3, "follow": { "id": "m_f_old_angler", "delay": 2, "ttl": 6 } }, "result": "他收线一看，愣了半天，冲水里说：谢谢啊。", "fail": { "effect": { "体温": -1 }, "result": "鱼从你嘴里溜了。钩子在你鼻尖前晃了晃。" } },
+      { "text": "前世被钩住过", "require": "legacy:spit_hook>=1", "effect": { "灵性": 3, "龙气": 5, "follow": { "id": "m_f_old_angler", "delay": 2, "ttl": 6 } }, "result": "前世你被这种钩子钩住过。这一世你绕开钩尖，把鱼挂好就走。" },
+      { "text": "看着就好", "effect": { "晒背": 1 }, "result": "他坐到天黑，收竿回家了。走路的样子，好像也不太在乎。" }
+    ]
+  },
+  {
+    "id": "m_f_old_angler", "dir": "up", "chainOnly": true, "teaser": "钓鱼的老头又来了",
+    "text": "钓鱼的老头又来了。这回他没下钩，往水里扔了一个馒头：给你的。",
+    "choices": [
+      { "text": "吃馒头", "effect": { "体温": 2, "灵性": 1 }, "result": "馒头泡软了，一点都不难吃。老头看着水面，抽了根烟。" },
+      { "text": "探头冲他点头", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.06, "effect": { "灵性": 3, "龙气": 6 }, "result": "他看见你，没跑，也没叫。他说：我就知道。", "fail": { "effect": { "体温": -1 }, "result": "他看见你，鱼竿都扔了。第二天，他换了个湖。" } }
+    ]
+  },
+  {
+    "id": "m_u3_movie", "dir": "up", "layers": ["U3"], "weight": 12,
+    "text": "晒谷场晚上放露天电影。银幕上一条大鳄鱼张开嘴，全村人一起叫出了声。",
+    "choices": [
+      { "text": "趴在幕布后面看", "effect": { "灵性": 3 }, "result": "你从背面看完了整部电影。字是反的，鳄鱼是好的。" },
+      { "text": "趁乱去晒谷子", "effect": { "晒背": 2, "体温": 1 }, "result": "大家都盯着银幕。你在谷堆上趴着，暖了一整夜。" },
+      { "text": "爬到银幕前面", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 10 }, "result": "全村人看看银幕，又看看你。放映员说：今晚是立体的。", "fail": { "effect": { "体温": -2 }, "result": "有人尖叫，板凳倒了一片。你在稻草堆里躲了一夜。" } }
+    ]
+  },
+  {
+    "id": "m_u3_banquet", "dir": "up", "layers": ["U3"], "stage": [1, 99], "weight": 12,
+    "text": "晒谷场摆了二十桌酒席，村里办喜事。角落一桌有个人一口酒没喝，老往河边看。",
+    "choices": [
+      { "text": "远远看着", "effect": { "灵性": 2 }, "result": "新郎新娘挨桌敬酒。你在谷堆后头看了一晚上热闹。" },
+      { "text": "叼一条红烧鱼", "chance": 0.45, "chanceAttr": "咬合", "chanceStep": 0.06, "effect": { "体温": 3, "咬合": 1, "龙气": 3 }, "result": "你叼走了一整盘。主桌的人说：喜事，算它一份。", "fail": { "effect": { "体温": -2 }, "result": "一桌人追着你扔筷子，你逃回了河里。" } },
+      { "text": "前世被人带走过", "require": "legacy:wary>=1", "effect": { "灵性": 2, "龙气": 8, "feud": "偷猎的在喜宴上露了馅" }, "result": "前世你被这种人带走过。这一世你冲他一张嘴，全村都看见了他的网兜。" }
+    ]
+  },
+  {
+    "id": "m_u4_moon", "dir": "up", "layers": ["U4"], "stage": [2, 99], "weight": 6, "gold": true, "once": true,
+    "text": "中秋夜，月亮落在江心，正好在你嘴边。江面铺了一层碎银。",
+    "choices": [
+      { "text": "趴着看", "effect": { "灵性": 3, "龙气": 12 }, "result": "你看了一整夜。天亮时，背上的鳞有一点发白。" },
+      { "text": "张嘴吞月", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 25 }, "result": "你一口咬下去，月亮碎了，又在你嘴里圆了。", "fail": { "effect": { "体温": -2 }, "result": "你咬了一口江水。月亮在旁边晃，像在笑。" } },
+      { "text": "前世老死在河边", "require": "legacy:old_croc>=1", "effect": { "灵性": 4, "龙气": 15 }, "result": "前世你看了一辈子月亮。这一世你看懂了月亮底下那条路。" }
+    ]
+  },
+  {
+    "id": "m_u4_lamb", "dir": "up", "layers": ["U4"], "stage": [1, 99], "weight": 12,
+    "text": "涨水了。一只小羊羔被冲到江心石边，扒着石头咩咩叫，四条腿都在抖。",
+    "choices": [
+      { "text": "挡在它上游", "effect": { "晒背": 1, "灵性": 2 }, "result": "你横在上游，浪拍在你身上。水退那天，它自己蹚回去了。" },
+      { "text": "驮它上岸", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.08, "effect": { "潜水": 2, "灵性": 3, "龙气": 6, "follow": { "id": "m_f_shepherd", "delay": 2 } }, "result": "你驮着小羊游回了岸。它下来时，腿还在抖。", "fail": { "effect": { "体温": -2 }, "result": "浪太大，小羊从背上滑下，又扒回了石头。你们一起等水退。" } },
+      { "text": "前世被洪水冲走", "require": "legacy:steady>=1", "effect": { "灵性": 3, "龙气": 8, "follow": { "id": "m_f_shepherd", "delay": 2 } }, "result": "前世洪水冲走了你。这一世你横在水里，小羊连蹄子都没湿。" }
+    ]
+  },
+  {
+    "id": "m_f_shepherd", "dir": "any", "chainOnly": true, "teaser": "岸上有人在喊那只羊",
+    "text": "放羊的小姑娘站在岸边，抱着那只小羊，冲你鞠了一躬。",
+    "choices": [
+      { "text": "点个头", "effect": { "灵性": 3, "龙气": 5 }, "result": "她也点了点头。小羊在她怀里咩了一声。" },
+      { "text": "游过去让她摸", "absurd": true, "chance": 0.2, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 4, "龙气": 10 }, "result": "她犹豫了一下，摸了摸你的鼻尖。那年村里都说河里有条好鳄鱼。", "fail": { "effect": { "体温": -1 }, "result": "她妈妈把她拽走了，跑得比羊还快。" } }
+    ]
+  },
+  {
+    "id": "m_l1_graffiti", "dir": "side", "layers": ["L1"], "maps": ["sewer"], "weight": 14,
+    "text": "下水道主干的墙上有人喷了一条大鳄鱼，底下一行字：传说。旁边还画了一串箭头。",
+    "choices": [
+      { "text": "趴在画底下", "effect": { "灵性": 2 }, "result": "检修工路过，看看画，看看你，又看看画。他没说话，走得很快。" },
+      { "text": "跟着箭头走", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.08, "effect": { "潜水": 2, "体温": 2 }, "result": "箭头指向一根暖水管。管壁热乎乎的，你在这儿过了冬。", "fail": { "effect": { "体温": -2 }, "result": "箭头指向一堵墙。画画的人显然也没出去过。" } },
+      { "text": "用尾巴画一条", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 8 }, "result": "你在旁边拖出一条歪歪扭扭的龙。第二天底下多了两个字：续集？", "fail": { "effect": { "灵性": 1 }, "result": "画成了一坨。你自己都不想认。" } }
+    ]
+  },
+  {
+    "id": "m_l1_lantern", "dir": "side", "layers": ["L1"], "weight": 12,
+    "text": "水面上漂来一盏纸灯，灯芯还亮着，一直漂到你跟前，停住了。",
+    "choices": [
+      { "text": "推它靠岸", "effect": { "灵性": 2, "龙气": 3 }, "result": "灯靠了岸。岸上有个人等了一夜，捧起来，小声说：回来啦。" },
+      { "text": "跟着灯漂", "chance": 0.55, "chanceAttr": "潜水", "chanceStep": 0.08, "effect": { "潜水": 2, "灵性": 2 }, "result": "灯漂进一个你没来过的水湾就灭了。那里的鱼都不怕你。", "fail": { "effect": { "体温": -2 }, "result": "灯越漂越远，你越游越冷。回头一看，不认得路了。" } },
+      { "text": "一口吞了", "absurd": true, "chance": 0.2, "chanceAttr": "咬合", "chanceStep": 0.03, "effect": { "咬合": 1, "龙气": 10 }, "result": "你吞了一盏灯。那一夜，你的肚子是亮的。", "fail": { "effect": { "体温": -1 }, "result": "灯灭了，纸糊了你一嘴。你吐了一晚上纸。" } }
+    ]
+  },
+  {
+    "id": "m_l2_bride", "dir": "side", "layers": ["L2"], "weight": 12,
+    "text": "湖边在拍婚纱照。新娘提着裙子，一脚踩上了你的背——她以为你是块石头。",
+    "choices": [
+      { "text": "一动不动", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.06, "effect": { "灵性": 2, "龙气": 5 }, "result": "照片拍完了。摄影师翻着照片放大，放大，然后安静地收了机器。", "fail": { "effect": { "体温": -1 }, "result": "你打了个喷嚏。新娘跑出了这辈子最快的速度。" } },
+      { "text": "慢慢沉下去", "effect": { "潜水": 1 }, "result": "新娘踩空，湿了一只鞋。她到最后也不知道踩的是什么。" },
+      { "text": "冲镜头笑", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 8 }, "result": "那张照片后来挂在他们家客厅正中间。", "fail": { "effect": { "体温": -1 }, "result": "新郎抱起新娘就跑。镜头里只剩下你。" } }
+    ]
+  },
+  {
+    "id": "m_l2_pipe", "dir": "side", "layers": ["L2"], "stage": [2, 99], "weight": 10,
+    "text": "城边的河段有根排水管，这几天流出来的水是彩色的。下游的鱼都搬走了。",
+    "choices": [
+      { "text": "绕开那段水", "effect": { "潜水": 1 }, "result": "你往上游绕了一大圈。那段水，连水草都不长了。" },
+      { "text": "拿身子堵管口", "chance": 0.4, "chanceAttr": "咬合", "chanceStep": 0.06, "effect": { "咬合": 2, "龙气": 8, "feud": "黑心厂被查了个底朝天" }, "result": "你堵了三天。第四天来了一群人，顺着管子查到了上游那家厂。", "fail": { "effect": { "体温": -3 }, "result": "彩色的水灌了你一嘴。你在泥里躺了半季才缓过来。" } },
+      { "text": "前世冲进过管道", "require": "legacy:pathfinder>=1", "effect": { "灵性": 3, "龙气": 8 }, "result": "前世你被冲进过污水处理厂。这一世你顺着管子，一路找到了上游的闸。" }
+    ]
+  },
+  {
+    "id": "m_l3_porpoise", "dir": "side", "layers": ["L3"], "weight": 12,
+    "text": "一头江豚在咸水淡水交界的地方转圈，笑眯眯的，像在等谁。",
+    "choices": [
+      { "text": "陪它转圈", "effect": { "潜水": 2, "灵性": 1 }, "result": "你们转了一下午。它笑，你也学着咧嘴。" },
+      { "text": "跟它比潜水", "chance": 0.45, "chanceAttr": "潜水", "chanceStep": 0.05, "effect": { "潜水": 3, "龙气": 8 }, "result": "它先上去换气了。上去前，它还是笑眯眯的。", "fail": { "effect": { "体温": -2 }, "result": "你憋不住先上去了。它在水下笑了好久。" } },
+      { "text": "问它笑什么", "absurd": true, "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 6 }, "result": "它说它天生长这样。说完它不笑了，你们都有点尴尬。", "fail": { "effect": { "灵性": 1 }, "result": "它听不懂河里的话，继续笑。" } }
+    ]
+  },
+  {
+    "id": "m_l3_stele", "dir": "side", "layers": ["L3"], "stage": [3, 99], "weight": 6, "gold": true, "once": true,
+    "text": "潮水退了，滩上露出半截石碑，碑上刻着一条鳄鱼，头朝大海，背上有角。",
+    "choices": [
+      { "text": "趴在碑前", "effect": { "灵性": 4, "龙气": 15 }, "result": "潮水涨上来又退下去。你趴了一整季，碑上的鳄好像动了一下。" },
+      { "text": "往海里游", "chance": 0.35, "chanceAttr": "潜水", "chanceStep": 0.04, "effect": { "潜水": 3, "龙气": 20 }, "result": "你顺着碑上那条鳄的方向游了一夜，游回来时，头顶有点痒。", "fail": { "effect": { "体温": -3 }, "result": "海水又咸又冷。你游回江里，打了一夜喷嚏。" } },
+      { "text": "前世被雷劈过", "require": "legacy:thunder_mark>=1", "effect": { "灵性": 3, "龙气": 18 }, "result": "前世雷劈过你。这一世你看见碑上那条鳄的背上，也有一道闪电。" }
+    ]
+  },
+  {
+    "id": "m_d1_phone", "dir": "down", "layers": ["D1"], "maps": ["sewer"], "weight": 14,
+    "text": "污水管里有个手机在响，屏幕亮着，来电显示：妈。",
+    "choices": [
+      { "text": "不理它", "effect": { "体温": 1 }, "result": "它响了一夜，最后没电了。管道里静得出奇。" },
+      { "text": "用鼻子按接听", "absurd": true, "chance": 0.25, "chanceAttr": "灵性", "chanceStep": 0.03, "effect": { "灵性": 3, "龙气": 6 }, "result": "那头说：吃饭了没？你说：嗷。那头说：信号不好，挂了啊。", "fail": { "effect": { "灵性": 1 }, "result": "你按成了挂断。屏幕灭了，又亮了，还是妈。" } },
+      { "text": "前世认过管子", "require": "legacy:pathfinder>=1", "effect": { "灵性": 3, "龙气": 6 }, "result": "前世你在管子里迷过路。这一世你把手机叼到人常走的井口底下。" }
+    ]
+  },
+  {
+    "id": "m_d1_blindfish", "dir": "down", "layers": ["D1"], "maps": ["river", "swamp"], "weight": 12,
+    "text": "浑水里有个软乎乎的东西撞了你一下，又撞一下。是一条瞎了眼的老鱼，在找路。",
+    "choices": [
+      { "text": "领它游一段", "effect": { "灵性": 2, "潜水": 1 }, "result": "你把它领到了水草多的地方。它碰了碰你的鼻子，算是道谢。" },
+      { "text": "一口吞了", "effect": { "体温": 3, "咬合": 1 }, "result": "你吃饱了。浑水里少了一条找路的鱼。" },
+      { "text": "让它跟着尾巴", "chance": 0.5, "chanceAttr": "潜水", "chanceStep": 0.08, "effect": { "潜水": 2, "灵性": 2, "龙气": 4 }, "result": "它贴着你的尾巴游了一季。它找得到的每一处暖水，你都记下了。", "fail": { "effect": { "体温": -1 }, "result": "你游太快，它跟丢了。你回头找了一下午。" } }
+    ]
+  },
+  {
+    "id": "m_d4_echo", "dir": "down", "layers": ["D4"], "stage": [2, 99], "weight": 12,
+    "text": "你在龙渊里叫了一声。回声隔了很久才回来，比你的低，也比你的老。",
+    "choices": [
+      { "text": "再叫一声", "effect": { "灵性": 3, "龙气": 6 }, "result": "这回回声只说了一个字：等。" },
+      { "text": "潜下去找", "chance": 0.35, "chanceAttr": "潜水", "chanceStep": 0.05, "effect": { "潜水": 2, "龙气": 12 }, "result": "你潜到回声的源头。那里是一片空水，水里留着一个很大的身形。", "fail": { "effect": { "death": "deep_cold" }, "result": "越往下越冷。回声说：太早了。" } },
+      { "text": "前世冻在这儿", "require": "legacy:cold_scale>=2", "effect": { "潜水": 3, "灵性": 2, "龙气": 15 }, "result": "前世你冻在了这儿。这一世寒气贴着鳞滑开，你潜到了回声的底。" }
+    ]
+  },
+  {
+    "id": "m_d4_chess", "dir": "down", "layers": ["D4"], "weight": 12,
+    "text": "渊底两块石头上，一只老鳖和一条大鲶鱼在下棋。听说下了一百年，还差一步。",
+    "choices": [
+      { "text": "看一会儿", "effect": { "灵性": 2, "龙气": 4 }, "result": "你看了一季。它们谁也没动。" },
+      { "text": "帮鲶鱼走一步", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05, "effect": { "灵性": 3, "龙气": 8 }, "result": "鲶鱼赢了。老鳖说：一百年白下了。它们摆好棋，又开始了。", "fail": { "effect": { "体温": -1 }, "result": "你推错了子。两个老家伙一起瞪你，瞪了一整季。" } },
+      { "text": "让慢慢去下", "showIf": "companion:softshell", "effect": { "灵性": 4, "龙气": 10 }, "result": "慢慢一出手，三步就赢了。原来它是那只老鳖的师父。" },
+      { "text": "把棋盘掀了", "absurd": true, "chance": 0.15, "chanceAttr": "咬合", "chanceStep": 0.02, "effect": { "咬合": 2, "龙气": 12 }, "result": "两个老家伙愣了，然后一起说：终于能下新的一盘了。", "fail": { "effect": { "体温": -2 }, "result": "棋盘没掀动。它们说：后生，这是块石头。" } }
+    ]
+  }
+]
