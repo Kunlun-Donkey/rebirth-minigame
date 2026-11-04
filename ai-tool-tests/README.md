@@ -20,3 +20,4 @@
 | 测试 | 工具 / 模型 | 产出 | 耗时 | 输出 token | 备注 |
 |---|---|---|---|---|---|
 | [章鱼骑自行车 SVG](zhangyu_ridebike/prompt.md) | Claude Code · Opus 5.5 | [opus_5.5_zhangyu_ridebike.svg](zhangyu_ridebike/opus_5.5_zhangyu_ridebike.svg) | 91 秒 | 8,960 | 完整提示词一次成功；同会话非冷启动，偏乐观 |
+| 同上 | Claude Code · MiMo v2.6（mimo-v2.6-pro-ultraspeed） | [mimo_v2.6_zhangyu_ridebike.svg](zhangyu_ridebike/mimo_v2.6_zhangyu_ridebike.svg) | 252 秒 | 91,992 | 冷启动；22 次调用，首次用满 32k 输出上限没有产出，之后自己改了 7 次；文件名写成了 opus 的，覆盖过 Opus 的文件 |
