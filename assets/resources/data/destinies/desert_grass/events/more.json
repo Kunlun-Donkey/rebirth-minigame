@@ -1,0 +1,250 @@
+[
+  {
+    "id": "m_d5_salamander", "dir": "down", "layers": ["D5"], "stage": [3, 99],
+    "text": "岩浆里游着一条火蜥蜴，尾巴像一根烧红的铁丝。它在找东西磨牙。",
+    "choices": [
+      { "text": "让它啃一口", "effect": { "follow": { "id": "m_d5_salamander_back", "delay": 2 }, "水分": -2, "灵气": 6 },
+        "result": "它啃了一口你的根，苦得直吐火星，扭头游走了。" },
+      { "text": "用耐火根抽它", "require": "legacy:fire_root>=1", "effect": { "feud": "火蜥蜴被一株草抽哭了", "灵气": 12, "韧性": 1 },
+        "result": "前世你在这里烤成了草干。这一世，你拿根抽哭了火的孩子。" },
+      { "text": "缩回根尖", "effect": { "韧性": 1, "水分": -1 }, "result": "你把根缩成一个结。它绕了两圈，没找着下嘴的地方。" },
+      { "text": "吞噬", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 18 },
+        "result": "你把它尾巴上的火吸走了。它变成一条普通蜥蜴，很委屈。" }
+    ]
+  },
+  {
+    "id": "m_d5_salamander_back", "dir": "down", "layers": ["D5"], "chainOnly": true,
+    "teaser": "火蜥蜴说要叫它妈来",
+    "text": "那条火蜥蜴回来了，身后跟着一条大十倍的。大的那条盯着你，很久没眨眼。",
+    "choices": [
+      { "text": "低头认怂", "effect": { "灵性": 1, "水分": -1 }, "result": "大的那条哼了一声，叼起小的走了。" },
+      { "text": "摊开根给它看", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵气": 15, "灵性": 2 }, "result": "它闻了闻：苦，是好根。它留下一片蜕下来的火皮。",
+        "easy": "它闻了一下就低了头。小的那条，被它按着给你道歉。",
+        "fail": { "effect": { "水分": -3 }, "result": "它喷了一口热气。你冒着烟退回了遗迹边上。" } },
+      { "text": "熔岩行走", "showIf": "skill:lava_walk", "useSkill": "lava_walk", "effect": { "灵气": 20, "根系": 1 },
+        "result": "你在岩浆里走了一圈给它看。它带着孩子，给你让了道。" }
+    ]
+  },
+  {
+    "id": "m_d5_sigh", "dir": "down", "layers": ["D5"], "stage": [3, 99],
+    "text": "岩浆深处传来一声叹气。很老，很长，像地底下有谁翻了个身。",
+    "choices": [
+      { "text": "屏住不动", "effect": { "灵性": 1, "灵气": 3 }, "result": "叹气声停了。你等了一整季，它没再出声。" },
+      { "text": "敲敲岩壁回它", "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "灵气": 18, "灵性": 2 }, "result": "地底回了三声。沙面上有只沙鼠，莫名打了个寒战。",
+        "fail": { "effect": { "水分": -2 }, "result": "回你的是一股热浪。你的根卷成了麻花。" } },
+      { "text": "唱首歌哄它睡", "absurd": true, "chance": 0.2,
+        "effect": { "灵气": 30, "灵性": 3 }, "result": "叹气声变成了鼾声。地底的热，给你让出一条缝。",
+        "fail": { "effect": { "death": "lava" }, "result": "它被你吵醒了。起床气很大。" } },
+      { "text": "以天眼观之", "showIf": "skill:sky_eye", "useSkill": "sky_eye", "effect": { "灵性": 3, "灵气": 15 },
+        "result": "你看见一条盘着睡觉的火脉。它在做梦，梦里有一棵树。" }
+    ]
+  },
+  {
+    "id": "m_d5_glass_flower", "dir": "down", "layers": ["D5"], "stage": [3, 99], "gold": true, "weight": 2, "once": true,
+    "text": "岩浆凉下去的地方，结出了一朵黑玻璃做的花。它又烫，又亮。",
+    "choices": [
+      { "text": "用根托住它", "effect": { "灵气": 20, "水分": -2 }, "result": "花在你根上化开了。那股烫，一路烧到了叶尖。" },
+      { "text": "把它种进根心", "require": "legacy:fire_root>=2", "effect": { "灵气": 35, "根系": 2, "韧性": 2 },
+        "result": "前世这股热把你烤成草干。这一世，它在你根里开了花。" },
+      { "text": "把它顶上沙面", "effect": { "灵性": 3, "水分上限": 2 }, "result": "你托着它往上送了一季。沙面上冒出一圈嫩芽。" }
+    ]
+  },
+
+  {
+    "id": "m_u4_fat_cloud", "dir": "up", "layers": ["U4"], "stage": [3, 99],
+    "text": "一朵胖云卡在你枝头下不来了。它在小声哭，掉下来的全是雨。",
+    "choices": [
+      { "text": "张嘴接着喝", "effect": { "水分": 4 }, "result": "你喝到打嗝。云哭得更凶了，因为你在笑。" },
+      { "text": "帮它解开", "effect": { "follow": { "id": "m_u4_cloud_return", "delay": 2 }, "灵性": 2, "灵气": 4 },
+        "result": "你把枝条一根根挪开。云飘走了，回头冲你打了个小雷。" },
+      { "text": "扣下当水缸", "absurd": true, "chance": 0.25,
+        "effect": { "水分上限": 3, "水分": 5, "灵气": 10 }, "result": "云认命了。它在你头顶住下，每天下一场小雨。",
+        "fail": { "effect": { "茎叶": -2 }, "result": "云的家长来了。一阵狂风，把你的枝头掰弯了。" } }
+    ]
+  },
+  {
+    "id": "m_u4_cloud_return", "dir": "up", "layers": ["U3", "U4"], "chainOnly": true,
+    "teaser": "那朵胖云说要回来谢你",
+    "text": "那朵胖云回来了，身后跟着一整排乌云。它们在你头顶站好，像要拍合照。",
+    "choices": [
+      { "text": "张开所有叶子", "effect": { "水分": 5, "灵气": 8 }, "result": "一排云一起下雨。你被浇得透透的，叶子亮得发光。" },
+      { "text": "请它们去浇枯井", "effect": { "灵性": 3, "灵气": 5 }, "result": "云们排着队飘向了西边。那天，枯井边下了一场雨。" }
+    ]
+  },
+  {
+    "id": "m_u4_thunder_egg", "dir": "up", "layers": ["U4"], "stage": [3, 99],
+    "text": "雷云里掉下一颗圆滚滚的东西，噼啪作响，卡进了你的枝杈。像一颗蛋。",
+    "choices": [
+      { "text": "用叶子捂着", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵气": 15, "灵性": 2 }, "result": "蛋壳裂了，钻出一只浑身冒火花的小鸟。它啄了啄你，飞回了云里。",
+        "fail": { "effect": { "茎叶": -2, "水分": -1 }, "result": "蛋炸了。你半边叶子成了卷发。" } },
+      { "text": "抖下去", "effect": { "茎叶": 1 }, "result": "蛋掉在沙上，滋滋叫着钻进了地里。" },
+      { "text": "让雷纹认它", "require": "legacy:thunder_mark>=1", "effect": { "灵气": 18, "灵性": 2, "skill": "thunder_call" },
+        "result": "前世雷劈过你。这一世，雷把自己的蛋托给你看着。" }
+    ]
+  },
+  {
+    "id": "m_u4_lost_drummer", "dir": "up", "layers": ["U4"], "stage": [3, 99],
+    "text": "雷云里探出一个小雷公，锤子拿反了。他问你：哪边是东？",
+    "choices": [
+      { "text": "指东", "effect": { "灵性": 1, "灵气": 4 }, "result": "他道了声谢，往西飞了。" },
+      { "text": "借他一根枝当锤柄", "chance": 0.4, "chanceAttr": "茎叶", "chanceStep": 0.02,
+        "effect": { "灵气": 15, "韧性": 2 }, "result": "他敲了三下，满意地把枝还你。枝上多了一道雷纹。",
+        "fail": { "effect": { "death": "lightning" }, "result": "他试了试手感。很顺手。" } },
+      { "text": "教他看云认路", "require": "legacy:old_wisdom>=1", "effect": { "灵性": 3, "灵气": 12 },
+        "result": "前世你活到寿终，看过一百场雷往哪边走。这一世，你给雷公指了路。" },
+      { "text": "骗他东在下面", "absurd": true, "chance": 0.15,
+        "effect": { "灵气": 25 }, "result": "他一头扎进了沙里。拔出来后，塞给你一道雷当封口费。",
+        "fail": { "effect": { "茎叶": -3 }, "result": "他识破了，拿锤子敲了你一下。" } }
+    ]
+  },
+
+  {
+    "id": "m_d1_snail_shell", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "沙里埋着一只空蜗牛壳，一圈一圈往里绕。里面有风声。",
+    "choices": [
+      { "text": "把根伸进去", "effect": { "follow": { "id": "m_d1_shell_owner", "delay": 2 }, "灵性": 2 },
+        "result": "根尖绕了七圈，碰到一点潮气。壳里的风声停了。" },
+      { "text": "推开它", "effect": { "根系": 1 }, "result": "你把它挪到一边。根底下宽敞多了。" },
+      { "text": "当水壶用", "effect": { "水分上限": 1, "水分": -1 }, "result": "你往壳里存了一口水。荒漠第一株有家当的草。" }
+    ]
+  },
+  {
+    "id": "m_d1_shell_owner", "dir": "down", "layers": ["D1", "D2"], "chainOnly": true,
+    "teaser": "空蜗牛壳有人来认领",
+    "text": "一只没有壳的小蜗牛爬了过来，在那只空壳前站了很久，触角一直在抖。",
+    "choices": [
+      { "text": "把壳还它", "effect": { "灵性": 3, "灵气": 5 }, "result": "它钻了回去，冲你点了点触角。壳上那点潮气，是你留的。" },
+      { "text": "让它住你根边", "effect": { "灵性": 2, "水分": 2 }, "result": "它在你根边安了家。每天早上，它替你舔一圈露水。" },
+      { "text": "装没听见", "effect": { "水分上限": 1, "灵性": -1 }, "result": "壳归你了。它在外面淋了一夜露水，没再来。" }
+    ]
+  },
+  {
+    "id": "m_d1_ant_road", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "一队蚂蚁在你根边修路。它们打算从你根底下直接穿过去。",
+    "choices": [
+      { "text": "让路", "effect": { "灵性": 1, "灵气": 2 }, "result": "蚂蚁排着队过去了。领头那只回头看了你一眼。" },
+      { "text": "把根横过去", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "根系": 2, "韧性": 1 }, "result": "蚂蚁们开了个会，决定绕道。",
+        "easy": "蚂蚁们看了看你的根，连会都没开，直接绕道。",
+        "fail": { "effect": { "death": "ant" }, "result": "蚂蚁们开了个会，决定把障碍搬走。" } },
+      { "text": "让它们抬抬看", "require": "legacy:hard_shell>=1", "effect": { "feud": "蚂蚁抬了三天没抬动", "韧性": 2, "灵气": 5 },
+        "result": "前世你被它们搬走过。这一世，它们抬了三天，没抬动。" },
+      { "text": "收过路费", "absurd": true, "chance": 0.2,
+        "effect": { "灵气": 12, "水分": 2 }, "result": "蚂蚁真交了。一只一粒沙枣碎，你发了。",
+        "fail": { "effect": { "水分": -2 }, "result": "蚂蚁们笑了，在你根上咬了一排牙印当收据。" } }
+    ]
+  },
+  {
+    "id": "m_d1_jerboa", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "一只跳鼠在你根边打了个窝。它睡觉蹬腿，一晚上踢你四十多脚。",
+    "choices": [
+      { "text": "忍了", "effect": { "根系": 1, "韧性": 1, "水分": -1 }, "result": "你一夜没睡。第二天，根扎得格外深，离它远点。" },
+      { "text": "缠住它的腿", "chance": 0.5, "chanceAttr": "根系", "chanceStep": 0.05,
+        "effect": { "灵气": 4, "根系": 1 }, "result": "它醒了，蹦起三尺高。从此改成侧着睡。",
+        "fail": { "effect": { "水分": -1 }, "result": "它一脚踹断你一根须，翻了个身接着睡。" } },
+      { "text": "跟它对踢", "absurd": true, "chance": 0.25,
+        "effect": { "根系": 2, "韧性": 2 }, "result": "你们对踢了一夜。天亮时，它搬去了隔壁沙丘。",
+        "fail": { "effect": { "水分": -1, "韧性": 1 }, "result": "你踢了它一脚。它在梦里踢回来十脚。" } },
+      { "text": "跟它商量", "showIf": "skill:beast_talk", "useSkill": "beast_talk", "effect": { "根系": 2, "灵性": 1 },
+        "result": "它说它梦见被鹰追。你答应替它看着天，它就不蹬了。" }
+    ]
+  },
+
+  {
+    "id": "m_l1_tortoise", "dir": "side", "layers": ["L1"], "stage": [1, 99],
+    "text": "一只老陆龟爬到沙丘背面。它说它要去绿洲，已经爬了二十年。",
+    "choices": [
+      { "text": "给它指路", "effect": { "灵性": 2 }, "result": "你指了指西边。它说谢谢，二十年前也有株草这么指。" },
+      { "text": "让它歇在你影子里", "effect": { "follow": { "id": "m_l1_tortoise_back", "delay": 3, "ttl": 8 }, "水分": -1, "灵性": 1, "灵气": 3 },
+        "result": "它在你的影子里睡了一季。走时说，回来给你捎东西。" },
+      { "text": "认出它来", "require": "legacy:grip_root>=1", "effect": { "灵性": 3, "灵气": 8 },
+        "result": "前世沙暴把你拔起，你从它头顶飞过。这一世，它也认出了你。" },
+      { "text": "搭它的顺风壳", "absurd": true, "chance": 0.2,
+        "effect": { "灵气": 15, "灵性": 2 }, "result": "你把一粒种子塞进它壳缝。很多年后，绿洲边多了一株你。",
+        "fail": { "effect": { "根系": -2, "水分": -1 }, "result": "它爬了三步，把你连根拽出来半截。" } }
+    ]
+  },
+  {
+    "id": "m_l1_tortoise_back", "dir": "side", "chainOnly": true,
+    "teaser": "老陆龟说会捎东西回来",
+    "text": "老陆龟回来了。壳上沾着绿洲的湿泥，嘴里叼着一颗椰枣核。",
+    "choices": [
+      { "text": "收下", "effect": { "水分": 3, "灵气": 6, "灵性": 1 }, "result": "椰枣核里还裹着一口绿洲的水。你一口喝完。" },
+      { "text": "请它种在你旁边", "effect": { "灵性": 3, "水分上限": 1 }, "result": "它刨了个坑。你多了一个邻居，也多了一个盼头。" }
+    ]
+  },
+  {
+    "id": "m_l1_mirage", "dir": "side", "layers": ["L1"], "stage": [1, 99],
+    "text": "沙丘背面浮出一片湖。湖边站着一株跟你一模一样的草，冲你招手。",
+    "choices": [
+      { "text": "别过去", "effect": { "灵性": 2 }, "result": "湖散了。那株草消失前，撇了撇嘴。" },
+      { "text": "把根伸过去", "chance": 0.35, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "水分": 3, "灵气": 8, "灵性": 1 }, "result": "根伸到一半，湖没了。湖底的位置，真埋着一汪水。",
+        "fail": { "effect": { "水分": -3 }, "result": "你的根在烫沙里爬了一天。什么都没有。" } },
+      { "text": "看穿它的笑", "require": "legacy:judge_heart>=1", "effect": { "灵性": 3, "灵气": 6 },
+        "result": "前世伙伴笑着吃了你。这一世，你一眼看出那张笑脸底下是烫沙。" },
+      { "text": "冲它做鬼脸", "absurd": true, "chance": 0.3,
+        "effect": { "灵气": 8, "韧性": 1 }, "result": "它也做了一个，比你丑。蜃气被你气散了。",
+        "fail": { "effect": { "灵性": -1 }, "result": "它做得比你好看。你很受伤。" } }
+    ]
+  },
+  {
+    "id": "m_l1_camelthorn", "dir": "side", "layers": ["L1"], "stage": [1, 99],
+    "text": "沙丘背面搬来一株骆驼刺，浑身是刺，嘴更刺：你这根，扎了跟没扎一样。",
+    "choices": [
+      { "text": "不吭声，扎深点", "effect": { "根系": 2, "水分": -1 }, "result": "一季后它不说话了。你的根，在它下面。" },
+      { "text": "回嘴", "chance": 0.45, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "灵气": 5 }, "result": "你说它刺多，是因为没人疼。它沉默了一下午。",
+        "fail": { "effect": { "灵性": -1, "韧性": 1 }, "result": "它说：至少我有刺。你没接上话。" } },
+      { "text": "亮出你的刺", "require": "legacy:thorn>=1", "effect": { "feud": "骆驼刺管你叫刺哥", "韧性": 2, "灵气": 6 },
+        "result": "前世你被蝎子欺负。这一世，你的刺比骆驼刺还硬。它改口叫你刺哥。" }
+    ]
+  },
+
+  {
+    "id": "m_l3_bucket", "dir": "side", "layers": ["L3"], "stage": [3, 99],
+    "text": "枯井边挂着半截井绳，绳头系着一只小木桶。桶底刻着两个字：等雨。",
+    "choices": [
+      { "text": "把桶摆正", "effect": { "follow": { "id": "m_l3_bucket_rain", "delay": 2, "ttl": 6 }, "灵性": 2, "灵气": 4 },
+        "result": "你用根把桶推正，桶口朝天。总得有谁接着等。" },
+      { "text": "拆绳子编进根里", "effect": { "韧性": 1, "根系": 1 }, "result": "麻绳在你根间烂成了纤维。很结实。" },
+      { "text": "往桶里吐一口水", "effect": { "水分": -2, "灵性": 3, "灵气": 6 }, "result": "桶底湿了一圈。很远的地方，好像有人松了口气。" }
+    ]
+  },
+  {
+    "id": "m_l3_bucket_rain", "dir": "side", "layers": ["L3"], "chainOnly": true,
+    "teaser": "枯井边那只木桶满了",
+    "text": "夜雨过后，那只木桶满了。桶边蹲着一个透明的小女孩，在数水面的涟漪。",
+    "choices": [
+      { "text": "安静陪她数", "effect": { "灵性": 3, "灵气": 8 }, "result": "她数到一百，冲你笑了笑，散了。桶里的水一滴没少。" },
+      { "text": "把水喝了", "effect": { "水分": 5, "灵性": 1 }, "result": "她愣了愣，没生气：本来就是给你等的。" }
+    ]
+  },
+  {
+    "id": "m_l3_rat_market", "dir": "side", "layers": ["L3"], "stage": [3, 99],
+    "text": "一群沙鼠在死棕榈底下摆起了集市。它们拿枣核当钱，嫌你穷。",
+    "choices": [
+      { "text": "拿露水换枣核", "effect": { "水分": -2, "灵气": 8 }, "result": "一滴露水换三颗枣核。沙鼠说你是大客户。" },
+      { "text": "给摊位遮阴", "effect": { "韧性": 1, "灵气": 4 }, "result": "你用叶子罩住摊位。收摊时，它们给你留了一堆碎屑。" },
+      { "text": "开个水铺", "require": "legacy:water_cells>=1", "effect": { "水分": -3, "灵气": 15, "灵性": 2 },
+        "result": "前世你渴死在沙里。这一世，你卖水给整个集市。" },
+      { "text": "打劫", "absurd": true, "chance": 0.15,
+        "effect": { "灵气": 20, "item": "ancient_seed" }, "result": "沙鼠们跑光了，留下一颗镇店的老种子。",
+        "fail": { "effect": { "水分": -2, "灵性": -1 }, "result": "它们一拥而上，啃秃了你半边叶，还把你拉黑了。" } }
+    ]
+  },
+  {
+    "id": "m_l3_lotus", "dir": "side", "layers": ["L3"], "stage": [3, 99], "gold": true, "weight": 2, "once": true,
+    "text": "枯池底下，一粒莲子裂开了。它等了三百年的水，先等到了你。",
+    "choices": [
+      { "text": "分它一口水", "effect": { "水分": -3, "灵性": 4, "灵气": 20 }, "result": "莲子抽了芽，开出一朵巴掌大的白花。荒漠第一朵。" },
+      { "text": "和它一起扎井", "require": "根系>=10", "effect": { "灵气": 25, "水分上限": 3 },
+        "result": "你们的根缠在一起往下钻。井底，有了回声。" },
+      { "text": "吞噬", "showIf": "skill:swallow", "useSkill": "swallow", "effect": { "灵气": 35 },
+        "result": "三百年的等，一口咽下。有点苦。" }
+    ]
+  }
+]

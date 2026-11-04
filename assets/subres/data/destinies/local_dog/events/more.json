@@ -1,0 +1,260 @@
+[
+  {
+    "id": "m_u1_goatherd", "dir": "up", "layers": ["U1"], "stage": [1, 99],
+    "text": "山脚下有个放羊的老汉，羊跑散了。他追不动，坐在石头上直喘。",
+    "choices": [
+      { "text": "帮他圈羊", "chance": 0.55, "chanceAttr": "脚力", "chanceStep": 0.05,
+        "effect": { "follow": { "id": "m_u1_goatherd_back", "delay": 2 }, "脚力": 2, "体力": 2 },
+        "result": "你绕着山坡跑了三圈，羊一只不少。老汉掏出半块饼。",
+        "easy": "你一圈就把羊拢齐了。老汉看呆了，饼掰了一大半给你。",
+        "fail": { "effect": { "体力": -2 }, "result": "羊没圈回来。你被头羊顶进了沟里。" } },
+      { "text": "冲羊群叫", "effect": { "牙口": 1 }, "result": "羊散得更开了。老汉看了你一眼，叹了口气。" },
+      { "text": "照老办法赶", "require": "legacy:old_dog>=1", "effect": { "follow": { "id": "m_u1_goatherd_back", "delay": 2 }, "忠义": 2, "灵性": 2, "体力": 2 },
+        "result": "前世你老到走不动，也帮人看过羊。这一世一个眼神，羊就排好了队。" },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "脚力": 1, "忠义": 2 },
+        "result": "你一嗓子下去，羊全挤回了老汉脚边。" }
+    ]
+  },
+  {
+    "id": "m_u1_goatherd_back", "dir": "up", "layers": ["U1", "U2"], "chainOnly": true,
+    "teaser": "放羊老汉在山脚等你",
+    "text": "放羊老汉又来了，脖子上多挂了个铃铛。他说：跟我放一季羊吧，管饭。",
+    "choices": [
+      { "text": "跟他走一季", "effect": { "体力": 4, "脚力": 1 }, "result": "你跟着羊群走了一季。头羊现在见你就低头。" },
+      { "text": "送他到山口", "effect": { "灵性": 1, "忠义": 1 }, "result": "他摸了摸你的头：村里的狗，留不住。" }
+    ]
+  },
+  {
+    "id": "m_u1_hedgehog", "dir": "up", "layers": ["U1"], "stage": [1, 99],
+    "text": "一只刺猬在山路正中缩成一团。不让路，也不说话。",
+    "choices": [
+      { "text": "绕过去", "effect": { "脚力": 1 }, "result": "你绕了一大圈。刺猬没动，好像赢了。" },
+      { "text": "用鼻子拱", "chance": 0.4, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "妖气": 4, "灵性": 1 }, "result": "刺猬被拱进草丛，展开身子骂了你一句。",
+        "fail": { "effect": { "体力": -2 }, "result": "你的鼻子成了针垫。三天不敢闻东西。" } },
+      { "text": "叼起来当球扔", "absurd": true, "chance": 0.2,
+        "effect": { "脚力": 2, "妖气": 8 }, "result": "你一甩，它飞了三丈。落地后，你们都很惊讶。",
+        "fail": { "effect": { "体力": -2, "牙口": -1 }, "result": "你一口下去。下巴到现在还在疼。" } },
+      { "text": "问它在等谁", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 2, "妖气": 5 },
+        "result": "它在等一只走丢的崽。你在坡下帮它找着了。" }
+    ]
+  },
+  {
+    "id": "m_u1_white_dog", "dir": "up", "layers": ["U1"], "stage": [1, 99],
+    "text": "山脚乱石堆边蹲着一条白狗。你近一步，它退一步。它脚下没有影子。",
+    "choices": [
+      { "text": "掉头回村", "effect": { "灵性": 1 }, "result": "你跑到村口才敢回头。它还在原地，冲你摇了摇尾巴。" },
+      { "text": "跟上去", "chance": 0.45, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "item": "old_collar", "灵性": 2 }, "result": "它领你到一棵柿子树下。土里埋着一只旧项圈。",
+        "fail": { "effect": { "体力": -2, "灵性": 1 }, "result": "它不见了。你在石头堆里转到了天亮。" } },
+      { "text": "看清它是谁", "require": "legacy:yin_eye>=1", "effect": { "follow": { "id": "m_u1_white_ghost", "delay": 2 }, "灵性": 2, "妖气": 8 },
+        "result": "前世古墓的阴气冲过你。这一世你看清了：它是一条很老的看山狗。" }
+    ]
+  },
+  {
+    "id": "m_u1_white_ghost", "dir": "up", "layers": ["U1", "U2"], "chainOnly": true,
+    "teaser": "那条白狗在山脚等你",
+    "text": "那条没有影子的白狗又来了。它叼来一根褪色的红绳，放在你脚边，往山上看。",
+    "choices": [
+      { "text": "叼起红绳跟它上山", "effect": { "脚力": 2, "灵性": 2, "妖气": 6 }, "result": "它送你到竹林口，身子淡了。这条山路，你认得了。" },
+      { "text": "把红绳埋回去", "effect": { "忠义": 2, "灵性": 1 }, "result": "白狗点点头，走进了石头堆。你在那儿趴了一夜。" }
+    ]
+  },
+  {
+    "id": "m_u2_blackwhite", "dir": "up", "layers": ["U2"], "stage": [1, 99],
+    "text": "竹林深处坐着个黑白相间的大家伙，抱着竹子啃。啃一口，看你一眼。",
+    "choices": [
+      { "text": "悄悄退走", "effect": { "脚力": 1 }, "result": "你退了三十步才敢转身。它还在啃。" },
+      { "text": "蹲下陪它啃", "effect": { "牙口": 1, "体力": -1, "灵性": 1 }, "result": "竹子真难吃。它好像很欣慰，终于有人陪了。" },
+      { "text": "抢它的竹子", "absurd": true, "chance": 0.15, "chanceAttr": "牙口", "chanceStep": 0.02,
+        "effect": { "妖气": 15, "牙口": 2 }, "result": "它愣住了，把竹子让给了你。你也愣住了。",
+        "fail": { "effect": { "体力": -2 }, "result": "它一巴掌把你按进竹叶堆。动作很慢，很稳。" } },
+      { "text": "问它从哪来", "showIf": "skill:talk", "useSkill": "talk", "effect": { "灵性": 2, "妖气": 6 },
+        "result": "它说它迷路了，家在很远的西边。你送它翻过了一道梁。" }
+    ]
+  },
+
+  {
+    "id": "m_u4_crane", "dir": "up", "layers": ["U4"], "stage": [3, 99],
+    "text": "雷池边落着一只白鹤。它说它等雷劫等了三百年，排队排在你前面。",
+    "choices": [
+      { "text": "让它先", "effect": { "follow": { "id": "m_u4_crane_after", "delay": 2, "ttl": 6 }, "灵性": 2, "妖气": 5 },
+        "result": "雷劈下来，白鹤化成了一个白胡子老头。他冲你拱了拱手。" },
+      { "text": "插队", "chance": 0.35, "chanceAttr": "牙口", "chanceStep": 0.04,
+        "effect": { "妖气": 20, "牙口": 1 }, "result": "雷先劈了你。你挺住了，白鹤在后面鼓掌。",
+        "fail": { "effect": { "death": "lightning" }, "result": "雷说：插队的，加倍。" } },
+      { "text": "亮出毛里的雷纹", "require": "legacy:thunder_mark>=1", "effect": { "妖气": 18, "灵性": 2 },
+        "result": "前世雷劈过你。这一世雷认出了你，先给你开了个小灶。" }
+    ]
+  },
+  {
+    "id": "m_u4_crane_after", "dir": "any", "chainOnly": true,
+    "teaser": "化形的白鹤要来还人情",
+    "text": "白胡子老头驾着云回来，往你面前放了一根白羽毛：三百年的队，你让了我。",
+    "choices": [
+      { "text": "收下羽毛", "effect": { "脚力": 3, "妖气": 12 }, "result": "羽毛插在你耳后。从此上山，脚下像有风。" },
+      { "text": "请他教一招", "effect": { "灵性": 3, "妖气": 8 }, "result": "他只说了一句：雷来的时候，别闭眼。" }
+    ]
+  },
+  {
+    "id": "m_u4_drum", "dir": "up", "layers": ["U4"], "stage": [3, 99],
+    "text": "山顶石缝里卡着一面破鼓。风一吹，鼓面自己响，一响就落一道雷。",
+    "choices": [
+      { "text": "趴远点听", "effect": { "灵性": 1, "妖气": 3 }, "result": "你趴在石头后面听了一夜。雷落了十七回。" },
+      { "text": "用爪子拍鼓", "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.04,
+        "effect": { "妖气": 25, "灵性": 2 }, "result": "咚。雷照着你的节奏落下来。你拍了一首歌。",
+        "fail": { "effect": { "体力": -3 }, "result": "咚。雷落在你尾巴尖上。毛卷了一个月。" } },
+      { "text": "冲鼓啸月", "showIf": "skill:howl", "useSkill": "howl", "effect": { "妖气": 20 },
+        "result": "你嚎一声，鼓响一声。谁也不让谁，一直到天亮。" },
+      { "text": "刨出来带回村", "absurd": true, "chance": 0.15,
+        "effect": { "item": "thunder_wood", "妖气": 15 }, "result": "鼓刨出来了，鼓腔里卡着一截雷击木。村里过年敲了它。",
+        "fail": { "effect": { "体力": -2, "脚力": -1 }, "result": "鼓没动。雷动了。" } }
+    ]
+  },
+  {
+    "id": "m_u4_jade_rabbit", "dir": "up", "layers": ["U4"], "stage": [3, 99], "gold": true, "weight": 2, "once": true,
+    "text": "雷池水面上蹲着一只玉色的兔子，在捣药。药香飘了满山。",
+    "choices": [
+      { "text": "坐下闻", "effect": { "灵性": 3, "妖气": 15 }, "result": "你闻了一夜药香。天亮时，骨头里像灌了月光。" },
+      { "text": "讨一口", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "体力上限": 2, "体力": 5, "妖气": 25 }, "result": "兔子舀了一勺给你。它说：狗也该长寿。",
+        "fail": { "effect": { "妖气": 5 }, "result": "兔子收起杵，跳回了月亮。只剩一点药渣。" } },
+      { "text": "追上去", "absurd": true, "chance": 0.15,
+        "effect": { "item": "moonstone", "妖气": 30, "脚力": 2 }, "result": "你追到了月亮底下。兔子扔给你一块石头，叫你别追了。",
+        "fail": { "effect": { "体力": -3 }, "result": "你一头扎进了雷池。兔子笑得杵都掉了。" } }
+    ]
+  },
+
+  {
+    "id": "m_d4_paper_horse", "dir": "down", "layers": ["D4"], "stage": [2, 99],
+    "text": "墓道里立着一匹纸扎的马，纸都黄了。你走过去时，它的头转了过来。",
+    "choices": [
+      { "text": "低头快走", "effect": { "灵性": 1 }, "result": "你没回头。身后传来很轻的纸响，一直跟到墓口。" },
+      { "text": "冲它叫", "chance": 0.5, "chanceAttr": "牙口", "chanceStep": 0.05,
+        "effect": { "牙口": 1, "妖气": 6 }, "result": "纸马打了个响鼻，散成一地纸屑。",
+        "fail": { "effect": { "体力": -2, "灵性": 1 }, "result": "纸马跟了你半条墓道。你一夜没合眼。" } },
+      { "text": "骑上去试试", "absurd": true, "chance": 0.2,
+        "effect": { "妖气": 15, "脚力": 3 }, "result": "纸马驮着你在墓道里跑了三圈，又自己站回原处。",
+        "fail": { "effect": { "体力": -2 }, "result": "纸马塌了。你趴在一堆纸上，很尴尬。" } },
+      { "text": "过阴问路", "showIf": "skill:ghost_walk", "useSkill": "ghost_walk", "effect": { "灵性": 3, "妖气": 10 },
+        "result": "纸马低头，给你指了一条墓主人都不知道的暗道。" }
+    ]
+  },
+  {
+    "id": "m_d4_mouse_ledger", "dir": "down", "layers": ["D4"], "stage": [2, 99],
+    "text": "一窝老鼠在墓里过日子。陪葬的铜钱码得整整齐齐，它们正在算账。",
+    "choices": [
+      { "text": "吓跑它们", "effect": { "牙口": 1, "妖气": 3 }, "result": "老鼠跑光了。账本是一片瓦，上面全是牙印。" },
+      { "text": "帮它们看门", "effect": { "忠义": 1, "体力": 2 }, "result": "老鼠管饭。墓里的供果，有点凉。" },
+      { "text": "查它们的账", "require": "legacy:judge>=1", "effect": { "feud": "墓里的鼠账被你查穿了", "灵性": 2, "妖气": 10 },
+        "result": "前世黄鼠狼骗过你。这一世你一眼看出，这账做了假。" },
+      { "text": "顺着鼠道刨", "showIf": "skill:dig", "useSkill": "dig", "effect": { "item": "bone", "妖气": 6 },
+        "result": "你一路刨下去，刨出了它们藏了三年的肉骨头。" }
+    ]
+  },
+  {
+    "id": "m_d4_mirror", "dir": "down", "layers": ["D4"], "stage": [2, 99],
+    "text": "墓壁上嵌着一面铜镜。镜子里的你，脖子上系着红绳，正埋头吃一碗饭。",
+    "choices": [
+      { "text": "看一会儿就走", "effect": { "灵性": 2 }, "result": "镜子里的你吃完了，舔了舔碗，冲你摇尾巴。" },
+      { "text": "伸爪子进去", "chance": 0.3, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "体力": 4, "妖气": 12 }, "result": "你够出来半碗饭。还是热的。",
+        "fail": { "effect": { "death": "yin" }, "result": "镜面凉得像井水。爪子没能抽回来。" } },
+      { "text": "不馋，看镜后", "require": "legacy:hunger_proof>=1", "effect": { "灵性": 3, "妖气": 10, "体力上限": 1 },
+        "result": "前世你饿死过。这一世半碗饭勾不走你，你看见镜背刻着一道符。" },
+      { "text": "看镜里的狗牌", "showIf": "item:dog_tag", "effect": { "忠义": 2, "灵性": 2 },
+        "result": "镜子里的你也戴着一块铜牌。上面的字，一模一样。" }
+    ]
+  },
+
+  {
+    "id": "m_l1_candied", "dir": "side", "layers": ["L1"], "stage": [1, 99],
+    "text": "卖糖葫芦的老头打了个盹。草靶子上的糖葫芦，正好垂到你鼻子前面。",
+    "choices": [
+      { "text": "舔一口", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "体力": 2, "灵性": 1 }, "result": "甜得你打了个喷嚏。老头没醒。",
+        "fail": { "effect": { "体力": -1, "忠义": -1 }, "result": "老头醒了，拿扫帚撵了你两条街。" } },
+      { "text": "替他看摊", "effect": { "follow": { "id": "m_l1_candied_back", "delay": 2 }, "忠义": 2 },
+        "result": "有个孩子想顺一串。你冲他摇摇头，他红着脸走了。" },
+      { "text": "叼走整个草靶", "absurd": true, "chance": 0.15,
+        "effect": { "体力": 6, "妖气": 6 }, "result": "你扛着草靶子跑了。全镇的孩子跟在你后面。",
+        "fail": { "effect": { "体力": -2, "忠义": -2 }, "result": "草靶子比你重。你被压在底下，人赃俱获。" } }
+    ]
+  },
+  {
+    "id": "m_l1_candied_back", "dir": "side", "layers": ["L1", "L2"], "chainOnly": true,
+    "teaser": "糖葫芦老头记着你",
+    "text": "卖糖葫芦的老头一见你就乐，把一串化了糖的放在你面前：给看摊的。",
+    "choices": [
+      { "text": "吃了", "effect": { "体力": 3, "忠义": 1 }, "result": "粘牙。你嚼了一下午。" },
+      { "text": "叼给狗剩", "showIf": "companion:beggar", "effect": { "忠义": 2, "灵性": 2 }, "result": "狗剩舍不得吃，举着看了一路。" },
+      { "text": "叼回去埋起来", "effect": { "灵性": 1, "妖气": 3 }, "result": "你把它埋在老槐树下。第二天来刨，蚂蚁先到了。" }
+    ]
+  },
+  {
+    "id": "m_l1_fortune", "dir": "side", "layers": ["L1"], "stage": [1, 99],
+    "text": "算命摊上的黄雀叼出一张签，丢在你面前。签上写：下下。",
+    "choices": [
+      { "text": "叼回去换一张", "chance": 0.4, "chanceAttr": "灵性", "chanceStep": 0.05,
+        "effect": { "灵性": 2, "妖气": 6 }, "result": "新签写着：上上。算命的愣了，说这狗命比他好。",
+        "fail": { "effect": { "体力": -1 }, "result": "又是下下。黄雀冲你耸了耸肩。" } },
+      { "text": "不信这个", "effect": { "牙口": 1, "妖气": 2 }, "result": "你在签上撒了泡尿。神清气爽。" },
+      { "text": "抢黄雀的活", "absurd": true, "chance": 0.2,
+        "effect": { "体力": 3, "妖气": 8 }, "result": "你叼签给路人。人家说准，赏了你半个包子。",
+        "fail": { "effect": { "体力": -1, "灵性": -1 }, "result": "路人说不准，掀了摊子。算命的拿竹竿追你。" } }
+    ]
+  },
+  {
+    "id": "m_l1_lost_kid", "dir": "side", "layers": ["L1"], "stage": [1, 99],
+    "text": "集市散了。一个小娃娃坐在石墩上哭，娘找不着了。",
+    "choices": [
+      { "text": "陪着他", "effect": { "灵性": 1, "忠义": 1, "体力": -1 }, "result": "他哭累了，抱着你睡着了。半夜，他娘找了过来。" },
+      { "text": "嗅着找他娘", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.06,
+        "effect": { "忠义": 3, "体力": 3 }, "result": "你在豆腐坊门口找到了她。她给了你一整块豆腐。",
+        "fail": { "effect": { "灵性": 1 }, "result": "你领回来一个卖豆腐的。娃不哭了，盯着豆腐看。" } },
+      { "text": "嗅灵", "showIf": "skill:sniff", "useSkill": "sniff", "effect": { "忠义": 4, "妖气": 5 },
+        "result": "鼻子一抽，你直奔东街。娘俩抱在一起，你被摸秃了头。" },
+      { "text": "驮他去找", "absurd": true, "chance": 0.25, "chanceAttr": "脚力", "chanceStep": 0.03,
+        "effect": { "忠义": 4, "脚力": 2 }, "result": "你驮着他满集市转。他娘远远看见，哭着笑了。",
+        "fail": { "effect": { "体力": -2 }, "result": "你趴下了。他坐在你背上，哭得更响了。" } }
+    ]
+  },
+
+  {
+    "id": "m_l3_palace_cat", "dir": "side", "layers": ["L3"], "stage": [3, 99],
+    "text": "宫墙上蹲着一只御猫，脖子上挂着金铃铛。它说：宫里的耗子归它，宫外的也归它。",
+    "choices": [
+      { "text": "不跟猫计较", "effect": { "灵性": 1 }, "result": "你掉头走了。它在墙上骂了一路，铃铛叮当响。" },
+      { "text": "跳上墙对峙", "chance": 0.4, "chanceAttr": "脚力", "chanceStep": 0.04,
+        "effect": { "feud": "御猫让出了半条街", "牙口": 2, "妖气": 8 }, "result": "你一跃上墙。御猫退了三步，让出了半条街。",
+        "fail": { "effect": { "体力": -2 }, "result": "墙太滑，你挂在墙头。御猫慢慢从你头上踩了过去。" } },
+      { "text": "这条街我也要", "require": "legacy:grudge>=1", "effect": { "feud": "御猫被你撵上了房", "牙口": 2, "妖气": 10 },
+        "result": "前世你被赶出过村子。这一世，谁也别想把你赶出这条街。" },
+      { "text": "狂吠", "showIf": "skill:bark", "useSkill": "bark", "effect": { "妖气": 6, "牙口": 1 },
+        "result": "你一嗓子下去，宫里好几声惊叫。御猫的铃铛掉了。" }
+    ]
+  },
+  {
+    "id": "m_l3_noodle", "dir": "side", "layers": ["L3"], "stage": [3, 99],
+    "text": "巷口面摊的老板娘每天收摊，都把锅底的面汤倒进一个豁口碗，放在墙角。",
+    "choices": [
+      { "text": "去喝", "effect": { "体力": 3 }, "result": "热的。京城这么大，有一碗是留给狗的。" },
+      { "text": "守摊到收摊", "effect": { "忠义": 2, "体力": 2, "item": "bone" }, "result": "你帮她撵走三个赖账的。今天碗里多了块骨头。" },
+      { "text": "把碗让给小狗", "require": "legacy:hunger_proof>=1", "effect": { "灵性": 3, "忠义": 2, "妖气": 5 },
+        "result": "前世你饿死过。这一世，你把这碗让给了更小的狗。" }
+    ]
+  },
+
+  {
+    "id": "m_d1_peddler", "dir": "down", "layers": ["D1"], "stage": [1, 99],
+    "text": "货郎挑着担子进了村，拨浪鼓一摇，全村孩子都跑了出来。你也跑了出来。",
+    "choices": [
+      { "text": "跟在后面", "effect": { "体力": 1, "忠义": 1 }, "result": "他走一步，你跟一步。他给你一块麦芽糖，叫你别跟了。" },
+      { "text": "闻闻担子底下", "require": "legacy:wary>=1", "effect": { "feud": "货郎担里的套绳露馅了", "灵性": 2, "忠义": 3 },
+        "result": "前世你被那辆板车带走。这一世，你在担子底下闻出了套狗绳。" },
+      { "text": "跟着拨浪鼓叫", "absurd": true, "chance": 0.3,
+        "effect": { "item": "bell", "灵性": 2 }, "result": "你叫得比鼓还准。货郎笑歪了担子，赏你一个铜铃铛。",
+        "fail": { "effect": { "忠义": -1 }, "result": "孩子们吓哭了。大人看你的眼神不太对。" } }
+    ]
+  }
+]
