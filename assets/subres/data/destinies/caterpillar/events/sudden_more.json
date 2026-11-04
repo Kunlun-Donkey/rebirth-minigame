@@ -1,0 +1,170 @@
+[
+  {
+    "id": "xs_hail", "dir": "any", "sudden": true, "weight": 8, "stage": [0, 3],
+    "text": "天上掉下来一把白豆子，砸得叶子噼啪响。是冰雹。",
+    "choices": [
+      { "text": "缩到叶柄底下", "effect": { "饱腹": -1, "攀爬": 1 }, "result": "叶柄底下只漏进来两颗。你抱着叶柄，数了一夜响声。" },
+      { "text": "趁乱啃砸落的嫩芽", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "饱腹": 3, "胃口": 1 }, "result": "嫩芽落了一地，没谁跟你抢。你一直吃到冰雹停。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "一颗冰雹正砸在你背上。你缩成一团，半天没敢动。" } },
+      { "text": "前世的厚皮", "require": "legacy:tough_skin>=1", "effect": { "饱腹": 1, "吐丝": 1 },
+        "result": "前世一阵药雾熏倒过你。这一世皮厚，冰雹砸上来就弹开了。" }
+    ]
+  },
+  {
+    "id": "xs_quiet_morning", "dir": "any", "sudden": true, "weight": 7, "stage": [1, 4],
+    "text": "一早上，园子里一只鸟都没叫。蚂蚁扛着卵，排着队往高处搬。",
+    "choices": [
+      { "text": "跟着蚂蚁往上爬", "effect": { "攀爬": 1, "饱腹": -1, "follow": "xs_f_flood_raft" },
+        "result": "你爬到了最高的那根枝。傍晚，天黑得像锅底。" },
+      { "text": "没鸟了，敞开吃", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "饱腹": 3, "胃口": 1 }, "result": "你吃了一整天。雨落下来时，你刚好吃饱爬上了高枝。",
+        "fail": { "effect": { "death": "rain" }, "result": "傍晚雨来了，水跟着漫上了叶子。" } },
+      { "text": "前世的抓地足", "require": "legacy:grip>=1", "effect": { "攀爬": 2, "灵性": 1, "follow": "xs_f_flood_raft" },
+        "result": "前世一场大雨冲走过你。这一世鸟一不叫，你就上了树顶。" }
+    ]
+  },
+  {
+    "id": "xs_f_flood_raft", "dir": "any", "chainOnly": true, "teaser": "高处看得见水漫上来了",
+    "text": "雨下了三天。底下成了一片水，一窝蚂蚁挤在一片叶子上打转。",
+    "choices": [
+      { "text": "垂根丝给它们", "effect": { "吐丝": 1, "灵性": 2 }, "result": "蚂蚁一只接一只顺着丝爬上来。最后一只冲你点了点触角。" },
+      { "text": "看着它们漂远", "effect": { "饱腹": 1 }, "result": "叶子打着转漂走了。你低头啃了口叶子，没再往下看。" }
+    ]
+  },
+  {
+    "id": "xs_selfie", "dir": "any", "sudden": true, "weight": 7, "stage": [1, 3], "maps": ["park"],
+    "text": "一个人趴在花坛边，手机镜头离你只有一指远。他小声说：别动，别动。",
+    "choices": [
+      { "text": "缩回叶背", "effect": { "灵性": 1 }, "result": "他等了半个钟头，最后拍了一片叶子回去。" },
+      { "text": "抬起半截身子", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "灵性": 1, "蜕变": 3 }, "result": "他拍了四十张，挑了一张发出去，配文：它在看我。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "你抬得太猛，一头栽下了花枝。" } },
+      { "text": "爬上他的手机屏幕", "absurd": true, "chance": 0.2,
+        "effect": { "蜕变": 10, "灵性": 2 }, "result": "你在屏幕上爬出一串弯弯绕。视频发出去，全网都在猜那是什么字。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "他手一抖，你飞进了月季丛，手机掉进了花坛。" } }
+    ]
+  },
+  {
+    "id": "xs_honeydew", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 3],
+    "text": "头顶的枝上一滴一滴落下亮晶晶的东西。舔一口，甜的。",
+    "choices": [
+      { "text": "在底下张嘴接", "effect": { "饱腹": 2 }, "result": "你张着嘴等了一下午。甜是甜，就是一滴一滴太慢。" },
+      { "text": "顺着往上找源头", "chance": 0.5, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "饱腹": 3, "蜕变": 4 }, "result": "上面一排蚜虫在冒蜜，看着它们的蚂蚁正在打盹。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "看蚜虫的蚂蚁醒了，一路把你撵下了枝。" } },
+      { "text": "前世的蚁族之约", "require": "legacy:ant_truce>=1", "effect": { "饱腹": 3, "胃口": 1, "灵性": 1 },
+        "result": "前世蚂蚁搬走过你。这一世看蜜的蚂蚁，给你让了个座。" }
+    ]
+  },
+  {
+    "id": "xs_beetle", "dir": "any", "sudden": true, "weight": 8, "stage": [0, 2],
+    "text": "一只甲虫仰面躺在叶子上，六条腿冲着天乱蹬，怎么也翻不过来。",
+    "choices": [
+      { "text": "用脑袋把它顶过来", "effect": { "饱腹": -1, "灵性": 2, "follow": { "id": "xs_f_beetle_gift", "delay": 2 } },
+        "result": "你顶了三回，它咕咚一声翻过来，冲你晃了晃角。" },
+      { "text": "吐根丝拉它", "chance": 0.6, "chanceAttr": "吐丝", "chanceStep": 0.08,
+        "effect": { "吐丝": 2, "follow": { "id": "xs_f_beetle_gift", "delay": 2 } }, "result": "丝一拉，它翻过来了。它看了看丝，又看了看你。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "它一蹬腿，把你也踹翻了。你俩并排躺着看了半天天。" } },
+      { "text": "躺下陪它一起蹬", "absurd": true, "chance": 0.25,
+        "effect": { "灵性": 3, "蜕变": 6 }, "result": "你俩一起蹬腿。路过的螳螂看了半天，觉得有诈，走了。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "你翻过去了，翻不回来了。最后是甲虫把你顶回来的。" } }
+    ]
+  },
+  {
+    "id": "xs_f_beetle_gift", "dir": "any", "chainOnly": true, "teaser": "那只甲虫在找你",
+    "text": "那只甲虫回来了，背上顶着一颗红红的野莓，放在了你面前。",
+    "choices": [
+      { "text": "收下野莓", "effect": { "饱腹": 3, "灵性": 1 }, "result": "野莓酸得你缩成一团。甲虫看着你吃完，才走。" },
+      { "text": "跟着它走", "effect": { "攀爬": 2, "蜕变": 3 }, "result": "它领你钻过一片草。那边的嫩叶，还没谁啃过。" }
+    ]
+  },
+  {
+    "id": "xs_field_trip", "dir": "any", "sudden": true, "weight": 7, "stage": [1, 2],
+    "text": "一队戴小黄帽的孩子路过。老师蹲下来指着你：大家看，这就是毛毛虫。",
+    "choices": [
+      { "text": "让他们看", "effect": { "灵性": 1, "蜕变": 2 }, "result": "四十个孩子轮流蹲下来看你。有个孩子说你长得像他舅舅。" },
+      { "text": "爬上老师的小旗杆", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 1, "灵性": 1, "蜕变": 4 }, "result": "你一路爬到旗杆顶上。全班哇了一声，老师举着旗不敢动。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "老师一挥旗，你被甩回了草里。" } },
+      { "text": "让点点上去表演", "showIf": "companion:ladybug", "effect": { "灵性": 2, "蜕变": 4 },
+        "result": "点点爬上你的背。孩子们喊：虫背着虫！老师赶紧拍了照。" }
+    ]
+  },
+  {
+    "id": "xs_dew_ring", "dir": "any", "sudden": true, "weight": 6, "stage": [2, 5],
+    "text": "后半夜，叶子上出现一圈露水，圆得像拿圆规画的。圈正中间是你。",
+    "choices": [
+      { "text": "待着不动", "effect": { "灵性": 2 }, "result": "一夜什么事都没有。天亮露水干了，你的触角尖有点发烫。" },
+      { "text": "把露水舔一圈", "chance": 0.6, "chanceAttr": "灵性", "chanceStep": 0.08,
+        "effect": { "蜕变": 5, "饱腹": 1 }, "result": "露水凉得发麻。舔完最后一口，你身上的毛亮了一圈。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "露水是苦的。你吐了一下午，圈也没了。" } },
+      { "text": "对着圈许个愿", "absurd": true, "chance": 0.2,
+        "effect": { "蜕变": 12, "灵性": 2 }, "result": "第二天你蜕了一层皮。旧皮上歪歪扭扭写着：收到。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "什么也没发生。你许的是吃饱，结果更饿了。" } }
+    ]
+  },
+  {
+    "id": "xs_scarecrow", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 3], "maps": ["veg"],
+    "text": "菜地中间新立了个稻草人，穿着件旧褂子。麻雀不怕它，全蹲在它肩膀上。",
+    "choices": [
+      { "text": "钻到菜叶底下吃", "effect": { "饱腹": 2 }, "result": "麻雀全在稻草人那儿，菜叶底下清净得很。" },
+      { "text": "爬上稻草人的帽子", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 2, "灵性": 1, "蜕变": 3 }, "result": "你趴在草帽顶上看了一天。全菜园就这儿看得最远。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "一只麻雀转过头来。你顺着袖子滑下去，躲了一下午。" } },
+      { "text": "前世的保护色", "require": "legacy:camouflage>=1", "effect": { "灵性": 2, "蜕变": 4 },
+        "result": "前世一只鸟叼走过你。这一世你趴在帽檐上，麻雀当你是片叶子。" }
+    ]
+  },
+  {
+    "id": "xs_ladder", "dir": "any", "sudden": true, "weight": 8, "stage": [1, 3], "maps": ["orchard"],
+    "text": "果农架起梯子摘苹果。一只大手伸过来，摘的正是你趴着的那个。",
+    "choices": [
+      { "text": "吐丝吊在半空", "effect": { "吐丝": 1, "饱腹": -1 }, "result": "苹果被摘走了。你吊在半空晃了一下午，才爬回叶子上。" },
+      { "text": "抢在合手前上枝", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.08,
+        "effect": { "攀爬": 2, "灵性": 1 }, "result": "他的手合上时，你已经在枝上了。苹果下去了，你没有。",
+        "fail": { "effect": { "death": "picked" }, "result": "他把苹果翻过来，看见了你。" } },
+      { "text": "前世的警觉", "require": "legacy:wary>=1", "effect": { "攀爬": 1, "灵性": 2 },
+        "result": "前世一只手捏走过你。这一世梯子一响，你就换了个苹果。" }
+    ]
+  },
+  {
+    "id": "xs_mantis_stuck", "dir": "any", "sudden": true, "weight": 7, "stage": [2, 5],
+    "text": "一只螳螂被一滴松脂粘在了树皮上，两把刀举在半空，动弹不得。",
+    "choices": [
+      { "text": "从它眼前慢慢爬过", "effect": { "灵性": 1 }, "result": "它的眼睛跟着你转了一路，刀没动。" },
+      { "text": "吐丝把刀捆上", "chance": 0.5, "chanceAttr": "吐丝", "chanceStep": 0.08,
+        "effect": { "吐丝": 2, "蜕变": 5, "feud": "螳螂的刀被你捆成了粽子" },
+        "result": "你绕了它十八圈。松脂化开时，它的两把刀还捆在一起。",
+        "easy": "你绕了十八圈，最后打了个蝴蝶结。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "松脂化了。你一路爬得比平时快三倍，才没被追上。" } },
+      { "text": "前世的毒毛", "require": "legacy:bristle>=1", "effect": { "蜕变": 4, "胃口": 1 },
+        "result": "前世你撞上过它。这一世你在它刀底下啃完了一整片叶子。" }
+    ]
+  },
+  {
+    "id": "xs_kite", "dir": "any", "sudden": true, "weight": 6, "stage": [4, 5], "maps": ["park", "veg"],
+    "text": "树顶挂着一只断了线的纸风筝，尾巴在风里一甩一甩。",
+    "choices": [
+      { "text": "落在风筝上歇脚", "effect": { "灵性": 1, "攀爬": 1 }, "result": "风筝晃啊晃。你在上面睡了个午觉，比叶子稳。" },
+      { "text": "借风筝的风往上飞", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.06,
+        "effect": { "攀爬": 2, "蜕变": 6 }, "result": "风筝一抖，你顺着那股风上了天。底下的树缩成了绿点。",
+        "fail": { "effect": { "饱腹": -1 }, "result": "风筝一甩尾巴，把你抽下了树顶。" } },
+      { "text": "把风筝拖回给小孩", "absurd": true, "chance": 0.15,
+        "effect": { "灵性": 4, "蜕变": 15 }, "result": "你拖着风筝飞了半条街。楼下的小孩哭着哭着，笑了。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "风筝纹丝不动。你在树顶扑腾了一下午，翅膀都酸了。" } }
+    ]
+  },
+  {
+    "id": "xs_migration", "dir": "any", "sudden": true, "weight": 6, "stage": [4, 5],
+    "text": "半夜，头顶飞过几千对翅膀，一片一片遮住了月亮。是往南去的蝶群。",
+    "choices": [
+      { "text": "留在这棵树上", "effect": { "灵性": 2 }, "result": "你没走。天亮时，几只掉队的落在你旁边歇脚。" },
+      { "text": "追上去", "chance": 0.5, "chanceAttr": "攀爬", "chanceStep": 0.06,
+        "effect": { "攀爬": 2, "蜕变": 8 }, "result": "你追了半夜，挤进了蝶群的尾巴。风一下子变顺了。",
+        "fail": { "effect": { "饱腹": -2 }, "result": "你追到天亮，只追上了一阵风。" } },
+      { "text": "前世老虫的见识", "require": "legacy:old_worm>=1", "effect": { "攀爬": 2, "蜕变": 10 },
+        "result": "前世你在这棵树上活到了老。这一世你知道它们在哪儿落脚，抄了近道。" }
+    ]
+  }
+]
