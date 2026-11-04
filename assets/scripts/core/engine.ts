@@ -744,12 +744,14 @@ export class Engine {
     private lifeHighlight(): string | undefined {
         const r = this.run;
         const out: string[] = [];
-        for (const f of r.feuds ?? []) out.push(`这一世最痛快的事：${f}`);
+        // 恩怨在结算页和分享卡上单独列出，这里不重复
         for (const l of this.lineViews()) if (l.state) out.push(`${l.name}那段，${l.state}`);
         const dirs = (['up', 'down', 'side'] as Dir[]).filter(d => r.maxPos[d] > 0).sort((a, b) => r.maxPos[b] - r.maxPos[a]);
         if (dirs.length) out.push(`去过最远的地方，是${this.layerName(dirs[0], r.maxPos[dirs[0]])}`);
         const item = r.items[r.items.length - 1];
         if (item) out.push(`陪到最后的，是${this.itemName(item)}`);
+        const mate = r.companions.map(id => this.data.companions.get(id)).find(c => c && !c.system);
+        if (mate) out.push(`一路陪着的，是${mate.name}`);
         return out.length ? out[this.rng.int(out.length)] : undefined;
     }
 

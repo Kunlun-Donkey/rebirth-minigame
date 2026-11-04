@@ -142,7 +142,10 @@ export function drawShareCard(ctx: Ctx, d: ShareCardData): void {
     ctx.font = `40px ${FONT}`;
     let y = py + 262;
     const feuds = d.feuds.slice(0, 2);
-    const epiLines = wrap(ctx, d.epitaph, iw, (feuds.length ? 3 : 4) - (d.rarity ? 1 : 0));
+    // 墓志铭能用的行数 = 恩怨行与稀有度行之外剩下的高度（墓志铭末尾常带这一世的高光，尽量放全）
+    const bottom = py + ph - 86 - (d.rarity ? 52 : 0) - 10;
+    const room = bottom - y - (feuds.length ? 10 + feuds.length * 46 : 0);
+    const epiLines = wrap(ctx, d.epitaph, iw, Math.max(2, Math.floor(room / 58)));
     for (const l of epiLines) {
         ctx.fillText(l, ix, y);
         y += 58;
