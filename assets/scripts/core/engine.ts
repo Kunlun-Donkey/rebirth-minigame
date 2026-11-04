@@ -711,7 +711,7 @@ export class Engine {
             goals: this.buildGoals(),
             log: [...r.log],
             feuds: [...(r.feuds ?? [])],
-            remark: tianhu ? TIANDAO_TIANHU : this.pickLine(TIANDAO_SETTLE[kind][tiandaoTier(r.life)]),
+            remark: this.pickLine(tianhu ? TIANDAO_TIANHU : TIANDAO_SETTLE[kind][tiandaoTier(r.life)]),
         };
         return this.settled;
     }
