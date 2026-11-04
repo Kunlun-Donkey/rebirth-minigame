@@ -14,6 +14,7 @@
 - 根目录 `tsconfig.json` 是 Cocos 的（继承 temp/tsconfig.cocos.json）；Linux 端由 `tools/ensure-cocos-temp.mjs`（npm pre 钩子）生成占位 temp 文件
 - package.json 的 `"type": "2d"` 是 Cocos 要求的，Node 会按 ESM 处理工具脚本：不要用 `__dirname`，用 `import.meta.url`
 - `npm run validate` — 剧本静态校验
+- `npm run rarity` — 40 种子 × 100 世模拟，生成 `data/destinies/rarity.json`（死法/结局每千世出现次数）；改剧本或数值后重跑，结算页与分享卡的稀有度读它
 - 广告总开关 `game/config.ts` 的 `CONFIG.adsEnabled`：广告审核通过前为 false（所有看视频入口隐藏，濒死只能接受命运）；通过后填 `rewardedAdUnitId` 并改为 true
 - `npm run play` — 终端试玩（`-- --new` 清档，开局选命格，`-- --destiny <id>` 直接指定）；Windows 双击根目录 `play.bat`：bat 只放纯 ASCII（cmd 读 UTF-8 中文会乱码切行），中文菜单在 `tools/menu.mjs`（首次自动 npm install，用 node 直接启动 tsx）；bat 须保持 CRLF（`.gitattributes`）
 - `npm run sim` — 随机 AI 2000 世数值统计（依次模拟全部命格；`-- --destiny local_dog` 只模拟一个）
@@ -30,6 +31,7 @@
   - 随机出生地图：destiny.json 的 `maps`（每世按 weight 随机，可覆盖层名/旁白、开局效果、mods），事件用 `maps: [...]` 限定地图；`engine.mapDef()/layerName()` 取显示名，兜底事件不能带 maps
   - 重生不限次数；命盘（destiny.json `upgrades`）只放大广告收益、**不提供免费复活/窥探等替代广告的效果**；改价格后用 `npm run sim`（含 `-- --ads`）看全满世数（设计文档 §6.4.2）
 - `assets/scripts/game/` Cocos 表现层（UI 全部代码生成，入口 `GameRoot` 挂 Canvas）
+  - 传播：`brag.ts`（纯逻辑：分享 query 编解码、称号「第 8 世被骆驼吃掉的草」、稀有度）· `screens/challenge.ts` 好友挑战（好友点分享卡进来先看 TA 的这一世，「我也投一次胎」可试玩未解锁命格一世，结算页对比胜负）· 排行数据 `Platform.reportScore` 写微信托管数据（排行榜 UI 需在 Cocos 建开放数据域）
   - `game.ts` 控制器（界面切换、存档、广告点位）· `config.ts` 配置与贴图路径 `TEX` · `platform.ts` wx 适配（存档/激励视频/分享/埋点，非微信环境自动 Mock）· `loader.ts` · `save.ts`
   - `res.ts` 资源分包：路径在主包 `resources` 找不到就等分包 `subres`（主界面出来后后台下载，点「重生」前确保就绪）
   - `ui/kit.ts` 代码 UI 工具包（左上角坐标系、纸张卡、按钮、弹窗、缺图兜底）

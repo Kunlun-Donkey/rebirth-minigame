@@ -628,4 +628,43 @@ describe('启动页（备案：游戏名 + 适龄提示 + 健康游戏忠告）'
         tapNode(tappables(g.screen).find(n => labels(n).some(l => l.includes('返回')))!);
         expect(screenName(g)).toBe('menu');
     });
+
+    it('好友挑战：分享回流弹出 TA 的这一世，接受后可试玩未解锁命格，结算对比后回到自己的命格', async () => {
+        sys.localStorage.clear?.();
+        const g = new Game(new Node('Canvas') as never);
+        await g.boot();
+        await flush();
+        const tapNode = (n: Node) => { n.emit(Node.EventType.TOUCH_START); n.emit(Node.EventType.TOUCH_END); };
+        const find = (layer: Node, s: string) => tappables(layer).find(n => labels(n).some(l => l.includes(s)));
+        expect(g.rarity).toBeTruthy();
+        await g.openChallenge({ d: 'crocodile', l: 8, k: 'ending', id: 'mars_ancestor' });
+        expect(labels(g.overlay).some(l => l.includes('第 8 世成了「火星鳄祖」的鳄鱼'))).toBe(true);
+        expect(labels(g.overlay).some(l => l.includes('TA 用了 8 世'))).toBe(true);
+        // 同一条分享只弹一次
+        g.overlay.destroyAllChildren();
+        await g.openChallenge({ d: 'crocodile', l: 8, k: 'ending', id: 'mars_ancestor' });
+        expect(g.overlay.children.length).toBe(0);
+        await g.openChallenge({ d: 'crocodile', l: 9, k: 'death', id: 'cold' });
+        tapNode(find(g.overlay, '我也投一次胎')!);
+        for (let i = 0; i < 10; i++) await flush();
+        expect(g.data.meta.id).toBe('crocodile');
+        expect(screenName(g)).toBe('draft');
+        // 本命格第一世：天道替你抓了三样，直接重生
+        tapNode(find(g.screen, '重   生')!);
+        for (let i = 0; i < 5; i++) await flush();
+        expect(screenName(g)).toBe('run');
+        g.overlay.destroyAllChildren();
+        g.engine.run.over = { kind: 'ending', id: 'dragon' };
+        g.goSettle();
+        await flush();
+        expect(labels(g.screen)).toContain('好友挑战');
+        expect(labels(g.screen).some(l => l.includes('TA 第 9 世冻僵了') && l.includes('赢了'))).toBe(true);
+        expect(g.save.challenge!.done).toBe(true);
+        // 对比完：未解锁的鳄鱼不能继续玩，回到能玩的命格
+        g.overlay.destroyAllChildren();
+        g.goDraft();
+        for (let i = 0; i < 10; i++) await flush();
+        expect(g.data.meta.id).not.toBe('crocodile');
+        expect(screenName(g)).toBe('draft');
+    });
 });

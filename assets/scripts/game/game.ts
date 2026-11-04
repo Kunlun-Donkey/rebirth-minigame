@@ -6,7 +6,9 @@ import { Label, Node, view } from 'cc';
 import { Destiny, DestinyIndex, destinyStates, Engine, pickDestiny, randomSeed, StepResult, tiandao } from '../core';
 import { Audio, SfxName } from './audio';
 import { CONFIG, setTexDestiny, TEX } from './config';
-import { loadDestiny, loadDestinyIndex } from './loader';
+import { loadDestiny, loadDestinyIndex, loadRarity } from './loader';
+import { decodeShare, RarityTable, ShareLife } from './brag';
+import { showChallenge } from './screens/challenge';
 import { Platform } from './platform';
 import { loadSubBundle } from './res';
 import { loadSave, SaveData, writeSave } from './save';
@@ -39,6 +41,8 @@ export class Game {
     /** 特效层（弹幕），在弹窗之上；切换界面时不清空 */
     fx!: Node;
     audio!: Audio;
+    /** 死法 / 结局稀有度（模拟估算） */
+    rarity: RarityTable | null = null;
     W = CONFIG.designWidth;
     H = CONFIG.designHeight;
 
@@ -63,7 +67,10 @@ export class Game {
         const status = showSplash(this, '正在轮回……');
         try {
             this.index = await loadDestinyIndex();
-            await this.useDestiny(pickDestiny(this.index, this.save.profile, run?.destiny ?? this.save.profile.current ?? CONFIG.defaultDestiny));
+            this.rarity = await loadRarity();
+            // 好友挑战试玩中的未解锁命格：有存档时也要能恢复
+            const pref = run?.destiny ?? this.save.profile.current ?? CONFIG.defaultDestiny;
+            await this.useDestiny(this.trialAllowed(pref) ? pref : pickDestiny(this.index, this.save.profile, pref));
         } catch (e) {
             console.error('[game] 剧本加载失败', e);
             const l = status.getComponent(Label);
@@ -84,6 +91,10 @@ export class Game {
         // 有中途存档就恢复到引擎里，由主菜单「继续」进入
         if (run && run.destiny === this.data.meta.id && run.phase !== 'over') this.engine.resume(run);
         this.goMenu();
+        // 好友从分享卡点进来：冷启动读 launch query，热启动听 onShow
+        const q = decodeShare(Platform.launchQuery());
+        if (q) this.openChallenge(q);
+        Platform.onShowQuery(raw => { const s = decodeShare(raw); if (s) this.openChallenge(s); });
         // 主界面出来后再后台拉分包（其余贴图、音频）
         loadSubBundle().then(b => { if (b) this.subReady = true; });
     }
@@ -107,7 +118,7 @@ export class Game {
     async switchDestiny(id: string, then: 'draft' | 'menu' = 'draft'): Promise<void> {
         if (this.switching || id === this.data.meta.id) return;
         const st = destinyStates(this.index, this.save.profile).find(s => s.entry.id === id);
-        if (!st?.unlocked) return;
+        if (!st || (!st.unlocked && !this.trialAllowed(id))) return;
         this.switching = true;
         if (id !== this.save.spinBonus) this.save.spinBonus = null;
         const prev = this.data.meta.id;
@@ -124,6 +135,43 @@ export class Game {
         }
         if (then === 'menu') this.goMenu();
         else this.goDraft();
+    }
+
+    // ───────────── 好友挑战（分享回流） ─────────────
+
+    private lastChallenge = '';
+    /** 弹出好友的这一世（同一条分享只弹一次；冷启动和 onShow 可能都会带来同一个 query） */
+    async openChallenge(q: ShareLife): Promise<void> {
+        const key = `${q.d}|${q.l}|${q.k}|${q.id}`;
+        if (key === this.lastChallenge || !this.index.destinies.some(e => e.id === q.d)) return;
+        this.lastChallenge = key;
+        try {
+            const d = this.destinyCache.get(q.d) ?? await loadDestiny(q.d);
+            this.destinyCache.set(q.d, d);
+            Platform.report('challenge_open', { destiny: q.d, kind: q.k });
+            showChallenge(this, q, d);
+        } catch (e) {
+            console.warn('[game] 挑战命格加载失败', e);
+        }
+    }
+
+    /** 接受挑战：记下挑战，进同一命格的轮回殿（有进行中的一局则先记下，结束后对比） */
+    acceptChallenge(q: ShareLife): void {
+        this.save.challenge = { ...q };
+        this.persist();
+        Platform.report('challenge_accept', { destiny: q.d });
+        if (this.hasActiveRun()) {
+            Platform.toast('挑战已记下，过完这一世再对比');
+            return;
+        }
+        if (q.d === this.data.meta.id) this.goDraft();
+        else this.switchDestiny(q.d, 'draft');
+    }
+
+    /** 未解锁的命格：接了好友挑战、还没对比过时，允许试玩这一世 */
+    trialAllowed(id: string): boolean {
+        const c = this.save.challenge;
+        return !!c && c.d === id && !c.done;
     }
 
     /** 随缘投胎：今天的免费次数还在吗 */
@@ -190,6 +238,12 @@ export class Game {
     }
 
     goDraft(): void {
+        // 试玩的未解锁命格（好友挑战）对比完就回到自己的命格
+        const st = destinyStates(this.index, this.save.profile).find(s => s.entry.id === this.data.meta.id);
+        if (st && !st.unlocked && !this.trialAllowed(st.entry.id)) {
+            this.switchDestiny(pickDestiny(this.index, this.save.profile), 'draft');
+            return;
+        }
         this.save.run = null;
         this.save.peekUsed = 0;
         this.save.rerollUsed = false;
@@ -225,6 +279,15 @@ export class Game {
         this.audio.playBgm('bgm_settle');
         if (s.kind === 'ending') this.audio.play('ending');
         showSettle(this);
+        // 好友挑战：结算页已对比过，标记完成
+        const c = this.save.challenge;
+        if (c && !c.done && c.d === this.data.meta.id) { c.done = true; c.at = this.engine.run.life; this.persist(); }
+        // 好友排行数据：本命格最快几世出结局、全命格结局收集数
+        const dps = Object.values(this.save.profile.destinies);
+        Platform.reportScore({
+            endings: dps.reduce((n, x) => n + (x?.codex.endings.length ?? 0), 0),
+            lives: this.save.profile.lives,
+        });
         // 新命格解锁：转盘揭晓（停在新命格上）
         if (fresh.length) showUnlockReveal(this, fresh.map(st => st.entry.id));
     }

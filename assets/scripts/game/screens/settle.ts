@@ -8,6 +8,7 @@ import { box, button, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, tex
 import { showInfo, showList } from './popups';
 import { GAME_NAME } from './splash';
 import { danmaku } from '../ui/danmaku';
+import { brandTitle, encodeShare, rarityOf } from '../brag';
 
 /** settle_panel.png 的九宫格（贴图像素：上 右 下 左）与显示缩放 */
 const PANEL_SLICE: [number, number, number, number] = [350, 280, 360, 280];
@@ -77,7 +78,14 @@ function panel(g: Game, root: Node, s: SettleResult, y: number): number {
     const w = g.W - 40;
     const innerX = 70, innerW = w - innerX * 2;
     const rows: { kind: 'sec' | 'line' | 'goal'; l: string; r?: string; color?: string; rColor?: string }[] = [];
-    // 天道评语、本世恩怨放最前（面板放不下时从末尾截断）
+    // 好友挑战、稀有度、天道评语、本世恩怨放最前（面板放不下时从末尾截断）
+    const vs = versus(g, s);
+    if (vs) {
+        rows.push({ kind: 'sec', l: '好友挑战' });
+        rows.push({ kind: 'goal', l: vs.line, color: vs.win ? COLOR.good : COLOR.bad });
+    }
+    const rar = rarityOf(g.rarity, g.data.meta.id, s.kind, s.id);
+    if (rar && rar.tier !== '常见') rows.push({ kind: 'goal', l: `【${rar.tier}】${rar.text}`, color: COLOR[rar.color] });
     if (s.remark) rows.push({ kind: 'goal', l: tiandao(s.remark), color: COLOR.ochreD });
     if (s.feuds.length) {
         rows.push({ kind: 'sec', l: '本世恩怨' });
@@ -151,19 +159,43 @@ function tianhuSeal(pic: Node): void {
     text(seal, '天胡', 0, 0, 84, { size: 28, color: COLOR.white, align: 'center', valign: 'center', bold: true }, 84);
 }
 
-/** 分享文案：天胡 / 结局 / 死亡各一种口吻 */
+/** 分享文案：称号 + 稀有度 + 一句挑衅；接了好友挑战的带上胜负 */
 function shareText(g: Game, s: SettleResult): string {
-    const name = g.data.meta.name;
-    if (s.tianhu) return `天胡！${name}第${s.life}世，直接成了「${s.title}」。${s.epitaph}`;
-    if (s.kind === 'ending') return `轮回${s.life}世，${name}终于成了「${s.title}」。你能更快吗？`;
-    return `第${s.life}世，我${s.title}了。${s.epitaph}`;
+    const brand = brandTitle(g.data.meta.name, s.life, s.kind, s.title);
+    const rar = rarityOf(g.rarity, g.data.meta.id, s.kind, s.id);
+    const tail = rar && rar.tier !== '常见' ? `（${rar.tier}，${rar.text.split('：')[1]}）` : '';
+    const vs = versus(g, s);
+    if (vs?.win) return `我接了好友的挑战，${vs.short}！${brand}。不服来比？`;
+    if (s.tianhu) return `天胡！${brand}${tail}`;
+    if (s.kind === 'ending') return `${brand}${tail}，你能更快吗？`;
+    return `${brand}${tail}。你会死得更离谱吗？`;
+}
+
+/** 好友挑战对比：仅当本世是接挑战的那个命格、且还没对比过 */
+function versus(g: Game, s: SettleResult): { line: string; win: boolean; short: string } | null {
+    const c = g.save.challenge;
+    if (!c || c.d !== g.data.meta.id || (c.done && c.at !== s.life)) return null;
+    const def = c.k === 'ending' ? g.data.endings.get(c.id) : g.data.deaths.get(c.id);
+    if (!def) return null;
+    const them = c.k === 'ending' ? `TA 第 ${c.l} 世成了「${def.name}」` : `TA 第 ${c.l} 世${def.name}`;
+    let verdict: string;
+    let win = false;
+    if (s.kind === 'ending' && (c.k === 'death' || s.life <= c.l)) {
+        win = true;
+        verdict = c.k === 'ending' ? `你只用了 ${s.life} 世，赢了！` : '你修成了正果，赢了！';
+    } else if (s.kind === c.k && s.id === c.id) verdict = '你们掉进了同一个坑。';
+    else if (s.kind === 'ending') verdict = `你用了 ${s.life} 世，比 TA 慢了一点。`;
+    else verdict = c.k === 'ending' ? '这一世没追上，下一世再来。' : '各有各的命。';
+    return { line: `${them}；${verdict}`, win, short: c.k === 'ending' ? `只用 ${s.life} 世就比 TA 快` : '比 TA 活得更明白' };
 }
 
 /** 分享图：优先现画本世的墓志铭卡，失败时用命格静态分享图 */
 function shareImage(g: Game, s: SettleResult): string {
+    const rar = rarityOf(g.rarity, g.data.meta.id, s.kind, s.id);
     return Platform.renderShareCard({
         game: GAME_NAME, destiny: g.data.meta.name, life: s.life, kind: s.kind, tianhu: s.tianhu,
         title: s.title, epitaph: s.epitaph, stageName: s.stageName, seasons: s.seasons, feuds: s.feuds,
+        rarity: rar ? { tier: rar.tier, text: rar.text } : undefined,
     }) ?? TEX.share(g.data.meta.id);
 }
 
@@ -185,7 +217,10 @@ function actions(g: Game, root: Node, s: SettleResult, y: number): void {
     const half = (w - 16) / 2;
     button(root, 30, cy, half, {
         label: '分享墓志铭', style: 'ghost', size: 28, align: 'center',
-        onClick: () => Platform.share(shareText(g, s), `life=${s.life}`, shareImage(g, s)),
+        onClick: () => {
+            Platform.report('share_life', { kind: s.kind, cause: s.id });
+            Platform.share(shareText(g, s), encodeShare({ d: g.data.meta.id, l: s.life, k: s.kind, id: s.id, t: s.tianhu }), shareImage(g, s));
+        },
     });
     button(root, 30 + half + 16, cy, half, {
         label: '再次重生', style: 'primary', size: 30,

@@ -2,6 +2,7 @@
 import { ImageAsset, JsonAsset, resources, SpriteFrame } from 'cc';
 import { buildDestiny, Destiny, DestinyIndex, RawDestiny, RawEvent, RawLine } from '../core';
 import { bundleOf } from './res';
+import type { RarityTable } from './brag';
 
 function loadJson<T>(path: string): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -19,6 +20,11 @@ function loadJsonDir<T>(path: string): Promise<{ name: string; json: T }[]> {
 
 export function loadDestinyIndex(): Promise<DestinyIndex> {
     return loadJson<DestinyIndex>('data/destinies/index');
+}
+
+/** 稀有度表（npm run rarity 生成）；缺失时不显示稀有度 */
+export function loadRarity(): Promise<RarityTable | null> {
+    return loadJson<RarityTable>('data/destinies/rarity').catch(() => null);
 }
 
 export async function loadDestiny(id: string): Promise<Destiny> {

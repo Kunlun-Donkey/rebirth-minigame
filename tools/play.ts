@@ -28,10 +28,26 @@ const RARITY_TEXT: Record<string, string> = { common: '普通', rare: '稀有', 
 
 if (flag('--sim')) {
     const ids = opt('--destiny') ? [opt('--destiny')!] : index.destinies.map(d => d.id);
+    const rarity: Record<string, Record<string, number>> = {};
     for (const id of ids) {
         data = load(id);
         console.log(`\n══════ ${data.meta.name} ══════`);
-        simulate(Number(opt('--sim') ?? 2000), Number(opt('--seed') ?? 1));
+        if (!flag('--rarity')) { simulate(Number(opt('--sim') ?? 2000), Number(opt('--seed') ?? 1)); continue; }
+        // 稀有度按真实玩家多数所处的前 100 世估算：40 个种子 × 100 世取平均（静默）
+        const log = console.log;
+        console.log = () => undefined;
+        const sum: Record<string, number> = {};
+        const SEEDS = 40;
+        for (let s = 1; s <= SEEDS; s++) for (const [k, v] of Object.entries(simulate(100, s))) sum[k] = (sum[k] ?? 0) + v / SEEDS;
+        console.log = log;
+        rarity[id] = Object.fromEntries(Object.entries(sum).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, Math.round(v * 10) / 10]));
+        console.log(Object.entries(rarity[id]).map(([k, v]) => `${k} ${v}‰`).join(' · '));
+    }
+    // --rarity：把各死法 / 结局的出现频率（每千世）写进游戏数据，结算页与分享卡显示稀有度
+    if (flag('--rarity')) {
+        const file = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources', 'data', 'destinies', 'rarity.json');
+        writeFileSync(file, JSON.stringify(rarity, null, 1) + '\n');
+        console.log(`\n已写入 ${file}`);
     }
 }
 else play().catch(e => { console.error(e); process.exit(1); });
@@ -294,7 +310,7 @@ async function play() {
 
 // ───────────── 自动模拟（数值平衡） ─────────────
 
-function simulate(lives: number, seed: number) {
+function simulate(lives: number, seed: number): Record<string, number> {
     const ads = flag('--ads');
     const profile = createProfile();
     const e = new Engine(data as Destiny, profile);
@@ -305,6 +321,7 @@ function simulate(lives: number, seed: number) {
     const stat: B[] = buckets.map(() => ({ n: 0, seasons: 0, stages: [0, 0, 0, 0, 0, 0], deaths: {}, endings: 0 }));
     const eventHits: Record<string, number> = {};
     const endingHits: Record<string, number> = {};
+    const outcome: Record<string, number> = {};
     let blessedN = 0, tianhuN = 0;
     const skillFirst: Record<string, number> = {};
     let skillUses = 0;
@@ -386,6 +403,7 @@ function simulate(lives: number, seed: number) {
         if (s.tianhu) tianhuN++;
         b.seasons += s.seasons;
         b.stages[s.stage]++;
+        outcome[`${s.kind}:${s.id}`] = (outcome[`${s.kind}:${s.id}`] ?? 0) + 1;
         if (s.kind === 'ending') { b.endings++; endingHits[s.id] = (endingHits[s.id] ?? 0) + 1; if (!firstEnding) firstEnding = life; }
         else b.deaths[s.id] = (b.deaths[s.id] ?? 0) + 1;
     }
@@ -428,4 +446,6 @@ function simulate(lives: number, seed: number) {
     }
     const never = [...data.events.keys()].filter(id => !eventHits[id]);
     if (never.length) console.log(`从未触发的事件（${never.length}）：${never.join(', ')}`);
+    // 每千世出现次数（保留 1 位小数）
+    return Object.fromEntries(Object.entries(outcome).map(([k, n]) => [k, Math.round((n / lives) * 10000) / 10]));
 }

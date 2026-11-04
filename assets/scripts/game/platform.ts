@@ -93,6 +93,30 @@ export const Platform = {
         }
     },
 
+    /** 冷启动参数（好友从分享卡点进来时带着分享者的 query） */
+    launchQuery(): Record<string, string> | null {
+        if (!isWx() || !wx.getLaunchOptionsSync) return null;
+        try { return wx.getLaunchOptionsSync()?.query ?? null; } catch { return null; }
+    },
+
+    /** 热启动：小游戏在后台时又从别的分享卡点进来 */
+    onShowQuery(cb: (q: Record<string, string>) => void): void {
+        if (!isWx() || !wx.onShow) return;
+        wx.onShow((res: { query?: Record<string, string> }) => { if (res?.query) cb(res.query); });
+    },
+
+    /**
+     * 好友排行数据：写进微信托管数据（开放数据域可读，排行榜页需在 Cocos 里另建开放数据域工程）。
+     * 只写数字成绩，不含任何个人信息。
+     */
+    reportScore(kv: Record<string, number>): void {
+        if (!isWx() || !wx.setUserCloudStorage) return;
+        wx.setUserCloudStorage({
+            KVDataList: Object.entries(kv).map(([key, v]) => ({ key, value: String(v) })),
+            fail: (err: unknown) => console.warn('[platform] 排行数据上报失败', err),
+        });
+    },
+
     /** 右上角菜单的被动分享 + 朋友圈（每次分享时取当前命格的文案与分享卡） */
     setupPassiveShare(get: () => { title: string; imageUrl?: string }): void {
         if (!isWx()) return;

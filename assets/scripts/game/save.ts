@@ -2,6 +2,7 @@
 import { createProfile, loadProfile, Profile, RunState } from '../core';
 import { CONFIG } from './config';
 import { Platform } from './platform';
+import type { ShareLife } from './brag';
 
 export interface SaveData {
     profile: Profile;
@@ -19,6 +20,10 @@ export interface SaveData {
     spinDay: string;
     /** 随缘投胎转出的命格：下一世若是它，结算轮回点加成 */
     spinBonus: string | null;
+    /** 好友分享过来的挑战（点「我也投一次胎」后记下，结算时对比） */
+    challenge: (ShareLife & { done?: boolean; at?: number }) | null;
+    /** 上次领分享奖励的日期（每天首次分享奖励轮回点） */
+    shareDay: string;
 }
 
 export function loadSave(): SaveData {
@@ -35,12 +40,14 @@ export function loadSave(): SaveData {
                 muted: d.muted ?? false,
                 spinDay: d.spinDay ?? '',
                 spinBonus: d.spinBonus ?? null,
+                challenge: d.challenge ?? null,
+                shareDay: d.shareDay ?? '',
             };
         } catch (e) {
             console.warn('[save] 存档损坏，已重置', e);
         }
     }
-    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false, spinDay: '', spinBonus: null };
+    return { profile: createProfile(), run: null, peekUsed: 0, rerollUsed: false, freeRerollUsed: 0, muted: false, spinDay: '', spinBonus: null, challenge: null, shareDay: '' };
 }
 
 export function writeSave(d: SaveData): void {

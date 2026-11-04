@@ -18,6 +18,8 @@
     "postinstall": "node tools/ensure-cocos-temp.mjs",
     "presim": "node tools/ensure-cocos-temp.mjs",
     "sim": "tsx tools/play.ts --sim 2000",
+    "prerarity": "node tools/ensure-cocos-temp.mjs",
+    "rarity": "tsx tools/play.ts --sim 100 --rarity",
     "pretest": "node tools/ensure-cocos-temp.mjs",
     "test": "vitest run",
     "lines": "tsx tools/lines.ts",

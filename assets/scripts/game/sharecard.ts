@@ -18,6 +18,8 @@ export interface ShareCardData {
     seasons: number;
     /** 本世恩怨（最多显示 2 条） */
     feuds: string[];
+    /** 稀有度：标签（传说/史诗/稀有/常见）与一句话 */
+    rarity?: { tier: string; text: string };
 }
 
 export const CARD_W = 1000;
@@ -109,12 +111,13 @@ export function drawShareCard(ctx: Ctx, d: ShareCardData): void {
     ctx.font = `bold 34px ${FONT}`;
     ctx.textAlign = 'left';
     ctx.fillText(`${d.destiny} · 第 ${d.life} 世`, ix, py + 56);
-    if (gold || end) {
-        const tag = gold ? '天 胡' : '圆 满';
+    const rareTag = d.rarity && d.rarity.tier !== '常见' ? d.rarity.tier : '';
+    if (gold || end || rareTag) {
+        const tag = gold ? '天 胡' : rareTag || '圆 满';
         ctx.font = `bold 30px ${FONT}`;
         const tw = ctx.measureText(tag).width + 40;
         roundRect(ctx, ix + iw - tw, py + 50, tw, 50, 25);
-        ctx.fillStyle = gold ? '#c0392b' : '#3c8a2a';
+        ctx.fillStyle = gold ? '#c0392b' : rareTag === '传说' ? '#d68a00' : rareTag === '史诗' ? '#8e44ad' : rareTag ? '#2e7dbf' : '#3c8a2a';
         ctx.fill();
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
@@ -139,7 +142,7 @@ export function drawShareCard(ctx: Ctx, d: ShareCardData): void {
     ctx.font = `40px ${FONT}`;
     let y = py + 262;
     const feuds = d.feuds.slice(0, 2);
-    const epiLines = wrap(ctx, d.epitaph, iw, feuds.length ? 3 : 4);
+    const epiLines = wrap(ctx, d.epitaph, iw, (feuds.length ? 3 : 4) - (d.rarity ? 1 : 0));
     for (const l of epiLines) {
         ctx.fillText(l, ix, y);
         y += 58;
@@ -158,6 +161,11 @@ export function drawShareCard(ctx: Ctx, d: ShareCardData): void {
 
     // 底栏：境界 · 享年 ｜ 游戏名
     const by = py + ph - 86;
+    if (d.rarity) {
+        ctx.fillStyle = accent;
+        ctx.font = `bold 30px ${FONT}`;
+        ctx.fillText(wrap(ctx, d.rarity.text, iw, 1)[0], ix, by - 52);
+    }
     ctx.fillStyle = '#6b5136';
     ctx.font = `30px ${FONT}`;
     ctx.fillText(`${d.stageName} · ${end ? '历' : '享年'} ${d.seasons} 季`, ix, by);
