@@ -505,6 +505,10 @@ tool('companions', `<circle cx="48" cy="56" r="13" fill="#c4874a"/><path d="M26 
   <circle cx="82" cy="50" r="15" fill="${BR}"/><path d="M58 98 Q58 70 82 70 Q106 70 106 98Z" fill="${BR}"/>`);
 tool('codex', `<path d="M64 40 Q46 30 26 34 V94 Q46 90 64 100 Q82 90 102 94 V34 Q82 30 64 40Z" fill="#fbf3e1" stroke="${BR}" stroke-width="4" stroke-linejoin="round"/>
   <path d="M64 40 V100" stroke="${BR}" stroke-width="4"/><path d="M36 50 h18 M36 62 h18 M74 50 h18 M74 62 h18 M74 74 h12" stroke="${GD}" stroke-width="3.5" stroke-linecap="round"/>`);
+// 故事（线路）：一根打了结的红线，两头各系一个人
+tool('lines', `<path d="M30 92 C30 52 58 40 64 62 C70 84 98 76 98 36" fill="none" stroke="#b5452f" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="64" cy="62" r="9" fill="none" stroke="#b5452f" stroke-width="5"/>
+  <circle cx="30" cy="96" r="9" fill="${BR}"/><circle cx="98" cy="32" r="9" fill="${GD}"/>`);
 
 // 属性 / 方向：彩色圆底 + 白色符号（128，小尺寸显示）
 function dot(rel, color, glyph) {

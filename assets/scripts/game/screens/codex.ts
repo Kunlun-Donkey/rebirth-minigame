@@ -74,6 +74,8 @@ export function showCodex(g: Game, tab: Tab = 'endings', page = 0): void {
     // 翻页
     if (pages > 1) {
         const py = g.H - 90;
+        // 垫一条纸色底：底部常是深色地面，直接放字看不清
+        rect(box(root, 30, py - 8, g.W - 60, 56, 'pager'), { fill: COLOR.paper, fillAlpha: 215, radius: 28 });
         text(root, `${p + 1} / ${pages}`, 0, py + 6, g.W, { size: 26, color: COLOR.ink2, align: 'center' }, 40);
         if (p > 0) onTap(chip(root, '‹ 上一页', 40, py, COLOR.ochreD, false, 26), () => { g.reset(); showCodex(g, tab, p - 1); });
         if (p + 1 < pages) {
@@ -130,7 +132,7 @@ function cell(parent: Node, c: Cell, x: number, y: number, w: number): void {
     const n = box(parent, x, y, w, CARD_H, 'cell');
     rect(n, c.got
         ? { fill: COLOR.paper, stroke: c.color, strokeAlpha: 200, lineWidth: 3, radius: 18, shadow: COLOR.btnShadow, shadowOffset: 6 }
-        : { fill: COLOR.ink, fillAlpha: 40, stroke: COLOR.ink2, strokeAlpha: 80, lineWidth: 2, radius: 18 });
+        : { fill: '#ddcfb3', fillAlpha: 235, stroke: COLOR.ink2, strokeAlpha: 80, lineWidth: 2, radius: 18 });
     text(n, clampText(c.title, w - 36, 28, 36, 36), 18, 16, w - 36, { size: 28, color: c.got ? c.color : COLOR.ink2, bold: true });
     const bodyH = CARD_H - 70 - (c.foot ? 34 : 12);
     text(n, clampText(c.body, w - 36, 22, 32, bodyH), 18, 62, w - 36, { size: 22, color: c.got ? COLOR.ink : COLOR.ink2, wrap: true, lineHeight: 32 }, bodyH);

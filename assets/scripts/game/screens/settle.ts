@@ -4,7 +4,7 @@ import { SettleResult, tiandao } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { box, button, chip, COLOR, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
+import { box, button, chip, clampText, COLOR, estimateWidth, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
 import { showInfo, showList } from './popups';
 import { GAME_NAME } from './splash';
 import { danmaku } from '../ui/danmaku';
@@ -69,7 +69,10 @@ function stone(g: Game, root: Node, s: SettleResult, y: number): number {
 
     const meta = s.explore.map(x => `${x.name.slice(-2)} · ${x.layer || '—'}`).join('    ');
     rect(box(n, 28 + P, h - 70 - P, w - 56 - 2 * P, 2, 'line'), { fill: '#7a4a1f', fillAlpha: 70 });
-    text(n, meta, 28 + P, h - 56 - P, w - 56 - 2 * P, { size: 22, color: COLOR.ink2, align: 'center' });
+    // 足迹行：层名长时缩小字号，仍放不下就截断（结局卡两角有花饰，再内缩）
+    const mw = w - 56 - 2 * P - (P ? 80 : 20);
+    const ms = estimateWidth(meta, 22) <= mw ? 22 : 19;
+    text(n, clampText(meta, mw + ms * 1.5, ms, ms + 8, ms + 8), (w - mw) / 2, h - 56 - P, mw, { size: ms, color: COLOR.ink2, align: 'center' });
     return y + h;
 }
 
@@ -77,54 +80,73 @@ function stone(g: Game, root: Node, s: SettleResult, y: number): number {
 function panel(g: Game, root: Node, s: SettleResult, y: number): number {
     const w = g.W - 40;
     const innerX = 70, innerW = w - innerX * 2;
-    const rows: { kind: 'sec' | 'line' | 'goal'; l: string; r?: string; color?: string; rColor?: string }[] = [];
+    // pri：面板放不下时按优先级保留（越小越重要，缺省 5）
+    const rows: { kind: 'sec' | 'line' | 'goal'; l: string; r?: string; color?: string; rColor?: string; pri?: number }[] = [];
     // 好友挑战、稀有度、天道评语、本世恩怨放最前（面板放不下时从末尾截断）
     const vs = versus(g, s);
     if (vs) {
         rows.push({ kind: 'sec', l: '好友挑战' });
-        rows.push({ kind: 'goal', l: vs.line, color: vs.win ? COLOR.good : COLOR.bad });
+        rows.push({ kind: 'goal', l: vs.line, color: vs.win ? COLOR.good : COLOR.bad, pri: 0 });
     }
     const rar = rarityOf(g.rarity, g.data.meta.id, s.kind, s.id);
-    if (rar && rar.tier !== '常见') rows.push({ kind: 'goal', l: `【${rar.tier}】${rar.text}`, color: COLOR[rar.color] });
-    if (s.remark) rows.push({ kind: 'goal', l: tiandao(s.remark), color: COLOR.ochreD });
+    if (rar && rar.tier !== '常见') rows.push({ kind: 'goal', l: `【${rar.tier}】${rar.text}`, color: COLOR[rar.color], pri: 3 });
+    if (s.remark) rows.push({ kind: 'goal', l: tiandao(s.remark), color: COLOR.ochreD, pri: 3 });
     if (s.feuds.length) {
         rows.push({ kind: 'sec', l: '本世恩怨' });
-        for (const f of s.feuds) rows.push({ kind: 'goal', l: `✓ ${f}`, color: COLOR.bad });
+        for (const f of s.feuds) rows.push({ kind: 'goal', l: `✓ ${f}`, color: COLOR.bad, pri: 4 });
     }
     rows.push({ kind: 'sec', l: '轮回收获' });
     if (s.legacy) {
         const desc = g.engine.data.legacies.get(s.legacy.id)?.desc ?? '';
-        rows.push({ kind: 'line', l: `传承 · ${s.legacy.name}`, r: `Lv${s.legacy.level}/${s.legacy.max}${s.legacy.isNew ? '' : ' 满级'}`, rColor: COLOR.good });
-        rows.push({ kind: 'goal', l: desc, color: COLOR.ink2 });
+        rows.push({ kind: 'line', l: `传承 · ${s.legacy.name}`, r: `Lv${s.legacy.level}/${s.legacy.max}${s.legacy.isNew ? '' : ' 满级'}`, rColor: COLOR.good, pri: 1 });
+        rows.push({ kind: 'goal', l: desc, color: COLOR.ink2, pri: 6 });
     }
-    if (s.skill) rows.push({ kind: 'line', l: `领悟技能 · ${s.skill.name}`, r: '已加入技能图鉴', rColor: COLOR.skill });
+    if (s.skill) rows.push({ kind: 'line', l: `领悟技能 · ${s.skill.name}`, r: '已加入技能图鉴', rColor: COLOR.skill, pri: 2 });
     const learnedAlive = s.learned.filter(x => x.id !== s.skill?.id);
-    if (learnedAlive.length) rows.push({ kind: 'line', l: `本世领悟 · ${learnedAlive.map(x => x.name).join('、')}`, rColor: COLOR.skill });
-    for (const b of s.breakdown) rows.push({ kind: 'line', l: b.label, r: `+${b.value}` });
-    rows.push({ kind: 'line', l: '轮回点', r: `+${s.points}  累计 ${g.save.profile.points}`, color: COLOR.ink, rColor: COLOR.legacy });
+    if (learnedAlive.length) rows.push({ kind: 'goal', l: `本世领悟 · ${learnedAlive.map(x => x.name).join('、')}`, color: COLOR.skill, pri: 5 });
+    const bdAt = rows.length;
+    for (const b of s.breakdown) rows.push({ kind: 'line', l: b.label, r: `+${b.value}`, pri: 1 });
+    rows.push({ kind: 'line', l: '轮回点', r: `+${s.points}  累计 ${g.save.profile.points}`, color: COLOR.ink, rColor: COLOR.legacy, pri: 0 });
     rows.push({ kind: 'sec', l: '图鉴' });
     const c = s.codex;
-    rows.push({ kind: 'line', l: `死法 ${c.deaths[0]}/${c.deaths[1]}  技能 ${c.skills[0]}/${c.skills[1]}  道具 ${c.items[0]}/${c.items[1]}  结局 ${c.endings[0]}/${c.endings[1]}` });
+    rows.push({ kind: 'line', l: `死法 ${c.deaths[0]}/${c.deaths[1]}  技能 ${c.skills[0]}/${c.skills[1]}  道具 ${c.items[0]}/${c.items[1]}  结局 ${c.endings[0]}/${c.endings[1]}`, pri: 7 });
     if (s.goals.length) {
         rows.push({ kind: 'sec', l: '下一世的目标' });
         for (const goal of s.goals) {
             rows.push(goal.ready
-                ? { kind: 'goal', l: `· 「${goal.text}」下一世可选！（${goal.lock}）`, color: COLOR.good }
-                : { kind: 'goal', l: `· 「${goal.text}」需要 ${goal.lock}`, color: COLOR.ink2 });
+                ? { kind: 'goal', l: `· 「${goal.text}」下一世可选！（${goal.lock}）`, color: COLOR.good, pri: 2 }
+                : { kind: 'goal', l: `· 「${goal.text}」需要 ${goal.lock}`, color: COLOR.ink2, pri: 6 });
         }
     }
 
     const rowH = (r: typeof rows[number]) => r.kind === 'sec' ? 52 : r.kind === 'goal' ? textHeight(r.l, innerW, 22, 34) + 4 : 40;
-    const contentH = rows.reduce((n, r) => n + rowH(r), 0);
+    const sum = (list: typeof rows) => list.reduce((n, r) => n + rowH(r), 0);
     const maxH = g.H - y - 360;
-    const h = Math.min(contentH + 110, Math.max(maxH, 360));
+    const avail = Math.max(maxH, 360) - 110;
+    // 放不下：轮回点明细并成一行，再按优先级挑行（保持原顺序；小节标题只在它下面有行时出现）
+    if (sum(rows) > avail && s.breakdown.length) {
+        rows.splice(bdAt, s.breakdown.length, { kind: 'goal', l: s.breakdown.map(b => `${b.label} +${b.value}`).join(' · '), color: COLOR.ink2, pri: 1 });
+    }
+    const secOf = rows.map((_, i) => { for (let j = i; j >= 0; j--) if (rows[j].kind === 'sec') return j; return -1; });
+    const keep = new Set<number>();
+    let used = 0;
+    const order = rows.map((_, i) => i).filter(i => rows[i].kind !== 'sec').sort((a, b) => (rows[a].pri ?? 5) - (rows[b].pri ?? 5) || a - b);
+    for (const i of order) {
+        const sec = secOf[i];
+        const add = rowH(rows[i]) + (sec >= 0 && !keep.has(sec) ? rowH(rows[sec]) : 0);
+        if (used + add > avail) continue;
+        used += add;
+        keep.add(i);
+        if (sec >= 0) keep.add(sec);
+    }
+    const shown = rows.filter((_, i) => keep.has(i));
+    const h = sum(shown) + 110;
     const n = box(root, 20, y, w, h, 'panel');
     rect(n, { fill: COLOR.paper, stroke: COLOR.paperEdge, lineWidth: 2, radius: 24, shadow: '#00000055', shadowOffset: 10 });
     image(n, TEX.settlePanel, 0, 0, w, h, { slice: PANEL_SLICE, sliceScale: PANEL_SLICE_SCALE });
 
     let cy = 50;
-    for (const r of rows) {
-        if (cy + rowH(r) > h - 40) break;
+    for (const r of shown) {
         if (r.kind === 'sec') {
             text(n, r.l, innerX, cy + 8, innerW, { size: 26, color: COLOR.ochreD, bold: true });
             rect(box(n, innerX + 130, cy + 26, innerW - 130, 2, 'rule'), { fill: COLOR.ochreD, fillAlpha: 60 });

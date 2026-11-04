@@ -8,7 +8,7 @@ import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
 import {
-    box, button, chip, clampText, clear, COLOR, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text, textHeight,
+    box, button, chip, clampText, clear, COLOR, note, estimateWidth, fadeIn, image, onTap, RARITY_COLOR, RARITY_TEXT, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
 import { ListEntry, showInfo, showList } from './popups';
 
@@ -130,7 +130,7 @@ export function showDraft(g: Game): void {
             });
             y += sizeOf(n).h + 14;
         }
-        text(root, '死了不要紧：每一种死法，都会变成下一世的本事。', 40, y + 10, g.W - 80, { size: 26, color: COLOR.memory, align: 'center', wrap: true, lineHeight: 40 });
+        note(root, '死了不要紧：每一种死法，都会变成下一世的本事。', y + 10, g.W, { size: 24, color: COLOR.memory });
         button(root, 60, g.H - 260, g.W - 120, { label: '重   生', style: 'primary', size: 36, onClick: () => g.startRun({
             talent: picks.talents!, item: picks.items!, companion: picks.companions!,
         }) });

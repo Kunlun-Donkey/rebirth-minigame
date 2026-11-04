@@ -4,7 +4,7 @@ import { ChoiceView, DirOption } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import {
-    box, button, ButtonOpts, chip, clampText, COLOR, image, onTap, rect, sizeOf, text, textHeight,
+    box, button, ButtonOpts, chip, clampText, COLOR, image, note, onTap, rect, sizeOf, text, textHeight,
 } from '../ui/kit';
 import { ListEntry, showInfo, showList } from './popups';
 
@@ -142,9 +142,11 @@ function eventArea(g: Game, parent: Node, y: number, bottom: number, level = 0):
     image(card, tex, 0, 0, cardW, cardH, { maxAspectDiff: 1.2 });
     const r = e.run;
     const head = v.cross ? '✕ 命运交汇' : v.cameo ? '◈ 似曾相识' : v.gold ? '✦ 奇遇' : v.sudden ? '⚡ 突发' : `第 ${r.season} 季 · ${SEASONS[(r.season - 1) % 4]}`;
-    text(card, head, 40, 30, 300, { size: 24, color: v.cross ? COLOR.rare : v.cameo ? COLOR.skill : v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2, bold: v.cameo || v.cross });
-    text(card, `${e.stageName(r.stage)}`, cardW - 240, 30, 200, { size: 24, color: COLOR.ink2, align: 'right' });
-    text(card, v.text, 40, 80, textW, { size: L.size, wrap: true, lineHeight: L.lh });
+    // 金卡边框带花饰：卡头内缩，避免压在边框线上
+    const hx = v.gold ? 60 : 40, hy = v.gold ? 42 : 30;
+    text(card, head, hx, hy, 300, { size: 24, color: v.cross ? COLOR.rare : v.cameo ? COLOR.skill : v.gold ? COLOR.legacy : v.sudden ? COLOR.bad : COLOR.ink2, bold: v.cameo || v.cross });
+    text(card, `${e.stageName(r.stage)}`, cardW - hx - 200, hy, 200, { size: 24, color: COLOR.ink2, align: 'right' });
+    text(card, v.text, 40, v.gold ? 88 : 80, textW, { size: L.size, wrap: true, lineHeight: L.lh });
 
     // 窥探天命（看视频）
     const left = CONFIG.peekPerRun - g.save.peekUsed;
@@ -229,7 +231,7 @@ function directionArea(g: Game, root: Node, y: number, _bottom: number): void {
     const items = e.usableItems();
     if (skills.length || items.length) {
         const hint = [skills.length ? `${skills.length} 个技能可施展` : '', items.length ? `${items.length} 件道具可使用` : ''].filter(Boolean).join(' · ');
-        text(root, `${hint}（见下方工具栏）`, 0, cy + 6, g.W, { size: 24, color: COLOR.skill, align: 'center' });
+        note(root, `${hint}（见下方工具栏）`, cy + 6, g.W, { size: 24, color: COLOR.skill });
     }
 }
 

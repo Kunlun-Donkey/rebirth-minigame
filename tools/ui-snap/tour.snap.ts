@@ -67,7 +67,10 @@ it('UI 巡检快照', async () => {
                 g.reset(); g.save.spinBonus = null; g.save.spinDay = '';
                 showUnlockReveal(g, ['local_dog']); await flush(8); snap('新命格解锁'); g.reset();
             }
-            await g.switchDestiny(did); await flush(6);
+            // 已是当前命格时 switchDestiny 不动作，要自己进轮回殿
+            if (g.data.meta.id === did) g.goDraft();
+            else await g.switchDestiny(did);
+            await flush(6);
 
             // 第一世一键开局页 → 我要自己挑 → 开局抽卡 3 步
             await snapIfNew();

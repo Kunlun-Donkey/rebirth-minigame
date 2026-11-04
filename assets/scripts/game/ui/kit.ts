@@ -272,6 +272,17 @@ export function chip(parent: Node, str: string, x: number, y: number, color: str
     return n;
 }
 
+/** 浮在背景图上的一行居中提示：垫一条半透明纸色底，背景花哨（如城市楼群）时也看得清 */
+export function note(parent: Node, str: string, y: number, parentW: number, style: TextStyle): Node {
+    const size = style.size ?? 24;
+    const w = Math.min(parentW - 40, Math.ceil(estimateWidth(str, size)) + 36);
+    const h = size + 18;
+    const n = box(parent, (parentW - w) / 2, y, w, h, 'note');
+    rect(n, { fill: COLOR.paper, fillAlpha: 215, radius: h / 2 });
+    text(n, clampText(str, w - 8 + size * 1.5, size, h, h), 0, 0, w, { ...style, align: 'center', valign: 'center' }, h);
+    return n;
+}
+
 export function estimateWidth(str: string, size: number): number {
     let w = 0;
     for (const ch of str) w += ch.charCodeAt(0) < 0x2e80 ? size * 0.55 : size;
