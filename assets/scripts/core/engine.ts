@@ -729,11 +729,12 @@ export class Engine {
         if (r.reckless && id !== this.data.meta.rules.oldAgeDeath) return '死于过度自信';
         if (r.season <= 2 && id !== this.data.meta.rules.oldAgeDeath) return '主打一个速通';
         const pg = this.stageProgress();
-        if (pg && pg.parts.length && pg.parts.reduce((n, p) => n + Math.min(1, p.cur / Math.max(1, p.need)), 0) / pg.parts.length >= 0.8) {
+        // 「只差一口气」要真的很近才说，而且不是每次都说，给这一世的高光留位置
+        if (pg && pg.parts.length && pg.parts.reduce((n, p) => n + Math.min(1, p.cur / Math.max(1, p.need)), 0) / pg.parts.length >= 0.9 && this.rng.chance(0.5)) {
             return `离「${pg.name}」只差一口气`;
         }
         const n = dp.deathCount?.[id] ?? 0;
-        if (n >= 5) return `老熟人了，第${n}回`;
+        if (n >= 5 && id !== this.data.meta.rules.oldAgeDeath && this.rng.chance(0.5)) return `老熟人了，第${n}回`;
         return this.lifeHighlight();
     }
 
@@ -741,7 +742,7 @@ export class Engine {
     private lifeHighlight(): string | undefined {
         const r = this.run;
         const out: string[] = [];
-        for (const f of r.feuds ?? []) out.push(`这辈子出过一口气：${f}`);
+        for (const f of r.feuds ?? []) out.push(`这一世最痛快的事：${f}`);
         for (const l of this.lineViews()) if (l.state) out.push(`${l.name}那段，${l.state}`);
         const dirs = (['up', 'down', 'side'] as Dir[]).filter(d => r.maxPos[d] > 0).sort((a, b) => r.maxPos[b] - r.maxPos[a]);
         if (dirs.length) out.push(`去过最远的地方，是${this.layerName(dirs[0], r.maxPos[dirs[0]])}`);
