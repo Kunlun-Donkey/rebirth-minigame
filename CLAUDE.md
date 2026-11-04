@@ -45,6 +45,7 @@
 - `docs/design/` 设计 · `docs/art/` 生图提示词 · `docs/filing/` 备案材料与界面原型 · `docs/dev/` 接入文档
 
 ## 约定
+- **开发不管的目录**：`ai-tool-tests/`（以及根目录的 `opus_*.svg` 等 AI 工具测试文件）与本项目无关，由用户单独管理和提交——不读、不改、不删、不随本项目提交（`git add` 只加具体路径）
 - 写剧本内容遵循 `.claude/skills/rebirth-content/SKILL.md`
 - 游戏层新用到 cc API 时，同步补 `typings/cc-shim.d.ts` 和 `tests/fake-cc.ts`
 - 游戏代码避免 ES2021+ 语法（如 `??=`），兼容老版本微信
