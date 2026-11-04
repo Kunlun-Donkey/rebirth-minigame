@@ -13,7 +13,7 @@
   },
   "events": [
     {
-      "id": "first_pie", "entry": true, "dir": "up", "layers": ["U1"], "weight": 22,
+      "id": "first_pie", "entry": true, "dir": "up", "layers": ["U1"], "weight": 40,
       "text": "入职第一天，老周拍着你的肩：好好干，明年上市，你就是元老。前世，你信了这句话十年。",
       "choices": [
         { "text": "使劲点头", "effect": { "身价": 2, "state": "fooled", "follow": { "id": "pie_again", "delay": 2 } }, "result": "老周很满意。他又拍了拍你的肩，拍得很用力。" },

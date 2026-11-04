@@ -58,7 +58,6 @@ export const TEX = {
     cover: (id: string) => [`textures/destiny/${id}/cover`],
     frame: (rarity: string) => [`${C}/frame/frame_${rarity}`],
     badge: (type: 'talent' | 'item' | 'companion' | 'skill') => [`${C}/frame/badge_${type}`],
-    fxBreakthrough: [`${C}/fx/fx_breakthrough`],
     /** 境界：命格版形象优先，回落通用突破光效 */
     stage: (lv: number) => [D(`stage_${lv}`), `${C}/fx/fx_breakthrough`],
     companion: (id: string) => [D(`companion_${id}`)],

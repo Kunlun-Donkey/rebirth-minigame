@@ -13,7 +13,7 @@
   },
   "events": [
     {
-      "id": "list", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 18,
+      "id": "list", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 36,
       "text": "公司来了个优化专员，西装笔挺，笑容标准。他手里的名单，第三个是你。前世，你最后一个知道。",
       "choices": [
         { "text": "假装不知道", "effect": { "state": "listed", "follow": { "id": "talk", "delay": 2 } },
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "id": "rumor", "entry": true, "dir": "down", "layers": ["D1"], "weight": 14,
+      "id": "rumor", "entry": true, "dir": "down", "layers": ["D1"], "weight": 28,
       "text": "茶水间里有人小声说：听说要优化三成。说完，所有人都看向了门口。",
       "choices": [
         { "text": "打听名单", "chance": 0.4, "chanceAttr": "人脉", "chanceStep": 0.06,

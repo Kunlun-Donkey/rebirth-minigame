@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "old_xu", "entry": true, "dir": "up", "weight": 16,
+      "id": "old_xu", "entry": true, "dir": "up", "weight": 32,
       "text": "部门来了个返聘的老工程师，老许，六十三了。工位上摆着一把算盘和一本手写笔记。",
       "choices": [
         { "text": "帮他装电脑", "effect": { "人脉": 1, "心态": 1, "follow": { "id": "manual", "delay": 2 } },

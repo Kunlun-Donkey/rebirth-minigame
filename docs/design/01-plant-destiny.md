@@ -312,9 +312,9 @@ MVP 只需做到 **0~5**（草籽→树妖），6~8 作为后续更新。
 ```
 
 条件 DSL：`属性>=N`、`flag:x`、`!flag:x`、`talent:x`、`item:x`、`companion:x`、`legacy:耐火根>=2`、`life>=N`（第几世），用 `&` `|` 组合。
-效果：属性增减、`flag`、`item`、`death:<死法id>`、`next:<事件id>`、`stage_up`。
+效果：属性增减、`flag`、`item`、`death:<死法id>`、`next:<事件id>`、`stageUp`（完整字段以 `assets/scripts/core/types.ts` 的 `RawEffect` 为准）。
 
-数据文件：`stages.json`、`layers.json`、`talents.json`、`items.json`、`companions.json`、`deaths.json`、`endings.json`、`events/*.json`。
+数据文件：`destiny.json`（属性 / 方向 / 层 / 境界 / 死法 / 传承 / 结局 / 规则）、`talents.json`、`items.json`、`companions.json`、`skills.json`、`events/*.json`，可选 `lines/*.json`、`crossings/*.json`（写法见 `.claude/skills/rebirth-content/SKILL.md`）。
 所有数据由 Linux 端校验脚本检查：死链、不可达事件、未定义 id、条件语法错误。
 
 ## 9. 激励视频点位
@@ -324,9 +324,11 @@ MVP 只需做到 **0~5**（草籽→树妖），6~8 作为后续更新。
 | 死亡时 | 「逆天改命」：复活，水分回半（命盘·续命：回满 + 韧性 +2） | 每局 1 次 |
 | 开局三池 | 「天机重演」：刷新一个池子（命盘·天机的免费次数用完后出现） | 每局 1 次 |
 | 轮回结算 | 「双倍轮回点」（轮回点可买命盘） | 每局 1 次 |
-| 封存遗物 | 「多带一件」（未实现） | 每局 1 次 |
 | 事件中 | 「窥探天命」：预览所有选项结果 | 每局 3 次 |
 | 轮回殿 | 「换一个天命」：重抽今日天命 | 每天 1 次 |
+| 命格选择 | 「随缘投胎」再转一次（每天首次免费，转出命格本世轮回点 +30%） | 不限 |
+
+> 原计划的「封存遗物 · 多带一件」不做：多封存的格子由命盘「藏宝」提供，避免两条加格途径重叠。所有看视频入口受 `CONFIG.adsEnabled` 控制，送审版本全部隐藏。
 
 原则：**广告只给加速与便利，不卡核心进度**；不看广告也能通关。局外成长（命盘）只放大广告收益、不替代广告（§6.4.2）。
 

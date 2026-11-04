@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "pitch", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 18,
+      "id": "pitch", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 36,
       "text": "茶水间里，隔壁组的老张压低声音：年化百分之十八，保本，我投了三年了，从没出过事。",
       "choices": [
         { "text": "积蓄全投进去", "effect": { "身价": 4, "state": "invested", "follow": { "id": "boom", "delay": 2 } },

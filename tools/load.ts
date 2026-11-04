@@ -4,7 +4,17 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { DestinyIndex, RawDestiny, RawEvent, RawLine } from '../assets/scripts/core/types';
 
-export const DATA_ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources', 'data', 'destinies');
+const ASSETS = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets');
+/** 主包剧本目录：index.json、rarity.json、默认开放的命格 */
+export const DATA_ROOT = join(ASSETS, 'resources', 'data', 'destinies');
+/** 分包剧本目录：游玩解锁的命格（游戏内由 loader.ts 按 bundle 查找） */
+export const SUB_DATA_ROOT = join(ASSETS, 'subres', 'data', 'destinies');
+
+/** 命格剧本所在目录（主包优先，其次分包） */
+export function destinyDir(id: string): string {
+    const main = join(DATA_ROOT, id);
+    return existsSync(main) ? main : join(SUB_DATA_ROOT, id);
+}
 
 const readJson = <T>(file: string): T => {
     try {
@@ -15,11 +25,12 @@ const readJson = <T>(file: string): T => {
 };
 
 export function listDestinies(): string[] {
-    return readdirSync(DATA_ROOT, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name);
+    const dirs = (root: string) => (existsSync(root) ? readdirSync(root, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name) : []);
+    return [...dirs(DATA_ROOT), ...dirs(SUB_DATA_ROOT)];
 }
 
 export function loadRawDestiny(id: string): { raw: RawDestiny; eventFiles: Record<string, string> } {
-    const dir = join(DATA_ROOT, id);
+    const dir = destinyDir(id);
     const evDir = join(dir, 'events');
     const events: RawEvent[] = [];
     const eventFiles: Record<string, string> = {};

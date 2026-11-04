@@ -105,6 +105,8 @@ index = json.load(open(os.path.join(DATA, 'index.json')))
 for ent in index['destinies']:
     did = ent['id']
     base = os.path.join(DATA, did)
+    if not os.path.isdir(base):  # 游玩解锁的命格剧本在分包
+        base = os.path.join(ROOT, 'assets/subres/data/destinies', did)
     meta = json.load(open(os.path.join(base, 'destiny.json')))
     need = [f'destiny/{did}/{n}' for n in ('main_bg', 'settle_bg', 'settle_bg_ending', 'cover')]
     need += [f'destiny/{did}/stage_{s["level"]}' for s in meta['stages'] if s['level'] > 0]
@@ -116,7 +118,8 @@ for ent in index['destinies']:
     for n in need:
         if n not in files:
             errors.append(f'缺图：{n}（{did} 引用）')
-    if f'destiny/{did}/main_bg' in files and 'resources' not in files[f'destiny/{did}/main_bg']:
+    # 默认开放的命格（无 unlock）首屏背景放主包；游玩解锁的命格放分包，控制主包 4MB
+    if not ent.get('unlock') and f'destiny/{did}/main_bg' in files and 'resources' not in files[f'destiny/{did}/main_bg']:
         errors.append(f'destiny/{did}/main_bg 应放主包（首屏）')
 
 main_kb = sum(os.path.getsize(p) for p in files.values() if '/resources/' in p) / 1024

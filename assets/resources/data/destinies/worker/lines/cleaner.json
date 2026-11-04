@@ -10,7 +10,7 @@
   },
   "events": [
     {
-      "id": "spill", "entry": true, "dir": "down", "layers": ["D1"], "weight": 14,
+      "id": "spill", "entry": true, "dir": "down", "layers": ["D1"], "weight": 28,
       "text": "茶水间里，保洁阿姨的水桶被人踢翻了。踢翻它的人头也没回，阿姨蹲在地上一点点擦。",
       "choices": [
         { "text": "蹲下来帮她擦", "effect": { "state": "helped", "心态": 1, "follow": { "id": "night_desk", "delay": 2 } }, "result": "阿姨说：小伙子，你衣服都弄脏了。你说：没事，反正也不贵。" },

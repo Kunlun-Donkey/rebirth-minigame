@@ -12,7 +12,7 @@
   },
   "events": [
     {
-      "id": "pitch", "entry": true, "dir": "side", "layers": ["L1", "L2"], "weight": 18,
+      "id": "pitch", "entry": true, "dir": "side", "layers": ["L1", "L2"], "weight": 36,
       "text": "烧烤摊上，大学室友阿杰喝到第三瓶：别打工了，跟我干！我出点子，你出技术，三年上市。",
       "choices": [
         { "text": "辞职跟他干", "effect": { "能力": 1, "脸皮": 1, "state": "founded", "follow": { "id": "equity", "delay": 1 } },

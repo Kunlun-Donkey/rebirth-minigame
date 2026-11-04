@@ -12,7 +12,8 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // 首屏用到的图进主包 resources，其余进分包 subres（见 assets/scripts/game/res.ts）
 const MAIN_TEX = join(ROOT, 'assets/resources/textures');
 const SUB_TEX = join(ROOT, 'assets/subres/textures');
-const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/local_dog/main_bg', 'destiny/caterpillar/main_bg', 'destiny/mantis_shrimp/main_bg', 'destiny/crocodile/main_bg', 'destiny/worker/main_bg', 'common/ui/logo_title', 'common/ui/panel',
+// 主包只放默认开放命格的首屏背景；游玩解锁的命格背景在分包（控制主包 4MB）
+const MAIN_FILES = new Set(['destiny/desert_grass/main_bg', 'destiny/worker/main_bg', 'common/ui/logo_title', 'common/ui/panel',
   'common/ui/btn_normal', 'common/ui/btn_primary', 'common/ui/btn_ad', 'common/ui/btn_locked']);
 const TMP = join(tmpdir(), 'rebirth-art');
 const filter = process.argv[2] ?? '';

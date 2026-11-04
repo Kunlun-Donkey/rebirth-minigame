@@ -12,7 +12,7 @@
   },
   "events": [
     {
-      "id": "takeout", "entry": true, "dir": "up", "layers": ["U1"], "weight": 16,
+      "id": "takeout", "entry": true, "dir": "up", "layers": ["U1"], "weight": 32,
       "text": "外卖员把一份麻辣烫塞给你：收件人是你的名字，可你没点。备注写着：不要香菜，辛苦了自己。",
       "choices": [
         { "text": "送去隔壁公司", "effect": { "state": "met", "人脉": 1, "follow": { "id": "noodle", "delay": 2 } },

@@ -12,7 +12,7 @@
   },
   "events": [
     {
-      "id": "meet", "entry": true, "dir": "down", "layers": ["D1"], "weight": 18,
+      "id": "meet", "entry": true, "dir": "down", "layers": ["D1"], "weight": 36,
       "text": "茶水间的冰箱顶上趴着一只橘猫，正盯着你手里的火腿肠。工牌夹上不知谁写了两个字：大橘。",
       "choices": [
         { "text": "掰一半给它", "effect": { "state": "fed", "心态": 1, "follow": { "id": "hr", "delay": 2 } },

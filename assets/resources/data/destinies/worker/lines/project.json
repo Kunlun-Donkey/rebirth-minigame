@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "kickoff", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 18,
+      "id": "kickoff", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 36,
       "text": "年底，组长把一个大项目丢给你：做好了，明年升职。前世，项目做好了，升职的是别人。",
       "choices": [
         { "text": "接了，好好干", "effect": { "能力": 1, "follow": { "id": "night", "delay": 1 } },
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "grudge", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 16, "once": true, "require": "died:scapegoat>=2",
+      "id": "grudge", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 32, "once": true, "require": "died:scapegoat>=2",
       "text": "又到年底。新组长捧着一个项目，笑眯眯地走向你。这样的锅，你背过{died:scapegoat}回了。",
       "choices": [
         { "text": "先让他写邮件确认", "effect": { "flag": "trail", "能力": 1, "follow": { "id": "night", "delay": 1 } },

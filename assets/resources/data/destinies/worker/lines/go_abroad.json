@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "offer", "entry": true, "dir": "side", "layers": ["L3"], "weight": 18,
+      "id": "offer", "entry": true, "dir": "side", "layers": ["L3"], "weight": 36,
       "text": "公司要开拓海外市场，名单上第一个是你。人事说：正规外派，合同签证保险齐全，就是那边没人说中文。",
       "choices": [
         { "text": "收拾行李就去", "effect": { "脸皮": 1, "身价": 4, "state": "abroad", "follow": { "id": "language", "delay": 1 } },

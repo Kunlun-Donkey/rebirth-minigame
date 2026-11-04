@@ -1,3 +1,6 @@
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { buildDestiny, createProfile, destinyProfile, destinyStates, Engine, pickDestiny, Rng } from '../assets/scripts/core';
 import { listDestinies, loadIndex, loadRawDestiny } from '../tools/load';
@@ -163,5 +166,21 @@ describe('探路道具（previewDirs）', () => {
             hits++;
         }
         expect(hits).toBeGreaterThan(3);
+    });
+});
+
+describe('主包体积（微信主包 4MB，引擎代码约 1.5MB 也算在主包里）', () => {
+    const root = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'assets', 'resources');
+    const size = (dir: string): number => readdirSync(dir, { withFileTypes: true })
+        .reduce((n, d) => n + (d.isDirectory() ? size(join(dir, d.name)) : d.name.endsWith('.meta') ? 0 : statSync(join(dir, d.name)).size), 0);
+
+    it('assets/resources 不超过 2.2MB（新素材、新命格剧本默认放分包 subres）', () => {
+        expect(size(root) / 1024 / 1024).toBeLessThan(2.2);
+    });
+
+    it('游玩解锁的命格剧本在分包，默认开放的命格在主包（首屏不等分包）', () => {
+        for (const e of loadIndex().destinies) {
+            expect(existsSync(join(root, 'data', 'destinies', e.id)), e.id).toBe(!e.unlock);
+        }
     });
 });

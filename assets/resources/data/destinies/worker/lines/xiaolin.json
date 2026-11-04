@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "meet", "entry": true, "dir": "up", "layers": ["U1"], "weight": 20,
+      "id": "meet", "entry": true, "dir": "up", "layers": ["U1"], "weight": 40,
       "text": "入职第一天，隔壁工位的小林递来半包饼干：同期？以后互相照应。前世，你们谁也没照应谁。",
       "choices": [
         { "text": "接过饼干", "effect": { "state": "friend", "人脉": 1, "心态": 1, "follow": { "id": "blame", "delay": 2 } },

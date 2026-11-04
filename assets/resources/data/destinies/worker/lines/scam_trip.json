@@ -13,7 +13,7 @@
   },
   "events": [
     {
-      "id": "offer", "entry": true, "dir": "any", "stage": [1, 2], "weight": 16,
+      "id": "offer", "entry": true, "dir": "any", "stage": [1, 2], "weight": 32,
       "text": "老周在群里宣布：公司包机去海外团建，表现好的直接外派，月薪五万。报名要先交护照，再签一份「自愿外派协议」。",
       "choices": [
         { "text": "报名", "effect": { "state": "joined", "身价": 2, "follow": { "id": "bus", "delay": 1, "ttl": 4 } }, "result": "你交了护照。老周拍拍你：好好干，回来就是骨干。" },

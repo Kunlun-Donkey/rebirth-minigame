@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "meet", "entry": true, "dir": "down", "layers": ["D2", "D3"], "weight": 20,
+      "id": "meet", "entry": true, "dir": "down", "layers": ["D2", "D3"], "weight": 40,
       "text": "楼梯间拐角，一个穿保安服的老头在泡茶。他抬眼看你：摸鱼？坐。这地儿，监控拍不到。",
       "choices": [
         { "text": "坐下喝茶", "effect": { "state": "buddy", "心态": 1, "follow": { "id": "chess", "delay": 2 } },

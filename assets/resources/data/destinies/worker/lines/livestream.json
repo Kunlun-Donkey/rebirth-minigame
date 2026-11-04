@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "clip", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 18,
+      "id": "clip", "entry": true, "dir": "down", "layers": ["D1", "D2"], "weight": 36,
       "text": "楼梯间里，你对着手机录了一段：老板说的「我们是一家人」，翻译过来就是……录完，你犹豫要不要发。",
       "choices": [
         { "text": "发出去", "effect": { "脸皮": 1, "state": "live", "follow": { "id": "blowup", "delay": 1 } },

@@ -11,7 +11,7 @@
   },
   "events": [
     {
-      "id": "steal", "entry": true, "dir": "up", "layers": ["U1"], "weight": 20,
+      "id": "steal", "entry": true, "dir": "up", "layers": ["U1"], "weight": 40,
       "text": "同期的王卷卷把你熬夜写的方案换了个封面，交给了组长。前世，你忍了。",
       "choices": [
         { "text": "忍了", "effect": { "能力": 1, "心态": -1, "state": "rival", "follow": { "id": "overtime", "delay": 2 } },
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "grudge", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 18, "once": true, "require": "died:out_rolled>=2",
+      "id": "grudge", "entry": true, "dir": "up", "layers": ["U1", "U2"], "weight": 36, "once": true, "require": "died:out_rolled>=2",
       "text": "凌晨三点，王卷卷又在工作群里发了一份周报。他把你挤走过{died:out_rolled}回。",
       "choices": [
         { "text": "设置免打扰", "effect": { "心态": 1, "state": "rival", "follow": { "id": "overtime", "delay": 2 } },

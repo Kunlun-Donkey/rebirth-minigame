@@ -880,6 +880,34 @@ describe('线路架构：命名空间 / 导出状态 / 交叉事件 / 系统 / �
         expect(e.systemId()).toBe('sys_sign');
     });
 
+    it('故事线视图：lineViews 列本世线路与状态说明；状态变化发消息；codexView 记录走过的线路 / 状态、技能提示、道具', () => {
+        const raw = fixture();
+        raw.lines = [
+            { id: 'trip', name: '团建', summary: '去不去？', states: { escaped: '逃出了园区', refused: '拒绝了团建' }, events: [
+                { id: 'offer', entry: true, dir: 'down', layers: ['D1'], weight: 1000, text: '团建？', choices: [
+                    { text: '不去', effect: { state: 'refused' }, result: '不去' },
+                ] },
+            ] },
+        ];
+        const e = new Engine(buildDestiny(raw), createProfile());
+        expect(e.codexView().lines).toEqual([{ id: 'trip', name: '团建', summary: '去不去？', got: false, states: [
+            { id: 'escaped', text: '逃出了园区', got: false }, { id: 'refused', text: '拒绝了团建', got: false },
+        ] }]);
+        e.startRun(pick, 1);
+        Object.assign(e.run.attrs, { water: 99, waterMax: 99 });
+        e.chooseDirection('down');
+        expect(e.lineViews()).toEqual([{ id: 'trip', name: '团建', summary: '去不去？', state: '' }]);
+        const st = e.choose(0);
+        expect(st.messages).toContain('◇ 故事线 · 团建：拒绝了团建');
+        expect(e.lineViews()[0].state).toBe('拒绝了团建');
+        const v = e.codexView();
+        expect(v.lines[0].got).toBe(true);
+        expect(v.lines[0].states.map(s => s.got)).toEqual([false, true]);
+        // 技能：未领悟带 hint；道具：本世拿到的也算
+        expect(v.skills.every(s => !s.got && typeof s.hint === 'string')).toBe(true);
+        expect(v.items.find(x => x.id === 'rock')!.got).toBe(true);
+    });
+
     it('寿终结局：寿元到头时满足条件判为结局，否则正常寿终', () => {
         const raw = fixture([{ id: 'idle', dir: 'down', layers: ['D1'], weight: 5000, text: '闲', choices: [{ text: '闲', effect: { 水分: 1 }, result: '闲' }] }]);
         raw.meta.endings.push({ id: 'plain', name: '平凡一生', epitaph: '平平淡淡' });

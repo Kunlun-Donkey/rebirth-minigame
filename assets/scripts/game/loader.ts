@@ -1,18 +1,21 @@
-/** 从 resources 加载命格剧本，组装成 RawDestiny（与 Node 端 tools/load.ts 等价） */
+/**
+ * 加载命格剧本，组装成 RawDestiny（与 Node 端 tools/load.ts 等价）。
+ * 默认开放的命格剧本在主包 resources；游玩解锁的命格在分包 subres（控制主包体积，见 docs/dev/cocos-setup.md 第三节）。
+ */
 import { ImageAsset, JsonAsset, resources, SpriteFrame } from 'cc';
 import { buildDestiny, Destiny, DestinyIndex, RawDestiny, RawEvent, RawLine } from '../core';
-import { bundleOf } from './res';
+import { Bundle, bundleOf } from './res';
 import type { RarityTable } from './brag';
 
-function loadJson<T>(path: string): Promise<T> {
+function loadJson<T>(path: string, bundle: Bundle = resources): Promise<T> {
     return new Promise((resolve, reject) => {
-        resources.load(path, JsonAsset, (err, asset) => (err || !asset ? reject(err ?? new Error(path)) : resolve(asset.json as T)));
+        bundle.load(path, JsonAsset, (err, asset) => (err || !asset ? reject(err ?? new Error(path)) : resolve(asset.json as T)));
     });
 }
 
-function loadJsonDir<T>(path: string): Promise<{ name: string; json: T }[]> {
+function loadJsonDir<T>(path: string, bundle: Bundle): Promise<{ name: string; json: T }[]> {
     return new Promise((resolve, reject) => {
-        resources.loadDir(path, JsonAsset, (err, assets) =>
+        bundle.loadDir(path, JsonAsset, (err, assets) =>
             err ? reject(err) : resolve((assets ?? []).map(a => ({ name: a.name, json: a.json as T }))),
         );
     });
@@ -29,16 +32,17 @@ export function loadRarity(): Promise<RarityTable | null> {
 
 export async function loadDestiny(id: string): Promise<Destiny> {
     const base = `data/destinies/${id}`;
+    const b = await bundleOf(`${base}/destiny`);
     const [meta, talents, items, companions, skills, eventFiles, lineFiles, crossFiles] = await Promise.all([
-        loadJson<RawDestiny['meta']>(`${base}/destiny`),
-        loadJson<RawDestiny['talents']>(`${base}/talents`),
-        loadJson<RawDestiny['items']>(`${base}/items`),
-        loadJson<RawDestiny['companions']>(`${base}/companions`),
-        loadJson<RawDestiny['skills']>(`${base}/skills`).catch(() => []),
-        loadJsonDir<RawEvent[]>(`${base}/events`),
+        loadJson<RawDestiny['meta']>(`${base}/destiny`, b),
+        loadJson<RawDestiny['talents']>(`${base}/talents`, b),
+        loadJson<RawDestiny['items']>(`${base}/items`, b),
+        loadJson<RawDestiny['companions']>(`${base}/companions`, b),
+        loadJson<RawDestiny['skills']>(`${base}/skills`, b).catch(() => []),
+        loadJsonDir<RawEvent[]>(`${base}/events`, b),
         // 线路与交叉事件目录可能不存在（老命格）
-        loadJsonDir<RawLine>(`${base}/lines`).catch(() => []),
-        loadJsonDir<RawEvent[]>(`${base}/crossings`).catch(() => []),
+        loadJsonDir<RawLine>(`${base}/lines`, b).catch(() => []),
+        loadJsonDir<RawEvent[]>(`${base}/crossings`, b).catch(() => []),
     ]);
     const byName = <T>(fs: { name: string; json: T }[]) => fs.sort((a, b) => a.name.localeCompare(b.name)).map(f => f.json);
     const events = byName(eventFiles).flat();
