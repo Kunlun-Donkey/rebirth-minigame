@@ -48,6 +48,8 @@ const REPEAT_WEIGHT = 0.12;
 /** 新鲜感：任何一世都没见过的事件加权；上一世刚见过的降权（避免连着两世剧情雷同） */
 export const NOVEL_WEIGHT = 2.5;
 export const RECENT_WEIGHT = 0.5;
+/** 在同一层走了这么多季后，上一层的事件也进抽取池 */
+export const STUCK_SEASONS = 3;
 /** 事件里的恩怨都已了结过：权重系数 */
 export const SETTLED_WEIGHT = 0.3;
 /** 天胡保底：本命格连续这么多世没成为天命之子后，每世概率再加 BLESSED_PITY_STEP */
@@ -281,8 +283,13 @@ export class Engine {
     }
 
     private drawForDir(dir: Dir): GameEvent | undefined {
-        const layer = this.data.layersByDir[dir][this.run.pos[dir]];
-        return this.drawEvent(e => (e.dir === dir || e.dir === 'any') && !e.sudden && (!e.layers || e.layers.includes(layer.id)));
+        const layers = this.data.layersByDir[dir];
+        const pos = this.run.pos[dir];
+        const ids = [layers[pos].id];
+        // 在同一层卡了好几季（过不去下一层）：上一层的事也会找上门，免得这几季反复碰到同一批
+        if (this.run.push[dir] >= STUCK_SEASONS && pos > 0) ids.push(layers[pos - 1].id);
+        if (this.run.push[dir] >= STUCK_SEASONS * 2 && pos > 1) ids.push(layers[pos - 2].id);
+        return this.drawEvent(e => (e.dir === dir || e.dir === 'any') && !e.sudden && (!e.layers || e.layers.some(l => ids.includes(l))));
     }
 
     chooseDirection(dir: Dir): void {
