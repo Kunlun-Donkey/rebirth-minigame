@@ -76,7 +76,7 @@
     { "level": 3, "name": "虾霸", "require": "海灵>=30 & 灵性>=3", "lifespan": 26,
       "narration": "这片礁石，开始有人管你叫大哥了。", "bonus": { "体力上限": 2, "拳力": 1 },
       "skillPool": ["molt", "talk"] },
-    { "level": 4, "name": "虾王", "require": "海灵>=100 & (拳力>=8 | 游速>=8 | 打洞>=8)", "lifespan": 34,
+    { "level": 4, "name": "虾王", "require": "海灵>=100 & (拳力>=8 | 游速>=8 | 打洞>=8)", "lifespan": 34, "oldAgeEndings": [{ "id": "burrow_master", "require": "打洞>=22" }],
       "narration": "你一拳下去，水里炸开一团气泡。石斑鱼看见你，掉头就走。", "bonus": { "体力上限": 3, "拳力": 2 },
       "skillPool": ["thunder", "muddy"] },
     { "level": 5, "name": "海神虾", "require": "海灵>=450 & 拳力>=14 & 游速>=14 & 灵性>=10", "lifespan": 99,
@@ -141,7 +141,8 @@
     { "id": "lets_go", "name": "皮皮虾我们走", "epitaph": "那个叫阿海的少年，骑着一只巨大的皮皮虾冲过了海峡。他喊了一声：皮皮虾，我们走！" },
     { "id": "aquarium_star", "name": "水族馆明星", "epitaph": "它住进了城里最大的水族馆。每天都有小孩趴在玻璃上，看它一拳打碎一个贝壳。" },
     { "id": "reef_guardian", "name": "珊瑚礁守护者", "epitaph": "珊瑚礁又长回来了。礁石底下有个洞，洞口趴着一只老皮皮虾，谁来都得先问它。" },
-    { "id": "boss_tank", "name": "水箱之王", "epitaph": "海鲜市场的胖老板换了行。他说那只皮皮虾打碎了他三个水箱，他认了。" }
+    { "id": "boss_tank", "name": "水箱之王", "epitaph": "海鲜市场的胖老板换了行。他说那只皮皮虾打碎了他三个水箱，他认了。" },
+    { "id": "burrow_master", "name": "洞主", "epitaph": "你没成王。礁石底下那个洞，你挖了一辈子，后来整片礁的小鱼都在里面躲过风浪。" }
   ],
   "upgrades": [
     { "id": "heaven_favor", "name": "天眷", "desc": "成为「海神眷顾」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },

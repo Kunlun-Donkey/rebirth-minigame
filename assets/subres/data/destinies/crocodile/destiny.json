@@ -77,7 +77,7 @@
     { "level": 3, "name": "鳄霸", "require": "龙气>=30 & 灵性>=3", "lifespan": 26,
       "narration": "你趴在河滩上，整条河湾的鳄鱼都往旁边挪了挪。", "bonus": { "体温上限": 2, "咬合": 1 },
       "skillPool": ["regrow", "tears"] },
-    { "level": 4, "name": "鳄王", "require": "龙气>=100 & (咬合>=8 | 潜水>=8 | 晒背>=8)", "lifespan": 34,
+    { "level": 4, "name": "鳄王", "require": "龙气>=100 & (咬合>=8 | 潜水>=8 | 晒背>=8)", "lifespan": 34, "oldAgeEndings": [{ "id": "sun_elder", "require": "晒背>=17" }],
       "narration": "你张开嘴打了个哈欠。岸上的水牛，掉头就走。", "bonus": { "体温上限": 3, "咬合": 2 },
       "skillPool": ["thunder", "mud"] },
     { "level": 5, "name": "鼍龙", "require": "龙气>=450 & 咬合>=14 & 潜水>=14 & 灵性>=10", "lifespan": 99,
@@ -143,7 +143,8 @@
     { "id": "plover_friend", "name": "牙签鸟的老朋友", "epitaph": "它没有化龙。它张着嘴在河滩上晒了一百年，嘴里住过一代又一代的牙签鸟。" },
     { "id": "sewer_king", "name": "下水道之王", "epitaph": "城里一直有个传说：下水道里住着一条鳄鱼王。修了一辈子管子的老豆说，那是他小时候养的。没人信。" },
     { "id": "mars_ancestor", "name": "火星鳄祖", "epitaph": "它没往东海去，一头扎进了天上那颗红星。后来火星的照片里多了一块石头，像两条鳄鱼并排趴着晒太阳。" },
-    { "id": "internet_star", "name": "网红鳄鱼", "epitaph": "它成了城里最有名的鳄鱼。每天湖边挤满了人，它学会了对着镜头张大嘴，等人夸它牙白。" }
+    { "id": "internet_star", "name": "网红鳄鱼", "epitaph": "它成了城里最有名的鳄鱼。每天湖边挤满了人，它学会了对着镜头张大嘴，等人夸它牙白。" },
+    { "id": "sun_elder", "name": "晒太阳的老祖宗", "epitaph": "你没化龙。你在河滩上晒了一辈子太阳，晒出了一身好脾气，小鳄鱼都爱趴你背上。" }
   ],
   "upgrades": [
     { "id": "heaven_favor", "name": "天眷", "desc": "成为「河神眷顾」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },

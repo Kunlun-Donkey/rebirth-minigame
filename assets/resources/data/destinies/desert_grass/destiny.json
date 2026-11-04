@@ -52,7 +52,7 @@
     { "level": 3, "name": "灵草", "require": "灵气>=30 & 灵性>=3", "lifespan": 26,
       "narration": "沙漠里的风，开始绕着你走。", "bonus": { "水分上限": 2, "灵性": 1 },
       "skillPool": ["grass_soldiers", "beast_talk"] },
-    { "level": 4, "name": "草精", "require": "灵气>=80 & (根系>=8 | 茎叶>=8 | 韧性>=8)", "lifespan": 40,
+    { "level": 4, "name": "草精", "require": "灵气>=80 & (根系>=8 | 茎叶>=8 | 韧性>=8)", "lifespan": 40, "oldAgeEndings": [{ "id": "green_patch", "require": "根系>=38" }],
       "narration": "骆驼们开始做噩梦。", "bonus": { "水分上限": 3, "韧性": 2 },
       "skillPool": ["vine_bind", "swallow"] },
     { "level": 5, "name": "树妖", "require": "灵气>=180 & 根系>=12 & 茎叶>=12", "lifespan": 99,
@@ -106,7 +106,8 @@
     { "id": "jianmu", "name": "建木重生", "epitaph": "荒漠正中长出了一棵通天的树。三千年前断掉的那一截，接上了。" },
     { "id": "devourer", "name": "噬荒魔木", "epitaph": "你吞了太多东西。荒漠安静了，再也没有别的草敢在你旁边发芽。" },
     { "id": "wind_seed", "name": "随风而去", "epitaph": "你没有长成树。第二年春天，整片荒漠都冒出了你的孩子。" },
-    { "id": "ancient_sleep", "name": "与古种同眠", "epitaph": "你们一起睡进了沙里。一万年后，会有谁来叫醒你们。" }
+    { "id": "ancient_sleep", "name": "与古种同眠", "epitaph": "你们一起睡进了沙里。一万年后，会有谁来叫醒你们。" },
+    { "id": "green_patch", "name": "一小片绿", "epitaph": "你没长成树。你走后，这片沙子上多了一圈草。风吹过去，像有人在点头。" }
   ],
   "upgrades": [
     { "id": "heaven_favor", "name": "天眷", "desc": "成为「天命之草」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },

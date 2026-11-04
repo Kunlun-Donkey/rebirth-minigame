@@ -75,7 +75,7 @@
     { "level": 3, "name": "茧中仙", "require": "蜕变>=30 & 灵性>=3", "lifespan": 26,
       "narration": "你给自己织了一间屋子。外面的世界，等一等。", "bonus": { "饱腹上限": 2, "吐丝": 1 },
       "skillPool": ["molt", "talk"] },
-    { "level": 4, "name": "灵蝶", "require": "蜕变>=100 & (吐丝>=8 | 攀爬>=8 | 胃口>=8)", "lifespan": 34,
+    { "level": 4, "name": "灵蝶", "require": "蜕变>=100 & (吐丝>=8 | 攀爬>=8 | 胃口>=8)", "lifespan": 34, "oldAgeEndings": [{ "id": "garden_gourmet", "require": "胃口>=14" }],
       "narration": "茧裂开了。你抖了抖翅膀，第一次从上往下看这个世界。", "bonus": { "饱腹上限": 3, "攀爬": 2 },
       "skillPool": ["flap", "dust"] },
     { "level": 5, "name": "蝶仙", "require": "蜕变>=400 & 吐丝>=14 & 攀爬>=14 & 灵性>=10", "lifespan": 99,
@@ -138,7 +138,8 @@
     { "id": "butterfly_effect", "name": "蝴蝶效应", "epitaph": "它在树顶扇了一下翅膀。三个月后，大洋那边刮了一场风。没人知道是它干的。" },
     { "id": "xiaoyu_butterfly", "name": "小雨的蝴蝶", "epitaph": "它没有成仙。每年春天，那个叫小雨的姑娘都会来公园，等一只停在她发梢上的蝴蝶。" },
     { "id": "cicada_king", "name": "地下歌王", "epitaph": "它没长翅膀，却学会了唱歌。树根底下的蝉，从此都唱它写的调子。" },
-    { "id": "garden_boss", "name": "菜园一霸", "epitaph": "老太太后来不捉虫了。她说那条虫子会冲她点头，怪吓人的。" }
+    { "id": "garden_boss", "name": "菜园一霸", "epitaph": "老太太后来不捉虫了。她说那条虫子会冲她点头，怪吓人的。" },
+    { "id": "garden_gourmet", "name": "菜园老饕", "epitaph": "你没长出翅膀。菜园里每一片好叶子，你都尝过。邻居说你是这片地最懂行的。" }
   ],
   "upgrades": [
     { "id": "heaven_favor", "name": "天眷", "desc": "成为「天选之虫」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },

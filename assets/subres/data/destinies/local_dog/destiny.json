@@ -50,7 +50,7 @@
     { "level": 3, "name": "犬妖", "require": "妖气>=30 & 灵性>=3", "lifespan": 26,
       "narration": "村里的公鸡，见了你开始绕道走。", "bonus": { "体力上限": 2, "牙口": 1 },
       "skillPool": ["howl", "talk"] },
-    { "level": 4, "name": "妖王", "require": "妖气>=100 & (牙口>=8 | 脚力>=8 | 忠义>=8)", "lifespan": 37,
+    { "level": 4, "name": "妖王", "require": "妖气>=100 & (牙口>=8 | 脚力>=8 | 忠义>=8)", "lifespan": 37, "oldAgeEndings": [{ "id": "old_huang", "require": "忠义>=34" }],
       "narration": "山里的狐狸、黄鼠狼、野猪，开始在你面前低头。", "bonus": { "体力上限": 3, "牙口": 2 },
       "skillPool": ["dash", "fang"] },
     { "level": 5, "name": "天狗", "require": "妖气>=400 & 牙口>=14 & 脚力>=14 & 灵性>=10", "lifespan": 99,
@@ -115,7 +115,8 @@
     { "id": "eclipse", "name": "天狗食日", "epitaph": "那天，太阳缺了一块。村里人说，是当年被赶走的那条黄狗回来了。" },
     { "id": "xiaocui_dog", "name": "小翠的狗", "epitaph": "它没有成仙。京城的一个小院里，有人叫了它一辈子小黄。" },
     { "id": "mountain_god", "name": "山神", "epitaph": "破庙又有了香火。供桌上的泥像，长着一张狗脸。" },
-    { "id": "wild_king", "name": "野狗王", "epitaph": "县城的野狗从此有了规矩：抢食可以，不许欺负小狗。" }
+    { "id": "wild_king", "name": "野狗王", "epitaph": "县城的野狗从此有了规矩：抢食可以，不许欺负小狗。" },
+    { "id": "old_huang", "name": "村口的老黄", "epitaph": "你在村口趴了一辈子。孩子们长大回村，第一句话是：老黄还在吗？" }
   ],
   "upgrades": [
     { "id": "heaven_favor", "name": "天眷", "desc": "成为「天狗转世」的概率 +0.3%。", "kind": "blessed", "value": 0.003, "costs": [600, 1800] },
