@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>opus_5.5_pelican_mech</title>
+  <defs>
+    <!-- 圆形遮罩 -->
+    <mask id="circleMask">
+      <rect width="512" height="512" fill="#000"/>
+      <circle cx="256" cy="256" r="240" fill="#fff"/>
+    </mask>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffcf9e"/>
+      <stop offset="1" stop-color="#fff1d6"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9f3ff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#8fd0f0" stop-opacity="0.25"/>
+    </linearGradient>
+    <!-- 一段城市剪影（周期 120） -->
+    <path id="city" d="M0 432 L0 396 L22 396 L22 380 L40 380 L40 402 L58 402 L58 370 L80 370 L80 392 L100 392 L100 386 L120 386 L120 432 Z" fill="#e3a77a" stroke="#7a4a33" stroke-width="2"/>
+    <!-- 一朵云（周期 300） -->
+    <path id="cloud" d="M0 0 Q8 -18 28 -12 Q40 -28 60 -16 T88 -4 Q96 6 84 10 L6 10 Q-8 8 0 0 Z" fill="#fffaf0" stroke="#7a4a33" stroke-width="2.5" stroke-linejoin="round"/>
+  </defs>
+
+  <g mask="url(#circleMask)">
+    <!-- ===== 背景 ===== -->
+    <rect width="512" height="512" fill="url(#sky)"/>
+    <circle cx="392" cy="112" r="30" fill="#ffe28a" stroke="#7a4a33" stroke-width="3"/>
+    <g>
+      <use href="#cloud" x="40" y="96"/>
+      <use href="#cloud" x="340" y="96"/>
+      <use href="#cloud" x="640" y="96"/>
+      <use href="#cloud" x="190" y="150"/>
+      <use href="#cloud" x="490" y="150"/>
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-300 0" dur="12s" repeatCount="indefinite"/>
+    </g>
+    <g>
+      <use href="#city" x="-120"/>
+      <use href="#city" x="0"/>
+      <use href="#city" x="120"/>
+      <use href="#city" x="240"/>
+      <use href="#city" x="360"/>
+      <use href="#city" x="480"/>
+      <use href="#city" x="600"/>
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-120 0" dur="4s" repeatCount="indefinite"/>
+    </g>
+    <path d="M0 430 L512 430 L512 512 L0 512 Z" fill="#b9a083" stroke="#5a3d22" stroke-width="3"/>
+    <path d="M-60 456 L-20 456 M50 470 L90 470 M160 456 L200 456 M270 470 L310 470 M380 456 L420 456 M490 470 L530 470 M600 456 L640 456" stroke="#8a7158" stroke-width="5" stroke-linecap="round">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-110 0" dur="1s" repeatCount="indefinite"/>
+    </path>
+
+    <g transform="translate(22 0)">
+      <g transform="skewX(-5)">
+        <!-- 地面阴影 -->
+        <ellipse cx="258" cy="432" rx="78" ry="7" fill="#3b2a20" opacity="0.25"/>
+
+        <!-- 整台机甲随步伐上下起伏 -->
+        <g>
+          <animateTransform attributeName="transform" type="translate" dur="2s" repeatCount="indefinite" values="0 6;0 0;0 6;0 0;0 6" keyTimes="0;0.25;0.5;0.75;1"/>
+
+          <!-- ===== 远侧腿（相位 B） 髋(246,300) 膝(246,358) 踝(246,415) ===== -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="-18 246 300;0 246 300;18 246 300;0 246 300;-18 246 300" keyTimes="0;0.25;0.5;0.75;1"/>
+            <path d="M232 300 L260 300 L256 358 L236 358 Z" fill="#8d929c" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+            <g>
+              <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="0 246 358;0 246 358;0 246 358;35 246 358;0 246 358" keyTimes="0;0.25;0.5;0.75;1"/>
+              <path d="M236 358 L256 358 L253 415 L239 415 Z" fill="#8d929c" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+              <g>
+                <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="18 246 415;0 246 415;-18 246 415;-35 246 415;18 246 415" keyTimes="0;0.25;0.5;0.75;1"/>
+                <path d="M226 415 L264 415 Q278 415 280 430 L220 430 Q218 418 226 415 Z" fill="#a8792a" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+                <circle cx="246" cy="415" r="7" fill="#5d636e" stroke="#1d2230" stroke-width="3"/>
+              </g>
+              <circle cx="246" cy="358" r="11" fill="#5d636e" stroke="#1d2230" stroke-width="4"/>
+            </g>
+            <circle cx="246" cy="300" r="14" fill="#5d636e" stroke="#1d2230" stroke-width="4"/>
+          </g>
+
+          <!-- ===== 远侧手臂（炮管从机身后伸出） ===== -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="6 258 222;0 258 222;-6 258 222;0 258 222;6 258 222" keyTimes="0;0.25;0.5;0.75;1"/>
+            <path d="M250 222 L266 222 L268 266 L254 266 Z" fill="#8d929c" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M252 256 L344 252 L344 266 L252 272 Z" fill="#8d929c" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+            <rect x="340" y="248" width="10" height="22" rx="2" fill="#5d636e" stroke="#1d2230" stroke-width="4"/>
+          </g>
+
+          <!-- ===== 背部推进器与喷火 ===== -->
+          <path d="M196 200 L172 204 L170 250 L196 256 Z" fill="#9aa0aa" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M174 250 L192 253 L194 263 L172 261 Z" fill="#4a4f5a" stroke="#1d2230" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M174 263 Q183 304 192 264 Z" fill="#ff8a3d" stroke="#b34a12" stroke-width="2.5" stroke-linejoin="round">
+            <animate attributeName="d" dur="0.24s" repeatCount="indefinite" values="M174 263 Q183 304 192 264 Z;M174 263 Q182 288 192 264 Z;M174 263 Q184 310 192 264 Z;M174 263 Q183 304 192 264 Z"/>
+          </path>
+          <path d="M178 263 Q183 288 188 264 Z" fill="#ffe066">
+            <animate attributeName="d" dur="0.24s" repeatCount="indefinite" values="M178 263 Q183 288 188 264 Z;M178 263 Q183 278 188 264 Z;M178 263 Q183 294 188 264 Z;M178 263 Q183 288 188 264 Z"/>
+          </path>
+
+          <!-- ===== 驾驶员：鹈鹕（坐在座舱里，下半身被机身挡住） ===== -->
+          <!-- 身体 -->
+          <ellipse cx="236" cy="186" rx="28" ry="20" fill="#ffffff" stroke="#2b2b35" stroke-width="3.5"/>
+          <!-- 脖子 -->
+          <path d="M240 176 Q232 160 242 142" fill="none" stroke="#2b2b35" stroke-width="17" stroke-linecap="round"/>
+          <path d="M240 176 Q232 160 242 142" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+          <!-- 头 -->
+          <ellipse cx="250" cy="132" rx="18" ry="16" fill="#ffffff" stroke="#2b2b35" stroke-width="3.5"/>
+          <!-- 头顶羽冠 -->
+          <path d="M238 122 Q228 112 222 120 T210 114" fill="none" stroke="#2b2b35" stroke-width="6" stroke-linecap="round"/>
+          <path d="M238 122 Q228 112 222 120 T210 114" fill="none" stroke="#f4e3b0" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 喉囊（一鼓一鼓） -->
+          <path d="M264 138 L318 140 Q302 156 288 166 T264 150 Z" fill="#f08a4b" stroke="#2b2b35" stroke-width="3" stroke-linejoin="round">
+            <animate attributeName="d" dur="1.6s" repeatCount="indefinite" values="M264 138 L318 140 Q302 156 288 166 T264 150 Z;M264 138 L318 140 Q306 166 290 178 T264 152 Z;M264 138 L318 140 Q302 156 288 166 T264 150 Z"/>
+          </path>
+          <!-- 上喙 -->
+          <path d="M262 126 Q292 128 318 140 Q292 141 264 139 Z" fill="#f2b134" stroke="#2b2b35" stroke-width="3" stroke-linejoin="round"/>
+          <!-- 眼睛：每 4 秒眨一次（translate 在前、scale 在后，以 y=128 为中心压扁） -->
+          <g>
+            <circle cx="255" cy="128" r="4.5" fill="#1d1d1d"/>
+            <circle cx="256.5" cy="126.5" r="1.5" fill="#ffffff"/>
+            <animateTransform attributeName="transform" type="translate" additive="sum" dur="4s" repeatCount="indefinite" values="0 0;0 0;0 115.2;0 0" keyTimes="0;0.9;0.95;1"/>
+            <animateTransform attributeName="transform" type="scale" additive="sum" dur="4s" repeatCount="indefinite" values="1 1;1 1;1 0.1;1 1" keyTimes="0;0.9;0.95;1"/>
+          </g>
+
+          <!-- ===== 机身躯干（挡住鹈鹕下半身 = 坐进座舱） ===== -->
+          <path d="M196 205 Q196 190 211 190 L311 190 Q326 190 326 205 L330 285 Q330 300 315 300 L207 300 Q192 300 192 285 Z" fill="#d8dbe0" stroke="#1d2230" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M200 230 L322 230" stroke="#1d2230" stroke-width="3"/>
+          <path d="M198 290 L210 300 M214 290 L226 300 M230 290 L242 300 M302 290 L314 300 M318 290 L328 298" stroke="#e0a43a" stroke-width="5"/>
+          <text x="204" y="252" font-family="monospace" font-size="14" font-weight="bold" fill="#1d2230">PELI-01</text>
+          <!-- 指示灯（错开闪） -->
+          <rect x="276" y="202" width="9" height="7" rx="1.5" fill="#57d36b" stroke="#1d2230" stroke-width="2">
+            <animate attributeName="opacity" dur="1s" repeatCount="indefinite" values="1;0.25;1"/>
+          </rect>
+          <rect x="289" y="202" width="9" height="7" rx="1.5" fill="#ffd23f" stroke="#1d2230" stroke-width="2">
+            <animate attributeName="opacity" dur="1s" begin="0.33s" repeatCount="indefinite" values="1;0.25;1"/>
+          </rect>
+          <!-- 前视传感器 -->
+          <rect x="306" y="203" width="18" height="12" rx="3" fill="#ff4b4b" stroke="#1d2230" stroke-width="3">
+            <animate attributeName="fill" dur="1.2s" repeatCount="indefinite" values="#ff4b4b;#ffb0b0;#ff4b4b"/>
+          </rect>
+
+          <!-- ===== 操纵杆（随翅膀推拉） ===== -->
+          <rect x="283" y="186" width="18" height="6" rx="2" fill="#4a4f5a" stroke="#1d2230" stroke-width="2.5"/>
+          <g>
+            <line x1="292" y1="190" x2="292" y2="174" stroke="#1d2230" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="292" cy="172" r="4.5" fill="#e23b3b" stroke="#1d2230" stroke-width="2"/>
+            <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="0 292 190;8 292 190;0 292 190;-8 292 190;0 292 190" keyTimes="0;0.25;0.5;0.75;1"/>
+          </g>
+          <!-- 翅膀握住操纵杆头 -->
+          <path d="M226 178 Q256 160 272 172 T292 172" fill="none" stroke="#2b2b35" stroke-width="15" stroke-linecap="round">
+            <animate attributeName="d" dur="2s" repeatCount="indefinite" values="M226 178 Q256 160 272 172 T292 172;M226 178 Q256 160 272 172 T294.5 172.2;M226 178 Q256 160 272 172 T292 172;M226 178 Q256 160 272 172 T289.5 172.2;M226 178 Q256 160 272 172 T292 172" keyTimes="0;0.25;0.5;0.75;1"/>
+          </path>
+          <path d="M226 178 Q256 160 272 172 T292 172" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round">
+            <animate attributeName="d" dur="2s" repeatCount="indefinite" values="M226 178 Q256 160 272 172 T292 172;M226 178 Q256 160 272 172 T294.5 172.2;M226 178 Q256 160 272 172 T292 172;M226 178 Q256 160 272 172 T289.5 172.2;M226 178 Q256 160 272 172 T292 172" keyTimes="0;0.25;0.5;0.75;1"/>
+          </path>
+          <path d="M232 174 Q252 164 266 170" fill="none" stroke="#c9ced8" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- ===== 座舱玻璃罩 + 天线 ===== -->
+          <path d="M204 192 Q204 96 266 96 Q336 98 336 192 Z" fill="url(#glass)" stroke="#1d2230" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M220 160 Q222 120 254 108" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="266" y1="96" x2="272" y2="74" stroke="#1d2230" stroke-width="4" stroke-linecap="round"/>
+          <rect x="267" y="66" width="10" height="9" rx="2" fill="#ff4b4b" stroke="#1d2230" stroke-width="2.5">
+            <animate attributeName="opacity" dur="0.8s" repeatCount="indefinite" values="1;0.3;1"/>
+          </rect>
+
+          <!-- ===== 近侧腿（相位 A） 髋(266,300) 膝(266,358) 踝(266,415) ===== -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="18 266 300;0 266 300;-18 266 300;0 266 300;18 266 300" keyTimes="0;0.25;0.5;0.75;1"/>
+            <path d="M252 300 L280 300 L276 358 L256 358 Z" fill="#c9ccd2" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M262 308 L262 350" stroke="#1d2230" stroke-width="3"/>
+            <g>
+              <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="0 266 358;35 266 358;0 266 358;0 266 358;0 266 358" keyTimes="0;0.25;0.5;0.75;1"/>
+              <path d="M256 358 L276 358 L273 415 L259 415 Z" fill="#c9ccd2" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M266 366 L266 406" stroke="#1d2230" stroke-width="3"/>
+              <g>
+                <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="-18 266 415;-35 266 415;18 266 415;0 266 415;-18 266 415" keyTimes="0;0.25;0.5;0.75;1"/>
+                <path d="M246 415 L284 415 Q298 415 300 430 L240 430 Q238 418 246 415 Z" fill="#e0a43a" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+                <circle cx="266" cy="415" r="7" fill="#7d838e" stroke="#1d2230" stroke-width="3"/>
+              </g>
+              <circle cx="266" cy="358" r="11" fill="#7d838e" stroke="#1d2230" stroke-width="4"/>
+            </g>
+            <circle cx="266" cy="300" r="14" fill="#7d838e" stroke="#1d2230" stroke-width="4"/>
+          </g>
+
+          <!-- ===== 近侧手臂（肩甲 + 臂炮） ===== -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" values="-6 244 232;0 244 232;6 244 232;0 244 232;-6 244 232" keyTimes="0;0.25;0.5;0.75;1"/>
+            <path d="M236 240 L252 240 L254 278 L238 278 Z" fill="#c9ccd2" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M236 270 L316 266 L316 282 L236 288 Z" fill="#c9ccd2" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M250 272 L300 270" stroke="#e0a43a" stroke-width="3"/>
+            <rect x="312" y="262" width="10" height="24" rx="2" fill="#7d838e" stroke="#1d2230" stroke-width="4"/>
+            <path d="M222 224 Q244 208 266 224 L262 242 L226 242 Z" fill="#e0a43a" stroke="#1d2230" stroke-width="4" stroke-linejoin="round"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#3a1f1f" stroke-width="6"/>
+</svg>

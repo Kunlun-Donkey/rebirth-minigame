@@ -21,3 +21,5 @@
 |---|---|---|---|---|---|
 | [章鱼骑自行车 SVG](zhangyu_ridebike/prompt.md) | Claude Code · Opus 5.5 | [opus_5.5_zhangyu_ridebike.svg](zhangyu_ridebike/opus_5.5_zhangyu_ridebike.svg) | 91 秒 | 8,960 | 完整提示词一次成功；同会话非冷启动，偏乐观 |
 | 同上 | Claude Code · MiMo v2.6（mimo-v2.6-pro-ultraspeed） | [mimo_v2.6_zhangyu_ridebike.svg](zhangyu_ridebike/mimo_v2.6_zhangyu_ridebike.svg) | 252 秒 | 91,992 | 冷启动；22 次调用，首次用满 32k 输出上限没有产出，之后自己改了 7 次；文件名写成了 opus 的，覆盖过 Opus 的文件 |
+| [鹈鹕开机甲 SVG](tihu_mecha/prompt.md) | Claude Code · MiMo v2.6（mimo-v2.6-pro-ultraspeed） | [mimo_v2.6_tihu_mecha.svg](tihu_mecha/mimo_v2.6_tihu_mecha.svg) | 101 秒 | 20,521 | 非冷启动（与章鱼同会话）；分 3 块写入 + 3 处小修，无返工重画；本轮提示词第 8 条文件名改为模型名占位 |
+| [鹈鹕开机甲 SVG（另一版提示词）](pelican_mech/prompt.md) | Claude Code · Opus 5.5 | [opus_5.5_pelican_mech.svg](pelican_mech/opus_5.5_pelican_mech.svg) | 202 秒 | 18,046 | 一次成功；非冷启动；原始指令只有一句，提示词是 Opus 事后整理的，**和 tihu_mecha 的提示词不同，不能直接对比** |
