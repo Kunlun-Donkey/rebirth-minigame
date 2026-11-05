@@ -89,9 +89,9 @@ export class Engine {
         };
         const n = this.draftSize();
         return {
-            talents: draw([...this.data.talents.values()], n),
-            items: draw([...this.data.items.values()], n),
-            companions: draw([...this.data.companions.values()].filter(c => !c.system), n),
+            talents: draw(Array.from(this.data.talents.values()), n),
+            items: draw(Array.from(this.data.items.values()), n),
+            companions: draw(Array.from(this.data.companions.values()).filter(c => !c.system), n),
         };
     }
 
@@ -146,7 +146,7 @@ export class Engine {
 
         const sink = this.newStep();
         // 出生地图（按权重随机）
-        const maps = [...d.maps.values()];
+        const maps = Array.from(d.maps.values());
         const map = maps.length ? this.rng.weighted(maps, m => m.weight ?? 1) : undefined;
         if (map) {
             this.run.map = map.id;
@@ -227,7 +227,7 @@ export class Engine {
     blessedChance(): number {
         const B = this.data.meta.blessed;
         if (!B) return 0;
-        const add = [...this.data.upgrades.values()].filter(u => u.kind === 'blessed')
+        const add = Array.from(this.data.upgrades.values()).filter(u => u.kind === 'blessed')
             .reduce((n, u) => n + this.upgradeLevel(u.id) * (u.value ?? 0.005), 0);
         // 保底：久不天胡，天道也会心软
         const dry = this.dp.blessedDry ?? 0;
@@ -707,7 +707,7 @@ export class Engine {
             legacy,
             points,
             tianhu,
-            relicCandidates: [...new Set(this.run.found)],
+            relicCandidates: Array.from(new Set(this.run.found)),
             relicSlots: 1 + (mods.relicSlots ?? 0) + this.upgradeValue('relicSlot'),
             firstTime,
             skill,
@@ -805,7 +805,7 @@ export class Engine {
     }
 
     upgradeViews(): UpgradeView[] {
-        return [...this.data.upgrades.values()].map(u => {
+        return Array.from(this.data.upgrades.values()).map(u => {
             const level = this.upgradeLevel(u.id);
             const cost = u.costs[level];
             return { id: u.id, name: u.name, desc: u.desc, level, max: u.costs.length, cost, affordable: cost !== undefined && this.profile.points >= cost };
@@ -831,7 +831,7 @@ export class Engine {
 
     /** 取今日天命（date = 本地日期 YYYY-MM-DD）；跨天时按日期确定性抽取（同一天所有玩家相同） */
     todayFate(date: string): string | undefined {
-        const fates = [...this.data.fates.keys()];
+        const fates = Array.from(this.data.fates.keys());
         if (!fates.length) return undefined;
         const dp = this.dp;
         if (dp.daily?.date !== date) {
@@ -848,7 +848,7 @@ export class Engine {
     swapFate(seed: number): string {
         const daily = this.dp.daily;
         if (!daily || !this.canSwapFate()) throw new Error('今日已换过天命');
-        const others = [...this.data.fates.keys()].filter(id => id !== daily.fate);
+        const others = Array.from(this.data.fates.keys()).filter(id => id !== daily.fate);
         daily.fate = others[new Rng({ rng: seed }).int(others.length)];
         daily.swapped = true;
         return daily.fate;
@@ -877,20 +877,20 @@ export class Engine {
         const ever = new Set(this.dp.ever ?? []);
         const items = new Set([...c.items, ...(this.run?.found ?? [])]);
         return {
-            endings: [...d.endings.values()].map(e => ({ id: e.id, name: e.name, epitaph: e.epitaph, got: c.endings.includes(e.id) })),
-            deaths: [...d.deaths.values()].map(x => ({
+            endings: Array.from(d.endings.values()).map(e => ({ id: e.id, name: e.name, epitaph: e.epitaph, got: c.endings.includes(e.id) })),
+            deaths: Array.from(d.deaths.values()).map(x => ({
                 id: x.id, name: x.name, epitaph: x.epitaph, got: c.deaths.includes(x.id),
                 count: this.dp.deathCount?.[x.id] ?? 0, legacy: x.legacy ? d.legacies.get(x.legacy)?.name : undefined,
             })),
             cameos,
-            feuds: [...feuds].map(text => ({ text, got: got.has(text) })).sort((a, b) => Number(b.got) - Number(a.got)),
+            feuds: Array.from(feuds).map(text => ({ text, got: got.has(text) })).sort((a, b) => Number(b.got) - Number(a.got)),
             tianhu: c.tianhu ?? 0,
-            lines: [...d.lines.values()].map(l => ({
+            lines: Array.from(d.lines.values()).map(l => ({
                 id: l.id, name: l.name, summary: l.summary ?? '', got: ever.has(l.id),
                 states: Object.entries(l.states).map(([sid, text]) => ({ id: sid, text, got: ever.has(`${l.id}.${sid}`) })),
             })),
-            skills: [...d.skills.values()].map(s => ({ id: s.id, name: s.name, desc: s.desc, hint: s.hint, got: this.dp.skills.includes(s.id) })),
-            items: [...d.items.values()].map(x => ({ id: x.id, name: x.name, desc: x.desc, got: items.has(x.id) })),
+            skills: Array.from(d.skills.values()).map(s => ({ id: s.id, name: s.name, desc: s.desc, hint: s.hint, got: this.dp.skills.includes(s.id) })),
+            items: Array.from(d.items.values()).map(x => ({ id: x.id, name: x.name, desc: x.desc, got: items.has(x.id) })),
         };
     }
 
@@ -1081,7 +1081,7 @@ export class Engine {
     private drawEvent(filter: (e: GameEvent) => boolean): GameEvent | undefined {
         const r = this.run;
         const goldMul = this.mods().goldMul ?? 1;
-        const cands = [...this.data.events.values()].filter(e =>
+        const cands = Array.from(this.data.events.values()).filter(e =>
             !e.chainOnly && filter(e) &&
             (!e.maps || (!!r.map && e.maps.includes(r.map))) &&
             this.careerOk(e) &&
@@ -1105,7 +1105,7 @@ export class Engine {
     private eventFeuds(e: GameEvent): string[] {
         let f = this.feudCache.get(e.id);
         if (!f) {
-            f = [...new Set(e.choices.flatMap(c => [c.success, c.fail].flatMap(o => o?.effect.feuds ?? [])))];
+            f = Array.from(new Set(e.choices.flatMap(c => [c.success, c.fail].flatMap(o => o?.effect.feuds ?? []))));
             this.feudCache.set(e.id, f);
         }
         return f;

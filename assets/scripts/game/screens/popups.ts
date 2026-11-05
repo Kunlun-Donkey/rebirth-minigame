@@ -93,7 +93,7 @@ export function showDying(g: Game): void {
     pop(panel);
     text(panel, e.data.meta.rules.dyingTitle ?? '你 要 死 了', 0, 50, panelW, { size: 44, color: COLOR.bad, align: 'center', bold: true });
     text(panel, `${e.data.meta.rules.dyingTitle ? '原因' : '死因'}：${def?.name ?? '未知'}`, 0, 130, panelW, { size: 30, color: COLOR.ink2, align: 'center' });
-    const boost = [...e.data.upgrades.values()].find(u => u.kind === 'reviveBoost' && e.upgradeLevel(u.id) > 0);
+    const boost = Array.from(e.data.upgrades.values()).find(u => u.kind === 'reviveBoost' && e.upgradeLevel(u.id) > 0);
     // 广告未开通时只能接受命运（道具/天赋保命在引擎里已自动生效）
     const canAd = CONFIG.adsEnabled && e.canReviveByAd();
     const hint = !canAd ? '这一世到头了。带着记忆，下一世再来。' : boost ? `命盘·${boost.name}：${boost.desc}` : '天道打了个盹，也许你还有一次机会。';
