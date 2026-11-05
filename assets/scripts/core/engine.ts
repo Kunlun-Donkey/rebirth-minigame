@@ -159,7 +159,7 @@ export class Engine {
             for (let i = 0; i < Math.min(lv, def.levelEffects.length); i++) this.applyEffect(def.levelEffects[i], sink, false);
         }
         // 命盘
-        for (const u of d.upgrades.values()) {
+        for (const u of Array.from(d.upgrades.values())) {
             if (u.kind !== 'start' || !u.startEffect) continue;
             for (let i = 0; i < this.upgradeLevel(u.id); i++) this.applyEffect(u.startEffect, sink, false);
         }
@@ -600,7 +600,7 @@ export class Engine {
         this.revive(step, lines[this.rng.int(lines.length)]);
         this.hype(step, 'revive');
         // 命盘·续命：放大广告复活的收益
-        for (const u of this.data.upgrades.values()) {
+        for (const u of Array.from(this.data.upgrades.values())) {
             if (u.kind !== 'reviveBoost' || !this.upgradeLevel(u.id)) continue;
             const R = this.data.meta.rules;
             this.addAttr(R.life, this.run.attrs[R.lifeMax] - this.run.attrs[R.life], step);
@@ -798,7 +798,7 @@ export class Engine {
     /** 某类命盘的总值：pointsBonus 为 等级 × value，其余为等级之和 */
     upgradeValue(kind: UpgradeKind): number {
         let v = 0;
-        for (const u of this.data.upgrades.values()) {
+        for (const u of Array.from(this.data.upgrades.values())) {
             if (u.kind === kind) v += this.upgradeLevel(u.id) * (kind === 'pointsBonus' ? u.value ?? 0.1 : 1);
         }
         return v;
@@ -863,7 +863,7 @@ export class Engine {
         const seen = new Set([...c.events, ...(this.run?.seen ?? [])]);
         const cameos: CodexView['cameos'] = [];
         const feuds = new Set<string>();
-        for (const ev of d.events.values()) {
+        for (const ev of Array.from(d.events.values())) {
             for (const ch of ev.choices) for (const o of [ch.success, ch.fail]) for (const f of o?.effect.feuds ?? []) feuds.add(f);
             if (!ev.cameo) continue;
             const hint = new Set<string>();
@@ -871,7 +871,7 @@ export class Engine {
                 if (l.t === 'has' && l.kind === 'xend') hint.add(l.id.split('/')[0]);
                 if (l.t === 'cmp' && (l.left.kind === 'xstage' || l.left.kind === 'xlives')) hint.add(l.left.id!);
             });
-            cameos.push({ id: ev.id, text: ev.text, got: seen.has(ev.id), hint: [...hint] });
+            cameos.push({ id: ev.id, text: ev.text, got: seen.has(ev.id), hint: Array.from(hint) });
         }
         const got = new Set(c.feuds ?? []);
         const ever = new Set(this.dp.ever ?? []);

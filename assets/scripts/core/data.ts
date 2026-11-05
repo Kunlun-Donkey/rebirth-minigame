@@ -182,7 +182,7 @@ export function buildDestiny(raw: RawDestiny): Destiny {
 
     const layers = new Map(meta.layers.map(l => [l.id, { ...l, cond: cond(l.require, `层 ${l.id}`) }]));
     const layersByDir = { up: [], down: [], side: [] } as Destiny['layersByDir'];
-    for (const l of layers.values()) layersByDir[l.dir].push(l);
+    for (const l of Array.from(layers.values())) layersByDir[l.dir].push(l);
 
     return {
         meta,
