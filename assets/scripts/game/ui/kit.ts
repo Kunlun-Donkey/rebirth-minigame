@@ -303,7 +303,7 @@ export function chipH(size = 20): number {
 /** 浅色底（金色/米色）上白字看不清，改用深墨色 */
 function inkOn(fill: string): string {
     const c = new Color().fromHEX(fill);
-    return 0.299 * c.r + 0.587 * c.g + 0.114 * c.b > 150 ? COLOR.ink : COLOR.white;
+    return 0.299 * c.r + 0.587 * c.g + 0.114 * c.b > 135 ? COLOR.ink : COLOR.white;
 }
 
 /** 小标签（如「前世：……」「传承·耐火根」） */
@@ -323,7 +323,7 @@ export function note(parent: Node, str: string, y: number, parentW: number, styl
     const h = fs(size) + 18;
     const n = box(parent, (parentW - w) / 2, y, w, h, 'note');
     rect(n, { fill: COLOR.paper, fillAlpha: 215, radius: h / 2 });
-    text(n, clampText(str, w - 8 + size * 1.5, size, h, h), 0, 0, w, { ...style, align: 'center', valign: 'center' }, h);
+    text(n, clampText(str, w - 8 + fs(size) * 1.5, size, h, h), 0, 0, w, { ...style, align: 'center', valign: 'center' }, h);
     return n;
 }
 
