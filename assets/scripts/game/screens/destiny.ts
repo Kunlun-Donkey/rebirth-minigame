@@ -9,7 +9,7 @@ import { destinyStates, SPIN_BONUS } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { box, button, chip, clampText, clear, COLOR, estimateWidth, fadeIn, image, modal, onTap, pop, rect, text, textHeight } from '../ui/kit';
+import { box, button, chip, clampText, clear, COLOR, estimateWidth, fadeIn, fs, image, modal, onTap, pop, rect, text, textHeight } from '../ui/kit';
 
 const MAX_CARD_H = 240;
 const GAP = 20;
@@ -59,7 +59,7 @@ export function showDestinySelect(g: Game, from: 'draft' | 'menu' = 'draft'): vo
         const statusY = CARD_H - (compact ? 12 : 22) - statusH;
         const room = statusY - descY - 4;
         // 估算留 1.5 个字的余量：破折号、标点在真机上的宽度和估算有出入
-        const fit = DESC_FONTS.find(([fs, lh]) => textHeight(entry.desc, tw - fs * 1.5, fs, lh) <= room) ?? DESC_FONTS[DESC_FONTS.length - 1];
+        const fit = DESC_FONTS.find(([f, lh]) => textHeight(entry.desc, tw - fs(f) * 1.5, f, lh) <= room) ?? DESC_FONTS[DESC_FONTS.length - 1];
         text(card, entry.name, tx, nameY, tw, { size: compact ? 32 : 36, bold: true, color: st.unlocked ? COLOR.ink : COLOR.ink2 });
         text(card, clampText(entry.desc, tw, fit[0], fit[1], room), tx, descY, tw, { size: fit[0], color: COLOR.ink2, wrap: true, lineHeight: fit[1] }, room);
         text(card, status, tx, statusY, tw, { size: 20, color: st.unlocked ? COLOR.ochre : COLOR.bad, wrap: true, lineHeight: 28 });

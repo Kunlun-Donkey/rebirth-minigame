@@ -205,18 +205,46 @@ export interface TextStyle {
     lineHeight?: number;
     /** 自动换行（固定宽度，高度按估算行数撑开） */
     wrap?: boolean;
+    /** 深色底上的字：不做浅色加深 */
+    onDark?: boolean;
 }
+
+/**
+ * 实际字号。各界面写的是「设计字号」，统一在这里放大（微信审核反馈字体不清晰）：
+ * 最小 24（750 宽设计稿上 ≈12pt），其余约 +15%，44 及以上的大标题不变。
+ * kit 里所有估算（行数/宽度/高度/截断）都按放大后的字号算，界面代码照旧传设计字号。
+ */
+export function fs(size: number): number {
+    return size >= 44 ? size : Math.min(44, Math.max(24, Math.round(size * 1.15)));
+}
+
+/** 行高随字号同比放大（未指定时取 1.5 倍字号） */
+function lhOf(size: number, lineHeight?: number): number {
+    return lineHeight === undefined ? Math.round(fs(size) * 1.5) : Math.round((lineHeight * fs(size)) / size);
+}
+
+/** 浅色字在纸色底上看不清：作为文字颜色时换成同色相的深一档 */
+const TEXT_INK: Record<string, string> = {
+    [COLOR.legacy]: '#a8690f',
+    [COLOR.legend]: '#a8690f',
+    [COLOR.ochre]: '#94592a',
+    [COLOR.adD]: '#8a6512',
+    [COLOR.common]: '#7d6d50',
+    '#a8987c': '#7d6d50',
+};
 
 export function text(parent: Node, str: string, x: number, y: number, w: number, s: TextStyle = {}, h?: number): Node {
     const size = s.size ?? 28;
-    const lh = s.lineHeight ?? Math.round(size * 1.5);
+    const lh = lhOf(size, s.lineHeight);
     const height = h ?? (s.wrap ? estimateLines(str, w, size) * lh : lh);
     const n = box(parent, x, y, w, height, 'text');
     const l = n.addComponent(Label);
     l.string = str;
-    l.fontSize = size;
-    l.lineHeight = lh;
-    l.color = hex(s.color ?? COLOR.ink, s.alpha);
+    l.fontSize = fs(size);
+    // 单行文字的框比行高矮时，Cocos SHRINK 会按「框高 / 行高」缩小字号：行高收到框高，字号保持
+    l.lineHeight = !s.wrap && h !== undefined ? Math.min(lh, h) : lh;
+    const c = s.color ?? COLOR.ink;
+    l.color = hex(s.onDark ? c : TEXT_INK[c] ?? c, s.alpha);
     l.isBold = !!s.bold;
     l.enableWrapText = !!s.wrap;
     // 换行文字：固定宽度、高度随内容撑开；单行文字：固定区域，超长自动缩小字号（保证对齐稳定）
@@ -230,7 +258,8 @@ export function text(parent: Node, str: string, x: number, y: number, w: number,
 const NO_LINE_START = '，。、！？；：）》」』”’…—,.!?;:)';
 
 /** 估算换行后的行数（中文按 1 个字号宽，ASCII 按半个字号宽；按字逐个排，放不下整字才换行） */
-export function estimateLines(str: string, width: number, size: number): number {
+export function estimateLines(str: string, width: number, designSize: number): number {
+    const size = fs(designSize);
     let lines = 0;
     for (const para of str.split('\n')) {
         let n = 1, w = 0, prev = 0;
@@ -250,25 +279,40 @@ export function estimateLines(str: string, width: number, size: number): number 
 }
 
 export function textHeight(str: string, w: number, size: number, lineHeight?: number): number {
-    return estimateLines(str, w, size) * (lineHeight ?? Math.round(size * 1.5));
+    return estimateLines(str, w, size) * lhOf(size, lineHeight);
 }
 
-/** 文字超出高度时截断加省略号（宽度留 1.5 个字的余量，防真机标点换行比估算多一行） */
+/**
+ * 文字超出高度时截断加省略号（宽度留 1.5 个字的余量，防真机标点换行比估算多一行）。
+ * h 是文字框高度；字号放大后行高可能超过 h，至少保留一行。
+ */
 export function clampText(str: string, w: number, size: number, lineHeight: number, h: number): string {
-    const ew = w - size * 1.5;
-    if (textHeight(str, ew, size, lineHeight) <= h) return str;
+    const ew = w - fs(size) * 1.5;
+    const eh = Math.max(h, lhOf(size, lineHeight));
+    if (textHeight(str, ew, size, lineHeight) <= eh) return str;
     let t = str;
-    while (t.length > 1 && textHeight(`${t}…`, ew, size, lineHeight) > h) t = t.slice(0, -1);
+    while (t.length > 1 && textHeight(`${t}…`, ew, size, lineHeight) > eh) t = t.slice(0, -1);
     return `${t}…`;
+}
+
+/** chip 的高度（按钮里排标签时要用） */
+export function chipH(size = 20): number {
+    return fs(size) + 14;
+}
+
+/** 浅色底（金色/米色）上白字看不清，改用深墨色 */
+function inkOn(fill: string): string {
+    const c = new Color().fromHEX(fill);
+    return 0.299 * c.r + 0.587 * c.g + 0.114 * c.b > 150 ? COLOR.ink : COLOR.white;
 }
 
 /** 小标签（如「前世：……」「传承·耐火根」） */
 export function chip(parent: Node, str: string, x: number, y: number, color: string, filled = false, size = 20): Node {
     const w = Math.ceil(estimateWidth(str, size)) + 20;
-    const h = size + 14;
+    const h = chipH(size);
     const n = box(parent, x, y, w, h, 'chip');
     rect(n, filled ? { fill: color, radius: 8 } : { fill: color, fillAlpha: 30, radius: 8 });
-    text(n, str, 0, 0, w, { size, color: filled ? COLOR.white : color, align: 'center', valign: 'center' }, h);
+    text(n, str, 0, 0, w, { size, color: filled ? inkOn(color) : color, align: 'center', valign: 'center', bold: filled }, h);
     return n;
 }
 
@@ -276,14 +320,15 @@ export function chip(parent: Node, str: string, x: number, y: number, color: str
 export function note(parent: Node, str: string, y: number, parentW: number, style: TextStyle): Node {
     const size = style.size ?? 24;
     const w = Math.min(parentW - 40, Math.ceil(estimateWidth(str, size)) + 36);
-    const h = size + 18;
+    const h = fs(size) + 18;
     const n = box(parent, (parentW - w) / 2, y, w, h, 'note');
     rect(n, { fill: COLOR.paper, fillAlpha: 215, radius: h / 2 });
     text(n, clampText(str, w - 8 + size * 1.5, size, h, h), 0, 0, w, { ...style, align: 'center', valign: 'center' }, h);
     return n;
 }
 
-export function estimateWidth(str: string, size: number): number {
+export function estimateWidth(str: string, designSize: number): number {
+    const size = fs(designSize);
     let w = 0;
     for (const ch of str) w += ch.charCodeAt(0) < 0x2e80 ? size * 0.55 : size;
     return w;
@@ -350,9 +395,11 @@ export function button(parent: Node, x: number, y: number, w: number, o: ButtonO
     // 第二行小字可换行（含 \n），高度按行数撑开
     const subLH = 30;
     const subH = o.sub ? textHeight(o.sub, w - pad * 2, 22, subLH) : 0;
+    const labelLH = Math.round(fs(size) * 1.4);
+    const tagH = chipH();
     let h = o.compact ? 68 : 92;
     if (o.sub) h += subH;
-    if (tagsOnNewLine) h += 40;
+    if (tagsOnNewLine) h += tagH + 6;
 
     const n = box(parent, x, y, w, h, 'button');
     const theme = {
@@ -366,27 +413,27 @@ export function button(parent: Node, x: number, y: number, w: number, o: ButtonO
     // 贴图皮肤：自带底部厚度，高度含画出来的 6px 投影
     if (style !== 'ghost') image(n, TEX.btn(style), 0, 0, w, h + 6, { slice: BTN_SLICE, sliceScale: 0.6 });
 
-    const top = o.sub || tagsOnNewLine ? 18 : (h - Math.round(size * 1.4)) / 2;
+    const top = o.sub || tagsOnNewLine ? 18 : (h - labelLH) / 2;
     const icon = o.icon ?? (style === 'ad' ? TEX.adIcon : undefined);
     let lx = pad;
     if (icon) {
-        const iy = top + (Math.round(size * 1.4) - BTN_ICON) / 2;
+        const iy = top + (labelLH - BTN_ICON) / 2;
         const ix = align === 'center' ? Math.max(pad, (w - labelW) / 2 - BTN_ICON - 10) : pad;
         image(n, icon, ix, iy, BTN_ICON, BTN_ICON);
         if (align === 'left') lx = pad + BTN_ICON + 12;
     }
-    text(n, o.label, lx, top, w - lx - pad, { size, color: theme.ink, align: align === 'center' ? 'center' : 'left', lineHeight: Math.round(size * 1.4) });
+    text(n, o.label, lx, top, w - lx - pad, { size, color: theme.ink, bold: style === 'primary' || style === 'ad', align: align === 'center' ? 'center' : 'left', lineHeight: Math.round(size * 1.4) });
 
-    let ty = top + Math.round(size * 1.4) + 6;
+    let ty = top + labelLH + 6;
     if (o.tags?.length) {
         let tx = tagsOnNewLine ? pad : w - pad - tagsW + 10;
         // 有第二行小字时标签与标题同行（垂直居中会压到小字）
-        const tagY = tagsOnNewLine ? ty : o.sub ? top + (Math.round(size * 1.4) - 34) / 2 : (h - 34) / 2;
+        const tagY = tagsOnNewLine ? ty : o.sub ? top + (labelLH - tagH) / 2 : (h - tagH) / 2;
         for (const t of o.tags) {
             const c = chip(n, t.text, tx, tagY, t.color, t.filled);
             tx += sizeOf(c).w + 10;
         }
-        if (tagsOnNewLine) ty += 40;
+        if (tagsOnNewLine) ty += tagH + 6;
     }
     if (o.sub) text(n, o.sub, pad, ty, w - pad * 2, { size: 22, color: o.subColor ?? COLOR.ink2, wrap: true, lineHeight: subLH });
 

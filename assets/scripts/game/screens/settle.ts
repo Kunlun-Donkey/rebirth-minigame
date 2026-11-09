@@ -4,7 +4,7 @@ import { SettleResult, tiandao } from '../../core';
 import { CONFIG, TEX } from '../config';
 import type { Game } from '../game';
 import { Platform } from '../platform';
-import { box, button, chip, clampText, COLOR, estimateWidth, fadeIn, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
+import { box, button, chip, clampText, COLOR, estimateWidth, fadeIn, fs, image, onTap, rect, sizeOf, text, textHeight } from '../ui/kit';
 import { showInfo, showList } from './popups';
 import { GAME_NAME } from './splash';
 import { danmaku } from '../ui/danmaku';
@@ -25,8 +25,8 @@ export function showSettle(g: Game): void {
 
     const light = isEnd ? COLOR.ochreD : COLOR.cream;
     const head = s.tianhu ? '✦ 天 胡 ✦' : isEnd ? '这 一 世 圆 满 了' : '这 一 世 结 束 了';
-    text(root, head, 0, CONFIG.safeTop - (s.tianhu ? 46 : 40), g.W, { size: s.tianhu ? 48 : 40, color: s.tianhu ? COLOR.legacy : light, align: 'center', bold: true });
-    text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + (s.tianhu ? 22 : 14), g.W, { size: 24, color: light, alpha: 200, align: 'center' });
+    text(root, head, 0, CONFIG.safeTop - (s.tianhu ? 50 : 44), g.W, { size: s.tianhu ? 48 : 40, color: s.tianhu ? COLOR.legacy : light, align: 'center', bold: true, onDark: !isEnd });
+    text(root, `${e.data.meta.name} · 轮回结算`, 0, CONFIG.safeTop + (s.tianhu ? 26 : 20), g.W, { size: 24, color: light, align: 'center' });
     // 回主菜单前也要走完遗物封存，避免白白丢掉本世遗物
     const menu = chip(root, '‹ 菜单', 30, CONFIG.safeTop + 22, light, false, 22);
     onTap(menu, () => sealThenRebirth(g, s, 'menu'));
@@ -47,7 +47,9 @@ function stone(g: Game, root: Node, s: SettleResult, y: number): number {
     const P = s.kind === 'ending' ? 22 : 0;
     const ix = 214 + P, iw = w - ix - 28 - P;
     // 墓志铭较长（结局文案常 3 行）时石板加高，避免压到底部足迹行
-    const h = Math.max(300, 132 + P + textHeight(s.epitaph, iw, 28, 44) + 84 + P);
+    // 估算宽度留一个字的余量（真机标点避头会多折一行）
+    const epH = textHeight(s.epitaph, iw - fs(28), 28, 44);
+    const h = Math.max(300, 132 + P + epH + 84 + P);
     const n = box(root, 30, y, w, h, 'stone');
     rect(n, { fill: '#e6d3ad', stroke: '#b89a6a', lineWidth: 2, radius: 22, shadow: '#00000055', shadowOffset: 10 });
     // 命格版优先、回落通用版；比例不合（如竖版图）会自动跳过，改用画出来的石板
@@ -65,7 +67,7 @@ function stone(g: Game, root: Node, s: SettleResult, y: number): number {
     text(n, s.title, ix, 66 + P, iw, { size: 40, color: COLOR.ochreD, bold: true }, 56);
     if (s.firstTime) chip(n, '首次', w - 28 - 70 - P, 76 + P, COLOR.bad, true, 20);
     if (s.tianhu) tianhuSeal(pic);
-    text(n, s.epitaph, ix, 132 + P, iw, { size: 28, wrap: true, lineHeight: 44 });
+    text(n, s.epitaph, ix, 132 + P, iw, { size: 28, wrap: true, lineHeight: 44 }, epH);
 
     const meta = s.explore.map(x => `${x.name.slice(-2)} · ${x.layer || '—'}`).join('    ');
     rect(box(n, 28 + P, h - 70 - P, w - 56 - 2 * P, 2, 'line'), { fill: '#7a4a1f', fillAlpha: 70 });

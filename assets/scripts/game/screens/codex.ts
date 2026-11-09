@@ -44,7 +44,7 @@ export function showCodex(g: Game, tab: Tab = 'endings', page = 0): void {
 
     // 页签：名字 + 收集数两行，页签多时也放得下
     const ty = CONFIG.safeTop + 136;
-    const TAB_H = 68;
+    const TAB_H = 82;
     const tg = tabs.length > 5 ? 8 : 12;
     const tabW = (g.W - 60 - tg * (tabs.length - 1)) / tabs.length;
     tabs.forEach((t, i) => {
@@ -52,8 +52,8 @@ export function showCodex(g: Game, tab: Tab = 'endings', page = 0): void {
         const list = v[t.id] as { got: boolean }[];
         const b = box(root, 30 + i * (tabW + tg), ty, tabW, TAB_H, `tab_${t.id}`);
         rect(b, on ? { fill: COLOR.ochreD, radius: 18 } : { fill: COLOR.btn, fillAlpha: 200, stroke: COLOR.btnEdge, strokeAlpha: 120, radius: 18 });
-        text(b, t.name, 0, 8, tabW, { size: 24, color: on ? COLOR.white : COLOR.ochreD, align: 'center', bold: on });
-        text(b, `${list.filter(x => x.got).length}/${list.length}`, 0, 38, tabW, { size: 18, color: on ? COLOR.white : COLOR.ink2, align: 'center' });
+        text(b, t.name, 0, 6, tabW, { size: 24, color: on ? COLOR.white : COLOR.ochreD, align: 'center', bold: on, lineHeight: 34 });
+        text(b, `${list.filter(x => x.got).length}/${list.length}`, 0, 44, tabW, { size: 18, color: on ? COLOR.white : COLOR.ink2, align: 'center', lineHeight: 26 });
         if (!on) onTap(b, () => { g.reset(); showCodex(g, t.id, 0); });
     });
 
